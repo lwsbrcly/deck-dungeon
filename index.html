@@ -120,6 +120,109 @@
       box-sizing: border-box;
       overflow: hidden;
     }
+    /* Combat animation */
+    .combat-hidden { visibility: hidden !important; }
+    .action-hidden { visibility: hidden !important; }
+    .action-clone {
+      position: fixed;
+      z-index: 1000;
+      pointer-events: none;
+      margin: 0 !important;
+      transform-origin: center center;
+      will-change: transform, opacity;
+    }
+    .equip-clone { animation: equip-card 420ms cubic-bezier(.2,.8,.25,1) forwards; }
+    @keyframes equip-card {
+      0% { transform: translate3d(0,0,0) scale(1); opacity: 1; }
+      78% { transform: translate3d(var(--dx),var(--dy),0) scale(1.25); opacity: 1; }
+      100% { transform: translate3d(var(--dx),var(--dy),0) scale(1.25); opacity: 1; }
+    }
+    .consume-clone { animation: consume-card 420ms cubic-bezier(.22,.8,.25,1) forwards; }
+    @keyframes consume-card {
+      0% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 1; }
+      48% { transform: translate3d(var(--dx),var(--dy),0) rotate(-7deg) scale(1.08); opacity: 1; }
+      62% { transform: translate3d(calc(var(--dx) + var(--hit-x)),calc(var(--dy) + var(--hit-y)),0) rotate(5deg) scale(1.14); opacity: 1; }
+      100% { transform: translate3d(var(--dx),var(--dy),0) rotate(0deg) scale(.75); opacity: 0; }
+    }
+    .discard-clone { animation: discard-card 560ms cubic-bezier(.35,.05,.75,.2) forwards; }
+    @keyframes discard-card {
+      0% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 1; }
+      28% { transform: translate3d(8px,18px,0) rotate(22deg) scale(1.02); opacity: 1; }
+      100% { transform: translate3d(30px,105vh,0) rotate(78deg) scale(.92); opacity: 0; }
+    }
+    .flee-clone { animation: flee-card 430ms cubic-bezier(.3,.7,.3,1) forwards; }
+    @keyframes flee-card {
+      0% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 1; }
+      100% { transform: translate3d(var(--dx),var(--dy),0) rotate(-8deg) scale(.92); opacity: 0; }
+    }
+    .enter-clone { animation: enter-card 700ms cubic-bezier(.2,.8,.25,1) forwards; }
+    @keyframes enter-card {
+      0% { transform: translate3d(var(--dx),0,0) rotate(7deg) scale(.94); opacity: 0; }
+      65% { transform: translate3d(-8px,0,0) rotate(-1deg) scale(1.01); opacity: 1; }
+      100% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 1; }
+    }
+    .action-impact {
+      position: fixed; z-index: 1001; pointer-events: none;
+      font-size: 1.5rem; font-weight: 900; color: var(--gold);
+      text-shadow: 0 0 8px rgba(241,196,15,.65);
+      animation: action-impact 260ms ease-out forwards;
+    }
+    .action-impact.heart-impact {
+      color: #e74c3c;
+      text-shadow: 0 0 8px rgba(231,76,60,.65);
+    }
+    @keyframes action-impact {
+      0% { transform: translate(-50%,-50%) scale(.5); opacity: 0; }
+      35% { transform: translate(-50%,-50%) scale(1.35); opacity: 1; }
+      100% { transform: translate(-50%,-70%) scale(.8); opacity: 0; }
+    }
+    .combat-clone {
+      position: fixed;
+      z-index: 1000;
+      pointer-events: none;
+      margin: 0 !important;
+      transform-origin: center center;
+      animation: combat-charge 420ms cubic-bezier(.22,.8,.25,1) forwards;
+      will-change: transform, opacity;
+    }
+    @keyframes combat-charge {
+      0%   { transform: translate3d(0,0,0) rotate(0deg) scale(1); }
+      48%  { transform: translate3d(var(--dx),var(--dy),0) rotate(10deg) scale(1.08); }
+      58%  { transform: translate3d(calc(var(--dx) + var(--hit-x)),calc(var(--dy) + var(--hit-y)),0) rotate(-7deg) scale(1.14); }
+      100% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 0; }
+    }
+    .combat-monster {
+      animation: combat-monster-charge 420ms cubic-bezier(.22,.8,.25,1) forwards;
+    }
+    @keyframes combat-monster-charge {
+      0%   { transform: translate3d(0,0,0) rotate(0deg) scale(1); }
+      48%  { transform: translate3d(var(--dx),var(--dy),0) rotate(-8deg) scale(1.08); }
+      58%  { transform: translate3d(calc(var(--dx) + var(--hit-x)),calc(var(--dy) + var(--hit-y)),0) rotate(6deg) scale(1.14); }
+      100% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 0; }
+    }
+    .combat-shake { animation: combat-shake 150ms ease-in-out; }
+    @keyframes combat-shake {
+      0%,100% { transform: translate3d(0,0,0); }
+      25% { transform: translate3d(-4px,1px,0) rotate(-.5deg); }
+      50% { transform: translate3d(5px,-1px,0) rotate(.5deg); }
+      75% { transform: translate3d(-3px,0,0) rotate(-.3deg); }
+    }
+    .combat-impact {
+      position: fixed;
+      z-index: 1001;
+      pointer-events: none;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--gold);
+      text-shadow: 0 0 8px rgba(241,196,15,.65);
+      animation: combat-impact 260ms ease-out forwards;
+    }
+    @keyframes combat-impact {
+      0% { transform: translate(-50%,-50%) scale(.5) rotate(-10deg); opacity: 0; }
+      35% { transform: translate(-50%,-50%) scale(1.35) rotate(8deg); opacity: 1; }
+      100% { transform: translate(-50%,-70%) scale(.8) rotate(18deg); opacity: 0; }
+    }
+
     .card.selected { border-color: var(--gold); box-shadow: 0 0 8px rgba(241, 196, 15, 0.4); }
     .card.red { color: var(--red); }
     .card.black { color: #fff; }
@@ -824,6 +927,7 @@
       log(p1Name + ' steps into the dungeon wielding a Dagger (2♦).');
     }
     render();
+    animateRoomEntry();
   }
 
   function resetRoomLimits() {
@@ -848,6 +952,7 @@
     if (state.justFled || state.over || state.dungeon.length < 4 || state.deck.length === 0) return;
     saveState();
    
+    var oldCardEls = Array.prototype.slice.call(document.querySelectorAll('#dungeon .dungeon-card-wrap .card'));
     var fledCards = state.dungeon.slice();
     state.dungeon = [];
 
@@ -863,7 +968,8 @@
     state.justFled = true;
     log('Fled! Dealt next room first, then shuffled fled cards into deck.', true, 'flee');
     checkGame();
-    render();
+    // Flee animation is purely visual; deal the new room after the old cards leave.
+    animateFlee(oldCardEls, function() { render(); animateRoomEntry(); });
   }
 
   function selectCard(i) {
@@ -910,71 +1016,155 @@
     var c = state.dungeon.splice(state.selected, 1)[0];
     state.selected = null;
     state.justFled = false;
+    var before = state.dungeon.length;
     fillDungeon();
+    state._roomWasDealt = (before <= 1 && state.dungeon.length > before);
+    state._skipFirstRoomCard = state._roomWasDealt && before === 1;
     return c;
+  }
+
+  function renderAfterAction() {
+    var animateRoom = !!state._roomWasDealt;
+    var skipFirst = !!state._skipFirstRoomCard;
+    state._roomWasDealt = false;
+    state._skipFirstRoomCard = false;
+    render();
+    if (animateRoom) animateRoomEntry(skipFirst);
+  }
+
+  function animateCardAction(cardEl, targetEl, className, done, icon) {
+    if (!cardEl) { done(); return; }
+    var a = cardEl.getBoundingClientRect();
+    var b = targetEl ? targetEl.getBoundingClientRect() : null;
+    var clone = cardEl.cloneNode(true);
+    clone.classList.add('action-clone', className);
+    clone.style.left = a.left + 'px';
+    clone.style.top = a.top + 'px';
+    clone.style.width = a.width + 'px';
+    clone.style.height = a.height + 'px';
+    if (b) {
+      var targetX = b.left + b.width / 2;
+      var targetY = b.top + b.height / 2;
+      if (className.indexOf('equip') !== -1) {
+        var slot = targetEl.parentElement;
+        var sr = slot ? slot.getBoundingClientRect() : b;
+        targetX = sr.left + sr.width / 2;
+        targetY = sr.top + sr.height / 2;
+      }
+      clone.style.setProperty('--dx', (targetX - (a.left + a.width/2)) + 'px');
+      clone.style.setProperty('--dy', (targetY - (a.top + a.height/2)) + 'px');
+      clone.style.setProperty('--hit-x', '0px');
+      clone.style.setProperty('--hit-y', '0px');
+    }
+    cardEl.classList.add('action-hidden');
+    document.body.appendChild(clone);
+    if (icon && b) {
+      setTimeout(function() {
+        var impact = document.createElement('div');
+        impact.className = 'action-impact' + (icon === '♥' ? ' heart-impact' : '');
+        impact.textContent = icon;
+        impact.style.left = (b.left + b.width/2) + 'px';
+        impact.style.top = (b.top + b.height/2) + 'px';
+        document.body.appendChild(impact);
+        setTimeout(function(){ impact.remove(); }, 280);
+      }, 230);
+    }
+    var duration = className.indexOf('discard') !== -1 ? 570 : (className.indexOf('equip') !== -1 ? 600 : 440);
+    setTimeout(function() { clone.remove(); cardEl.classList.remove('action-hidden'); done(); }, duration);
+  }
+
+  function animateRoomEntry(skipFirst) {
+    var cards = document.querySelectorAll('#dungeon .dungeon-card-wrap .card:not(.empty)');
+    var startIndex = skipFirst ? 1 : 0;
+    for (var i=startIndex; i<cards.length; i++) {
+      (function(card, index, sequence){
+        var rect = card.getBoundingClientRect();
+        var clone = card.cloneNode(true);
+        clone.style.left = rect.left + 'px'; clone.style.top = rect.top + 'px';
+        clone.style.width = rect.width + 'px'; clone.style.height = rect.height + 'px';
+        clone.style.setProperty('--dx', (window.innerWidth - rect.left + 40 + index*8) + 'px');
+        card.classList.add('action-hidden');
+        // Delay starting the animation itself, not just removing the clone.
+        // This makes each card actually arrive after the previous one.
+        var delay = sequence * 250;
+        setTimeout(function(){
+          clone.classList.add('action-clone','enter-clone');
+          document.body.appendChild(clone);
+          setTimeout(function(){ clone.remove(); card.classList.remove('action-hidden'); }, 700);
+        }, delay);
+      })(cards[i], i, i-startIndex);
+    }
+  }
+
+  function animateFlee(cards, done) {
+    if (!cards || !cards.length) { done(); return; }
+    var remaining = cards.length;
+    for (var i=0; i<cards.length; i++) {
+      var card = cards[i];
+      var rect = card.getBoundingClientRect();
+      var clone = card.cloneNode(true);
+      clone.classList.add('action-clone','flee-clone');
+      clone.style.left = rect.left + 'px'; clone.style.top = rect.top + 'px';
+      clone.style.width = rect.width + 'px'; clone.style.height = rect.height + 'px';
+      clone.style.setProperty('--dx', -(rect.left + rect.width + 80) + 'px');
+      clone.style.setProperty('--dy', ((i%2 ? -1 : 1) * (8 + i*3)) + 'px');
+      card.classList.add('action-hidden');
+      document.body.appendChild(clone);
+      setTimeout(function(c, el){ return function(){ c.remove(); el.classList.remove('action-hidden'); if (--remaining === 0) done(); }; }(clone,card), 440);
+    }
   }
 
   function equipWeapon(player) {
     if (state.over || state.selected === null) return;
     var c = state.dungeon[state.selected], p = state[player];
     if (p.hp <= 0) { log(name(player) + ' is Downed and cannot take weapons.'); return; }
+    var cardEl = document.querySelector('#dungeon .dungeon-card-wrap:nth-child(' + (state.selected + 1) + ') .card');
+    var targetEl = document.getElementById(player + 'Weapon');
     saveState();
     var old = p.weapon;
-    p.weapon = c;
-    p.ceiling = 14;
-    removeSelected();
-    log(name(player) + ' equips ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').' + (old ? ' (' + old.name + ' discarded)' : ''), true, 'weapon', player === 'p1' ? {p1:c.value,p2:null} : {p1:null,p2:c.value});
-    checkGame();
-    render();
+    animateCardAction(cardEl, targetEl, 'equip-clone', function() {
+      p.weapon = c; p.ceiling = 14; removeSelected();
+      log(name(player) + ' equips ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').' + (old ? ' (' + old.name + ' discarded)' : ''), true, 'weapon', player === 'p1' ? {p1:c.value,p2:null} : {p1:null,p2:c.value});
+      checkGame(); renderAfterAction();
+    });
   }
 
   function discardDungeonWeapon() {
     if (state.over || state.selected === null) return;
+    var cardEl = document.querySelector('#dungeon .dungeon-card-wrap:nth-child(' + (state.selected + 1) + ') .card');
     saveState();
-    var c = removeSelected();
-    log('Discarded weapon ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').');
-    checkGame();
-    render();
+    animateCardAction(cardEl, null, 'discard-clone', function() {
+      var c = removeSelected(); log('Discarded weapon ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').'); checkGame(); renderAfterAction();
+    });
   }
 
   function discardDungeonPotion() {
     if (state.over || state.selected === null) return;
+    var cardEl = document.querySelector('#dungeon .dungeon-card-wrap:nth-child(' + (state.selected + 1) + ') .card');
     saveState();
-    var c = removeSelected();
-    log('Discarded potion ' + c.name + ' (' + c.value + ' HP).');
-    checkGame();
-    render();
+    animateCardAction(cardEl, null, 'discard-clone', function() {
+      var c = removeSelected(); log('Discarded potion ' + c.name + ' (' + c.value + ' HP).'); checkGame(); renderAfterAction();
+    });
   }
 
   function drinkDirectPotion(target) {
     if (state.over || state.selected === null) return;
     var t = state[target];
+    var cardEl = document.querySelector('#dungeon .dungeon-card-wrap:nth-child(' + (state.selected + 1) + ') .card');
+    var targetEl = document.getElementById(target + 'Panel');
     saveState();
     var c = state.dungeon[state.selected];
-    var isDowned = t.hp === 0;
-
-    var amount = 0;
-    if (!t.consumedThisRoom) {
-      amount = isDowned ? Math.floor(c.value / 2) + 1 : c.value;
-      var actualHeal = Math.min(state.maxHP - t.hp, amount);
-      t.hp = Math.min(state.maxHP, t.hp + amount);
-      t.consumedThisRoom = true;
-      if (actualHeal > 0) {
-        state.foodConsumed += actualHeal;
-      }
-     
-      if (isDowned) {
-        log(name(target) + ' was revived by ' + c.name + ' with ' + amount + ' HP!', true, 'potion');
-      } else {
-        log(name(target) + ' consumes ' + c.name + ', restoring ' + amount + ' HP.', true, 'potion');
-      }
-    } else {
-      log(name(target) + ' consumed ' + c.name + ', but already used one this room (restored 0 HP).', true, 'potion');
-    }
-
-    removeSelected();
-    checkGame();
-    render();
+    animateCardAction(cardEl, targetEl, 'consume-clone', function() {
+      var isDowned = t.hp === 0; var amount = 0;
+      if (!t.consumedThisRoom) {
+        amount = isDowned ? Math.floor(c.value / 2) + 1 : c.value;
+        var actualHeal = Math.min(state.maxHP - t.hp, amount); t.hp = Math.min(state.maxHP, t.hp + amount); t.consumedThisRoom = true;
+        if (actualHeal > 0) state.foodConsumed += actualHeal;
+        if (isDowned) log(name(target) + ' was revived by ' + c.name + ' with ' + amount + ' HP!', true, 'potion');
+        else log(name(target) + ' consumes ' + c.name + ', restoring ' + amount + ' HP.', true, 'potion');
+      } else log(name(target) + ' consumed ' + c.name + ', but already used one this room (restored 0 HP).', true, 'potion');
+      removeSelected(); checkGame(); renderAfterAction();
+    }, '♥');
   }
 
   function validWeapon(p, c) { return p.weapon && p.ceiling !== null && c.value <= p.ceiling; }
@@ -987,10 +1177,75 @@
     state.weaponUsage[weaponName].ptsSlain += monsterValue;
   }
 
+  function animateAttack(player, targetEl, done, isFistFight) {
+    if (!targetEl) { done(); return; }
+
+    var sourceEl = null;
+    var sourceRect;
+    var targetRect;
+    var clone;
+
+    if (isFistFight) {
+      // Bare-handed combat: the monster itself lunges up at the player.
+      sourceEl = targetEl;
+      targetRect = (player === 'both'
+        ? document.getElementById('p1Panel').getBoundingClientRect()
+        : document.getElementById(player + 'Panel').getBoundingClientRect());
+    } else if (player === 'p1' || player === 'p2') {
+      // Weapon combat: the player's weapon card lunges down at the monster.
+      sourceEl = document.querySelector('#' + player + 'Weapon .card');
+      targetRect = targetEl.getBoundingClientRect();
+    }
+
+    if (!sourceEl) { done(); return; }
+
+    sourceRect = sourceEl.getBoundingClientRect();
+    var sourceX = sourceRect.left + sourceRect.width / 2;
+    var sourceY = sourceRect.top + sourceRect.height / 2;
+    var targetX = targetRect.left + targetRect.width / 2;
+    var targetY = targetRect.top + targetRect.height / 2;
+
+    clone = sourceEl.cloneNode(true);
+    clone.classList.add('combat-clone');
+    if (isFistFight) clone.classList.add('combat-monster');
+    clone.style.left = sourceRect.left + 'px';
+    clone.style.top = sourceRect.top + 'px';
+    clone.style.width = sourceRect.width + 'px';
+    clone.style.height = sourceRect.height + 'px';
+    clone.style.setProperty('--dx', (targetX - sourceX) + 'px');
+    clone.style.setProperty('--dy', (targetY - sourceY) + 'px');
+    clone.style.setProperty('--hit-x', isFistFight ? '-5px' : '5px');
+    clone.style.setProperty('--hit-y', isFistFight ? '3px' : '-3px');
+
+    // Hide the real card while its animated copy is moving, so there is only one card on screen.
+    sourceEl.classList.add('combat-hidden');
+    document.body.appendChild(clone);
+
+    setTimeout(function() {
+      document.getElementById('game').classList.add('combat-shake');
+      var impact = document.createElement('div');
+      impact.className = 'combat-impact';
+      impact.textContent = isFistFight ? '💥' : '⚔';
+      impact.style.left = targetX + 'px';
+      impact.style.top = targetY + 'px';
+      document.body.appendChild(impact);
+      setTimeout(function() { impact.remove(); }, 280);
+      setTimeout(function() { document.getElementById('game').classList.remove('combat-shake'); }, 160);
+    }, 210);
+
+    setTimeout(function() {
+      clone.remove();
+      sourceEl.classList.remove('combat-hidden');
+      done();
+    }, 430);
+  }
+
   function fight(player, mode) {
     if (state.over || state.selected === null) return;
     var c = state.dungeon[state.selected];
     if (['spades','clubs'].indexOf(c.suit) === -1) return;
+
+    var targetEl = document.querySelector('#dungeon .dungeon-card-wrap:nth-child(' + (state.selected + 1) + ') .card');
 
     if (player === 'both') {
       var a = state.p1, b = state.p2;
@@ -999,31 +1254,36 @@
 
       if (mode === 'combined_bare') {
         saveState();
-        var totalDamage = c.value;
-        applySharedDamage(totalDamage, 'p1');
-        state.combinedUsedThisRoom = true;
-        state.monstersSlain++;
-        trackWeaponKill('Bare Fists', c.value);
-        removeSelected();
-        log('Both heroes team up vs ' + c.name + '. Took ' + totalDamage + ' damage split between them.', true, 'monster');
+        animateAttack('both', targetEl, function() {
+          var totalDamage = c.value;
+          applySharedDamage(totalDamage, 'p1');
+          state.combinedUsedThisRoom = true;
+          state.monstersSlain++;
+          trackWeaponKill('Bare Fists', c.value);
+          removeSelected();
+          log('Both heroes team up vs ' + c.name + '. Took ' + totalDamage + ' damage split between them.', true, 'monster');
+          checkGame();
+          renderAfterAction();
+        }, true);
       } else {
         if (!a.weapon || !b.weapon || a.ceiling === null || b.ceiling === null || c.value > (a.ceiling + b.ceiling)) { log('Cannot combine weapons.'); return; }
         saveState();
-        var power = a.weapon.value + b.weapon.value;
-        var damage = Math.max(0, c.value - power);
-       
-        applySharedDamage(damage, 'p1');
-        var targetCeiling = Math.floor(c.value / 2);
-        a.ceiling = Math.min(a.ceiling, targetCeiling);
-        b.ceiling = Math.min(b.ceiling, targetCeiling);
-        state.combinedUsedThisRoom = true;
-        state.monstersSlain++;
-
-        trackWeaponKill(a.weapon.name, Math.floor(c.value / 2));
-        trackWeaponKill(b.weapon.name, Math.ceil(c.value / 2));
-       
-        removeSelected();
-        log('Combined weapons (' + power + ' pwr) vs ' + c.name + '. Taken ' + damage + ' damage.', true, 'monster');
+        animateAttack('p1', targetEl, function() {
+          var power = a.weapon.value + b.weapon.value;
+          var damage = Math.max(0, c.value - power);
+          applySharedDamage(damage, 'p1');
+          var targetCeiling = Math.floor(c.value / 2);
+          a.ceiling = Math.min(a.ceiling, targetCeiling);
+          b.ceiling = Math.min(b.ceiling, targetCeiling);
+          state.combinedUsedThisRoom = true;
+          state.monstersSlain++;
+          trackWeaponKill(a.weapon.name, Math.floor(c.value / 2));
+          trackWeaponKill(b.weapon.name, Math.ceil(c.value / 2));
+          removeSelected();
+          log('Combined weapons (' + power + ' pwr) vs ' + c.name + '. Taken ' + damage + ' damage.', true, 'monster');
+          checkGame();
+          renderAfterAction();
+        });
       }
     } else {
       var p = state[player];
@@ -1032,26 +1292,30 @@
 
       if (mode === 'weapon') {
         if (!validWeapon(p, c)) { log('Monster value exceeds weapon ceiling.'); return; }
-        saveState();
-        damage = Math.max(0, c.value - p.weapon.value);
-        p.ceiling = Math.min(p.ceiling, c.value);
-        trackWeaponKill(p.weapon.name, c.value);
-      } else {
-        saveState();
-        trackWeaponKill('Bare Fists', c.value);
       }
-     
-      p.hp = Math.max(0, p.hp - damage);
-      state.monstersSlain++;
-      if (mode === 'weapon') {
-        log(name(player) + ' uses ' + p.weapon.name + ' vs ' + c.name + '. Damage taken: ' + damage + '.', true, 'monster');
-      } else {
-        log(name(player) + ' enters Fist Fight with ' + c.name + ' and takes ' + damage + ' damage.', true, 'monster');
-      }
-      removeSelected();
+
+      saveState();
+      animateAttack(player, targetEl, function() {
+        if (mode === 'weapon') {
+          damage = Math.max(0, c.value - p.weapon.value);
+          p.ceiling = Math.min(p.ceiling, c.value);
+          trackWeaponKill(p.weapon.name, c.value);
+        } else {
+          trackWeaponKill('Bare Fists', c.value);
+        }
+
+        p.hp = Math.max(0, p.hp - damage);
+        state.monstersSlain++;
+        if (mode === 'weapon') {
+          log(name(player) + ' uses ' + p.weapon.name + ' vs ' + c.name + '. Damage taken: ' + damage + '.', true, 'monster');
+        } else {
+          log(name(player) + ' enters Fist Fight with ' + c.name + ' and takes ' + damage + ' damage.', true, 'monster');
+        }
+        removeSelected();
+        checkGame();
+        renderAfterAction();
+      }, mode !== 'weapon');
     }
-    checkGame();
-    render();
   }
 
   function applySharedDamage(damage, acting) {
