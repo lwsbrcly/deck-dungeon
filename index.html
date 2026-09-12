@@ -137,7 +137,7 @@
       width: 52%;
       height: 52%;
       pointer-events: none;
-      opacity: 0.85;
+      opacity: 0.95;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -296,8 +296,8 @@
       <label for="modeSelect">Game Mode</label>
       <select id="modeSelect" onchange="toggleModeInputs()">
         <option value="solo">Solitaire (1 Player)</option>
-        <option value="coop">Co-op (2 Players Hardcore)</option>
-        <option value="solo_dagger">Solitaire (Starter Dagger)</option>
+        <option value="coop">Co-op (2 Players)</option>
+        <option value="solo_dagger">Starter Dagger (1 Player)</option>
       </select>
     </div>
     
@@ -416,7 +416,7 @@
     </div>
 
     <div class="run-chart">
-      <div class="run-chart-title"><strong>Run History</strong><span>health over event order</span></div>
+      <div class="run-chart-title"><strong>Run History</strong><span>HP over time</span></div>
       <div id="runChart" aria-label="Run history chart"></div>
       <div id="runChartLegend" class="run-chart-legend" aria-label="Run history legend"></div>
     </div>
@@ -661,9 +661,9 @@
       '<p style="margin-bottom: 8px;">Survive the dungeon by clearing ALL cards in the deck! Finishing with remaining HP gives a positive score, while dying results in a negative score equal to remaining monster health.</p>' +
       '<h3>Card Types</h3>' +
       '<ul>' +
-        '<li><strong>♠ Clubs & Spades (Monsters):</strong> Deal damage equal to their value. Fight bare-handed or absorb damage with a weapon.</li>' +
-        '<li><strong>♦ Diamonds (Weapons):</strong> Equip to reduce monster damage. Weapons break down over time—they can only strike monsters equal to or weaker than the last monster slain.</li>' +
-        '<li><strong>♥ Hearts (Potions):</strong> Restore HP equal to their card value (capped at your max HP). Only 1 potion provides healing per room (extra potions can be discarded or consumed for 0 HP)!</li>' +
+        '<li><strong>♠ Clubs & Spades (Monsters):</strong> Deal damage equal to their value minus your equipped weapon''s attack.</li>' +
+        '<li><strong>♦ Diamonds (Weapons):</strong> Weapons wear down over time — they can only strike monsters less than or equal to the previous monster.</li>' +
+        '<li><strong>♥ Hearts (Consumables):</strong> Restore HP equal to their card value (capped at your max HP). Only 1 heal per room (extra will be consumed for 0 HP)!</li>' +
       '</ul>' +
       '<h3>Room Mechanics</h3>' +
       '<ul>' +
@@ -703,7 +703,7 @@
           '<h3>Solitaire Rules</h3>' +
           '<ul>' +
             '<li><strong>HP Limit:</strong> Start with 20 HP.</li>' +
-            '<li>Manage your weapons carefully and save high-value potions for when you take massive hits!</li>' +
+            '<li>Manage your weapons carefully! Sometimes a fist fight followed by food is better than dulling your blade!</li>' +
           '</ul>';
       }
     }
@@ -969,7 +969,7 @@
         log(name(target) + ' consumes ' + c.name + ', restoring ' + amount + ' HP.', true, 'potion');
       }
     } else {
-      log(name(target) + ' consumed ' + c.name + ', but already used a potion this room (restored 0 HP).', true, 'potion');
+      log(name(target) + ' consumed ' + c.name + ', but already used one this room (restored 0 HP).', true, 'potion');
     }
 
     removeSelected();
@@ -1105,7 +1105,7 @@
       } else {
         title = 'You Have Fallen';
         score = -monsterSum;
-        text = 'The dungeon overcame your expedition.';
+        text = 'The dungeon has beaten you this time, Adventurer.';
         scoreBanner.className = 'score-banner negative';
         scoreBanner.textContent = 'SCORE: ' + score;
       }
@@ -1375,7 +1375,7 @@
       if (!isSolo) legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-line p2"></span>' + xmlEscape(state.p2Name || 'Player 2') + '</span>';
       legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot monster"></span>Monster fight</span>';
       legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot weapon"></span>Weapon equipped</span>';
-      legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot potion"></span>Potion drank</span>';
+      legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot potion"></span>HP restored</span>';
       legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot flee"></span>Room fled</span>';
       legend.innerHTML = legendHtml;
     }
