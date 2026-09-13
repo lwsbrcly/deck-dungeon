@@ -243,10 +243,10 @@
     /* SVG Custom Artwork Styling */
     .card-art {
       position: absolute;
-      top: 54%;
+      top: 58%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 52%;
+      width: 58%;
       height: 52%;
       pointer-events: none;
       opacity: 0.95;
@@ -263,7 +263,7 @@
     .card-title { 
       font-size: 0.55rem; 
       text-align: center; 
-      line-height: 1.05; 
+      line-height: 1.04; 
       width: 100%;
       white-space: normal;
       overflow: hidden;
@@ -400,7 +400,7 @@
 <div class="container">
   <header>
     <h1>DECK DUNGEON</h1>
-    <span class="version-label">v1.22</span>
+    <span class="version-label">v1.23</span>
   </header>
 
   <!-- Setup Screen -->
@@ -408,9 +408,8 @@
     <div class="form-group">
       <label for="modeSelect">Game Mode</label>
       <select id="modeSelect" onchange="toggleModeInputs()">
-        <option value="solo">Solitaire (1 Player)</option>
+        <option value="solo_dagger">Solitaire (1 Player)</option>
         <option value="coop">Co-op (2 Players)</option>
-        <option value="solo_dagger">Starter Dagger (1 Player)</option>
       </select>
     </div>
     
@@ -525,7 +524,7 @@
       <div class="summary-row"><span>Monsters Slain:</span> <strong id="summarySlain">0 / 26</strong></div>
       <div class="summary-row"><span>Rooms Cleared:</span> <strong id="summaryRooms">0 / 14</strong></div>
       <div class="summary-row"><span>Best Weapon:</span> <strong id="summaryFavWeapon">Bare Fists (0 damage dealt)</strong></div>
-      <div class="summary-row"><span>Food Consumed:</span> <strong id="summaryFood">0 / 54 HP</strong></div>
+      <div class="summary-row"><span>HP restored:</span> <strong id="summaryFood">0 / 54 HP</strong></div>
     </div>
 
     <div class="run-chart">
@@ -771,7 +770,7 @@
     var setupRules = document.getElementById('setupRulesText');
 
     var baseRules = '<h3>Goal of the Game</h3>' +
-      '<p style="margin-bottom: 8px;">Survive the dungeon by clearing ALL cards in the deck! Finishing with remaining HP gives a positive score, while dying results in a negative score equal to remaining monster health.</p>' +
+      '<p style="margin-bottom: 8px;">Survive the dungeon by clearing ALL cards in the deck! Final score = player HP minus remaining monster health.</p>' +
       '<h3>Card Types</h3>' +
       '<ul>' +
         '<li><strong>♠ Clubs & Spades (Monsters):</strong> Deal damage equal to their value minus your equipped weapons attack.</li>' +
@@ -780,7 +779,7 @@
       '</ul>' +
       '<h3>Room Mechanics</h3>' +
       '<ul>' +
-        '<li><strong>Clear Room:</strong> Clear 3 cards to deal the next 3 from the deck.</li>' +
+        '<li><strong>To Clear:</strong> Action 3 cards to move to next room.</li>' +
         '<li><strong>Fleeing:</strong> Press <em>Flee</em> to skip a dangerous room. The next room is dealt immediately, and the fled cards are shuffled back into the deck. You cannot flee twice in a row!</li>' +
       '</ul>';
 
