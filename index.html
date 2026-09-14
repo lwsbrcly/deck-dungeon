@@ -93,7 +93,6 @@
       text-align: center; 
     }
     .slot-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
-    .slot-meta { font-size: 0.75rem; margin-top: 4px; color: var(--text); font-weight: 500; }
 
     /* Dungeon & Cards */
     .dungeon-section { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
@@ -388,7 +387,7 @@
     .run-chart-legend-line.p2 { border-top-style: dashed; opacity: 0.72; }
     .run-chart-legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; border: 1px solid var(--bg); }
     .run-chart-legend-dot.monster { background: #e55555; }
-    .run-chart-legend-dot.fist { background: #e55555; }
+    .run-chart-legend-dot.fist { background: #429AFF; }
     .run-chart-legend-dot.weapon { background: var(--gold); }
     .run-chart-legend-dot.potion { background: #47d16c; }
     .run-chart-legend-dot.flee { background: #6f8ea8; }
@@ -401,12 +400,12 @@
     .run-chart .weapon-line { fill: none; stroke: var(--gold); stroke-width: 2.2; stroke-dasharray: 5 3; }
     .run-chart .event-dot { stroke: var(--bg); stroke-width: 1.5; }
     .run-chart .event-dot.monster { fill: #e55555; }
-    .run-chart .event-dot.fist { fill: #e55555; }
+    .run-chart .event-dot.fist { fill: #429AFF; }
     .run-chart .event-dot.weapon { fill: var(--gold); }
     .run-chart .event-dot.potion { fill: #47d16c; }
     .run-chart .event-dot.flee { fill: #6f8ea8; }
-    .run-chart .event-dot.other { fill: #8d8d99; }
-    .run-chart .event-dot.alt { opacity: 0.55; }
+    .run-chart .event-dot.other { fill: #c0c0c0; }
+    .run-chart .event-dot.alt { opacity: 0.75; }
     .run-chart .weapon-equip-dot { fill: var(--gold); stroke: #fff; stroke-width: 1.2; }
     .run-chart .legend { font-size: 10px; fill: var(--muted); }
     .run-chart .legend-line { stroke-width: 2; }
@@ -475,7 +474,6 @@
         <div class="slot">
           <div class="slot-label">Weapon</div>
           <div id="p1Weapon" style="width: 100%; display: flex; justify-content: center;"></div>
-          <div class="slot-meta" id="p1WeaponMeta">Empty</div>
         </div>
       </div>
 
@@ -493,7 +491,6 @@
         <div class="slot">
           <div class="slot-label">Weapon</div>
           <div id="p2Weapon" style="width: 100%; display: flex; justify-content: center;"></div>
-          <div class="slot-meta" id="p2WeaponMeta">Empty</div>
         </div>
       </div>
     </div>
@@ -551,9 +548,9 @@
     <div class="summary-grid">
       <div class="summary-row"><span>Monsters Slain:</span> <strong id="summarySlain">0 / 26</strong></div>
       <div class="summary-row"><span>Rooms Cleared:</span> <strong id="summaryRooms">0 / 14</strong></div>
-      <div class="summary-row"><span>Rooms Fled:</span> <strong id="summaryFled">0</strong></div>
       <div class="summary-row"><span>Best Weapon:</span> <strong id="summaryFavWeapon">Bare Fists (0 damage dealt)</strong></div>
-      <div class="summary-row"><span>HP Restored:</span> <strong id="summaryFood">0 / 54 HP</strong></div>
+      <div class="summary-row"><span>HP Restored:</span> <strong id="summaryFood">0 / 54</strong></div>
+      <div class="summary-row"><span>Flee Count:</span> <strong id="summaryFled">0</strong></div>
     </div>
 
     <div class="run-chart">
@@ -799,17 +796,17 @@
     var setupRules = document.getElementById('setupRulesText');
 
     var baseRules = '<h3>Goal of the Game</h3>' +
-      '<p style="margin-bottom: 8px;">Survive the dungeon by clearing ALL cards in the deck! Finishing with remaining HP gives a positive score, while dying results in a negative score equal to remaining monster health.</p>' +
+      '<p style="margin-bottom: 8px;">Escape the dungeon by clearing ALL cards in the deck! Final Score = Your remaining HP minus remaining monster health.</p>' +
       '<h3>Card Types</h3>' +
       '<ul>' +
-        '<li><strong>♠ Clubs & Spades (Monsters):</strong> Deal damage equal to their value minus your equipped weapons attack.</li>' +
-        '<li><strong>♦ Diamonds (Weapons):</strong> Weapons wear down over time — they can only strike monsters less than or equal to the previous monster.</li>' +
-        '<li><strong>♥ Hearts (Consumables):</strong> Restore HP equal to their card value (capped at your max HP). Only 1 heal per room (extra will be consumed for 0 HP)!</li>' +
+        '<li><strong>♠ Clubs & Spades (Monsters):</strong> Deal damage equal to their value (2 to 14).</li>' +
+        '<li><strong>♦ Diamonds (Weapons):</strong> Wear down over time — only effective against monsters less than or equal to the previous monster.</li>' +
+        '<li><strong>♥ Hearts (Consumables):</strong> Restore lost HP. Only 1 heal per room allowed!</li>' +
       '</ul>' +
       '<h3>Room Mechanics</h3>' +
       '<ul>' +
-        '<li><strong>Clear Room:</strong> Clear 3 cards to deal the next 3 from the deck.</li>' +
-        '<li><strong>Fleeing:</strong> Press <em>Flee</em> to skip a dangerous room. The next room is dealt immediately, and the fled cards are shuffled back into the deck. You cannot flee twice in a row!</li>' +
+        '<li><strong>Clear Room:</strong> Action 3 cards to move on.</li>' +
+        '<li><strong>Fleeing:</strong> Press <em>Flee</em> to skip a room until later. You cannot flee twice in a row!</li>' +
       '</ul>';
 
     if (mode === 'coop') {
@@ -822,7 +819,7 @@
             '<li><strong>HP Limit:</strong> Both heroes start with 10 HP.</li>' +
             '<li><strong>Starting Weapons:</strong> Both heroes begin with a <strong>2♦ Dagger</strong> equipped.</li>' +
             '<li><strong>2v1 Attacks:</strong> Team up with weapons or fists against a monster to split incoming damage evenly.</li>' +
-            '<li><strong>Revives:</strong> Use a potion on a downed ally to revive them with (Potion Value / 2) + 1 HP.</li>' +
+            '<li><strong>Revives:</strong> Revive a downed ally with (Card Value / 2) + 1 HP.</li>' +
           '</ul>';
       }
     } else if (mode === 'solo_dagger') {
@@ -891,7 +888,7 @@
     var p2Name = p2Val || 'Player 2';
     var maxHP = mode === 'coop' ? 10 : 20;
     
-    var isDaggerMode = mode !== 'coop';
+    var isDaggerMode = true; //mode !== 'coop';
     var initialDeck = makeDeck(isDaggerMode);
    
     historyStack = [];
@@ -961,7 +958,7 @@
     }
    
     fillDungeon(); 
-    log('A new ' + (mode === 'coop' ? 'co-op' : 'starter dagger') + ' run begins.'); 
+    log('A new ' + (mode === 'coop' ? 'co-op' : 'solo') + ' run begins.',false); 
     if (isDaggerMode) {
       log(p1Name + ' steps into the dungeon wielding a Dagger (2♦).');
     } else if (mode === 'coop') {
@@ -1262,7 +1259,7 @@
     var cardEl = document.querySelector('#dungeon .dungeon-card-wrap:nth-child(' + (state.selected + 1) + ') .card');
     saveState();
     animateCardAction(cardEl, null, 'discard-clone', function() {
-      var c = removeSelected(); log('Discarded weapon ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').'); checkGame(); renderAfterAction();
+      var c = removeSelected(); log('Discarded the ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').'); checkGame(); renderAfterAction();
     });
   }
 
@@ -1271,7 +1268,7 @@
     var cardEl = document.querySelector('#dungeon .dungeon-card-wrap:nth-child(' + (state.selected + 1) + ') .card');
     saveState();
     animateCardAction(cardEl, null, 'discard-clone', function() {
-      var c = removeSelected(); log('Discarded potion ' + c.name + ' (' + c.value + ' HP).'); checkGame(); renderAfterAction();
+      var c = removeSelected(); log('Discarded the ' + c.name + ' (' + c.value + ' HP).'); checkGame(); renderAfterAction();
     });
   }
 
@@ -1290,7 +1287,7 @@
         if (actualHeal > 0) state.foodConsumed += actualHeal;
         if (isDowned) log(name(target) + ' was revived by ' + c.name + ' with ' + amount + ' HP!', true, 'potion');
         else log(name(target) + ' consumes ' + c.name + ', restoring ' + amount + ' HP.', true, 'potion');
-      } else log(name(target) + ' consumed ' + c.name + ', but already used one this room (restored 0 HP).', true, 'potion');
+      } else log(name(target) + ' consumed ' + c.name + ', but to no effect.', false, 'potion');
       removeSelected(); checkGame(); renderAfterAction();
     }, '♥');
   }
@@ -1408,7 +1405,7 @@
           trackWeaponKill(a.weapon.name, Math.floor(c.value / 2));
           trackWeaponKill(b.weapon.name, Math.ceil(c.value / 2));
           removeSelected();
-          log('Combined weapons (' + power + ' pwr) vs ' + c.name + '. Taken ' + damage + ' damage.', true, 'weapon');
+          log('Combined weapons (' + power + ' pwr) vs ' + c.name + '. Taken ' + damage + ' damage.', true, 'monster');
           checkGame();
           renderAfterAction();
         });
@@ -1435,7 +1432,7 @@
         p.hp = Math.max(0, p.hp - damage);
         state.monstersSlain++;
         if (mode === 'weapon') {
-          log(name(player) + ' uses ' + p.weapon.name + ' vs ' + c.name + '. Damage taken: ' + damage + '.', true, 'weapon');
+          log(name(player) + ' uses ' + p.weapon.name + ' vs ' + c.name + '. Damage taken: ' + damage + '.', true, 'monster');
         } else {
           log(name(player) + ' enters Fist Fight with ' + c.name + ' and takes ' + damage + ' damage.', true, 'fist');
         }
@@ -1726,13 +1723,13 @@
     var parts = [];
     parts.push('<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Run log">');
     parts.push('<line class="grid-line" x1="' + left + '" y1="' + hpY(maxHP) + '" x2="' + (W-right) + '" y2="' + hpY(maxHP) + '"/>');
-    parts.push('<line class="grid-line" x1="' + left + '" y1="' + hpY(maxHP/2) + '" x2="' + (W-right) + '" y2="' + hpY(maxHP/2) + '"/>');
+    //parts.push('<line class="grid-line" x1="' + left + '" y1="' + hpY(maxHP/2) + '" x2="' + (W-right) + '" y2="' + hpY(maxHP/2) + '"/>');
     parts.push('<line class="grid-line" x1="' + left + '" y1="' + hpY(0) + '" x2="' + (W-right) + '" y2="' + hpY(0) + '"/>');
     parts.push('<line class="axis-line" x1="' + left + '" y1="' + top + '" x2="' + left + '" y2="' + bottom + '"/>');
     parts.push('<line class="axis-line" x1="' + left + '" y1="' + bottom + '" x2="' + (W-right) + '" y2="' + bottom + '"/>');
-    parts.push('<text class="panel-label" x="' + left + '" y="13">Health</text>');
+    //parts.push('<text class="panel-label" x="' + left + '" y="13">Health</text>');
     parts.push('<text class="axis-label" text-anchor="end" x="' + (left-7) + '" y="' + (hpY(maxHP)+4) + '">' + maxHP + '</text>');
-    parts.push('<text class="axis-label" text-anchor="end" x="' + (left-7) + '" y="' + (hpY(maxHP/2)+4) + '">' + Math.round(maxHP/2) + '</text>');
+    //parts.push('<text class="axis-label" text-anchor="end" x="' + (left-7) + '" y="' + (hpY(maxHP/2)+4) + '">' + Math.round(maxHP/2) + '</text>');
     parts.push('<text class="axis-label" text-anchor="end" x="' + (left-7) + '" y="' + (hpY(0)+4) + '">0</text>');
 
     var p1HpPoints = events.map(function(e,i){ return x(i)+','+hpY(e.p1hp); }).join(' ');
@@ -1743,10 +1740,10 @@
     }
 
     events.forEach(function(e,i){
-      var cls = ['weapon','fist','potion','flee'].indexOf(e.type) >= 0 ? e.type : 'other';
+      var cls = ['weapon','monster','fist','potion','flee'].indexOf(e.type) >= 0 ? e.type : 'other';
       var py = hpY(e.p1hp);
       var title = 'Event ' + (i+1) + ': ' + e.text;
-      parts.push('<circle class="event-dot ' + cls + '" cx="' + x(i) + '" cy="' + py + '" r="4.5"><title>' + xmlEscape(title) + '</title></circle>');
+      parts.push('<circle class="event-dot ' + cls + '" cx="' + x(i) + '" cy="' + py + '" r="6"><title>' + xmlEscape(title) + '</title></circle>');
       if (!isSolo && e.p2hp != null) {
         parts.push('<circle class="event-dot ' + cls + ' alt" cx="' + x(i) + '" cy="' + hpY(e.p2hp) + '" r="3.7"><title>' + xmlEscape(title) + '</title></circle>');
       }
@@ -1759,7 +1756,7 @@
       parts.push('<line class="axis-line" x1="' + x(i) + '" y1="' + bottom + '" x2="' + x(i) + '" y2="' + (bottom+4) + '"/>');
       parts.push('<text class="axis-label" text-anchor="middle" x="' + x(i) + '" y="' + (bottom+17) + '">' + (i+1) + '</text>');
     });
-    parts.push('<text class="axis-label" text-anchor="middle" x="' + (W/2) + '" y="' + (H-5) + '">Event order</text>');
+    //parts.push('<text class="axis-label" text-anchor="middle" x="' + (W/2) + '" y="' + (H-5) + '">Event order</text>');
     parts.push('</svg>');
     target.innerHTML = parts.join('');
 
