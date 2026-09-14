@@ -436,7 +436,7 @@
     <div class="form-group">
       <label for="modeSelect">Game Mode</label>
       <select id="modeSelect" onchange="toggleModeInputs()">
-        <option value="solo_dagger">Starter Dagger (1 Player)</option>
+        <option value="solo_dagger">Solitaire (1 Player)</option>
         <option value="coop">Co-op (2 Players)</option>
       </select>
     </div>
@@ -553,7 +553,7 @@
       <div class="summary-row"><span>Rooms Cleared:</span> <strong id="summaryRooms">0 / 14</strong></div>
       <div class="summary-row"><span>Rooms Fled:</span> <strong id="summaryFled">0</strong></div>
       <div class="summary-row"><span>Best Weapon:</span> <strong id="summaryFavWeapon">Bare Fists (0 damage dealt)</strong></div>
-      <div class="summary-row"><span>Food Consumed:</span> <strong id="summaryFood">0 / 54 HP</strong></div>
+      <div class="summary-row"><span>HP Restored:</span> <strong id="summaryFood">0 / 54 HP</strong></div>
     </div>
 
     <div class="run-chart">
@@ -1724,7 +1724,7 @@
     var hpY = function(v) { return bottom - (Math.max(0, Math.min(maxHP, v)) / maxHP) * hpH; };
 
     var parts = [];
-    parts.push('<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Run health history over event order">');
+    parts.push('<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Run log">');
     parts.push('<line class="grid-line" x1="' + left + '" y1="' + hpY(maxHP) + '" x2="' + (W-right) + '" y2="' + hpY(maxHP) + '"/>');
     parts.push('<line class="grid-line" x1="' + left + '" y1="' + hpY(maxHP/2) + '" x2="' + (W-right) + '" y2="' + hpY(maxHP/2) + '"/>');
     parts.push('<line class="grid-line" x1="' + left + '" y1="' + hpY(0) + '" x2="' + (W-right) + '" y2="' + hpY(0) + '"/>');
