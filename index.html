@@ -427,7 +427,7 @@
 <div class="container">
   <header>
     <h1>DECK DUNGEON</h1>
-    <span class="version-label">v1.29</span>
+    <span class="version-label">v1.30</span>
   </header>
 
   <!-- Setup Screen -->
@@ -1017,7 +1017,7 @@
     state.selected = null;
     state.justFled = true;
     state.roomsFled++;
-    log('Fled the room', true, 'flee');
+    log('Fled the room.', true, 'flee');
     checkGame();
     // Flee animation is purely visual; deal the new room after the old cards leave.
     animateFlee(oldCardEls).then(function() {
