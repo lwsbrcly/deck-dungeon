@@ -35,7 +35,8 @@
     }
     
     .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 10px; }
-    header { text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    header { position: relative; text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .version-label { position: absolute; right: 2px; top: 2px; font-size: 0.62rem; color: var(--muted); font-weight: normal; letter-spacing: 0.2px; }
     h1 { font-size: 1.5rem; color: #fff; letter-spacing: 1px; }
 
     /* Setup Screen */
@@ -131,11 +132,37 @@
       transform-origin: center center;
       will-change: transform, opacity;
     }
-    .equip-clone { animation: equip-card 200ms cubic-bezier(.2,.8,.25,1) forwards; }
+    .equip-clone { animation: equip-card 650ms cubic-bezier(.18,.92,.22,1) forwards; }
     @keyframes equip-card {
-      0% { transform: translate3d(0,0,0) scale(1); opacity: 1; }
-      78% { transform: translate3d(var(--dx),var(--dy),0) scale(1.15); opacity: 1; }
-      100% { transform: translate3d(var(--dx),var(--dy),0) scale(1.25); opacity: 1; }
+      /* Lift it right off the table. */
+      0%   { transform: translate3d(0,0,0) scale(1) rotate(0deg); opacity: 1; }
+      18%  { transform: translate3d(0,-68px,0) scale(1.34) rotate(-3deg); opacity: 1; }
+      /* Hold in the air so the player gets a clear look at the weapon. */
+      40%  { transform: translate3d(var(--dx),calc(var(--dy) - 42px),0) scale(1.34) rotate(2deg); opacity: 1; }
+      51%  { transform: translate3d(var(--dx),calc(var(--dy) - 42px),0) scale(1.34) rotate(0deg); opacity: 1; }
+      /* Then drop hard into the slot. */
+      62%  { transform: translate3d(var(--dx),var(--dy),0) scale(.88) rotate(0deg); opacity: 1; }
+      69%  { transform: translate3d(var(--dx),var(--dy),0) scale(1.10) rotate(0deg); opacity: 1; }
+      78%  { transform: translate3d(var(--dx),var(--dy),0) scale(.97) rotate(0deg); opacity: 1; }
+      88%  { transform: translate3d(var(--dx),var(--dy),0) scale(1.025) rotate(0deg); opacity: 1; }
+      100% { transform: translate3d(var(--dx),var(--dy),0) scale(1) rotate(0deg); opacity: 1; }
+    }
+    .equip-sparks {
+      position: fixed; z-index: 1002; pointer-events: none;
+      width: 1px; height: 1px;
+      animation: equip-sparks 300ms ease-out forwards;
+    }
+    .equip-sparks::before, .equip-sparks::after {
+      content: '✦'; position: absolute; left: 0; top: 0;
+      font-size: 1.05rem; font-weight: 900; color: var(--gold);
+      text-shadow: 0 0 7px rgba(241,196,15,.8);
+    }
+    .equip-sparks::before { transform: translate(-21px,-9px) scale(.8); }
+    .equip-sparks::after { transform: translate(15px,7px) scale(.65); }
+    @keyframes equip-sparks {
+      0% { opacity: 0; }
+      18% { opacity: 1; }
+      100% { opacity: 0; }
     }
     .consume-clone { animation: consume-card 420ms cubic-bezier(.22,.8,.25,1) forwards; }
     @keyframes consume-card {
@@ -155,7 +182,15 @@
       0% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 1; }
       100% { transform: translate3d(var(--dx),var(--dy),0) rotate(-8deg) scale(.92); opacity: 0; }
     }
-    .enter-clone { animation: enter-card 700ms cubic-bezier(.2,.8,.25,1) forwards; }
+    .enter-prep {
+      opacity: 0 !important;
+      transform: translate3d(var(--dx),0,0) rotate(7deg) scale(.94) !important;
+      pointer-events: none !important;
+    }
+    .enter-card {
+      animation: enter-card 700ms cubic-bezier(.2,.8,.25,1) forwards;
+      will-change: transform, opacity;
+    }
     @keyframes enter-card {
       0% { transform: translate3d(var(--dx),0,0) rotate(7deg) scale(.94); opacity: 0; }
       65% { transform: translate3d(-8px,0,0) rotate(-1deg) scale(1.01); opacity: 1; }
@@ -353,6 +388,7 @@
     .run-chart-legend-line.p2 { border-top-style: dashed; opacity: 0.72; }
     .run-chart-legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; border: 1px solid var(--bg); }
     .run-chart-legend-dot.monster { background: #e55555; }
+    .run-chart-legend-dot.fist { background: #e55555; }
     .run-chart-legend-dot.weapon { background: var(--gold); }
     .run-chart-legend-dot.potion { background: #47d16c; }
     .run-chart-legend-dot.flee { background: #6f8ea8; }
@@ -365,6 +401,7 @@
     .run-chart .weapon-line { fill: none; stroke: var(--gold); stroke-width: 2.2; stroke-dasharray: 5 3; }
     .run-chart .event-dot { stroke: var(--bg); stroke-width: 1.5; }
     .run-chart .event-dot.monster { fill: #e55555; }
+    .run-chart .event-dot.fist { fill: #e55555; }
     .run-chart .event-dot.weapon { fill: var(--gold); }
     .run-chart .event-dot.potion { fill: #47d16c; }
     .run-chart .event-dot.flee { fill: #6f8ea8; }
@@ -391,6 +428,7 @@
 <div class="container">
   <header>
     <h1>DECK DUNGEON</h1>
+    <span class="version-label">v1.29</span>
   </header>
 
   <!-- Setup Screen -->
@@ -398,9 +436,8 @@
     <div class="form-group">
       <label for="modeSelect">Game Mode</label>
       <select id="modeSelect" onchange="toggleModeInputs()">
-        <option value="solo">Solitaire (1 Player)</option>
-        <option value="coop">Co-op (2 Players)</option>
         <option value="solo_dagger">Starter Dagger (1 Player)</option>
+        <option value="coop">Co-op (2 Players)</option>
       </select>
     </div>
     
@@ -514,6 +551,7 @@
     <div class="summary-grid">
       <div class="summary-row"><span>Monsters Slain:</span> <strong id="summarySlain">0 / 26</strong></div>
       <div class="summary-row"><span>Rooms Cleared:</span> <strong id="summaryRooms">0 / 14</strong></div>
+      <div class="summary-row"><span>Rooms Fled:</span> <strong id="summaryFled">0</strong></div>
       <div class="summary-row"><span>Best Weapon:</span> <strong id="summaryFavWeapon">Bare Fists (0 damage dealt)</strong></div>
       <div class="summary-row"><span>Food Consumed:</span> <strong id="summaryFood">0 / 54 HP</strong></div>
     </div>
@@ -755,7 +793,7 @@
 
   function toggleModeInputs() {
     var modeSelect = document.getElementById('modeSelect');
-    var mode = modeSelect ? modeSelect.value : 'solo';
+    var mode = modeSelect ? modeSelect.value : 'solo_dagger';
     var p2Group = document.getElementById('p2Group');
     var p1Label = document.querySelector('#p1Group label');
     var setupRules = document.getElementById('setupRulesText');
@@ -782,6 +820,7 @@
           '<h3>Co-op Hardcore Rules</h3>' +
           '<ul>' +
             '<li><strong>HP Limit:</strong> Both heroes start with 10 HP.</li>' +
+            '<li><strong>Starting Weapons:</strong> Both heroes begin with a <strong>2♦ Dagger</strong> equipped.</li>' +
             '<li><strong>2v1 Attacks:</strong> Team up with weapons or fists against a monster to split incoming damage evenly.</li>' +
             '<li><strong>Revives:</strong> Use a potion on a downed ally to revive them with (Potion Value / 2) + 1 HP.</li>' +
           '</ul>';
@@ -796,17 +835,6 @@
             '<li><strong>HP Limit:</strong> Start with 20 HP.</li>' +
             '<li><strong>Pre-equipped:</strong> You start with the <strong>2♦ Dagger</strong> equipped!</li>' +
             '<li><strong>Clean Finish:</strong> The 2♦ Dagger is removed from the deck (43 cards), allowing the run to conclude cleanly in 14 full rooms.</li>' +
-          '</ul>';
-      }
-    } else {
-      if (p2Group) p2Group.style.display = 'none';
-      if (p1Label) p1Label.textContent = 'Player Name';
-      if (setupRules) {
-        setupRules.innerHTML = baseRules + 
-          '<h3>Solitaire Rules</h3>' +
-          '<ul>' +
-            '<li><strong>HP Limit:</strong> Start with 20 HP.</li>' +
-            '<li>Manage your weapons carefully! Sometimes a fist fight followed by food is better than dulling your blade!</li>' +
           '</ul>';
       }
     }
@@ -856,22 +884,24 @@
 
   function startGame() {
     var modeInput = document.getElementById('modeSelect');
-    var mode = modeInput ? modeInput.value : 'solo';
+    var mode = modeInput ? modeInput.value : 'solo_dagger';
     var p1Val = document.getElementById('p1NameInput').value.trim();
     var p2Val = document.getElementById('p2NameInput').value.trim();
-    var p1Name = p1Val || ((mode === 'solo' || mode === 'solo_dagger') ? 'Player' : 'Player 1');
+    var p1Name = p1Val || (mode === 'coop' ? 'Player 1' : 'Player');
     var p2Name = p2Val || 'Player 2';
-    var maxHP = (mode === 'solo' || mode === 'solo_dagger') ? 20 : 10;
+    var maxHP = mode === 'coop' ? 10 : 20;
     
-    var isDaggerMode = mode === 'solo_dagger';
+    var isDaggerMode = mode !== 'coop';
     var initialDeck = makeDeck(isDaggerMode);
    
     historyStack = [];
 
     var starterWeaponP1 = null;
+    var starterWeaponP2 = null;
     var starterCeilingP1 = null;
+    var starterCeilingP2 = null;
 
-    if (isDaggerMode) {
+    if (isDaggerMode || mode === 'coop') {
       starterWeaponP1 = {
         suit: 'diamonds',
         rank: '2',
@@ -879,7 +909,15 @@
         name: CARD_NAMES['diamonds']['2'],
         id: 'diamonds2'
       };
+      starterWeaponP2 = {
+        suit: 'diamonds',
+        rank: '2',
+        value: 2,
+        name: CARD_NAMES['diamonds']['2'],
+        id: 'diamonds2'
+      };
       starterCeilingP1 = 14;
+      starterCeilingP2 = 14;
     }
 
     state = {
@@ -892,13 +930,14 @@
       dungeon: [], selected: null, justFled: false, over: false,
       monstersSlain: 0,
       roomsCleared: 0,
+      roomsFled: 0,
       targetRooms: isDaggerMode ? 14 : 15,
       foodConsumed: 0,
       maxFoodHP: 54,
       weaponUsage: {},
       eventHistory: [],
       p1: { hp: maxHP, weapon: starterWeaponP1, ceiling: starterCeilingP1, consumedThisRoom: false },
-      p2: { hp: maxHP, weapon: null, ceiling: null, consumedThisRoom: false },
+      p2: { hp: maxHP, weapon: starterWeaponP2, ceiling: starterCeilingP2, consumedThisRoom: false },
       combinedUsedThisRoom: false
     };
    
@@ -913,7 +952,7 @@
     document.getElementById('p1DisplayName').textContent = p1Name;
     document.getElementById('p2DisplayName').textContent = p2Name;
    
-    if (mode === 'solo' || mode === 'solo_dagger') {
+    if (mode !== 'coop') {
       p2Panel.style.display = 'none';
       playersContainer.classList.add('solo-mode');
     } else {
@@ -922,9 +961,11 @@
     }
    
     fillDungeon(); 
-    log('A new ' + (mode === 'coop' ? 'co-op' : (mode === 'solo_dagger' ? 'starter dagger' : 'solitaire')) + ' run begins.'); 
+    log('A new ' + (mode === 'coop' ? 'co-op' : 'starter dagger') + ' run begins.'); 
     if (isDaggerMode) {
       log(p1Name + ' steps into the dungeon wielding a Dagger (2♦).');
+    } else if (mode === 'coop') {
+      log(p1Name + ' and ' + p2Name + ' enter the dungeon wielding Daggers (2♦).');
     }
     render();
     animateRoomEntry();
@@ -957,19 +998,38 @@
     state.dungeon = [];
 
     resetRoomLimits();
+
+    // Deal the replacement room from the untouched deck first. Normally there
+    // are at least 4 cards available, so this simply deals a full room. At the
+    // end of a Starter Dagger run there can be exactly 3 cards left: deal those
+    // 3 first, then shuffle the fled room back in and draw one random card to
+    // make the replacement room a full 4 cards.
     while (state.dungeon.length < 4 && state.deck.length > 0) {
       state.dungeon.push(state.deck.pop());
     }
 
+    // Now return the fled room to the deck. If only 3 untouched cards remained,
+    // this also supplies the fourth card needed for the new room.
     state.deck.push.apply(state.deck, fledCards);
     shuffle(state.deck);
 
+    while (state.dungeon.length < 4 && state.deck.length > 0) {
+      state.dungeon.push(state.deck.pop());
+    }
+
     state.selected = null;
     state.justFled = true;
-    log('Fled! Dealt next room first, then shuffled fled cards into deck.', true, 'flee');
+    state.roomsFled++;
+    log('Fled the room', true, 'flee');
     checkGame();
     // Flee animation is purely visual; deal the new room after the old cards leave.
-    animateFlee(oldCardEls, function() { render(); animateRoomEntry(); });
+    animateFlee(oldCardEls).then(function() {
+      // Do not render the replacement room until every fleeing card has
+      // reported that its animation is finished. Then wait one paint frame
+      // before starting the first incoming card.
+      render();
+      requestAnimationFrame(function() { animateRoomEntry(); });
+    });
   }
 
   function selectCard(i) {
@@ -1017,8 +1077,17 @@
     state.selected = null;
     state.justFled = false;
     var before = state.dungeon.length;
-    fillDungeon();
-    state._roomWasDealt = (before <= 1 && state.dungeon.length > before);
+
+    // If this action just killed the player(s), do not deal another room.
+    // checkGame() will show the game-over overlay immediately afterwards.
+    var isSolo = state.mode !== 'coop';
+    var isDead = isSolo ? state.p1.hp <= 0 : (state.p1.hp <= 0 && state.p2.hp <= 0);
+
+    if (!isDead) {
+      fillDungeon();
+    }
+
+    state._roomWasDealt = !isDead && (before <= 1 && state.dungeon.length > before);
     state._skipFirstRoomCard = state._roomWasDealt && before === 1;
     return c;
   }
@@ -1069,49 +1138,108 @@
         setTimeout(function(){ impact.remove(); }, 280);
       }, 230);
     }
-    var duration = className.indexOf('discard') !== -1 ? 570 : (className.indexOf('equip') !== -1 ? 600 : 440);
+    if (className.indexOf('equip') !== -1 && b) {
+      // The slam happens at roughly 62% of the animation. Make the landing
+      // feel physical: sparks + a quick screen shake at the exact impact.
+      setTimeout(function() {
+        var sparks = document.createElement('div');
+        sparks.className = 'equip-sparks';
+        sparks.style.left = (b.left + b.width / 2) + 'px';
+        sparks.style.top = (b.top + b.height / 2) + 'px';
+        document.body.appendChild(sparks);
+        var game = document.getElementById('game');
+        if (game) {
+          game.classList.remove('combat-shake');
+          void game.offsetWidth;
+          game.classList.add('combat-shake');
+          setTimeout(function(){ game.classList.remove('combat-shake'); }, 170);
+        }
+        setTimeout(function(){ sparks.remove(); }, 320);
+      }, 403);
+    }
+    var duration = className.indexOf('discard') !== -1 ? 570 : (className.indexOf('equip') !== -1 ? 650 : 440);
     setTimeout(function() { clone.remove(); cardEl.classList.remove('action-hidden'); done(); }, duration);
   }
 
-  function animateRoomEntry(skipFirst) {
+  function waitForAnimation(el) {
+    return new Promise(function(resolve) {
+      var finished = false;
+      function done() {
+        if (finished) return;
+        finished = true;
+        el.removeEventListener('animationend', done);
+        resolve();
+      }
+      el.addEventListener('animationend', done);
+    });
+  }
+
+  async function animateRoomEntry(skipFirst) {
     var cards = document.querySelectorAll('#dungeon .dungeon-card-wrap .card:not(.empty)');
     var startIndex = skipFirst ? 1 : 0;
-    for (var i=startIndex; i<cards.length; i++) {
-      (function(card, index, sequence){
-        var rect = card.getBoundingClientRect();
-        var clone = card.cloneNode(true);
-        clone.style.left = rect.left + 'px'; clone.style.top = rect.top + 'px';
-        clone.style.width = rect.width + 'px'; clone.style.height = rect.height + 'px';
-        clone.style.setProperty('--dx', (window.innerWidth - rect.left + 40 + index*8) + 'px');
-        card.classList.add('action-hidden');
-        // Delay starting the animation itself, not just removing the clone.
-        // This makes each card actually arrive after the previous one.
-        var delay = sequence * 250;
-        setTimeout(function(){
-          clone.classList.add('action-clone','enter-clone');
-          document.body.appendChild(clone);
-          setTimeout(function(){ clone.remove(); card.classList.remove('action-hidden'); }, 700);
-        }, delay);
-      })(cards[i], i, i-startIndex);
+    var animated = [];
+
+    // Put the real rendered cards just off-screen first. This means the
+    // browser paints them outside the visible dungeon, rather than showing
+    // them in their final positions and then trying to animate them away.
+    for (var i = startIndex; i < cards.length; i++) {
+      var card = cards[i];
+      var rect = card.getBoundingClientRect();
+      card.style.setProperty('--dx', (window.innerWidth - rect.left + 40) + 'px');
+      card.classList.add('enter-prep');
+      animated.push(card);
+    }
+
+    if (!animated.length) return;
+
+    // Give the browser a paint with all cards safely off-screen, then start
+    // the whole room's deal animation together.
+    await new Promise(function(resolve) { requestAnimationFrame(function() {
+      requestAnimationFrame(resolve);
+    }); });
+
+    for (var j = 0; j < animated.length; j++) {
+      animated[j].classList.remove('enter-prep');
+      animated[j].classList.add('enter-card');
+    }
+
+    // The four incoming cards are one deal: wait for the whole group to
+    // finish, rather than chaining one card after another.
+    await Promise.all(animated.map(waitForAnimation));
+
+    for (var k = 0; k < animated.length; k++) {
+      animated[k].classList.remove('enter-card');
+      animated[k].style.removeProperty('--dx');
     }
   }
 
-  function animateFlee(cards, done) {
-    if (!cards || !cards.length) { done(); return; }
-    var remaining = cards.length;
-    for (var i=0; i<cards.length; i++) {
+  async function animateFlee(cards) {
+    if (!cards || !cards.length) return;
+
+    // All four cards leave together. The only wait here is until the entire
+    // fleeing room has finished, so the replacement room cannot appear early.
+    var waits = [];
+    for (var i = 0; i < cards.length; i++) {
       var card = cards[i];
       var rect = card.getBoundingClientRect();
       var clone = card.cloneNode(true);
       clone.classList.add('action-clone','flee-clone');
-      clone.style.left = rect.left + 'px'; clone.style.top = rect.top + 'px';
-      clone.style.width = rect.width + 'px'; clone.style.height = rect.height + 'px';
+      clone.style.left = rect.left + 'px';
+      clone.style.top = rect.top + 'px';
+      clone.style.width = rect.width + 'px';
+      clone.style.height = rect.height + 'px';
       clone.style.setProperty('--dx', -(rect.left + rect.width + 80) + 'px');
       clone.style.setProperty('--dy', ((i%2 ? -1 : 1) * (8 + i*3)) + 'px');
       card.classList.add('action-hidden');
       document.body.appendChild(clone);
-      setTimeout(function(c, el){ return function(){ c.remove(); el.classList.remove('action-hidden'); if (--remaining === 0) done(); }; }(clone,card), 440);
+      waits.push(waitForAnimation(clone).then(function(c, el) {
+        return function() {
+          c.remove();
+          el.classList.remove('action-hidden');
+        };
+      }(clone, card)));
     }
+    await Promise.all(waits);
   }
 
   function equipWeapon(player) {
@@ -1261,7 +1389,7 @@
           state.monstersSlain++;
           trackWeaponKill('Bare Fists', c.value);
           removeSelected();
-          log('Both heroes team up vs ' + c.name + '. Took ' + totalDamage + ' damage split between them.', true, 'monster');
+          log('Both heroes team up vs ' + c.name + '. Took ' + totalDamage + ' damage split between them.', true, 'fist');
           checkGame();
           renderAfterAction();
         }, true);
@@ -1280,7 +1408,7 @@
           trackWeaponKill(a.weapon.name, Math.floor(c.value / 2));
           trackWeaponKill(b.weapon.name, Math.ceil(c.value / 2));
           removeSelected();
-          log('Combined weapons (' + power + ' pwr) vs ' + c.name + '. Taken ' + damage + ' damage.', true, 'monster');
+          log('Combined weapons (' + power + ' pwr) vs ' + c.name + '. Taken ' + damage + ' damage.', true, 'weapon');
           checkGame();
           renderAfterAction();
         });
@@ -1307,9 +1435,9 @@
         p.hp = Math.max(0, p.hp - damage);
         state.monstersSlain++;
         if (mode === 'weapon') {
-          log(name(player) + ' uses ' + p.weapon.name + ' vs ' + c.name + '. Damage taken: ' + damage + '.', true, 'monster');
+          log(name(player) + ' uses ' + p.weapon.name + ' vs ' + c.name + '. Damage taken: ' + damage + '.', true, 'weapon');
         } else {
-          log(name(player) + ' enters Fist Fight with ' + c.name + ' and takes ' + damage + ' damage.', true, 'monster');
+          log(name(player) + ' enters Fist Fight with ' + c.name + ' and takes ' + damage + ' damage.', true, 'fist');
         }
         removeSelected();
         checkGame();
@@ -1326,7 +1454,7 @@
   }
 
   function checkGame() {
-    var isSolo = state.mode === 'solo' || state.mode === 'solo_dagger';
+    var isSolo = state.mode !== 'coop';
     var isDead = isSolo ? state.p1.hp <= 0 : (state.p1.hp <= 0 && state.p2.hp <= 0);
    
     var totalCardsRemaining = state.deck.length + state.dungeon.length;
@@ -1392,6 +1520,8 @@
       // Populate Run Summary Stats
       document.getElementById('summarySlain').textContent = state.monstersSlain + ' / 26';
       document.getElementById('summaryRooms').textContent = state.roomsCleared + ' / ' + (state.targetRooms || 15);
+      var summaryFled = document.getElementById('summaryFled');
+      if (summaryFled) summaryFled.textContent = state.roomsFled || 0;
       document.getElementById('summaryFavWeapon').textContent = favWeaponFormatted;
       document.getElementById('summaryFood').textContent = state.foodConsumed + ' / ' + state.maxFoodHP + ' HP';
 
@@ -1405,7 +1535,7 @@
   function name(p) { return p === 'p1' ? state.p1Name : state.p2Name; }
 
   function render() {
-    var isSolo = state.mode === 'solo' || state.mode === 'solo_dagger';
+    var isSolo = state.mode !== 'coop';
     ['p1','p2'].forEach(function(id) {
       if (isSolo && id === 'p2') return;
       var p = state[id];
@@ -1448,7 +1578,7 @@
     }
    
     var currentDeck = state.deck.length;
-    var totalDeck = state.totalDeckSize || (state.mode === 'solo_dagger' ? 43 : 44);
+    var totalDeck = state.totalDeckSize || (state.mode !== 'coop' ? 43 : 44);
     var ratio = Math.max(0, Math.min(1, currentDeck / totalDeck));
    
     var deckBar = document.getElementById('deckBar');
@@ -1583,7 +1713,7 @@
       return;
     }
 
-    var isSolo = state.mode === 'solo' || state.mode === 'solo_dagger';
+    var isSolo = state.mode !== 'coop';
     var W = 720, H = 300;
     var left = 54, right = 12, top = 22, bottom = 252;
     var plotW = W - left - right;
@@ -1613,7 +1743,7 @@
     }
 
     events.forEach(function(e,i){
-      var cls = ['monster','weapon','potion','flee'].indexOf(e.type) >= 0 ? e.type : 'other';
+      var cls = ['weapon','fist','potion','flee'].indexOf(e.type) >= 0 ? e.type : 'other';
       var py = hpY(e.p1hp);
       var title = 'Event ' + (i+1) + ': ' + e.text;
       parts.push('<circle class="event-dot ' + cls + '" cx="' + x(i) + '" cy="' + py + '" r="4.5"><title>' + xmlEscape(title) + '</title></circle>');
@@ -1637,7 +1767,8 @@
       var legendHtml = '';
       legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-line"></span>' + xmlEscape(state.p1Name || 'Player 1') + '</span>';
       if (!isSolo) legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-line p2"></span>' + xmlEscape(state.p2Name || 'Player 2') + '</span>';
-      legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot monster"></span>Monster fight</span>';
+      legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot monster"></span>Weapon fight</span>';
+      legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot fist"></span>Fist fight</span>';
       legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot weapon"></span>Weapon equipped</span>';
       legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot potion"></span>HP restored</span>';
       legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot flee"></span>Room fled</span>';
