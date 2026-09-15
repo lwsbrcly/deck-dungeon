@@ -420,14 +420,86 @@
       font-size: 0.75rem;
     }
     .peek-btn:active { background: rgba(255,255,255,0.1); }
+
+    /* Opening splash screen */
+    #splashScreen {
+      position: fixed; inset: 0; z-index: 5000;
+      display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(circle at center, #29251f 0%, #171512 48%, #0d0c0b 100%);
+      color: #e8e1d2; cursor: pointer; user-select: none;
+      text-align: center; opacity: 1; transition: opacity 450ms ease;
+    }
+    #splashScreen.fade-out { opacity: 0; pointer-events: none; }
+    .splash-content {
+      width: min(1100px, 96vw);
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .ascii-title {
+      display: flex; flex-direction: column; align-items: center;
+      font-family: "Courier New", Courier, monospace;
+      font-weight: 900; line-height: 1.02;
+      text-shadow: 0 2px 0 #000, 0 0 18px rgba(232,225,210,.12);
+      transform: scale(
+            min(1, calc(100vw / 700))
+      );
+      transform-origin: center;
+    }
+    .ascii-title pre {
+      margin: 0; padding: 0; white-space: pre;
+      font: inherit; line-height: inherit;
+    }
+    .ascii-deck { font-size: clamp(8px, 1.45vw, 17px); }
+    .ascii-dungeon { font-size: clamp(6px, 1.0vw, 12px); margin-top: 5px !important; }
+    .splash-symbols {
+      margin-top: 28px; font-family: "Courier New", monospace;
+      font-size: clamp(20px, 3vw, 34px); letter-spacing: .55em;
+      color: var(--gold);
+    }
+    .splash-prompt {
+      margin-top: 44px; font-family: "Courier New", monospace;
+      font-size: clamp(12px, 1.5vw, 17px); letter-spacing: .18em;
+      animation: splash-pulse 1.8s ease-in-out infinite;
+    }
+    .splash-hint { margin-top: 12px; color: #756f65; font-size: 12px; letter-spacing: .08em; }
+    @keyframes splash-pulse { 0%,100% {opacity:.45} 50% {opacity:1} }
+    .container.splash-hidden { display: none; }
+    
   </style>
 </head>
 <body>
 
-<div class="container">
+<div id="splashScreen" role="button" tabindex="0" aria-label="Click anywhere to begin">
+  <div class="splash-content">
+    <div class="ascii-title">
+      <pre class="ascii-deck">██████╗ ███████╗ ██████╗██╗  ██╗
+██╔══██╗██╔════╝██╔════╝██║ ██╔╝
+██║  ██║█████╗  ██║     █████╔╝
+██║  ██║██╔══╝  ██║     ██╔═██╗
+██████╔╝███████╗╚██████╗██║  ██╗
+╚═════╝ ╚══════╝ ╚═════╝╚═╝  ╚═╝</pre>
+      <pre class="ascii-dungeon">██████╗ ██╗   ██╗███╗   ██╗ ██████╗ ███████╗ ██████╗ ███╗   ██╗
+██╔══██╗██║   ██║████╗  ██║██╔════╝ ██╔════╝██╔═══██╗████╗  ██║
+██║  ██║██║   ██║██╔██╗ ██║██║  ███╗█████╗  ██║   ██║██╔██╗ ██║
+██║  ██║██║   ██║██║╚██╗██║██║   ██║██╔══╝  ██║   ██║██║╚██╗██║
+██████╔╝╚██████╔╝██║ ╚████║╚██████╔╝███████╗╚██████╔╝██║ ╚████║
+╚═════╝  ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝</pre>
+    </div>
+    <div class="splash-symbols">♦ &nbsp; ⚔ &nbsp; ♦</div>
+    <div class="splash-prompt">CLICK ANYWHERE TO BEGIN</div>
+    <div class="splash-hint">the dungeon awaits</div>
+  </div>
+</div>
+
+<div class="container splash-hidden">
   <header>
     <h1>DECK DUNGEON</h1>
-    <span class="version-label">v1.31</span>
+    <span class="version-label">v1.30</span>
+  </header>
+  
+  <div class="container">
+  <header>
+    <h1>DECK DUNGEON</h1>
+    <span class="version-label">v1.32</span>
   </header>
 
   <!-- Setup Screen -->
@@ -565,8 +637,8 @@
 </div>
 
 <script>
-
   let audioContext;
+  let themeNodes = [];
 
     function getAudioContext() {
       if (!audioContext) {
@@ -1365,6 +1437,15 @@
       }
     }
 
+    function stopDeckDungeonTheme() {
+      if (!themeNodes.length || !audioContext) return;
+      const now = audioContext.currentTime;
+      themeNodes.forEach(function(node) {
+        try { node.stop(now); } catch (e) {}
+      });
+      themeNodes = [];
+    }
+
   const CARD_NAMES = {
     clubs: {
       '2': 'Rat', '3': 'Cave Spider', '4': 'Wolf', '5': 'Goblin',
@@ -1680,6 +1761,7 @@
   }
 
   function startGame() {
+    stopDeckDungeonTheme();
     var modeInput = document.getElementById('modeSelect');
     var mode = modeInput ? modeInput.value : 'solo_dagger';
     var p1Val = document.getElementById('p1NameInput').value.trim();
