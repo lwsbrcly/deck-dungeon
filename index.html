@@ -100,14 +100,14 @@
     .dungeon-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
     .dungeon-card-wrap {
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: column; 
+      justify-content: space-between;
+      position: reltive;
       width: 100%;
       max-width: 80px;
-      min-height: 125px;
       aspect-ratio: 2 / 3;
       background: var(--panel-bg);
-      border: 1px dashed var(--border);
+      border: 1.5px dashed var(--border);
       border-radius: 5px;
       padding: 4px;
       box-sizing: border-box;
