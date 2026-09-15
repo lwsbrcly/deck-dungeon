@@ -2696,10 +2696,32 @@
     peekBtn.addEventListener('touchend', function(e) { e.preventDefault(); setPeek(false); });
   }
 
-  // Initial load execution
+ // Initial load execution
   window.onload = function() {
     toggleModeInputs();
     setupPeekHandlers();
+
+    var splash = document.getElementById('splashScreen');
+    var app = document.querySelector('.container');
+    var splashStarted = false;
+
+    function beginFromSplash() {
+      if (splashStarted) return;
+      splashStarted = true;
+
+      // This click is the browser-approved user gesture that unlocks Web Audio.
+      getAudioContext();
+      deckDungeonTheme();
+
+      app.classList.remove('splash-hidden');
+      splash.classList.add('fade-out');
+      setTimeout(function() { splash.remove(); }, 500);
+    }
+
+    splash.addEventListener('click', beginFromSplash);
+    splash.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); beginFromSplash(); }
+    });
   };
 </script>
 </body>
