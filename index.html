@@ -2532,16 +2532,38 @@
 
     if (potion) {
       if (isSolo) {
-        potionGrid.style.gridTemplateColumns = '1fr 1fr';
-        potionGrid.innerHTML = 
-          '<button type="button" onclick="drinkDirectPotion(\'p1\')">Consume' + (state.p1.consumedThisRoom ? ' (+0 HP)' : '') + '</button>' +
-          '<button type="button" onclick="discardDungeonPotion()">Discard</button>';
+        if (state.p1.consumedThisRoom) {
+          potionGrid.style.gridTemplateColumns = '1fr';
+          potionGrid.innerHTML =
+            '<button type="button" onclick="discardDungeonPotion()">Discard Potion</button>';
+        } else {
+          potionGrid.style.gridTemplateColumns = '1fr 1fr';
+          potionGrid.innerHTML =
+            '<button type="button" onclick="drinkDirectPotion(\'p1\')">Consume</button>' +
+            '<button type="button" onclick="discardDungeonPotion()">Discard</button>';
+        }
       } else {
-        potionGrid.style.gridTemplateColumns = '1fr 1fr';
-        potionGrid.innerHTML = 
-          '<button type="button" onclick="drinkDirectPotion(\'p1\')">' + state.p1Name + ' Consume' + (state.p1.consumedThisRoom ? ' (+0 HP)' : '') + '</button>' +
-          '<button type="button" onclick="drinkDirectPotion(\'p2\')">' + state.p2Name + ' Consume' + (state.p2.consumedThisRoom ? ' (+0 HP)' : '') + '</button>' +
-          '<button type="button" onclick="discardDungeonPotion()" style="grid-column:1/-1">Discard Potion</button>';
+        var buttons = '';
+    
+        if (!state.p1.consumedThisRoom) {
+          buttons += '<button type="button" onclick="drinkDirectPotion(\'p1\')">' +
+            state.p1Name + ' Consume</button>';
+        }
+    
+        if (!state.p2.consumedThisRoom) {
+          buttons += '<button type="button" onclick="drinkDirectPotion(\'p2\')">' +
+            state.p2Name + ' Consume</button>';
+        }
+    
+        buttons += '<button type="button" onclick="discardDungeonPotion()" style="grid-column:1/-1">Discard Potion</button>';
+    
+        potionGrid.style.gridTemplateColumns =
+          buttons.indexOf('grid-column') !== -1 && 
+          (state.p1.consumedThisRoom && state.p2.consumedThisRoom)
+            ? '1fr'
+            : '1fr 1fr';
+    
+        potionGrid.innerHTML = buttons;
       }
     }
 
