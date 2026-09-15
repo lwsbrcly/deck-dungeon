@@ -102,16 +102,25 @@
       position: relative;
       width: 80px;
       height: 120px;
+      box-sizing: border-box;
+    }
+    
+    .dungeon-card-wrap::before {
+      content: "";
+      position: absolute;
+      inset: 0;
       border: 1.5px dashed var(--border);
       border-radius: 5px;
       box-sizing: border-box;
     }
+    
     .dungeon-card-wrap .card {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       max-width: none;
+      z-index: 1;
     }
     /* Cards */
     .card { 
