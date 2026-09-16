@@ -2516,7 +2516,12 @@
     undoBtn.disabled = historyStack.length === 0;
 
     var c = state.selected === null ? null : state.dungeon[state.selected];
-    document.getElementById('selectedLabel').textContent = c ? (c.name + ' (' + c.rank + SUITS[c.suit] + ') — val ' + c.value) : 'Select card';
+    var valueText = c && ['J', 'Q', 'K', 'A'].indexOf(c.rank) >= 0
+      ? ' — (' + c.value + ')'
+      : '';
+
+    document.getElementById('selectedLabel').textContent =
+      c ? c.name + ' (' + c.rank + SUITS[c.suit] + ')' + valueText : 'Select card';
 
     var monster = c && ['spades','clubs'].indexOf(c.suit) !== -1;
     var weapon = c && c.suit === 'diamonds';
