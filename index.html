@@ -563,7 +563,6 @@
           <div class="bar-bg"><div id="p1Bar" class="bar-fill hp-fill"></div></div>
         </div>
         <div class="slot">
-          <div class="slot-label">Weapon</div>
           <div id="p1Weapon" style="width: 100%; display: flex; justify-content: center;"></div>
         </div>
       </div>
@@ -580,7 +579,6 @@
           <div class="bar-bg"><div id="p2Bar" class="bar-fill hp-fill"></div></div>
         </div>
         <div class="slot">
-          <div class="slot-label">Weapon</div>
           <div id="p2Weapon" style="width: 100%; display: flex; justify-content: center;"></div>
         </div>
       </div>
@@ -590,7 +588,7 @@
     <div class="dungeon-section">
       <div class="dungeon-header">
         <div class="dungeon-title-row">
-          <strong>Dungeon Progress</strong>
+          <strong>The Dungeon</strong>
           <span style="color: var(--muted); font-size: 0.75rem;">Deck: <span id="deckCountText">0 / 0</span></span>
         </div>
         <div class="bar-bg">
@@ -1696,10 +1694,10 @@
     var setupRules = document.getElementById('setupRulesText');
 
     var baseRules = '<h3>Goal of the Game</h3>' +
-      '<p style="margin-bottom: 8px;">Escape the dungeon by clearing ALL cards in the deck! Final Score = Your remaining HP minus remaining monster health.</p>' +
+      '<p style="margin-bottom: 8px;">Escape the dungeon by clearing all cards in the deck!</p>' +
       '<h3>Card Types</h3>' +
       '<ul>' +
-        '<li><strong>♠ Clubs & Spades (Monsters):</strong> Deal damage equal to their value (2 to 14).</li>' +
+        '<li><strong>♠ Clubs & Spades (Monsters):</strong> Deal damage equal to their value (2 to 14) minus your equipped weapon strength.</li>' +
         '<li><strong>♦ Diamonds (Weapons):</strong> Wear down over time — only effective against monsters less than or equal to the previous monster.</li>' +
         '<li><strong>♥ Hearts (Consumables):</strong> Restore lost HP. Only 1 heal per room allowed!</li>' +
       '</ul>' +
@@ -1727,11 +1725,10 @@
       if (p1Label) p1Label.textContent = 'Player Name';
       if (setupRules) {
         setupRules.innerHTML = baseRules + 
-          '<h3>Starter Dagger Solitaire Rules</h3>' +
+          '<h3>Starter Dagger Rules</h3>' +
           '<ul>' +
             '<li><strong>HP Limit:</strong> Start with 20 HP.</li>' +
-            '<li><strong>Pre-equipped:</strong> You start with the <strong>2♦ Dagger</strong> equipped!</li>' +
-            '<li><strong>Clean Finish:</strong> The 2♦ Dagger is removed from the deck (43 cards), allowing the run to conclude cleanly in 14 full rooms.</li>' +
+            '<li><strong>Pre-equipped:</strong> Enter the dungeon with the <strong>2♦ Dagger</strong> equipped!</li>' +
           '</ul>';
       }
     }
@@ -2521,7 +2518,7 @@
       : '';
 
     document.getElementById('selectedLabel').textContent =
-      c ? c.name + ' (' + c.rank + SUITS[c.suit] + ')' + valueText : 'Select card';
+      c ? c.name + ' (' + c.rank + SUITS[c.suit] + ')' + valueText : 'Select a card';
 
     var monster = c && ['spades','clubs'].indexOf(c.suit) !== -1;
     var weapon = c && c.suit === 'diamonds';
