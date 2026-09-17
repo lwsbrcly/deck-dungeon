@@ -472,17 +472,20 @@
       font-family: "Courier New", Courier, monospace;
       font-weight: 900; line-height: 1.02;
       text-shadow: 0 2px 0 #000, 0 0 18px rgba(232,225,210,.12);
-      transform: scale(
-            min(1, calc(100vw / 500))
-      );
-      transform-origin: center;
+      width: 100%;
+      max-width: 100%;
     }
     .ascii-title pre {
       margin: 0; padding: 0; white-space: pre;
       font: inherit; line-height: inherit;
     }
-    .ascii-deck { font-size: clamp(8px, 1.45vw, 17px); }
-    .ascii-dungeon { font-size: clamp(6px, 1.0vw, 12px); margin-top: 5px !important; }
+    /* Size from the viewport so the fixed-width ASCII art actually shrinks on phones. */
+    .ascii-deck { font-size: min(17px, 4.0vw); }
+    .ascii-dungeon { font-size: min(12px, 2.15vw); margin-top: 5px !important; }
+    @media (max-width: 420px) {
+      .ascii-deck { font-size: 3.75vw; }
+      .ascii-dungeon { font-size: 1.95vw; }
+    }
     .splash-symbols {
       margin-top: 28px; font-family: "Courier New", monospace;
       font-size: clamp(20px, 3vw, 34px); letter-spacing: .55em;
