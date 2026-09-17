@@ -108,6 +108,16 @@
     .bar-fill { height: 100%; width: 100%; transition: width 0.3s ease, background-color 0.3s ease; }
     .hp-fill { background: var(--green); }
 
+    .ascii-dungeon-progress {
+      font-family: monospace;
+      font-size: 14px;
+      letter-spacing: 0;
+      white-space: nowrap;
+      text-align: center;
+      overflow-x: auto;
+      padding: 4px 0;
+    }
+    
     /* Weapon & Item Display Slot */
     .slot { 
       background: var(--bg); 
@@ -642,9 +652,7 @@
           <strong>The Dungeon</strong>
           <span style="color: var(--muted); font-size: 0.75rem;">Deck: <span id="deckCountText">0 / 0</span></span>
         </div>
-        <div class="bar-bg">
-          <div id="deckBar" class="bar-fill"></div>
-        </div>
+        <div id="deckProgress" class="ascii-dungeon-progress"></div>
       </div>
       <div class="dungeon-grid" id="dungeon"></div>
     </div>
@@ -2683,19 +2691,23 @@
       })(i);
     }
    
-    var currentDeck = state.deck.length;
-    var totalDeck = state.totalDeckSize || (state.mode !== 'coop' ? 43 : 44);
-    var ratio = Math.max(0, Math.min(1, currentDeck / totalDeck));
-   
-    var deckBar = document.getElementById('deckBar');
-    document.getElementById('deckCountText').textContent = currentDeck + ' / ' + totalDeck;
-    deckBar.style.width = (ratio * 100) + '%';
-   
-    if (ratio > 0.5) {
-      deckBar.style.backgroundColor = 'hsl(' + (120 * ((ratio - 0.5) * 2)) + ', 70%, 50%)';
-    } else {
-      deckBar.style.backgroundColor = 'hsl(' + (50 * (ratio * 2)) + ', 80%, 50%)';
+    var progress = document.getElementById('deckProgress');
+    var rooms = state.roomsCleared || 0;
+    var totalRooms = 14;
+    
+    var dungeonPath = '🚪 ';
+    
+    for (var i = 0; i < totalRooms; i++) {
+      dungeonPath += i < rooms ? '██' : '░░';
+    
+      if (i < totalRooms - 1) {
+        dungeonPath += '--';
+      }
     }
+    
+    dungeonPath += ' 🏆';
+    
+    progress.textContent = dungeonPath;
 
     var skipBtn = document.getElementById('refreshBtn');
     skipBtn.textContent = state.justFled ? "Fled" : "Flee";
