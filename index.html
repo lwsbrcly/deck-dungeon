@@ -552,6 +552,13 @@
       <input type="text" id="p2NameInput" value="Hero 2">
     </div>
 
+    <div class="hard-mode-option">
+      <label class="hard-mode-label">
+        <input type="checkbox" id="hardModeInput">
+        <span><strong>Hard Mode</strong> — weapon ceilings are strictly less than the previous monster value.</span>
+      </label>
+    </div>
+
     <div class="setup-rules" id="setupRulesText"></div>
 
     <button type="button" class="primary-btn" id="startBtn" onclick="startGame()">Enter Dungeon</button>
@@ -1928,12 +1935,13 @@
         name: CARD_NAMES['diamonds']['2'],
         id: 'diamonds2'
       };
-      starterCeilingP1 = 14;
-      starterCeilingP2 = 14;
+      starterCeilingP1 = 99;
+      starterCeilingP2 = 99;
     }
 
     state = {
       mode: mode,
+      hardMode: hardMode,
       maxHP: maxHP,
       p1Name: p1Name,
       p2Name: p2Name,
@@ -1943,7 +1951,7 @@
       monstersSlain: 0,
       roomsCleared: 0,
       roomsFled: 0,
-      targetRooms: isDaggerMode ? 14 : 15,
+      targetRooms: 14,
       foodConsumed: 0,
       maxFoodHP: 54,
       weaponUsage: {},
@@ -2288,7 +2296,7 @@
     saveState();
     var old = p.weapon;
     animateCardAction(cardEl, targetEl, 'equip-clone', function() {
-      p.weapon = c; p.ceiling = 14; removeSelected();
+      p.weapon = c; p.ceiling = 99; removeSelected();
       log(name(player) + ' equips ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').' + (old ? ' (' + old.name + ' discarded)' : ''), true, 'weapon', player === 'p1' ? {p1:c.value,p2:null} : {p1:null,p2:c.value});
       checkGame(); renderAfterAction();
     });
@@ -2567,7 +2575,7 @@
 
       // Populate Run Summary Stats
       document.getElementById('summarySlain').textContent = state.monstersSlain + ' / 26';
-      document.getElementById('summaryRooms').textContent = state.roomsCleared + ' / ' + (state.targetRooms || 15);
+      document.getElementById('summaryRooms').textContent = state.roomsCleared + ' / 14';
       var summaryFled = document.getElementById('summaryFled');
       if (summaryFled) summaryFled.textContent = state.roomsFled || 0;
       document.getElementById('summaryFavWeapon').textContent = favWeaponFormatted;
@@ -2593,7 +2601,7 @@
       document.getElementById(id + 'Down').innerHTML = p.hp === 0 ? '<span class="badge">DOWN</span>' : '';
       
       if (p.weapon) {
-        var displayStats = 'ATK ' + p.weapon.value + '<br><span style="font-size:0.5rem; opacity:0.85;">MAX ' + p.ceiling + '</span>';
+        var displayStats = 'ATK ' + p.weapon.value + (p.ceiling === 99 ? '' : '<br><span style="font-size:0.5rem; opacity:0.85;">MAX ' + p.ceiling + '</span>');
         document.getElementById(id + 'Weapon').innerHTML = cardHTML(p.weapon, displayStats);
        // document.getElementById(id + 'WeaponMeta').textContent = p.weapon.name;
       } else {
@@ -2601,7 +2609,7 @@
        // document.getElementById(id + 'WeaponMeta').textContent = 'Empty';
       }
     });
-
+    
     var d = document.getElementById('dungeon');
     d.innerHTML = '';
     for (var i = 0; i < 4; i++) {
