@@ -64,6 +64,35 @@
     .setup-rules ul { padding-left: 16px; margin-bottom: 8px; }
     .setup-rules li { margin-bottom: 4px; }
 
+    .hard-mode-option {
+      margin-bottom: 12px;
+      text-align: left;
+    }
+    .hard-mode-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin: 0;
+      padding: 9px 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 0.78rem;
+      line-height: 1.35;
+      cursor: pointer;
+    }
+    .hard-mode-label input {
+      width: 16px;
+      height: 16px;
+      margin: 1px 0 0;
+      flex: 0 0 auto;
+      accent-color: var(--gold);
+      appearance: auto;
+      -webkit-appearance: checkbox;
+    }
+    .hard-mode-label strong { color: var(--gold); }
+
     /* Game Layout */
     .game-layout { display: flex; flex-direction: column; gap: 10px; }
 
@@ -529,7 +558,7 @@
 <div class="container splash-hidden">
   <header>
     <h1>DECK DUNGEON</h1>
-    <span class="version-label">v1.34</span>
+    <span class="version-label">v1.35</span>
   </header>
 
   <!-- Setup Screen -->
@@ -1906,6 +1935,7 @@
     var mode = modeInput ? modeInput.value : 'solo_dagger';
     var p1Val = document.getElementById('p1NameInput').value.trim();
     var p2Val = document.getElementById('p2NameInput').value.trim();
+    var hardMode = document.getElementById('hardModeInput').checked;
     var p1Name = p1Val || (mode === 'coop' ? 'Player 1' : 'Player');
     var p2Name = p2Val || 'Player 2';
     var maxHP = mode === 'coop' ? 10 : 20;
@@ -2340,7 +2370,10 @@
     }, '♥');
   }
 
-  function validWeapon(p, c) { return p.weapon && p.ceiling !== null && c.value <= p.ceiling; }
+  function validWeapon(p, c) {
+    if (!p.weapon || p.ceiling === null) return false;
+    return state.hardMode ? c.value < p.ceiling : c.value <= p.ceiling;
+  }
 
   function trackWeaponKill(weaponName, monsterValue) {
     if (!state.weaponUsage[weaponName]) {
