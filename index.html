@@ -505,8 +505,12 @@
       max-width: 100%;
     }
     .ascii-title pre {
+      display: block;
       margin: 0; padding: 0; white-space: pre;
-      font: inherit; line-height: inherit;
+      font-family: "Courier New", Courier, monospace;
+      line-height: 1.02;
+      max-width: 100%;
+      box-sizing: border-box;
     }
     /* Size from the viewport so the fixed-width ASCII art actually shrinks on phones. */
     .ascii-deck { font-size: min(17px, 4.0vw); }
