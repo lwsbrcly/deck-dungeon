@@ -542,14 +542,14 @@
     <div class="ascii-title">
       <pre class="ascii-deck">██████╗ ███████╗ ██████╗██╗  ██╗
 ██╔══██╗██╔════╝██╔════╝██║ ██╔╝
-██║  ██║█████╗  ██║     █████╔╝ 
-██║  ██║██╔══╝  ██║     ██╔═██╗ 
+██║   ██║█████╗  ██║     █████╔╝ 
+██║   ██║██╔══╝  ██║     ██╔═██╗ 
 ██████╔╝███████╗╚██████╗██║  ██╗
 ╚═════╝ ╚══════╝ ╚═════╝╚═╝  ╚═╝</pre>
       <pre class="ascii-dungeon">██████╗ ██╗   ██╗███╗   ██╗ ██████╗ ███████╗ ██████╗ ███╗   ██╗
 ██╔══██╗██║   ██║████╗  ██║██╔════╝ ██╔════╝██╔═══██╗████╗  ██║
-██║  ██║██║   ██║██╔██╗ ██║██║  ███╗█████╗  ██║   ██║██╔██╗ ██║
-██║  ██║██║   ██║██║╚██╗██║██║   ██║██╔══╝  ██║   ██║██║╚██╗██║
+██║   ██║██║   ██║██╔██╗ ██║██║  ███╗█████╗  ██║   ██║██╔██╗ ██║
+██║   ██║██║   ██║██║╚██╗██║██║   ██║██╔══╝  ██║   ██║██║╚██╗██║
 ██████╔╝╚██████╔╝██║ ╚████║╚██████╔╝███████╗╚██████╔╝██║ ╚████║
 ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝</pre>
     </div>
@@ -2543,8 +2543,9 @@
    
     var totalCardsRemaining = state.deck.length + state.dungeon.length;
     var isCleared = totalCardsRemaining === 0;
+    var allMonstersSlain = state.monstersSlain === 26;
 
-    if (isDead || isCleared) {
+    if (isDead || allMonstersSlain) {
       state.over = true;
       var title = "";
       var text = "";
@@ -2554,13 +2555,15 @@
       // Calculate remaining monsters
       var monsterSum = 0;
       var monstersRemainingCount = 0;
+      var HPRemain = 0;
       var allRemaining = state.deck.concat(state.dungeon);
       for (var i = 0; i < allRemaining.length; i++) {
         var card = allRemaining[i];
         if (['spades','clubs'].indexOf(card.suit) !== -1) {
           monsterSum += card.value;
           monstersRemainingCount++;
-        }
+        } elseif (['hearts'].indexOf(card.suit) !== -1) {
+          HPRemain += card.value;
       }
 
       // Check special case: dying on the very last card after clearing all monsters
@@ -2572,10 +2575,10 @@
         text = "You struck down the final beast of the dungeon, but took a mortal blow in the process. The dungeon is cleared, though none survived to tell the tale!";
         scoreBanner.className = 'score-banner';
         scoreBanner.textContent = 'SCORE: 0 (DRAW)';
-      } else if (isCleared) {
+      } else if (isCleared || allMonstersSlain) {
         title = 'Dungeon Complete!';
-        score = isSolo ? state.p1.hp : (state.p1.hp + state.p2.hp);
-        text = 'You fully conquered all cards in the dungeon!';
+        score = isSolo ? state.p1.hp + HPRemain : (state.p1.hp + state.p2.hp) + HPRemain;
+        text = 'You have defeated the dungeon!';
         scoreBanner.className = 'score-banner';
         scoreBanner.textContent = 'SCORE: +' + score;
       } else {
@@ -2592,7 +2595,7 @@
       }
 
       // Play the result sting once, after the outcome is determined.
-      if (isPyrrhicVictory || isCleared) winGameSound();
+      if (isPyrrhicVictory || allMonstersSlain || isCleared) winGameSound();
       else loseGameSound();
 
       // Calculate Best Weapon
