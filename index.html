@@ -2545,7 +2545,7 @@
     var isCleared = totalCardsRemaining === 0;
     var allMonstersSlain = state.monstersSlain === 26;
 
-    if (isDead || allMonstersSlain) {
+    if (isDead || isCleared || allMonstersSlain) {
       state.over = true;
       var title = "";
       var text = "";
@@ -2562,7 +2562,7 @@
         if (['spades','clubs'].indexOf(card.suit) !== -1) {
           monsterSum += card.value;
           monstersRemainingCount++;
-        } elseif (['hearts'].indexOf(card.suit) !== -1) {
+        } else if (['hearts'].indexOf(card.suit) !== -1) {
           HPRemain += card.value;
       }
 
