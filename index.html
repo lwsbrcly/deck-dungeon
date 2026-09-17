@@ -117,6 +117,17 @@
       overflow-x: auto;
       padding: 4px 0;
     }
+
+    .room-current::after {
+      content: "█";
+      animation: dungeonRoomFlash 1s steps(1) infinite;
+    }
+    
+    @keyframes dungeonRoomFlash {
+      50% {
+        content: "░";
+      }
+    }
     
     /* Weapon & Item Display Slot */
     .slot { 
@@ -2698,16 +2709,21 @@
     var dungeonPath = '';
     
     for (var i = 0; i < totalRooms; i++) {
-      dungeonPath += i < rooms ? '█' : '░';
+    
+      if (i < rooms) {
+        dungeonPath += '<span class="room-complete">█</span>';
+      } else if (i === rooms) {
+        dungeonPath += '<span class="room-current"></span>';
+      } else {
+        dungeonPath += '<span class="room-future">░</span>';
+      }
     
       if (i < totalRooms - 1) {
         dungeonPath += '═';
       }
     }
     
-    dungeonPath += '';
-    
-    progress.textContent = dungeonPath;
+    progress.innerHTML = dungeonPath;
 
     var skipBtn = document.getElementById('refreshBtn');
     skipBtn.textContent = state.justFled ? "Fled" : "Flee";
