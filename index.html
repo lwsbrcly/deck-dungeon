@@ -2695,17 +2695,17 @@
     var rooms = state.roomsCleared || 0;
     var totalRooms = 14;
     
-    var dungeonPath = '🚪 ';
+    var dungeonPath = '🚪═';
     
     for (var i = 0; i < totalRooms; i++) {
-      dungeonPath += i < rooms ? '██' : '░░';
+      dungeonPath += i < rooms ? '█' : '░';
     
       if (i < totalRooms - 1) {
-        dungeonPath += '--';
+        dungeonPath += '═';
       }
     }
     
-    dungeonPath += ' 🏆';
+    dungeonPath += '═🏆';
     
     progress.textContent = dungeonPath;
 
