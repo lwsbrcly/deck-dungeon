@@ -2555,15 +2555,24 @@
       // Calculate remaining monsters
       var monsterSum = 0;
       var monstersRemainingCount = 0;
-      var HPRemain = 0;
+      
       var allRemaining = state.deck.concat(state.dungeon);
       for (var i = 0; i < allRemaining.length; i++) {
         var card = allRemaining[i];
         if (['spades','clubs'].indexOf(card.suit) !== -1) {
           monsterSum += card.value;
           monstersRemainingCount++;
-        } else if (['hearts'].indexOf(card.suit) !== -1) {
-          HPRemain += card.value;
+        }
+      }
+
+      var finalConsumableScore = 0;
+
+      for (var i = 0; i < allRemaining.length; i++) {
+        var card = allRemaining[i];
+      
+        if (card.suit === 'hearts') {
+          finalConsumableScore += card.value;
+        }
       }
 
       // Check special case: dying on the very last card after clearing all monsters
@@ -2577,7 +2586,8 @@
         scoreBanner.textContent = 'SCORE: 0 (DRAW)';
       } else if (isCleared || allMonstersSlain) {
         title = 'Dungeon Complete!';
-        score = isSolo ? state.p1.hp + HPRemain : (state.p1.hp + state.p2.hp) + HPRemain;
+        score = (isSolo ? state.p1.hp : (state.p1.hp + state.p2.hp))
+        + finalConsumableScore;
         text = 'You have defeated the dungeon!';
         scoreBanner.className = 'score-banner';
         scoreBanner.textContent = 'SCORE: +' + score;
