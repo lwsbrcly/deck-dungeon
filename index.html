@@ -110,7 +110,7 @@
 
     .ascii-dungeon-progress {
       font-family: monospace;
-      font-size: 18px;
+      font-size: 17px;
       letter-spacing: 0;
       white-space: nowrap;
       text-align: center;
@@ -2695,7 +2695,7 @@
     var rooms = state.roomsCleared || 0;
     var totalRooms = 14;
     
-    var dungeonPath = '~<║';
+    var dungeonPath = '';
     
     for (var i = 0; i < totalRooms; i++) {
       dungeonPath += i < rooms ? '█' : '░';
@@ -2705,7 +2705,7 @@
       }
     }
     
-    dungeonPath += '║>~';
+    dungeonPath += '';
     
     progress.textContent = dungeonPath;
 
