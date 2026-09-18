@@ -103,7 +103,7 @@
 
     .player-panel { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
     .player-panel.downed { opacity: 0.5; border-color: var(--red); }
-    .player-header { display: flex; justify-content: normal; align-items: center; font-size: 0.85rem; }
+    .player-header { display: flex; align-items: center; font-size: 1.3rem; }
 
     .ascii-health-bar {
       font-family: monospace;
@@ -2058,7 +2058,7 @@
     fillDungeon(); 
     log('A new ' + (mode === 'coop' ? 'co-op' : 'solo') + ' run begins.',false); 
     if (isDaggerMode) {
-      log(p1Name + ' steps into the dungeon wielding a Dagger (2♦).');
+      log(p1Name + ' enters the dungeon wielding a Dagger (2♦).');
     } else if (mode === 'coop') {
       log(p1Name + ' and ' + p2Name + ' enter the dungeon wielding Daggers (2♦).');
     }
