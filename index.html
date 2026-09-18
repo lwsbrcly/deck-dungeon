@@ -2828,30 +2828,7 @@
           },
           false
         );
-    
-      } else {
-    
-        setContextAction(
-          1,
-          state.p1Name + ' Consume' +
-            (state.p1.consumedThisRoom ? ' (+0 HP)' : ''),
-          function() {
-            drinkDirectPotion('p1');
-          },
-          state.p1.consumedThisRoom
-        );
-    
-        setContextAction(
-          2,
-          state.p2Name + ' Consume' +
-            (state.p2.consumedThisRoom ? ' (+0 HP)' : ''),
-          function() {
-            drinkDirectPotion('p2');
-          },
-          state.p2.consumedThisRoom
-        );
-    
-      }
+      } 
     }  
 
           //weaponGrid.innerHTML = 
