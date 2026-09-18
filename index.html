@@ -103,12 +103,17 @@
     .player-panel { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
     .player-panel.downed { opacity: 0.5; border-color: var(--red); }
     .player-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
-    
-    /* Progress Bars */
-    .bar-bg { background: #2a2a32; height: 8px; border-radius: 4px; overflow: hidden; width: 100%; margin-top: 4px; }
-    .bar-fill { height: 100%; width: 100%; transition: width 0.3s ease, background-color 0.3s ease; }
-    .hp-fill { background: var(--green); }
 
+    .ascii-health-bar {
+      font-family: monospace;
+      font-size: 17px;
+      letter-spacing: 0;
+      white-space: nowrap;
+      text-align: center;
+      overflow-x: auto;
+      padding: 4px 0;
+    }
+    
     .ascii-dungeon-progress {
       font-family: monospace;
       font-size: 17px;
@@ -656,9 +661,7 @@
           <span id="p1Down"></span>
         </div>
         <div>
-          <span style="font-size: 0.75rem; color: var(--muted);">HP: </span>
-          <span id="p1HP" style="font-size: 0.75rem;">20 / 20</span>
-          <div class="bar-bg"><div id="p1Bar" class="bar-fill hp-fill"></div></div>
+          <div id="p1Bar" class="ascii-health-bar"></div>
         </div>
         <div class="slot">
           <div id="p1Weapon" style="width: 100%; display: flex; justify-content: center;"></div>
@@ -672,9 +675,7 @@
           <span id="p2Down"></span>
         </div>
         <div>
-          <span style="font-size: 0.75rem; color: var(--muted);">HP: </span>
-          <span id="p2HP" style="font-size: 0.75rem;">10 / 10</span>
-          <div class="bar-bg"><div id="p2Bar" class="bar-fill hp-fill"></div></div>
+          <div id="p2Bar" class="ascii-health-bar"></div>
         </div>
         <div class="slot">
           <div id="p2Weapon" style="width: 100%; display: flex; justify-content: center;"></div>
@@ -2699,8 +2700,23 @@
     ['p1','p2'].forEach(function(id) {
       if (isSolo && id === 'p2') return;
       var p = state[id];
-      document.getElementById(id + 'HP').textContent = p.hp + ' / ' + state.maxHP;
-      document.getElementById(id + 'Bar').style.width = ((p.hp / state.maxHP) * 100) + '%';
+      var healthbar = document.getElementById(id + 'Bar');
+      var healthPath = 'HP ║';
+      
+      for (var i = 0; i < state.maxHP; i++) {
+      
+        if (i <= p.hp) {
+          healthPath += '█';
+        } else {
+          healthPath += '░';
+        }
+      }
+
+      healthPath += p.hp < 10 ? '  ' : ' ';
+      healthPath += p.hp
+      
+      healthbar.textContent = healthPath;
+      
       document.getElementById(id + 'Panel').classList.toggle('downed', p.hp === 0);
       document.getElementById(id + 'Down').innerHTML = p.hp === 0 ? '<span class="badge">DOWN</span>' : '';
       
