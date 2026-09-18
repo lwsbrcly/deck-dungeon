@@ -405,9 +405,9 @@
       grid-template-columns: 1fr 1fr;
     }
     .action-buttons {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
       gap: 6px;
-      flex-shrink: 0;
     }
         
     button { 
@@ -698,34 +698,19 @@
     <!-- Controls -->
     <div class="action-panel">
       <div class="action-row">
-    
-        <span id="selectedLabel">
-          Select a card
-        </span>
-    
-        <div class="action-options">
-    
-          <div id="fightOptions" class="action-group">
-            <div class="btn-grid" id="fightGrid"></div>
-          </div>
-    
-          <div id="weaponOptions" class="action-group">
-            <div class="btn-grid" id="weaponGrid"></div>
-          </div>
-    
-          <div id="potionOptions" class="action-group">
-            <div class="btn-grid" id="potionGrid"></div>
-          </div>
-    
-        </div>
-    
         <div class="action-buttons">
+          
+          <!-- Contextual actions -->
+          <button id="action1" class="context-action" hidden></button>
+          <button id="action2" class="context-action" hidden></button>
+         
+          <!-- Always available -->
           <button type="button" id="undoBtn"
                   onclick="undoLastAction()" disabled>↩ Undo</button>
           <button type="button" id="refreshBtn"
                   onclick="refreshDungeon()">Flee</button>
+          
         </div>
-    
       </div>
     </div>
 
@@ -2697,6 +2682,20 @@
 
   function name(p) { return p === 'p1' ? state.p1Name : state.p2Name; }
 
+  function hideContextActions() {
+    document.getElementById('action1').hidden = true;
+    document.getElementById('action2').hidden = true;
+  }
+  
+  function setContextAction(number, label, onclick, disabled) {
+    var btn = document.getElementById('action' + number);
+  
+    btn.textContent = label;
+    btn.onclick = onclick;
+    btn.disabled = !!disabled;
+    btn.hidden = false;
+  }
+
   function render() {
     var isSolo = state.mode !== 'coop';
     ['p1','p2'].forEach(function(id) {
@@ -2771,86 +2770,112 @@
     undoBtn.disabled = historyStack.length === 0;
 
     var c = state.selected === null ? null : state.dungeon[state.selected];
-    var valueText = c && ['J', 'Q', 'K', 'A'].indexOf(c.rank) >= 0
-      ? ' — (' + c.value + ')'
-      : '';
+    //var valueText = c && ['J', 'Q', 'K', 'A'].indexOf(c.rank) >= 0
+    //  ? ' — (' + c.value + ')'
+    //  : '';
 
-    document.getElementById('selectedLabel').textContent =
-      c ? c.name + ' (' + c.rank + SUITS[c.suit] + ')' + valueText : 'Select a card';
+    //document.getElementById('selectedLabel').textContent = c ? c.name + ' (' + c.rank + SUITS[c.suit] + ')' + valueText : 'Select a card';
 
     var monster = c && ['spades','clubs'].indexOf(c.suit) !== -1;
     var weapon = c && c.suit === 'diamonds';
     var potion = c && c.suit === 'hearts';
 
-    document.getElementById('fightOptions').classList.toggle('show', !!monster);
-    document.getElementById('weaponOptions').classList.toggle('show', !!weapon);
-    document.getElementById('potionOptions').classList.toggle('show', !!potion);
+    hideContextActions();
 
-    var potionGrid = document.getElementById('potionGrid');
-    var weaponGrid = document.getElementById('weaponGrid');
-    var fightGrid = document.getElementById('fightGrid');
-
-    if (potion) {
-      if (isSolo) {
-        potionGrid.innerHTML =
-          '<button type="button" onclick="drinkDirectPotion(\'p1\')" ' +
-          (state.p1.consumedThisRoom ? 'disabled' : '') +
-          '>Consume' + (state.p1.consumedThisRoom ? ' (+0 HP)' : '') + '</button>' +
-          '<button type="button" onclick="discardDungeonPotion()">Discard</button>';
+    if (monster && isSolo) {
+    
+      setContextAction(
+        1,
+        'Weapon', function() {
+        fight('p1','weapon');
+        },
+        !validWeapon(state.p1, c)
+      );
+    
+      setContextAction(
+        2,
+        'Fist Fight', function() {
+          fight('p1','bare');
+        }
+      );
+    
+    } else if (weapon && isSolo) {
+    
+      setContextAction(1, 'Equip', function() {
+        equipWeapon('p1');
+      });
+    
+      setContextAction(2, 'Discard', function() {
+        discardDungeonWeapon();
+      });
+    
+    } else if (potion && isSolo) {
+    
+        setContextAction(
+          1,
+          state.p1.consumedThisRoom ? 'Consume (+0 HP)' : 'Consume',
+          function() {
+            drinkDirectPotion('p1');
+          },
+          state.p1.consumedThisRoom
+        );
+    
+        setContextAction(
+          2,
+          'Discard',
+          function() {
+            discardDungeonPotion();
+          },
+          false
+        );
+    
       } else {
-        potionGrid.innerHTML =
-          '<button type="button" onclick="drinkDirectPotion(\'p1\')" ' +
-          (state.p1.consumedThisRoom ? 'disabled' : '') +
-          '>' + state.p1Name + ' Consume' +
-          (state.p1.consumedThisRoom ? ' (+0 HP)' : '') + '</button>' +
-      
-          '<button type="button" onclick="drinkDirectPotion(\'p2\')" ' +
-          (state.p2.consumedThisRoom ? 'disabled' : '') +
-          '>' + state.p2Name + ' Consume' +
-          (state.p2.consumedThisRoom ? ' (+0 HP)' : '') + '</button>' +
-      
-          '<button type="button" onclick="discardDungeonPotion()" style="grid-column:1/-1">Discard</button>';
+    
+        setContextAction(
+          1,
+          state.p1Name + ' Consume' +
+            (state.p1.consumedThisRoom ? ' (+0 HP)' : ''),
+          function() {
+            drinkDirectPotion('p1');
+          },
+          state.p1.consumedThisRoom
+        );
+    
+        setContextAction(
+          2,
+          state.p2Name + ' Consume' +
+            (state.p2.consumedThisRoom ? ' (+0 HP)' : ''),
+          function() {
+            drinkDirectPotion('p2');
+          },
+          state.p2.consumedThisRoom
+        );
+    
       }
-    }
+    }  
 
-    if (weapon) {
-      if (isSolo) {
-        weaponGrid.innerHTML = 
-          '<button type="button" onclick="equipWeapon(\'p1\')">Equip</button>' +
-          '<button type="button" onclick="discardDungeonWeapon()">Discard</button>';
-      } else {
-        weaponGrid.innerHTML = 
-          '<button type="button" onclick="equipWeapon(\'p1\')"' + (state.p1.hp === 0 ? ' disabled' : '') + '>' + state.p1Name + ' Equip</button>' +
-          '<button type="button" onclick="equipWeapon(\'p2\')"' + (state.p2.hp === 0 ? ' disabled' : '') + '>' + state.p2Name + ' Equip</button>' +
-          '<button type="button" onclick="discardDungeonWeapon()" style="grid-column:1/-1">Discard Weapon</button>';
-      }
-    }
-
-    if (monster) {
-      if (isSolo) {
-        fightGrid.innerHTML = 
-          '<button type="button" onclick="fight(\'p1\',\'weapon\')" id="p1WeaponFight">Weapon</button>' +
-          '<button type="button" onclick="fight(\'p1\',\'bare\')" id="p1BareFight">Fist Fight</button>';
-        document.getElementById('p1WeaponFight').disabled = !validWeapon(state.p1, c) || state.p1.hp === 0;
-        document.getElementById('p1BareFight').disabled = state.p1.hp === 0;
-      } else {
-        fightGrid.innerHTML = 
-          '<button type="button" onclick="fight(\'p1\',\'weapon\')" id="p1WeaponFight" style="grid-column:1">' + state.p1Name + ' Weapon</button>' +
-          '<button type="button" onclick="fight(\'p2\',\'weapon\')" id="p2WeaponFight" style="grid-column:2">' + state.p2Name + ' Weapon</button>' +
-          '<button type="button" onclick="fight(\'p1\',\'bare\')" id="p1BareFight" style="grid-column:1">' + state.p1Name + ' Fist Fight</button>' +
-          '<button type="button" onclick="fight(\'p2\',\'bare\')" id="p2BareFight" style="grid-column:2">' + state.p2Name + ' Fist Fight</button>' +
-          '<button type="button" onclick="fight(\'both\',\'combined\')" id="combinedFight" style="grid-column:1/-1">⚔️ Both Combine Weapons</button>' +
-          '<button type="button" onclick="fight(\'both\',\'combined_bare\')" id="combinedBareFight" style="grid-column:1/-1">👊 Both 2v1 Fist Fight</button>';
-        document.getElementById('p1WeaponFight').disabled = !validWeapon(state.p1, c) || state.p1.hp === 0;
-        document.getElementById('p2WeaponFight').disabled = !validWeapon(state.p2, c) || state.p2.hp === 0;
-        document.getElementById('p1BareFight').disabled = state.p1.hp === 0;
-        document.getElementById('p2BareFight').disabled = state.p2.hp === 0;
+          //weaponGrid.innerHTML = 
+          //'<button type="button" onclick="equipWeapon(\'p1\')"' + (state.p1.hp === 0 ? ' disabled' : '') + '>' + state.p1Name + ' Equip</button>' +
+          //'<button type="button" onclick="equipWeapon(\'p2\')"' + (state.p2.hp === 0 ? ' disabled' : '') + '>' + state.p2Name + ' Equip</button>' +
+          //'<button type="button" onclick="discardDungeonWeapon()" style="grid-column:1/-1">Discard Weapon</button>';
+      
+        //fightGrid.innerHTML = 
+        //  '<button type="button" onclick="fight(\'p1\',\'weapon\')" id="p1WeaponFight" style="grid-column:1">' + state.p1Name + ' Weapon</button>' +
+        //  '<button type="button" onclick="fight(\'p2\',\'weapon\')" id="p2WeaponFight" style="grid-column:2">' + state.p2Name + ' Weapon</button>' +
+        //  '<button type="button" onclick="fight(\'p1\',\'bare\')" id="p1BareFight" style="grid-column:1">' + state.p1Name + ' Fist Fight</button>' +
+        //  '<button type="button" onclick="fight(\'p2\',\'bare\')" id="p2BareFight" style="grid-column:2">' + state.p2Name + ' Fist Fight</button>' +
+        //  '<button type="button" onclick="fight(\'both\',\'combined\')" id="combinedFight" style="grid-column:1/-1">⚔️ Both Combine Weapons</button>' +
+        //  '<button type="button" onclick="fight(\'both\',\'combined_bare\')" id="combinedBareFight" style="grid-column:1/-1">👊 Both 2v1 Fist Fight</button>';
+        //document.getElementById('p1WeaponFight').disabled = !validWeapon(state.p1, c) || state.p1.hp === 0;
+        //document.getElementById('p2WeaponFight').disabled = !validWeapon(state.p2, c) || state.p2.hp === 0;
+        //document.getElementById('p1BareFight').disabled = state.p1.hp === 0;
+        //document.getElementById('p2BareFight').disabled = state.p2.hp === 0;
         
-        var okCombinedWeapon = state.p1.weapon && state.p2.weapon && state.p1.ceiling !== null && state.p2.ceiling !== null && state.p1.hp > 0 && state.p2.hp > 0 && (c.value) <= (state.p1.ceiling + state.p2.ceiling) && !state.combinedUsedThisRoom;
-        document.getElementById('combinedFight').disabled = !okCombinedWeapon;
+        //var okCombinedWeapon = state.p1.weapon && state.p2.weapon && state.p1.ceiling !== null && state.p2.ceiling !== null && state.p1.hp > 0 && state.p2.hp > 0 && (c.value) <= (state.p1.ceiling + state.p2.ceiling) && !state.combinedUsedThisRoom;
+        //document.getElementById('combinedFight').disabled = !okCombinedWeapon;
 
-        var okCombinedBare = state.p1.hp > 0 && state.p2.hp > 0 && !state.combinedUsedThisRoom;
-        document.getElementById('combinedBareFight').disabled = !okCombinedBare;
+        //var okCombinedBare = state.p1.hp > 0 && state.p2.hp > 0 && !state.combinedUsedThisRoom;
+        //document.getElementById('combinedBareFight').disabled = !okCombinedBare;
       }
     }
   }
