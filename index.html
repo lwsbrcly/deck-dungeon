@@ -668,14 +668,16 @@
     <div class="action-panel">
       <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
         <span id="selectedLabel" style="font-weight: bold; color: var(--gold);">Select a card</span>
-        <div id="fightOptions" class="action-group">
-          <div class="btn-grid" id="fightGrid"></div>
-        </div>
-        <div id="weaponOptions" class="action-group">
-          <div class="btn-grid" id="weaponGrid"></div>
-        </div>
-        <div id="potionOptions" class="action-group">
-          <div class="btn-grid" id="potionGrid"></div>
+        <div style="display: flex; gap: 6px;">
+          <div id="fightOptions" class="action-group">
+            <div class="btn-grid" id="fightGrid"></div>
+          </div>
+          <div id="weaponOptions" class="action-group">
+            <div class="btn-grid" id="weaponGrid"></div>
+          </div>
+          <div id="potionOptions" class="action-group">
+            <div class="btn-grid" id="potionGrid"></div>
+          </div>
         </div>
         <div style="display: flex; gap: 6px;">
           <button type="button" id="undoBtn" onclick="undoLastAction()" disabled>↩ Undo</button>
