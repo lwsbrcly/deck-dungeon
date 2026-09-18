@@ -376,19 +376,20 @@
     }
 
     /* Controls & Actions */
+    .action-panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+    }
     .action-row {
       display: flex;
       align-items: center;
       gap: 10px;
       font-size: 0.8rem;
     }
-    .action-panel {
-      background: var(--panel-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px;
-    }  
     .action-buttons {
+      flex: 1;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 6px;
