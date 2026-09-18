@@ -376,7 +376,7 @@
 
     /* Controls & Actions */
     .action-panel { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
-    .action-group { display: none; margin-top: 8px; }
+    .action-group { display: none; }
     .action-group.show { display: block; }
     .btn-grid { display: grid; gap: 6px; }
     
@@ -563,8 +563,8 @@
     <div class="ascii-title">
       <pre class="ascii-deck">██████╗ ███████╗ ██████╗██╗  ██╗
 ██╔══██╗██╔════╝██╔════╝██║ ██╔╝
-██║   ██║█████╗  ██║     █████╔╝ 
-██║   ██║██╔══╝  ██║     ██╔═██╗ 
+██║  ██║█████╗  ██║     █████╔╝ 
+██║  ██║██╔══╝  ██║     ██╔═██╗ 
 ██████╔╝███████╗╚██████╗██║  ██╗
 ╚═════╝ ╚══════╝ ╚═════╝╚═╝  ╚═╝</pre>
       <pre class="ascii-dungeon">██████╗ ██╗   ██╗███╗   ██╗ ██████╗ ███████╗ ██████╗ ███╗   ██╗
@@ -583,7 +583,7 @@
 <div class="container splash-hidden">
   <header>
     <h1>DECK DUNGEON</h1>
-    <span class="version-label">v1.35</span>
+    <span class="version-label">v1.36</span>
   </header>
 
   <!-- Setup Screen -->
@@ -609,10 +609,11 @@
     <div class="setup-rules" id="setupRulesText"></div>
 
     <button type="button" class="primary-btn" id="startBtn" onclick="startGame()">Enter Dungeon</button>
+    
     <div class="hard-mode-option">
       <label class="hard-mode-label">
         <input type="checkbox" id="hardModeInput">
-        <span><strong>Hard Mode</strong> — weapon ceilings are strictly less than the previous monster value.</span>
+        <span><strong>Hard Mode</strong> — weapon ceilings become "less than" (no "equal" anymore).</span>
       </label>
     </div>
   </div>
@@ -670,11 +671,9 @@
         <div id="fightOptions" class="action-group">
           <div class="btn-grid" id="fightGrid"></div>
         </div>
-  
         <div id="weaponOptions" class="action-group">
           <div class="btn-grid" id="weaponGrid"></div>
         </div>
-  
         <div id="potionOptions" class="action-group">
           <div class="btn-grid" id="potionGrid"></div>
         </div>
