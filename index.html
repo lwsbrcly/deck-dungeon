@@ -549,7 +549,7 @@
     }
     .ascii-title {
       display: flex; flex-direction: column; align-items: center;
-      font-family: "Courier New", Courier, monospace;
+      font-family: monospace;
       font-weight: 900; line-height: 1.02;
       text-shadow: 0 2px 0 #000, 0 0 18px rgba(232,225,210,.12);
       width: 100%;
@@ -558,10 +558,11 @@
     .ascii-title pre {
       display: block;
       margin: 0; padding: 0; white-space: pre;
-      font-family: "Courier New", Courier, monospace;
+      font-family: monospace;
       line-height: 1.02;
       max-width: 100%;
       box-sizing: border-box;
+      width: max-content;
     }
     /* Size from the viewport so the fixed-width ASCII art actually shrinks on phones. */
     .ascii-deck { font-size: min(17px, 4.0vw); }
