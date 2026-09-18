@@ -15,6 +15,7 @@
       --red: #e55555;
       --green: #47d16c;
       --gold: #f1c40f;
+      --dungeon: #6A557F;
     }
 
     * { 
@@ -107,12 +108,12 @@
     .ascii-health-bar {
       font-family: monospace;
       font-size: 17px;
-      letter-spacing: 0;
+      letter-spacing: 2px;
       white-space: nowrap;
       text-align: center;
       overflow-x: auto;
       padding: 4px 0;
-      color: var(--red);
+      color: var(--green);
     }
     
     .ascii-dungeon-progress {
@@ -123,6 +124,7 @@
       text-align: center;
       overflow-x: auto;
       padding: 4px 0;
+      color: var(--dungeon);
     }
 
     .room-current::after {
