@@ -409,6 +409,9 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 6px;
     }
+    .action-button-hidden {
+      visibility: hidden;
+    }
         
     button { 
       padding: 8px 10px; 
@@ -2683,8 +2686,11 @@
   function name(p) { return p === 'p1' ? state.p1Name : state.p2Name; }
 
   function hideContextActions() {
-    document.getElementById('action1').hidden = true;
-    document.getElementById('action2').hidden = true;
+    var btn1 = document.getElementById('action1');
+    var btn2 = document.getElementById('action2');
+  
+    btn1.classList.add('action-button-hidden');
+    btn2.classList.add('action-button-hidden');
   }
   
   function setContextAction(number, label, onclick, disabled) {
@@ -2693,7 +2699,7 @@
     btn.textContent = label;
     btn.onclick = onclick;
     btn.disabled = !!disabled;
-    btn.hidden = false;
+    btn.classList.remove('action-button-hidden');
   }
 
   function render() {
