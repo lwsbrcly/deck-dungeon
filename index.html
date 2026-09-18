@@ -615,7 +615,7 @@
 <div class="container splash-hidden">
   <header color: var(--gold)>
     <h1>DECK DUNGEON</h1>
-    <span class="version-label">v1.38</span>
+    <span class="version-label">v1.39</span>
   </header>
 
   <!-- Setup Screen -->
@@ -2704,7 +2704,7 @@
       var healthbar = document.getElementById(id + 'Bar');
       var healthPath = 'HP ║';
       
-      for (var i = 0; i < state.maxHP; i++) {
+      for (var i = 0; i <= state.maxHP; i++) {
       
         if (i <= p.hp) {
           healthPath += '█';
