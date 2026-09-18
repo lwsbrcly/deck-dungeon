@@ -151,8 +151,8 @@
     .dungeon-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
     .dungeon-card-wrap {
       position: relative;
-      width: 80px;
-      height: 120px;
+      width: 100%; 
+      aspect-ratio: 2 / 3; 
       box-sizing: border-box;
     }
     
@@ -176,7 +176,7 @@
     /* Cards */
     .card { 
       width: 100%; 
-      max-width: 80px; 
+      /*max-width: 80px;*/ 
       aspect-ratio: 2 / 3; 
       background: var(--card-bg); 
       border: 1.5px solid var(--border); 
