@@ -606,16 +606,15 @@
       <input type="text" id="p2NameInput" value="Hero 2">
     </div>
 
+    <div class="setup-rules" id="setupRulesText"></div>
+
+    <button type="button" class="primary-btn" id="startBtn" onclick="startGame()">Enter Dungeon</button>
     <div class="hard-mode-option">
       <label class="hard-mode-label">
         <input type="checkbox" id="hardModeInput">
         <span><strong>Hard Mode</strong> — weapon ceilings are strictly less than the previous monster value.</span>
       </label>
     </div>
-
-    <div class="setup-rules" id="setupRulesText"></div>
-
-    <button type="button" class="primary-btn" id="startBtn" onclick="startGame()">Enter Dungeon</button>
   </div>
 
   <!-- Game UI -->
@@ -668,22 +667,21 @@
     <div class="action-panel">
       <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
         <span id="selectedLabel" style="font-weight: bold; color: var(--gold);">Select a card</span>
+        <div id="fightOptions" class="action-group">
+          <div class="btn-grid" id="fightGrid"></div>
+        </div>
+  
+        <div id="weaponOptions" class="action-group">
+          <div class="btn-grid" id="weaponGrid"></div>
+        </div>
+  
+        <div id="potionOptions" class="action-group">
+          <div class="btn-grid" id="potionGrid"></div>
+        </div>
         <div style="display: flex; gap: 6px;">
           <button type="button" id="undoBtn" onclick="undoLastAction()" disabled>↩ Undo</button>
           <button type="button" id="refreshBtn" onclick="refreshDungeon()">Flee</button>
         </div>
-      </div>
-
-      <div id="fightOptions" class="action-group">
-        <div class="btn-grid" id="fightGrid"></div>
-      </div>
-
-      <div id="weaponOptions" class="action-group">
-        <div class="btn-grid" id="weaponGrid"></div>
-      </div>
-
-      <div id="potionOptions" class="action-group">
-        <div class="btn-grid" id="potionGrid"></div>
       </div>
     </div>
 
