@@ -12,11 +12,159 @@
 
 <body>
 
-    <!-- splash -->
-    <!-- game selection -->
-    <!-- setup -->
-    <!-- game board -->
-    <!-- game-over modal -->
+    <div id="splashScreen" role="button" tabindex="0" aria-label="Click anywhere to begin">
+          <div class="splash-content">
+            <div class="ascii-title">
+              <pre class="ascii-deck">██████╗ ███████╗ ██████╗██╗  ██╗
+        ██╔══██╗██╔════╝██╔════╝██║ ██╔╝
+        ██║  ██║█████╗  ██║     █████╔╝ 
+        ██║  ██║██╔══╝  ██║     ██╔═██╗ 
+        ██████╔╝███████╗╚██████╗██║  ██╗
+        ╚═════╝ ╚══════╝ ╚═════╝╚═╝  ╚═╝</pre>
+              <pre class="ascii-dungeon">██████╗ ██╗   ██╗███╗   ██╗ ██████╗ ███████╗ ██████╗ ███╗   ██╗
+        ██╔══██╗██║   ██║████╗  ██║██╔════╝ ██╔════╝██╔═══██╗████╗  ██║
+        ██║  ██║██║   ██║██╔██╗ ██║██║  ███╗█████╗  ██║   ██║██╔██╗ ██║
+        ██║  ██║██║   ██║██║╚██╗██║██║   ██║██╔══╝  ██║   ██║██║╚██╗██║
+        ██████╔╝╚██████╔╝██║ ╚████║╚██████╔╝███████╗╚██████╔╝██║ ╚████║
+        ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝</pre>
+            </div>
+            <div class="splash-symbols">♦ &nbsp; ⚔ &nbsp; ♦</div>
+            <div class="splash-prompt">CLICK ANYWHERE TO BEGIN</div>
+            <div class="splash-hint">the dungeon awaits</div>
+          </div>
+        </div>
+        
+        <div class="container splash-hidden">
+          <header>
+            <h1>DECK DUNGEON</h1>
+            <span class="version-label">v2.0</span>
+          </header>
+        
+          <!-- Setup Screen -->
+          <div id="setupScreen" class="setup-screen">
+            <div class="form-group">
+              <label for="modeSelect">Game Mode</label>
+              <select id="modeSelect" onchange="toggleModeInputs()">
+                <option value="solo_dagger">Solitaire (1 Player)</option>
+                <option value="coop">Co-op (2 Players)</option>
+              </select>
+            </div>
+            
+            <div class="form-group" id="p1Group">
+              <label id="p1Label" for="p1NameInput">Player Name</label>
+              <input type="text" id="p1NameInput" value="Hero 1">
+            </div>
+            
+            <div class="form-group" id="p2Group" style="display: none;">
+              <label for="p2NameInput">Player 2 Name</label>
+              <input type="text" id="p2NameInput" value="Hero 2">
+            </div>
+        
+            <div class="setup-rules" id="setupRulesText"></div>
+        
+            <button type="button" class="primary-btn" id="startBtn" onclick="startGame()">Enter Dungeon</button>
+            
+            <div class="hard-mode-option">
+              <label class="hard-mode-label">
+                <input type="checkbox" id="hardModeInput">
+                <span><strong>Hard Mode</strong> — weapon ceilings become "less than" (no "equal" anymore).</span>
+              </label>
+            </div>
+          </div>
+        
+          <!-- Game UI -->
+          <div id="game" style="display: none;" class="game-layout">
+        
+            <!-- Players Container -->
+            <div class="players-container" id="playersContainer">
+              <!-- Player 1 -->
+              <div id="p1Panel" class="player-panel">
+                <div class="player-header">
+                  <strong id="p1DisplayName">Hero 1</strong>
+                  <span id="p1Down"></span>
+                </div>
+                <div>
+                  <div id="p1Bar" class="ascii-health-bar"></div>
+                </div>
+                <div class="slot">
+                  <div id="p1Weapon" style="width: 100%; display: flex; justify-content: center;"></div>
+                </div>
+              </div>
+        
+              <!-- Player 2 -->
+              <div id="p2Panel" class="player-panel">
+                <div class="player-header">
+                  <strong id="p2DisplayName">Hero 2</strong>
+                  <span id="p2Down"></span>
+                </div>
+                <div>
+                  <div id="p2Bar" class="ascii-health-bar"></div>
+                </div>
+                <div class="slot">
+                  <div id="p2Weapon" style="width: 100%; display: flex; justify-content: center;"></div>
+                </div>
+              </div>
+            </div>
+        
+            <!-- Dungeon Room -->
+            <div class="dungeon-section">
+              <div class="dungeon-header">
+                <div id="deckProgress" class="ascii-dungeon-progress"></div>
+              </div>
+              <div class="dungeon-grid" id="dungeon"></div>
+            </div>
+        
+            <!-- Controls -->
+            <div class="action-panel">
+              <div class="action-row">
+                <div class="action-buttons">
+                  
+                  <!-- Contextual actions -->
+                  <button id="action1" class="context-action"></button>
+                  <button id="action2" class="context-action"></button>
+                 
+                  <!-- Always available -->
+                  <button type="button" id="undoBtn"
+                          onclick="undoLastAction()" disabled>↩ Undo</button>
+                  <button type="button" id="refreshBtn"
+                          onclick="refreshDungeon()">Flee</button>
+                  
+                </div>
+              </div>
+            </div>
+        
+            <!-- Log -->
+            <div class="log-box" id="log"></div>
+          </div>
+        </div>
+        
+        <!-- Modal Dialog -->
+        <div class="modal-overlay" id="overlay">
+          <div class="modal">
+            <h2 id="modalTitle">Game Over</h2>
+            <div id="modalScore" class="score-banner"></div>
+            <p id="modalText"></p>
+        
+            <!-- Run Summary Card -->
+            <div class="summary-grid">
+              <div class="summary-row"><span>Monsters Slain:</span> <strong id="summarySlain">0 / 26</strong></div>
+              <div class="summary-row"><span>Rooms Cleared:</span> <strong id="summaryRooms">0 / 14</strong></div>
+              <div class="summary-row"><span>Best Weapon:</span> <strong id="summaryFavWeapon">Bare Fists (0 damage dealt)</strong></div>
+              <div class="summary-row"><span>HP Restored:</span> <strong id="summaryFood">0 / 54</strong></div>
+              <div class="summary-row"><span>Flee Count:</span> <strong id="summaryFled">0</strong></div>
+            </div>
+        
+            <div class="run-chart">
+              <div class="run-chart-title"><strong>Run History</strong><span>HP over time</span></div>
+              <div id="runChart" aria-label="Run history chart"></div>
+              <div id="runChartLegend" class="run-chart-legend" aria-label="Run history legend"></div>
+            </div>
+        
+            <button type="button" class="peek-btn" id="peekBtn">Hold [V] or Tap & Hold to Peek Board</button>
+            <button type="button" class="undo-modal-btn" id="modalUndoBtn" onclick="undoFromGameOver()">↩ Undo Fatal Error</button>
+            <button type="button" class="primary-btn" id="modalBtn" onclick="restartSetup()">Play Again</button>
+          </div>
+        </div>
 
     <script src="js/themes.js"></script>
     <script src="js/audio.js"></script>
