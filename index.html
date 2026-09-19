@@ -1550,16 +1550,6 @@
           playDrum(now + (pass * passLength + beatNumber) * beat);
         });
       }
-    }
-
-    function stopDeckDungeonTheme() {
-      if (!themeNodes.length || !audioContext) return;
-      const now = audioContext.currentTime;
-      themeNodes.forEach(function(node) {
-        try { node.stop(now); } catch (e) {}
-      });
-      themeNodes = [];
-    }
 
   const CARD_NAMES = {
     clubs: {
@@ -1913,6 +1903,15 @@
 
   var state = {};
   var historyStack = [];
+
+  function stopDeckDungeonTheme() {
+    if (!themeNodes.length || !audioContext) return;
+    const now = audioContext.currentTime;
+    themeNodes.forEach(function(node) {
+      try { node.stop(now); } catch (e) {}
+    });
+    themeNodes = [];
+  }
 
   function saveState() {
     historyStack.push(JSON.parse(JSON.stringify(state)));
@@ -2466,7 +2465,7 @@
         var actualHeal = Math.min(state.maxHP - t.hp, amount); t.hp = Math.min(state.maxHP, t.hp + amount); t.consumedThisRoom = true;
         if (actualHeal > 0) state.foodConsumed += actualHeal;
         if (isDowned) log(name(target) + ' was revived by ' + c.name + ' with ' + amount + ' HP!', true, 'potion');
-        else log(name(target) + ' consumes ' + c.name + ', restoring ' + amount + ' HP.', true, 'potion');
+        else log(name(target) + ' consumes ' + c.name + ', restoring ' + actualHeal + ' HP.', true, 'potion');
       } else log(name(target) + ' consumed ' + c.name + ', but to no effect.', false, 'potion');
       removeSelected(); checkGame(); renderAfterAction();
     }, '♥');
