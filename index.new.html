@@ -12,27 +12,125 @@
 
 <body>
 
-    <div id="splashScreen" role="button" tabindex="0" aria-label="Click anywhere to begin">
-          <div class="splash-content">
-            <div class="ascii-title">
-              <pre class="ascii-deck">██████╗ ███████╗ ██████╗██╗  ██╗
-        ██╔══██╗██╔════╝██╔════╝██║ ██╔╝
-        ██║  ██║█████╗  ██║     █████╔╝ 
-        ██║  ██║██╔══╝  ██║     ██╔═██╗ 
-        ██████╔╝███████╗╚██████╗██║  ██╗
-        ╚═════╝ ╚══════╝ ╚═════╝╚═╝  ╚═╝</pre>
-              <pre class="ascii-dungeon">██████╗ ██╗   ██╗███╗   ██╗ ██████╗ ███████╗ ██████╗ ███╗   ██╗
-        ██╔══██╗██║   ██║████╗  ██║██╔════╝ ██╔════╝██╔═══██╗████╗  ██║
-        ██║  ██║██║   ██║██╔██╗ ██║██║  ███╗█████╗  ██║   ██║██╔██╗ ██║
-        ██║  ██║██║   ██║██║╚██╗██║██║   ██║██╔══╝  ██║   ██║██║╚██╗██║
-        ██████╔╝╚██████╔╝██║ ╚████║╚██████╔╝███████╗╚██████╔╝██║ ╚████║
-        ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝</pre>
+    <div class="game-selector">
+
+    <h1>Choose Your Deck</h1>
+    <p class="selector-subtitle">Choose a theme to begin your adventure.</p>
+
+    <div class="theme-grid">
+
+        <!-- DECK DUNGEON - WORKING -->
+        <button class="theme-card deck-dungeon"
+                type="button"
+                onclick="selectTheme('dungeon')">
+
+            <div class="theme-logo">
+                DECK<br>
+                <span>DUNGEON</span>
             </div>
-            <div class="splash-symbols">♦ &nbsp; ⚔ &nbsp; ♦</div>
-            <div class="splash-prompt">CLICK ANYWHERE TO BEGIN</div>
-            <div class="splash-hint">the dungeon awaits</div>
-          </div>
-        </div>
+
+            <div class="theme-description">
+                Monsters. Weapons. Potions.<br>
+                How deep can you go?
+            </div>
+
+            <div class="theme-select">
+                ENTER DUNGEON
+            </div>
+
+        </button>
+
+
+        <!-- SHAUN OF THE DECK -->
+        <button class="theme-card coming-soon"
+                type="button"
+                disabled>
+
+            <div class="theme-logo">
+                SHAUN<br>
+                <span>OF THE DECK</span>
+            </div>
+
+            <div class="theme-description">
+                The pub. The Winchester.<br>
+                And a whole lot of zombies.
+            </div>
+
+            <div class="theme-select">
+                COMING SOON
+            </div>
+
+        </button>
+
+
+        <!-- SPACE DECK -->
+        <button class="theme-card coming-soon"
+                type="button"
+                disabled>
+
+            <div class="theme-logo">
+                SPACE<br>
+                <span>DECK</span>
+            </div>
+
+            <div class="theme-description">
+                Something has gone wrong<br>
+                aboard the ship...
+            </div>
+
+            <div class="theme-select">
+                COMING SOON
+            </div>
+
+        </button>
+
+
+        <!-- PIRATE -->
+        <button class="theme-card coming-soon"
+                type="button"
+                disabled>
+
+            <div class="theme-logo">
+                ALL HANDS<br>
+                <span>ON DECK</span>
+            </div>
+
+            <div class="theme-description">
+                Hoist the colours.<br>
+                Face the dangers of the deep.
+            </div>
+
+            <div class="theme-select">
+                COMING SOON
+            </div>
+
+        </button>
+
+
+        <!-- NINJA -->
+        <button class="theme-card coming-soon"
+                type="button"
+                disabled>
+
+            <div class="theme-logo">
+                <span>???</span><br>
+                DECK
+            </div>
+
+            <div class="theme-description">
+                Steel. Shadow. Silence.<br>
+                Choose your weapons carefully.
+            </div>
+
+            <div class="theme-select">
+                COMING SOON
+            </div>
+
+        </button>
+
+    </div>
+
+</div>
         
         <div class="container splash-hidden">
           <header>
