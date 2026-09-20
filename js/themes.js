@@ -1,10 +1,10 @@
 const THEMES = {
 
-    medieval: {
+    dungeon: {
 
-        id: 'medieval',
-        name: 'Medieval Dungeon',
-        description: 'Fight monsters, find weapons and escape the dungeon.',
+        id: 'kdungeon',
+        name: 'Deck Dungeon',
+        description: 'Fight monsters, find weapons, and escape the dungeon.',
 
         colours: {
             bg: '#121214',
@@ -32,14 +32,12 @@ const THEMES = {
         cards: {
             'clubs-2': {
                 name: 'Rat',
-                type: 'monster',
-                art: 'rat.svg'
+                type: 'monster'
             },
 
             'clubs-3': {
                 name: 'Cave Spider',
-                type: 'monster',
-                art: 'cave-spider.svg'
+                type: 'monster'
             },
 
             'spades-A': {
@@ -50,8 +48,7 @@ const THEMES = {
 
             'diamonds-2': {
                 name: 'Dagger',
-                type: 'weapon',
-                art: 'dagger.svg'
+                type: 'weapon'
             }
 
             // ...
