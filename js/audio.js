@@ -797,12 +797,3 @@ let themeNodes = [];
       });
     }
   }
-
-  function stopDeckDungeonTheme() {
-    if (!themeNodes.length || !audioContext) return;
-    const now = audioContext.currentTime;
-    themeNodes.forEach(function(node) {
-      try { node.stop(now); } catch (e) {}
-    });
-    themeNodes = [];
-  }
