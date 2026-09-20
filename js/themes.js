@@ -10,6 +10,8 @@ const THEMES = {
             card: 'assets/dungeon/card.png',
             back: 'assets/dungeon/back.png',
         },
+
+        //audio: {},
             
         colours: {
             bg: '#121214',
@@ -36,7 +38,10 @@ const THEMES = {
             fist: 'enters fist fight with',
             heal: 'consumes',
             flee: 'Fled the room',
-            enter: 'Enters Dungeon weilding'
+            enter: 'Enters Dungeon weilding',
+            draw: 'No one survived etc',
+            lose: 'The dungeon has defeated you',
+            win: 'You have defeated the dungeon!',
         },
 
         cards: {
