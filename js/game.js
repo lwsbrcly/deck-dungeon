@@ -1,3 +1,39 @@
+function selectTheme(theme) {
+    
+    if (theme === "dungeon") {
+
+        // Store the selected theme
+        window.selectedTheme = "dungeon";
+
+        // Go to your existing rules screen
+        showRules("dungeon");
+    }
+}
+
+function showScreen(screenId) {
+
+    // Hide every screen
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+    });
+
+    // Show the requested screen
+    document.getElementById(screenId).classList.add('active');
+}
+
+function selectTheme(theme) {
+
+    selectedTheme = theme;
+
+    showScreen('rules');
+}
+
+function enterGame() {
+
+    showScreen('game');
+
+    startGame();
+}
 
 const CARD_NAMES = {
 clubs: {
