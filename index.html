@@ -5,18 +5,16 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-    <title>Deck Engine</title>
+    <title>Deck Game Engine</title>
 
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/selector.css">
 </head>
 
 <body>
-<div class="container">
+<div id="game-selector" class="screen active">
 
     <!-- GAME SELECTOR -->
-    <section id="game-selector">
-
     <h1>Choose Your Deck</h1>
     <p class="selector-subtitle">Choose a theme to begin your adventure.</p>
 
@@ -131,10 +129,10 @@
 
     </div>
 
-</section>
+</div>
 
 <!-- RULES -->
-<section id="rules" style"display: none;">
+<div id="rules" class="screen">
 
   <div id="setupScreen" class="setup-screen">
     <div class="form-group">
@@ -157,7 +155,7 @@
 
     <div class="setup-rules" id="setupRulesText"></div>
 
-    <button type="button" class="primary-btn" id="startBtn" onclick="startGame()">Enter Dungeon</button>
+    <button type="button" class="primary-btn" id="startBtn" onclick="enterGame()">Enter Dungeon</button>
     
     <div class="hard-mode-option">
       <label class="hard-mode-label">
@@ -167,10 +165,10 @@
     </div>
   </div>
     
-</section>
+</div>
     
 <!-- Game UI -->
-<section id="game" style="display: none;">
+<div id="game" class="screen">
   
     <div id="game" style="display: none;" class="game-layout">
 
@@ -264,7 +262,7 @@
         <button type="button" class="primary-btn" id="modalBtn" onclick="restartSetup()">Play Again</button>
       </div>
     </div>
-</section>
+</div>
     
     <script>
         function selectTheme(theme) {
@@ -277,6 +275,31 @@
                 // Go to your existing rules screen
                 showRules("dungeon");
             }
+        }
+
+        function showScreen(screenId) {
+
+            // Hide every screen
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+        
+            // Show the requested screen
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function selectTheme(theme) {
+        
+            selectedTheme = theme;
+        
+            showScreen('rules');
+        }
+
+        function enterGame() {
+
+            showScreen('game');
+        
+            startGame();
         }
     </script>
 
