@@ -32,7 +32,7 @@ function selectTheme(theme) {
 
 function enterGame() {
 
-    showScreen('game');
+    showScreen('game-ui');
 
     startGame();
 }
