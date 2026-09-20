@@ -89,6 +89,13 @@
     border-style: dashed;
 }
 
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}
 
 /* Mobile */
 
