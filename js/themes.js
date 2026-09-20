@@ -2,7 +2,7 @@ const THEMES = {
 
     dungeon: {
 
-        id: 'kdungeon',
+        id: 'dungeon',
         name: 'Deck Dungeon',
         description: 'Fight monsters, find weapons, and escape the dungeon.',
 
@@ -19,7 +19,7 @@ const THEMES = {
             success: '#47d16c'
         },
 
-        terminology: {
+        text: {
             gameTitle: 'DECK DUNGEON',
             location: 'Dungeon',
             enemy: 'Monster',
@@ -30,29 +30,30 @@ const THEMES = {
         },
 
         cards: {
-            'clubs-2': {
-                name: 'Rat',
-                type: 'monster'
+            monsters: {
+                clubs: {
+                    '2': 'Rat', '3': 'Cave Spider', '4': 'Wolf', '5': 'Goblin',
+                    '6': 'Orc', '7': 'Shaman', '8': 'Bandit', '9': 'Gladiator',
+                    '10': 'Dark Wizard', 'J': 'Minotaur', 'Q': 'Ogre', 'K': 'Giant', 'A': 'Dragon'
+                },
+                spades: {
+                    '2': 'Spooky Fog', '3': 'Slime', '4': 'Snakes', '5': 'Skeleton',
+                    '6': 'Zombie', '7': 'Ghost', '8': 'Ghoul', '9': 'Wraith',
+                    '10': 'Necromancer', 'J': 'Vampire', 'Q': 'Mummy', 'K': 'Lich King', 'A': 'Bone Dragon'
+                }
             },
-
-            'clubs-3': {
-                name: 'Cave Spider',
-                type: 'monster'
+            weapons: {
+                diamonds: {
+                    '2': 'Dagger', '3': 'Club', '4': 'Short Sword', '5': 'Mace',
+                    '6': 'Longsword', '7': 'Battle Axe', '8': 'Warhammer', '9': 'Great Axe', '10': 'Greatsword'
+                }
             },
-
-            'spades-A': {
-                name: 'Bone Dragon',
-                type: 'monster',
-                art: 'bone-dragon.svg'
-            },
-
-            'diamonds-2': {
-                name: 'Dagger',
-                type: 'weapon'
+            potions: {
+                hearts: {
+                    '2': 'Stale Bread', '3': 'Sus Mushrooms', '4': 'Apple', '5': 'Fresh Bread',
+                    '6': 'Cooked Meats', '7': 'Roast Chicken', '8': 'Hearty Stew', '9': 'Healing Elixir', '10': 'Magic Potion'
+                }
             }
-
-            // ...
         }
     }
-
 };
