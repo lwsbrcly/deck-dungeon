@@ -1,3 +1,5 @@
+let selectedTheme = null;
+
 function selectTheme(theme) {
     
     if (theme === "dungeon") {
