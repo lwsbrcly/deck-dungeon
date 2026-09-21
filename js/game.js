@@ -834,16 +834,33 @@ async function animateRoomEntry(skipFirst) {
 var cards = document.querySelectorAll('#dungeon .dungeon-card-wrap .card:not(.empty)');
 var startIndex = skipFirst ? 1 : 0;
 var animated = [];
+var deckEl = document.getElementById('p1Deck');
+var deckRect = deckEl ? deckEl.getBoundingClientRect() : null;
 
-// Put the real rendered cards just off-screen first. This means the
-// browser paints them outside the visible dungeon, rather than showing
-// them in their final positions and then trying to animate them away.
+// Clone each incoming card at the deck and fly the clone into its
+// destination. The deck sits above the animation, so the card appears
+// to emerge from underneath the deck stack.
 for (var i = startIndex; i < cards.length; i++) {
   var card = cards[i];
   var rect = card.getBoundingClientRect();
-  card.style.setProperty('--dx', (window.innerWidth - rect.left + 40) + 'px');
-  card.classList.add('enter-prep');
-  animated.push(card);
+  var clone = card.cloneNode(true);
+  clone.classList.add('action-clone', 'enter-card');
+  clone.style.left = (deckRect ? deckRect.left : rect.left) + 'px';
+  clone.style.top = (deckRect ? deckRect.top : rect.top) + 'px';
+  clone.style.width = rect.width + 'px';
+  clone.style.height = rect.height + 'px';
+
+  if (deckRect) {
+    clone.style.setProperty('--dx', (rect.left + rect.width / 2 - (deckRect.left + deckRect.width / 2)) + 'px');
+    clone.style.setProperty('--dy', (rect.top + rect.height / 2 - (deckRect.top + deckRect.height / 2)) + 'px');
+  } else {
+    clone.style.setProperty('--dx', '0px');
+    clone.style.setProperty('--dy', '0px');
+  }
+
+  card.classList.add('action-hidden');
+  document.body.appendChild(clone);
+  animated.push({ clone: clone, card: card });
 }
 
 if (!animated.length) return;
@@ -851,25 +868,16 @@ if (!animated.length) return;
 // Match the card-entry animation with one whoosh per incoming card.
 dealCardsSound(animated.length);
 
-// Give the browser a paint with all cards safely off-screen, then start
-// the whole room's deal animation together.
-await new Promise(function(resolve) { requestAnimationFrame(function() {
-  requestAnimationFrame(resolve);
-}); });
-
-for (var j = 0; j < animated.length; j++) {
-  animated[j].classList.remove('enter-prep');
-  animated[j].classList.add('enter-card');
-}
+await new Promise(function(resolve) { requestAnimationFrame(resolve); });
 
 // The four incoming cards are one deal: wait for the whole group to
 // finish, rather than chaining one card after another.
-await Promise.all(animated.map(waitForAnimation));
-
-for (var k = 0; k < animated.length; k++) {
-  animated[k].classList.remove('enter-card');
-  animated[k].style.removeProperty('--dx');
-}
+await Promise.all(animated.map(function(item) {
+  return waitForAnimation(item.clone).then(function() {
+    item.clone.remove();
+    item.card.classList.remove('action-hidden');
+  });
+}));
 }
 
 async function animateFlee(cards) {
