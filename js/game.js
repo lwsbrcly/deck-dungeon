@@ -571,8 +571,10 @@ if (isDaggerMode) {
 } else if (mode === 'coop') {
   log(p1Name + ' and ' + p2Name + ' enter the dungeon wielding Daggers (2♦).');
 }
-render();
-animateRoomEntry();
+requestAnimationFrame(function() {
+  render();
+  animateRoomEntry();
+});
 }
 
 function resetRoomLimits() {
