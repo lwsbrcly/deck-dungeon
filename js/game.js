@@ -926,16 +926,6 @@ cardEl.classList.add('action-hidden');
 document.body.appendChild(clone);
 
 setTimeout(function() {
-  var game = document.getElementById('game');
-  if (game) {
-    game.classList.remove('combat-shake');
-    void game.offsetWidth;
-    game.classList.add('combat-shake');
-    setTimeout(function(){ game.classList.remove('combat-shake'); }, 170);
-  }
-}, 403);
-
-setTimeout(function() {
   clone.remove();
   cardEl.classList.remove('action-hidden');
   done();
@@ -952,16 +942,16 @@ saveState();
 var old = p.weapon;
 
 var previousStack = player === 'p1' ? document.querySelectorAll('#p1PreviousMonster .previous-monster-card .card') : [];
-var clearPreviousMonsters = function(done) {
-  if (!previousStack.length) { done(); return; }
+
+function clearPreviousMonsters() {
+  if (!previousStack.length) return;
 
   discardSound();
-  var waits = [];
   for (var i = 0; i < previousStack.length; i++) {
     var monsterCardEl = previousStack[i];
     var rect = monsterCardEl.getBoundingClientRect();
     var clone = monsterCardEl.cloneNode(true);
-    clone.classList.add('action-clone', 'discard-clone');
+    clone.classList.add('action-clone', 'previous-monster-discard-clone');
     clone.style.left = rect.left + 'px';
     clone.style.top = rect.top + 'px';
     clone.style.width = rect.width + 'px';
@@ -970,15 +960,12 @@ var clearPreviousMonsters = function(done) {
     clone.style.setProperty('--dy', ((i % 2 ? -1 : 1) * (8 + i * 3)) + 'px');
     monsterCardEl.classList.add('action-hidden');
     document.body.appendChild(clone);
-    waits.push(waitForAnimation(clone).then(function(c, el) {
-      return function() {
-        c.remove();
-        el.classList.remove('action-hidden');
-      };
-    }(clone, monsterCardEl)));
+
+    clone.addEventListener('animationend', function() {
+      clone.remove();
+    }, { once: true });
   }
-  Promise.all(waits).then(done);
-};
+}
 
 var finishEquip = function() {
   p.weapon = c;
@@ -989,9 +976,9 @@ var finishEquip = function() {
   checkGame(); renderAfterAction();
 };
 
-clearPreviousMonsters(function() {
-  animateCardAction(cardEl, targetEl, 'equip-clone', finishEquip);
-});
+// Start both animations together.
+clearPreviousMonsters();
+animateCardAction(cardEl, targetEl, 'equip-clone', finishEquip);
 }
 
 function discardDungeonWeapon() {
@@ -1182,7 +1169,7 @@ if (player === 'both') {
     } else {
       log(name(player) + ' enters Fist Fight with ' + c.name + ' and takes ' + damage + ' damage.', true, 'fist');
     }
-    if (player === 'p1') {
+    if (player === 'p1' && mode === 'weapon') {
       var previousMonster = JSON.parse(JSON.stringify(c));
       var pileIndex = p.previousMonsters.length;
       previousMonster.stackX = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
@@ -1198,6 +1185,7 @@ if (player === 'both') {
       return;
     }
 
+    // Fist fights clear the monster normally.
     removeSelected();
     checkGame();
     renderAfterAction();
