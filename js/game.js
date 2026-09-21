@@ -837,26 +837,38 @@ var animated = [];
 var deckEl = document.getElementById('p1Deck');
 var deckRect = deckEl ? deckEl.getBoundingClientRect() : null;
 
-// Clone each incoming card at the deck and fly the clone into its
-// destination. The deck sits above the animation, so the card appears
-// to emerge from underneath the deck stack.
+// Deal each card from the deck, with a small stagger so they arrive
+// one at a time rather than looking like a single group movement.
 for (var i = startIndex; i < cards.length; i++) {
   var card = cards[i];
   var rect = card.getBoundingClientRect();
-  var clone = card.cloneNode(true);
-  clone.classList.add('action-clone', 'enter-card');
+  var clone = document.createElement('div');
+  clone.className = 'action-clone enter-card';
   clone.style.left = (deckRect ? deckRect.left : rect.left) + 'px';
   clone.style.top = (deckRect ? deckRect.top : rect.top) + 'px';
   clone.style.width = rect.width + 'px';
   clone.style.height = rect.height + 'px';
+  clone.style.setProperty('--deal-delay', ((i - startIndex) * 150) + 'ms');
 
   if (deckRect) {
-    clone.style.setProperty('--dx', (rect.left + rect.width / 2 - (deckRect.left + deckRect.width / 2)) + 'px');
-    clone.style.setProperty('--dy', (rect.top + rect.height / 2 - (deckRect.top + deckRect.height / 2)) + 'px');
+    // Use top-left coordinates so the flight path is exact.
+    clone.style.setProperty('--dx', (rect.left - deckRect.left) + 'px');
+    clone.style.setProperty('--dy', (rect.top - deckRect.top) + 'px');
   } else {
     clone.style.setProperty('--dx', '0px');
     clone.style.setProperty('--dy', '0px');
   }
+
+  var back = document.createElement('img');
+  back.className = 'deal-card-back';
+  back.src = 'assets/dungeon/back.png';
+  back.alt = '';
+
+  var front = card.cloneNode(true);
+  front.classList.add('deal-card-front');
+
+  clone.appendChild(back);
+  clone.appendChild(front);
 
   card.classList.add('action-hidden');
   document.body.appendChild(clone);
@@ -870,8 +882,6 @@ dealCardsSound(animated.length);
 
 await new Promise(function(resolve) { requestAnimationFrame(resolve); });
 
-// The four incoming cards are one deal: wait for the whole group to
-// finish, rather than chaining one card after another.
 await Promise.all(animated.map(function(item) {
   return waitForAnimation(item.clone).then(function() {
     item.clone.remove();
