@@ -1267,7 +1267,7 @@ var isSolo = state.mode !== 'coop';
   
   if (p.weapon) {
     var displayStats = 'ATK ' + p.weapon.value + (p.ceiling === 99 ? '' : '<br><span style="font-size:0.5rem; opacity:0.85;">MAX ' + p.ceiling + '</span>');
-    document.getElementById(id + 'Weapon').innerHTML = cardHTML(p.weapon, displayStats);
+    document.getElementById(id + 'Weapon').innerHTML = cardHTML(p.weapon); //, displayStats);
    // document.getElementById(id + 'WeaponMeta').textContent = p.weapon.name;
   } else {
     document.getElementById(id + 'Weapon').innerHTML = '';
