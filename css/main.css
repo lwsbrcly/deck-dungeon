@@ -250,14 +250,12 @@ button.primary-btn {
   position: absolute;
   inset: 0;
   z-index: 1;
+  pointer-events: none;
 }
 .dungeon-card-wrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-  aspect-ratio: auto;
+  position: absolute;
   box-sizing: border-box;
+  pointer-events: none;
 }
 .dungeon-card-wrap .card {
   position: absolute;
@@ -266,6 +264,7 @@ button.primary-btn {
   height: 100%;
   max-width: none;
   z-index: 1;
+  pointer-events: auto;
 }
 /* Cards */
 .card { 
