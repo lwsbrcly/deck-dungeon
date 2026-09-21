@@ -305,6 +305,19 @@ button.primary-btn {
   will-change: transform, opacity;
 }
 .equip-clone { animation: equip-card 650ms cubic-bezier(.18,.92,.22,1) forwards; }
+.monster-equip-clone { animation: monster-equip-card 650ms cubic-bezier(.18,.92,.22,1) forwards; }
+
+@keyframes monster-equip-card {
+  0%   { transform: translate3d(0,0,0) scale(1) rotate(0deg); opacity: 1; }
+  18%  { transform: translate3d(0,-68px,0) scale(1.34) rotate(-3deg); opacity: 1; }
+  40%  { transform: translate3d(var(--dx),calc(var(--dy) - 42px),0) scale(1.34) rotate(2deg); opacity: 1; }
+  51%  { transform: translate3d(var(--dx),calc(var(--dy) - 42px),0) scale(1.34) rotate(0deg); opacity: 1; }
+  62%  { transform: translate3d(var(--dx),var(--dy),0) scale(.88) rotate(var(--stack-rotation)); opacity: 1; }
+  69%  { transform: translate3d(var(--dx),var(--dy),0) scale(1.10) rotate(var(--stack-rotation)); opacity: 1; }
+  78%  { transform: translate3d(var(--dx),var(--dy),0) scale(.97) rotate(var(--stack-rotation)); opacity: 1; }
+  88%  { transform: translate3d(var(--dx),var(--dy),0) scale(1.025) rotate(var(--stack-rotation)); opacity: 1; }
+  100% { transform: translate3d(var(--dx),var(--dy),0) scale(1) rotate(var(--stack-rotation)); opacity: 1; }
+}
 @keyframes equip-card {
   /* Lift it right off the table. */
   0%   { transform: translate3d(0,0,0) scale(1) rotate(0deg); opacity: 1; }
