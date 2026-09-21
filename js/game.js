@@ -760,6 +760,11 @@ if (animateRoom) animateRoomEntry(skipFirst);
 
 function animateCardAction(cardEl, targetEl, className, done, icon) {
 if (!cardEl) { done(); return; }
+// Remove the selection highlight before the action animation begins.
+if (state.selected !== null) {
+  state.selected = null;
+  render();
+}
 var a = cardEl.getBoundingClientRect();
 var b = targetEl ? targetEl.getBoundingClientRect() : null;
 var clone = cardEl.cloneNode(true);
