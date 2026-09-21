@@ -1269,7 +1269,11 @@ var isSolo = state.mode !== 'coop';
     var deckEl = document.getElementById('p1Deck');
     if (state.deck.length > 0) {
       var deckDepth = Math.ceil(state.deck.length / 3);
-      deckEl.innerHTML = '<div class="deck-card" style="--deck-shadow:' + deckDepth + 'px;"><img src="assets/dungeon/back.png" alt="Deck"></div>';
+      var deckLayers = '';
+      for (var layer = deckDepth; layer >= 0; layer--) {
+        deckLayers += '<img src="assets/dungeon/back.png" alt="" style="--deck-offset:' + layer + 'px; z-index:' + (deckDepth - layer + 1) + ';">';
+      }
+      deckEl.innerHTML = '<div class="deck-card" style="--deck-depth:' + deckDepth + 'px;">' + deckLayers + '</div>';
     } else {
       deckEl.innerHTML = '';
     }
