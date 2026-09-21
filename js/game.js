@@ -564,16 +564,26 @@ if (mode !== 'coop') {
   playersContainer.classList.remove('solo-mode');
 }
 
-fillDungeon(); 
+fillDungeon();
+var firstRoom = state.dungeon.slice();
+state.dungeon = [];
+
 log('A new ' + (mode === 'coop' ? 'co-op' : 'solo') + ' run begins.',false); 
 if (isDaggerMode) {
   log(p1Name + ' enters the dungeon wielding a Dagger (2♦).');
 } else if (mode === 'coop') {
   log(p1Name + ' and ' + p2Name + ' enter the dungeon wielding Daggers (2♦).');
 }
+
+// First render the stable layout with no dungeon cards.
+// Then, on the next frame, put the room cards in place and start the deal.
+render();
 requestAnimationFrame(function() {
+  state.dungeon = firstRoom;
   render();
-  animateRoomEntry();
+  requestAnimationFrame(function() {
+    animateRoomEntry();
+  });
 });
 }
 
