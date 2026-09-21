@@ -387,8 +387,8 @@ button.primary-btn {
   opacity: 1 !important;
 }
 @keyframes enter-card {
-  0% { transform: translate3d(var(--dx),var(--dy),0) rotate(7deg) scale(.94); opacity: 1; }
-  65% { transform: translate3d(calc(var(--dx) - 8px),calc(var(--dy)),0) rotate(-1deg) scale(1.01); opacity: 1; }
+  0% { transform: translate3d(0,0,0) rotate(7deg) scale(.94); opacity: 1; }
+  65% { transform: translate3d(calc(var(--dx) * .92),calc(var(--dy) * .92),0) rotate(-1deg) scale(1.01); opacity: 1; }
   100% { transform: translate3d(var(--dx),var(--dy),0) rotate(0deg) scale(1); opacity: 1; }
 }
 .action-impact {
