@@ -567,8 +567,8 @@ state = {
   maxFoodHP: 54,
   weaponUsage: {},
   eventHistory: [],
-  p1: { hp: maxHP, weapon: starterWeaponP1, ceiling: starterCeilingP1, consumedThisRoom: false },
-  p2: { hp: maxHP, weapon: starterWeaponP2, ceiling: starterCeilingP2, consumedThisRoom: false },
+  p1: { hp: maxHP, weapon: starterWeaponP1, ceiling: starterCeilingP1, consumedThisRoom: false, previousMonsters: [] },
+  p2: { hp: maxHP, weapon: starterWeaponP2, ceiling: starterCeilingP2, consumedThisRoom: false, previousMonsters: [] },
   combinedUsedThisRoom: false
 };
 
@@ -913,7 +913,10 @@ var targetEl = document.getElementById(player + 'Weapon');
 saveState();
 var old = p.weapon;
 animateCardAction(cardEl, targetEl, 'equip-clone', function() {
-  p.weapon = c; p.ceiling = 99; removeSelected();
+  p.weapon = c;
+  p.ceiling = 99;
+  if (player === 'p1') p.previousMonsters = [];
+  removeSelected();
   log(name(player) + ' equips ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').' + (old ? ' (' + old.name + ' discarded)' : ''), true, 'weapon', player === 'p1' ? {p1:c.value,p2:null} : {p1:null,p2:c.value});
   checkGame(); renderAfterAction();
 });
@@ -1101,6 +1104,18 @@ if (player === 'both') {
 
     p.hp = Math.max(0, p.hp - damage);
     state.monstersSlain++;
+
+    // Keep a copy of the slain monster for the previous-monster pile.
+    // The original card is still removed from the dungeon below.
+    if (player === 'p1') {
+      var previousMonster = JSON.parse(JSON.stringify(c));
+      var pileIndex = p.previousMonsters.length;
+      previousMonster.stackX = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
+      previousMonster.stackY = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
+      previousMonster.stackRotation = pileIndex === 0 ? 0 : (Math.random() * 10 - 5);
+      p.previousMonsters.push(previousMonster);
+    }
+
     if (mode === 'weapon') {
       log(name(player) + ' uses ' + p.weapon.name + ' vs ' + c.name + '. Damage taken: ' + damage + '.', true, 'monster');
     } else {
@@ -1279,7 +1294,17 @@ var isSolo = state.mode !== 'coop';
     }
 
     var previousMonsterEl = document.getElementById('p1PreviousMonster');
-    previousMonsterEl.innerHTML = p.lastMonster ? cardHTML(p.lastMonster) : '';
+    if (p.previousMonsters && p.previousMonsters.length) {
+      var previousMonsterHtml = '<div class="previous-monster-stack">';
+      for (var m = 0; m < p.previousMonsters.length; m++) {
+        var monsterCard = p.previousMonsters[m];
+        previousMonsterHtml += '<div class="previous-monster-card" style="--stack-x:' + monsterCard.stackX + 'px; --stack-y:' + monsterCard.stackY + 'px; --stack-rotation:' + monsterCard.stackRotation + 'deg; z-index:' + (m + 1) + ';">' + cardHTML(monsterCard) + '</div>';
+      }
+      previousMonsterHtml += '</div>';
+      previousMonsterEl.innerHTML = previousMonsterHtml;
+    } else {
+      previousMonsterEl.innerHTML = '';
+    }
   }
 
   if (p.weapon) {
