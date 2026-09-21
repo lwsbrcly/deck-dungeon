@@ -1265,6 +1265,19 @@ var isSolo = state.mode !== 'coop';
   document.getElementById(id + 'Panel').classList.toggle('downed', p.hp === 0);
   document.getElementById(id + 'Down').innerHTML = p.hp === 0 ? '<span class="badge">DOWN</span>' : '';
   
+  if (isSolo && id === 'p1') {
+    var deckEl = document.getElementById('p1Deck');
+    if (state.deck.length > 0) {
+      var deckDepth = Math.ceil(state.deck.length / 3);
+      deckEl.innerHTML = '<div class="deck-card" style="--deck-shadow:' + deckDepth + 'px;"><img src="assets/dungeon/back.png" alt="Deck"></div>';
+    } else {
+      deckEl.innerHTML = '';
+    }
+
+    var previousMonsterEl = document.getElementById('p1PreviousMonster');
+    previousMonsterEl.innerHTML = p.lastMonster ? cardHTML(p.lastMonster) : '';
+  }
+
   if (p.weapon) {
     var displayStats = 'ATK ' + p.weapon.value + (p.ceiling === 99 ? '' : '<br><span style="font-size:0.5rem; opacity:0.85;">MAX ' + p.ceiling + '</span>');
     document.getElementById(id + 'Weapon').innerHTML = cardHTML(p.weapon); //, displayStats);
