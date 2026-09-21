@@ -405,15 +405,25 @@ button.primary-btn {
   transform: rotateY(180deg);
 }
 @keyframes enter-card {
+  /* Throw the card out of the deck, lifting it as it travels. */
   0% {
-    transform: translate3d(0,0,0) rotateY(0deg) rotateZ(3deg) scale(.96);
+    transform: translate3d(0,0,0) rotateY(0deg) rotateZ(2deg) scale(.96);
   }
-  48% {
-    transform: translate3d(calc(var(--dx) * .68),calc(var(--dy) * .68),0) rotateY(115deg) rotateZ(1deg) scale(1);
+  22% {
+    transform: translate3d(calc(var(--dx) * .22),calc(var(--dy) * .22 - 34px),0) rotateY(0deg) rotateZ(1deg) scale(1.08);
   }
+  /* Peak of the throw: card is high and large before the flip. */
+  45% {
+    transform: translate3d(calc(var(--dx) * .45),calc(var(--dy) * .45 - 72px),0) rotateY(0deg) rotateZ(0deg) scale(1.18);
+  }
+  55% {
+    transform: translate3d(calc(var(--dx) * .55),calc(var(--dy) * .55 - 72px),0) rotateY(180deg) rotateZ(0deg) scale(1.18);
+  }
+  /* Start dropping toward the table after the flip. */
   72% {
-    transform: translate3d(calc(var(--dx) * .9),calc(var(--dy) * .9),0) rotateY(180deg) rotateZ(0deg) scale(1.01);
+    transform: translate3d(calc(var(--dx) * .72),calc(var(--dy) * .72 - 38px),0) rotateY(180deg) rotateZ(-1deg) scale(1.08);
   }
+  /* Land cleanly at the destination. */
   100% {
     transform: translate3d(var(--dx),var(--dy),0) rotateY(180deg) rotateZ(0deg) scale(1);
   }
