@@ -371,7 +371,7 @@ button.primary-btn {
   28% { transform: translate3d(8px,18px,0) rotate(22deg) scale(1.02); opacity: 1; }
   100% { transform: translate3d(30px,105vh,0) rotate(78deg) scale(.92); opacity: 0; }
 }
-.flee-clone { animation: flee-card 430ms cubic-bezier(.3,.7,.3,1) forwards; }
+.flee-clone { animation: flee-card 560ms cubic-bezier(.3,.7,.3,1) forwards; }
 @keyframes flee-card {
   0% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 1; }
   100% { transform: translate3d(var(--dx),var(--dy),0) rotate(-8deg) scale(.92); opacity: 1; }
@@ -381,8 +381,8 @@ button.primary-btn {
   transform: translate3d(var(--dx),0,0) rotate(7deg) scale(.94) !important;
   pointer-events: none !important;
 }
-.enter-card {
-  animation: enter-card 700ms cubic-bezier(.2,.8,.25,1) forwards;
+ .enter-card {
+  animation: enter-card 910ms cubic-bezier(.2,.8,.25,1) forwards;
   will-change: transform, opacity;
   opacity: 1 !important;
 }
