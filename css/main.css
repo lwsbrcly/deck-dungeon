@@ -208,21 +208,14 @@ button.primary-btn {
 
 .card-rank {
     position: absolute;
-    top: 8%;
-    left: 8%;
-    font-weight: bold; font-size: 0.62rem; line-height: 1.05; z-index: 2;
-}
-
-.card-suit {
-    position: absolute;
-    top: 8%;
-    right: 8%;
+    top: 10%;
+    left: 10%;
     font-weight: bold; font-size: 0.62rem; line-height: 1.05; z-index: 2;
 }
 
 .card-title {
     position: absolute;
-    bottom: 12%;
+    bottom: 11%;
     left: 10%;
     right: 10%;
     text-align: center;
