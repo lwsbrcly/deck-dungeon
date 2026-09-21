@@ -247,6 +247,7 @@ button.primary-btn {
   box-sizing: border-box;
 }
 .dungeon-grid {
+  display: block;
   position: absolute;
   inset: 0;
   z-index: 1;
