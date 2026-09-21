@@ -26,6 +26,7 @@ const ranks = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
 function value(rank) { return rank==='A'?14:rank==='J'?11:rank==='Q'?12:rank==='K'?13:Number(rank); }
 
 
+
 function makeDeck(excludeDagger) {
 var d = [];
 var suitKeys = Object.keys(SUITS);
