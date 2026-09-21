@@ -696,9 +696,52 @@ return '<div class="card ' + (red ? 'red' : 'black') + '">' +
 
 function removeSelected() {
 var removedIndex = state.selected;
-var c = state.dungeon.splice(removedIndex, 1)[0];
-state._removedIndex = removedIndex;
+var c = state.dungeon[removedIndex];
+var shouldAnimateShift = !state.over && state.dungeon.length > 1 && removedIndex < state.dungeon.length - 1;
+var shiftCards = [];
+
+if (shouldAnimateShift) {
+  var wraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
+  for (var i = removedIndex + 1; i < wraps.length; i++) {
+    var rect = wraps[i].getBoundingClientRect();
+    shiftCards.push({ el: wraps[i], x: rect.left, y: rect.top });
+  }
+}
+
+state.dungeon.splice(removedIndex, 1);
 state.selected = null;
+state._removedIndex = removedIndex;
+
+if (shiftCards.length) {
+  requestAnimationFrame(function() {
+    var newWraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
+    for (var j = 0; j < shiftCards.length; j++) {
+      var old = shiftCards[j];
+      var target = newWraps[removedIndex + j];
+      if (!target) continue;
+      var targetRect = target.getBoundingClientRect();
+      old.el.style.position = 'fixed';
+      old.el.style.left = old.x + 'px';
+      old.el.style.top = old.y + 'px';
+      old.el.style.width = targetRect.width + 'px';
+      old.el.style.height = targetRect.height + 'px';
+      old.el.style.zIndex = '1003';
+      old.el.style.pointerEvents = 'none';
+      old.el.style.transition = 'left 350ms cubic-bezier(.2,.8,.25,1), top 350ms cubic-bezier(.2,.8,.25,1)';
+      requestAnimationFrame((function(el, rect) {
+        return function() {
+          el.style.left = rect.left + 'px';
+          el.style.top = rect.top + 'px';
+        };
+      })(old.el, targetRect));
+      setTimeout((function(el) {
+        return function() { el.remove(); };
+      })(old.el), 380);
+    }
+  });
+}
+
+
 state.justFled = false;
 var before = state.dungeon.length;
 
@@ -714,77 +757,6 @@ if (!isDead) {
 state._roomWasDealt = !isDead && (before <= 1 && state.dungeon.length > before);
 state._skipFirstRoomCard = state._roomWasDealt && before === 1;
 return c;
-}
-
-function captureDungeonCardPositions(removedIndex) {
-var positions = new Map();
-var wraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
-for (var i = 0; i < state.dungeon.length; i++) {
-  var oldIndex = (removedIndex !== null && removedIndex !== undefined && i >= removedIndex) ? i + 1 : i;
-  var wrap = wraps[oldIndex];
-  if (!wrap || !state.dungeon[i]) continue;
-  positions.set(state.dungeon[i], wrap.getBoundingClientRect());
-}
-return positions;
-}
-
-function animateDungeonShift(oldPositions) {
-if (!oldPositions || !oldPositions.size) return;
-
-var wraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
-var moving = [];
-
-for (var i = 0; i < wraps.length; i++) {
-  var card = state.dungeon[i];
-  var oldRect = oldPositions.get(card);
-  if (!card || !oldRect) continue;
-
-  var newRect = wraps[i].getBoundingClientRect();
-  var dx = oldRect.left - newRect.left;
-  var dy = oldRect.top - newRect.top;
-  if (Math.abs(dx) < 1 && Math.abs(dy) < 1) continue;
-
-  wraps[i].style.transform = 'translate3d(' + dx + 'px, ' + dy + 'px, 0)';
-  wraps[i].style.transition = 'none';
-  moving.push(wraps[i]);
-}
-
-// Force the browser to acknowledge the starting positions before changing them.
-for (var j = 0; j < moving.length; j++) {
-  moving[j].offsetHeight;
-}
-
-requestAnimationFrame(function() {
-  requestAnimationFrame(function() {
-    for (var k = 0; k < moving.length; k++) {
-      var el = moving[k];
-      el.style.transition = 'transform 450ms cubic-bezier(.2,.8,.25,1)';
-      el.style.transform = 'translate3d(0, 0, 0)';
-    }
-  });
-});
-
-setTimeout(function() {
-  for (var m = 0; m < moving.length; m++) {
-    moving[m].style.transform = '';
-    moving[m].style.transition = '';
-  }
-}, 480);
-}
-
-function renderAfterAction() {
-var animateRoom = !!state._roomWasDealt;
-var skipFirst = !!state._skipFirstRoomCard;
-var oldPositions = animateRoom ? null : captureDungeonCardPositions(state._removedIndex);
-state._roomWasDealt = false;
-state._removedIndex = null;
-state._skipFirstRoomCard = false;
-render();
-if (animateRoom) {
-  animateRoomEntry(skipFirst);
-} else {
-  animateDungeonShift(oldPositions);
-}
 }
 
 function animateCardAction(cardEl, targetEl, className, done, icon) {
