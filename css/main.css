@@ -103,8 +103,8 @@ button.primary-btn {
 
 .ascii-health-bar {
   font-family: monospace;
-  font-size: 16px;
-  letter-spacing: 2px;
+  font-size: 18px;
+  letter-spacing: 0;
   white-space: nowrap;
   text-align: center;
   overflow-x: auto;
