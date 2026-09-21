@@ -5,7 +5,7 @@
     text-align: center;
 }
 
-.game-selector h1 {
+#game-selector h1 {
     margin: 0 0 35px;
     font-size: 52px;
     line-height: 1.05;
@@ -109,7 +109,7 @@
         grid-template-columns: 1fr;
     }
 
-    .game-selector h1 {
+    #game-selector h1 {
         font-size: 32px;
     }
 
