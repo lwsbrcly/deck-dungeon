@@ -1,4 +1,3 @@
-
 :root {
   --bg: #19191A; 
   --panel-bg: #0E253D;
@@ -499,14 +498,17 @@ button.primary-btn {
   font-size: 0.8rem;
 }
 .action-buttons {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 6px;
 }
 .action-buttons button {
   width: 100%;
+  min-width: 0;
   box-sizing: border-box;
+  white-space: nowrap;
 }
 .action-button-hidden {
   visibility: hidden;
