@@ -715,7 +715,7 @@ if (c.suit === 'clubs' && c.rank === 'A') {
 }
 
 return '<div class="card ' + (red ? 'red' : 'black') + '">' +
-  '<div class="corner">' + cornerText + '</div>' +
+  '<div class="card-rank">' + cornerText + '</div>' +
   centerArt +
   '<div class="card-title">' + c.name + '</div>' +
 '</div>';
