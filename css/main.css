@@ -190,7 +190,7 @@ button.primary-btn {
   /*max-width: 80px;*/ 
   aspect-ratio: 2 / 3; 
   /*background: var(--card-bg);*/
-  background-image: url("../assets/dungeon/back.png");
+  background-image: url("../assets/dungeon/card.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
