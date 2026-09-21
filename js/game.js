@@ -868,6 +868,8 @@ for (var i = startIndex; i < cards.length; i++) {
     clone.style.setProperty('--dy', '0px');
   }
 
+  // Build a real two-sided card. Both faces stay in place for the
+  // entire animation; the wrapper itself performs the Y rotation.
   var back = document.createElement('img');
   back.className = 'deal-card-back';
   back.src = 'assets/dungeon/back.png';
