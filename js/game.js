@@ -878,8 +878,11 @@ if (!cards || !cards.length) return;
 // Sound begins with the room fleeing.
 fleeSound();
 
-// All four cards leave together. The only wait here is until the entire
-// fleeing room has finished, so the replacement room cannot appear early.
+var deckEl = document.getElementById('p1Deck');
+var deckRect = deckEl ? deckEl.getBoundingClientRect() : null;
+
+// All four cards return to the deck together. The only wait here is until
+// the entire fleeing room has finished, so the replacement room cannot appear early.
 var waits = [];
 for (var i = 0; i < cards.length; i++) {
   var card = cards[i];
@@ -890,8 +893,15 @@ for (var i = 0; i < cards.length; i++) {
   clone.style.top = rect.top + 'px';
   clone.style.width = rect.width + 'px';
   clone.style.height = rect.height + 'px';
-  clone.style.setProperty('--dx', -(rect.left + rect.width + 80) + 'px');
-  clone.style.setProperty('--dy', ((i%2 ? -1 : 1) * (8 + i*3)) + 'px');
+
+  if (deckRect) {
+    clone.style.setProperty('--dx', (deckRect.left + deckRect.width / 2 - (rect.left + rect.width / 2)) + 'px');
+    clone.style.setProperty('--dy', (deckRect.top + deckRect.height / 2 - (rect.top + rect.height / 2)) + 'px');
+  } else {
+    clone.style.setProperty('--dx', -(rect.left + rect.width + 80) + 'px');
+    clone.style.setProperty('--dy', ((i%2 ? -1 : 1) * (8 + i*3)) + 'px');
+  }
+
   card.classList.add('action-hidden');
   document.body.appendChild(clone);
   waits.push(waitForAnimation(clone).then(function(c, el) {
