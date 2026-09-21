@@ -6,8 +6,10 @@
 }
 
 .game-selector h1 {
-    margin: 0 0 8px;
-    font-size: 42px;
+    margin: 0 0 35px;
+    font-size: 52px;
+    line-height: 1.05;
+    text-align: center;
 }
 
 .selector-subtitle {
