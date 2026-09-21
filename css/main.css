@@ -208,7 +208,7 @@ button.primary-btn {
 
 .card-rank {
     position: absolute;
-    top: 12%;
+    top: 10%;
     left: 10%;
     font-weight: bold; font-size: 0.6rem; line-height: 1.05; z-index: 2;
 }
