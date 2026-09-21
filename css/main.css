@@ -226,24 +226,37 @@ button.primary-btn {
 .dungeon-section { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
 .dungeon-header { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
 .dungeon-title-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
-.dungeon-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-.dungeon-card-wrap {
+.dungeon-board {
   position: relative;
-  width: 100%; 
-  aspect-ratio: 2 / 3; 
-  box-sizing: border-box;
 }
-
-.dungeon-card-wrap::before {
-  content: "";
-  background-image: none;
-  position: absolute;
-  inset: 0;
+.dungeon-slots,
+.dungeon-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.dungeon-slots {
+  position: relative;
+  z-index: 0;
+}
+.dungeon-slot {
+  width: 100%;
+  aspect-ratio: 2 / 3;
   border: 1.5px dashed var(--border);
   border-radius: 5px;
   box-sizing: border-box;
 }
-
+.dungeon-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.dungeon-card-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  box-sizing: border-box;
+}
 .dungeon-card-wrap .card {
   position: absolute;
   inset: 0;
