@@ -1,15 +1,13 @@
 
 :root {
-  --bg: #121214;
-  --card-bg: #1e1e24;
-  --panel-bg: #18181c;
-  --border: #2e2e38;
-  --text: #e1e1e6;
-  --muted: #8d8d99;
-  --red: #e55555;
-  --green: #47d16c;
-  --gold: #f1c40f;
-  --dungeon: #6A557F;
+  --bg: #0E253D;
+  --panel-bg: #19191A;
+  --border: #B0843C;
+  --text: #CDA655;
+  --muted: #8f8e8d;
+  --red: #963221;
+  --highlight: #eb6b20;
+  --rooms: #a0723f;
 }
 
 * { 
@@ -30,9 +28,9 @@ body {
 }
 
 .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 10px; }
-header { position: relative; text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; color: (var --gold); }
+header { position: relative; text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; color: var(--highlight); }
 .version-label { position: absolute; right: 2px; top: 2px; font-size: 0.62rem; color: var(--muted); font-weight: normal; letter-spacing: 0.2px; }
-h1 { font-size: 1.5rem; letter-spacing: 1px; color: var(--gold); }
+h1 { font-size: 1.5rem; letter-spacing: 1px; color: var(--highlight); }
 
 /* Setup Screen */
 .setup-screen { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px; text-align: center; }
@@ -43,7 +41,7 @@ select, input { width: 100%; padding: 8px; background: var(--bg); border: 1px so
 button.primary-btn { 
   width: 100%; 
   padding: 12px; 
-  background: #3b82f6; 
+  background: var(--highlight); 
   color: #fff; 
   font-weight: bold; 
   border: none; 
@@ -55,7 +53,7 @@ button.primary-btn {
 }
 
 .setup-rules { font-size: 0.78rem; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px; text-align: left; margin-bottom: 12px; line-height: 1.4; }
-.setup-rules h3 { color: var(--gold); font-size: 0.85rem; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.setup-rules h3 { color: var(--highlight); font-size: 0.85rem; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
 .setup-rules ul { padding-left: 16px; margin-bottom: 8px; }
 .setup-rules li { margin-bottom: 4px; }
 
@@ -83,11 +81,11 @@ button.primary-btn {
   height: 16px;
   margin: 1px 0 0;
   flex: 0 0 auto;
-  accent-color: var(--gold);
+  accent-color: var(--highlight);
   appearance: auto;
   -webkit-appearance: checkbox;
 }
-.hard-mode-label strong { color: var(--gold); }
+.hard-mode-label strong { color: var(--highlight); }
 
 /* Game Layout */
 .game-layout { display: flex; flex-direction: column; gap: 10px; }
@@ -112,7 +110,7 @@ button.primary-btn {
   text-align: center;
   overflow-x: auto;
   padding: 4px 0;
-  color: var(--green);
+  color: var(--red);
 }
 
 .ascii-dungeon-progress {
@@ -240,7 +238,7 @@ button.primary-btn {
 }
 .equip-sparks::before, .equip-sparks::after {
   content: '✦'; position: absolute; left: 0; top: 0;
-  font-size: 1.05rem; font-weight: 900; color: var(--gold);
+  font-size: 1.05rem; font-weight: 900; color: var(--highlight);
   text-shadow: 0 0 7px rgba(241,196,15,.8);
 }
 .equip-sparks::before { transform: translate(-21px,-9px) scale(.8); }
@@ -284,7 +282,7 @@ button.primary-btn {
 }
 .action-impact {
   position: fixed; z-index: 1001; pointer-events: none;
-  font-size: 1.5rem; font-weight: 900; color: var(--gold);
+  font-size: 1.5rem; font-weight: 900; color: var(--highlight);
   text-shadow: 0 0 8px rgba(241,196,15,.65);
   animation: action-impact 260ms ease-out forwards;
 }
@@ -334,7 +332,7 @@ button.primary-btn {
   pointer-events: none;
   font-size: 1.5rem;
   font-weight: 900;
-  color: var(--gold);
+  color: var(--highlight);
   text-shadow: 0 0 8px rgba(241,196,15,.65);
   animation: combat-impact 260ms ease-out forwards;
 }
@@ -344,7 +342,7 @@ button.primary-btn {
   100% { transform: translate(-50%,-70%) scale(.8) rotate(18deg); opacity: 0; }
 }
 
-.card.selected { border-color: var(--gold); box-shadow: 0 0 8px rgba(241, 196, 15, 0.4); }
+.card.selected { border-color: var(--highlight); box-shadow: 0 0 8px rgba(241, 196, 15, 0.4); }
 .card.red { color: var(--red); }
 .card.black { color: #fff; }
 .card.empty {
@@ -454,7 +452,7 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .modal { background: rgba(24, 24, 28, 0.95); border: 1px solid var(--border); border-radius: 8px; padding: 20px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
 .modal h2 { margin-bottom: 4px; color: #fff; font-size: 1.2rem; }
 .modal p { color: var(--muted); margin-bottom: 12px; font-size: 0.85rem; line-height: 1.4; }
-.score-banner { font-size: 1.5rem; font-weight: bold; margin: 6px 0 12px 0; color: var(--gold); }
+.score-banner { font-size: 1.5rem; font-weight: bold; margin: 6px 0 12px 0; color: var(--highlight); }
 .score-banner.negative { color: var(--red); }
 
 /* Summary Card Grid */
@@ -500,7 +498,7 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .run-chart-legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; border: 1px solid var(--bg); }
 .run-chart-legend-dot.monster { background: #e55555; }
 .run-chart-legend-dot.fist { background: #429AFF; }
-.run-chart-legend-dot.weapon { background: var(--gold); }
+.run-chart-legend-dot.weapon { background: #f1c40f; }
 .run-chart-legend-dot.potion { background: #47d16c; }
 .run-chart-legend-dot.flee { background: #6f8ea8; }
 .run-chart .grid-line { stroke: var(--border); stroke-width: 1; }
@@ -509,16 +507,16 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .run-chart .panel-label { fill: var(--text); font-size: 11px; font-weight: 600; }
 .run-chart .hp-line { fill: none; stroke: #e1e1e6; stroke-width: 2.5; }
 .run-chart .hp-line.p2 { stroke-dasharray: 6 4; opacity: 0.72; }
-.run-chart .weapon-line { fill: none; stroke: var(--gold); stroke-width: 2.2; stroke-dasharray: 5 3; }
+.run-chart .weapon-line { fill: none; stroke: var(--highlight); stroke-width: 2.2; stroke-dasharray: 5 3; }
 .run-chart .event-dot { stroke: var(--bg); stroke-width: 1.5; }
 .run-chart .event-dot.monster { fill: #e55555; }
 .run-chart .event-dot.fist { fill: #429AFF; }
-.run-chart .event-dot.weapon { fill: var(--gold); }
+.run-chart .event-dot.weapon { fill: #f1c40f; }
 .run-chart .event-dot.potion { fill: #47d16c; }
 .run-chart .event-dot.flee { fill: #6f8ea8; }
 .run-chart .event-dot.other { fill: #c0c0c0; }
 .run-chart .event-dot.alt { opacity: 0.75; }
-.run-chart .weapon-equip-dot { fill: var(--gold); stroke: #fff; stroke-width: 1.2; }
+.run-chart .weapon-equip-dot { fill: #f1c40f; stroke: #fff; stroke-width: 1.2; }
 .run-chart .legend { font-size: 10px; fill: var(--muted); }
 .run-chart .legend-line { stroke-width: 2; }
 
@@ -581,7 +579,7 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .splash-symbols {
   margin-top: 28px; font-family: "Courier New", monospace;
   font-size: clamp(20px, 3vw, 34px); letter-spacing: .55em;
-  color: var(--gold);
+  color: var(--highlight);
 }
 .splash-prompt {
   margin-top: 44px; font-family: "Courier New", monospace;
