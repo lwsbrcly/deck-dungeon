@@ -844,16 +844,25 @@ for (var i = startIndex; i < cards.length; i++) {
   var rect = card.getBoundingClientRect();
   var clone = document.createElement('div');
   clone.className = 'action-clone enter-card';
-  clone.style.left = (deckRect ? deckRect.left : rect.left) + 'px';
-  clone.style.top = (deckRect ? deckRect.top : rect.top) + 'px';
+  // The top card is the last rendered deck layer. That layer is
+  // offset slightly up/left from the dotted deck box, so start the
+  // animation from the visible centre of that top card rather than
+  // from the bottom layer underneath it.
+  var deckDepth = deckRect ? Math.ceil(state.deck.length / 3) : 0;
+  var deckTopOffset = -(deckDepth / 2);
+  var dealStartLeft = deckRect ? deckRect.left + deckTopOffset : rect.left;
+  var dealStartTop = deckRect ? deckRect.top + deckTopOffset : rect.top;
+
+  clone.style.left = dealStartLeft + 'px';
+  clone.style.top = dealStartTop + 'px';
   clone.style.width = rect.width + 'px';
   clone.style.height = rect.height + 'px';
   clone.style.setProperty('--deal-delay', ((i - startIndex) * 150) + 'ms');
 
   if (deckRect) {
     // Use top-left coordinates so the flight path is exact.
-    clone.style.setProperty('--dx', (rect.left - deckRect.left) + 'px');
-    clone.style.setProperty('--dy', (rect.top - deckRect.top) + 'px');
+    clone.style.setProperty('--dx', (rect.left - dealStartLeft) + 'px');
+    clone.style.setProperty('--dy', (rect.top - dealStartTop) + 'px');
   } else {
     clone.style.setProperty('--dx', '0px');
     clone.style.setProperty('--dy', '0px');
