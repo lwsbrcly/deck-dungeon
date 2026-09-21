@@ -374,7 +374,7 @@ button.primary-btn {
 .flee-clone { animation: flee-card 430ms cubic-bezier(.3,.7,.3,1) forwards; }
 @keyframes flee-card {
   0% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 1; }
-  100% { transform: translate3d(var(--dx),var(--dy),0) rotate(-8deg) scale(.92); opacity: 0; }
+  100% { transform: translate3d(var(--dx),var(--dy),0) rotate(-8deg) scale(.92); opacity: 1; }
 }
 .enter-prep {
   opacity: 0 !important;
@@ -386,9 +386,9 @@ button.primary-btn {
   will-change: transform, opacity;
 }
 @keyframes enter-card {
-  0% { transform: translate3d(var(--dx),0,0) rotate(7deg) scale(.94); opacity: 0; }
-  65% { transform: translate3d(-8px,0,0) rotate(-1deg) scale(1.01); opacity: 1; }
-  100% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 1; }
+  0% { transform: translate3d(var(--dx),var(--dy),0) rotate(7deg) scale(.94); opacity: 1; }
+  65% { transform: translate3d(calc(var(--dx) - 8px),calc(var(--dy)),0) rotate(-1deg) scale(1.01); opacity: 1; }
+  100% { transform: translate3d(var(--dx),var(--dy),0) rotate(0deg) scale(1); opacity: 1; }
 }
 .action-impact {
   position: fixed; z-index: 1001; pointer-events: none;
