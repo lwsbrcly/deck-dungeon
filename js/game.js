@@ -462,7 +462,40 @@ document.getElementById('setupScreen').style.display = 'block';
 showScreen('game-selector');
 }
 
-;
+function removeSelected() {
+var c = state.dungeon.splice(state.selected, 1)[0];
+state.selected = null;
+state.justFled = false;
+var before = state.dungeon.length;
+
+// If this action just killed the player(s), do not deal another room.
+// checkGame() will show the game-over overlay immediately afterwards.
+var isSolo = state.mode !== 'coop';
+var isDead = isSolo ? state.p1.hp <= 0 : (state.p1.hp <= 0 && state.p2.hp <= 0);
+
+if (!isDead) {
+  fillDungeon();
+}
+
+state._roomWasDealt = !isDead && (before <= 1 && state.dungeon.length > before);
+state._skipFirstRoomCard = state._roomWasDealt && before === 1;
+return c;
+}
+
+function renderAfterAction() {
+var animateRoom = !!state._roomWasDealt;
+var skipFirst = !!state._skipFirstRoomCard;
+state._roomWasDealt = false;
+state._skipFirstRoomCard = false;
+render();
+if (animateRoom) animateRoomEntry(skipFirst);
+}
+
+function animateCardAction(cardEl, targetEl, className, done, icon) {
+if (!cardEl) { done(); return; }
+// Remove the selection highlight before the action animation begins.
+if (state.selected !== null) {
+  state.selected = null;
   render();
 }
 var a = cardEl.getBoundingClientRect();
