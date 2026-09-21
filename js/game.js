@@ -695,7 +695,9 @@ return '<div class="card ' + (red ? 'red' : 'black') + '">' +
 }
 
 function removeSelected() {
-var c = state.dungeon.splice(state.selected, 1)[0];
+var removedIndex = state.selected;
+var c = state.dungeon.splice(removedIndex, 1)[0];
+state._removedIndex = removedIndex;
 state.selected = null;
 state.justFled = false;
 var before = state.dungeon.length;
@@ -714,13 +716,14 @@ state._skipFirstRoomCard = state._roomWasDealt && before === 1;
 return c;
 }
 
-function captureDungeonCardPositions() {
+function captureDungeonCardPositions(removedIndex) {
 var positions = new Map();
 var wraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
-for (var i = 0; i < wraps.length; i++) {
-  var card = state.dungeon[i];
-  if (!card) continue;
-  positions.set(card, wraps[i].getBoundingClientRect());
+for (var i = 0; i < state.dungeon.length; i++) {
+  var oldIndex = (removedIndex !== null && removedIndex !== undefined && i >= removedIndex) ? i + 1 : i;
+  var wrap = wraps[oldIndex];
+  if (!wrap || !state.dungeon[i]) continue;
+  positions.set(state.dungeon[i], wrap.getBoundingClientRect());
 }
 return positions;
 }
@@ -761,8 +764,9 @@ for (var i = 0; i < wraps.length; i++) {
 function renderAfterAction() {
 var animateRoom = !!state._roomWasDealt;
 var skipFirst = !!state._skipFirstRoomCard;
-var oldPositions = animateRoom ? null : captureDungeonCardPositions();
+var oldPositions = animateRoom ? null : captureDungeonCardPositions(state._removedIndex);
 state._roomWasDealt = false;
+state._removedIndex = null;
 state._skipFirstRoomCard = false;
 render();
 if (animateRoom) {
