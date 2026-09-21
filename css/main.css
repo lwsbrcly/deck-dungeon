@@ -121,7 +121,7 @@ button.primary-btn {
   text-align: center;
   overflow-x: auto;
   padding: 4px 0;
-  color: var(--dungeon);
+  color: var(--rooms);
 }
 
 .room-current::after {
