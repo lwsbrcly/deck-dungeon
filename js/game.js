@@ -18,7 +18,6 @@ function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
     });
-var pendingDungeonShift = null;
 
     // Show the requested screen
     document.getElementById(screenId).classList.add('active');
@@ -696,37 +695,8 @@ return '<div class="card ' + (red ? 'red' : 'black') + '">' +
 }
 
 function removeSelected() {
-var removedIndex = state.selected;
-var c = state.dungeon[removedIndex];
-var shouldAnimateShift = !state.over && state.dungeon.length > 1 && removedIndex < state.dungeon.length - 1;
-pendingDungeonShift = null;
-
-if (shouldAnimateShift) {
-  var wraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
-  var shifts = [];
-
-  for (var i = removedIndex + 1; i < wraps.length; i++) {
-    var cardEl = wraps[i].querySelector('.card:not(.empty)');
-    if (!cardEl) continue;
-
-    var rect = cardEl.getBoundingClientRect();
-    var clone = cardEl.cloneNode(true);
-    clone.classList.add('action-clone', 'dungeon-shift-clone');
-    clone.style.left = rect.left + 'px';
-    clone.style.top = rect.top + 'px';
-    clone.style.width = rect.width + 'px';
-    clone.style.height = rect.height + 'px';
-    document.body.appendChild(clone);
-
-    shifts.push({ clone: clone, targetIndex: i - 1 });
-  }
-
-  pendingDungeonShift = shifts;
-}
-
-state.dungeon.splice(removedIndex, 1);
+var c = state.dungeon.splice(state.selected, 1)[0];
 state.selected = null;
-
 state.justFled = false;
 var before = state.dungeon.length;
 
@@ -747,44 +717,10 @@ return c;
 function renderAfterAction() {
 var animateRoom = !!state._roomWasDealt;
 var skipFirst = !!state._skipFirstRoomCard;
-var shifts = pendingDungeonShift;
-pendingDungeonShift = null;
 state._roomWasDealt = false;
 state._skipFirstRoomCard = false;
-
 render();
-
-if (animateRoom) {
-  if (shifts) {
-    for (var i = 0; i < shifts.length; i++) shifts[i].clone.remove();
-  }
-  animateRoomEntry(skipFirst);
-  return;
-}
-
-if (!shifts || !shifts.length) return;
-
-requestAnimationFrame(function() {
-  for (var i = 0; i < shifts.length; i++) {
-    var shift = shifts[i];
-    var target = document.querySelectorAll('#dungeon .dungeon-card-wrap')[shift.targetIndex];
-    if (!target) {
-      shift.clone.remove();
-      continue;
-    }
-
-    var targetRect = target.querySelector('.card').getBoundingClientRect();
-    shift.clone.style.transition = 'left 350ms cubic-bezier(.2,.8,.25,1), top 350ms cubic-bezier(.2,.8,.25,1)';
-    shift.clone.style.left = targetRect.left + 'px';
-    shift.clone.style.top = targetRect.top + 'px';
-  }
-});
-
-setTimeout(function() {
-  for (var i = 0; i < shifts.length; i++) {
-    if (shifts[i].clone.parentNode) shifts[i].clone.remove();
-  }
-}, 380);
+if (animateRoom) animateRoomEntry(skipFirst);
 }
 
 function animateCardAction(cardEl, targetEl, className, done, icon) {
