@@ -904,6 +904,44 @@ for (var i = 0; i < cards.length; i++) {
 await Promise.all(waits);
 }
 
+function animateMonsterToPrevious(cardEl, targetEl, monster, done) {
+if (!cardEl || !targetEl) { done(); return; }
+
+var a = cardEl.getBoundingClientRect();
+var b = targetEl.getBoundingClientRect();
+var clone = cardEl.cloneNode(true);
+clone.classList.add('action-clone', 'monster-equip-clone');
+clone.style.left = a.left + 'px';
+clone.style.top = a.top + 'px';
+clone.style.width = a.width + 'px';
+clone.style.height = a.height + 'px';
+
+var targetX = b.left + b.width / 2 + (monster.stackX || 0);
+var targetY = b.top + b.height / 2 + (monster.stackY || 0);
+clone.style.setProperty('--dx', (targetX - (a.left + a.width / 2)) + 'px');
+clone.style.setProperty('--dy', (targetY - (a.top + a.height / 2)) + 'px');
+clone.style.setProperty('--stack-rotation', (monster.stackRotation || 0) + 'deg');
+
+cardEl.classList.add('action-hidden');
+document.body.appendChild(clone);
+
+setTimeout(function() {
+  var game = document.getElementById('game');
+  if (game) {
+    game.classList.remove('combat-shake');
+    void game.offsetWidth;
+    game.classList.add('combat-shake');
+    setTimeout(function(){ game.classList.remove('combat-shake'); }, 170);
+  }
+}, 403);
+
+setTimeout(function() {
+  clone.remove();
+  cardEl.classList.remove('action-hidden');
+  done();
+}, 650);
+}
+
 function equipWeapon(player) {
 if (state.over || state.selected === null) return;
 var c = state.dungeon[state.selected], p = state[player];
@@ -912,13 +950,47 @@ var cardEl = document.querySelector('#dungeon .dungeon-card-wrap:nth-child(' + (
 var targetEl = document.getElementById(player + 'Weapon');
 saveState();
 var old = p.weapon;
-animateCardAction(cardEl, targetEl, 'equip-clone', function() {
+
+var previousStack = player === 'p1' ? document.querySelectorAll('#p1PreviousMonster .previous-monster-card .card') : [];
+var clearPreviousMonsters = function(done) {
+  if (!previousStack.length) { done(); return; }
+
+  discardSound();
+  var waits = [];
+  for (var i = 0; i < previousStack.length; i++) {
+    var monsterCardEl = previousStack[i];
+    var rect = monsterCardEl.getBoundingClientRect();
+    var clone = monsterCardEl.cloneNode(true);
+    clone.classList.add('action-clone', 'discard-clone');
+    clone.style.left = rect.left + 'px';
+    clone.style.top = rect.top + 'px';
+    clone.style.width = rect.width + 'px';
+    clone.style.height = rect.height + 'px';
+    clone.style.setProperty('--dx', (window.innerWidth - rect.left + 80) + 'px');
+    clone.style.setProperty('--dy', ((i % 2 ? -1 : 1) * (8 + i * 3)) + 'px');
+    monsterCardEl.classList.add('action-hidden');
+    document.body.appendChild(clone);
+    waits.push(waitForAnimation(clone).then(function(c, el) {
+      return function() {
+        c.remove();
+        el.classList.remove('action-hidden');
+      };
+    }(clone, monsterCardEl)));
+  }
+  Promise.all(waits).then(done);
+};
+
+var finishEquip = function() {
   p.weapon = c;
   p.ceiling = 99;
   if (player === 'p1') p.previousMonsters = [];
   removeSelected();
   log(name(player) + ' equips ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').' + (old ? ' (' + old.name + ' discarded)' : ''), true, 'weapon', player === 'p1' ? {p1:c.value,p2:null} : {p1:null,p2:c.value});
   checkGame(); renderAfterAction();
+};
+
+clearPreviousMonsters(function() {
+  animateCardAction(cardEl, targetEl, 'equip-clone', finishEquip);
 });
 }
 
@@ -1105,8 +1177,11 @@ if (player === 'both') {
     p.hp = Math.max(0, p.hp - damage);
     state.monstersSlain++;
 
-    // Keep a copy of the slain monster for the previous-monster pile.
-    // The original card is still removed from the dungeon below.
+    if (mode === 'weapon') {
+      log(name(player) + ' uses ' + p.weapon.name + ' vs ' + c.name + '. Damage taken: ' + damage + '.', true, 'monster');
+    } else {
+      log(name(player) + ' enters Fist Fight with ' + c.name + ' and takes ' + damage + ' damage.', true, 'fist');
+    }
     if (player === 'p1') {
       var previousMonster = JSON.parse(JSON.stringify(c));
       var pileIndex = p.previousMonsters.length;
@@ -1114,13 +1189,15 @@ if (player === 'both') {
       previousMonster.stackY = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
       previousMonster.stackRotation = pileIndex === 0 ? 0 : (Math.random() * 10 - 5);
       p.previousMonsters.push(previousMonster);
+
+      removeSelected();
+      animateMonsterToPrevious(targetEl, document.getElementById('p1PreviousMonster'), previousMonster, function() {
+        checkGame();
+        renderAfterAction();
+      });
+      return;
     }
 
-    if (mode === 'weapon') {
-      log(name(player) + ' uses ' + p.weapon.name + ' vs ' + c.name + '. Damage taken: ' + damage + '.', true, 'monster');
-    } else {
-      log(name(player) + ' enters Fist Fight with ' + c.name + ' and takes ' + damage + ' damage.', true, 'fist');
-    }
     removeSelected();
     checkGame();
     renderAfterAction();
