@@ -1270,8 +1270,8 @@ var isSolo = state.mode !== 'coop';
     if (state.deck.length > 0) {
       var deckDepth = Math.ceil(state.deck.length / 3);
       var deckLayers = '';
-      for (var layer = deckDepth; layer >= 0; layer--) {
-        deckLayers += '<img src="assets/dungeon/back.png" alt="" style="--deck-offset:' + layer + 'px; z-index:' + (deckDepth - layer + 1) + ';">';
+      for (var layer = 0; layer <= deckDepth; layer++) {
+        deckLayers += '<img src="assets/dungeon/back.png" alt="" style="--deck-offset:' + layer + 'px; z-index:' + (layer + 1) + ';">';
       }
       deckEl.innerHTML = '<div class="deck-card" style="--deck-depth:' + deckDepth + 'px;">' + deckLayers + '</div>';
     } else {
