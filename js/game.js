@@ -698,48 +698,24 @@ function removeSelected() {
 var removedIndex = state.selected;
 var c = state.dungeon[removedIndex];
 var shouldAnimateShift = !state.over && state.dungeon.length > 1 && removedIndex < state.dungeon.length - 1;
-var shiftCards = [];
-
 if (shouldAnimateShift) {
   var wraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
   for (var i = removedIndex + 1; i < wraps.length; i++) {
-    var rect = wraps[i].getBoundingClientRect();
-    shiftCards.push({ el: wraps[i], x: rect.left, y: rect.top });
+    var el = wraps[i];
+    var from = el.getBoundingClientRect();
+    var target = wraps[i - 1].getBoundingClientRect();
+    var dx = target.left - from.left;
+    var dy = target.top - from.top;
+
+    el.style.transition = 'transform 350ms cubic-bezier(.2,.8,.25,1)';
+    el.style.transform = 'translate3d(' + dx + 'px, ' + dy + 'px, 0)';
+    el.style.zIndex = '10';
   }
 }
 
 state.dungeon.splice(removedIndex, 1);
 state.selected = null;
 state._removedIndex = removedIndex;
-
-if (shiftCards.length) {
-  requestAnimationFrame(function() {
-    var newWraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
-    for (var j = 0; j < shiftCards.length; j++) {
-      var old = shiftCards[j];
-      var target = newWraps[removedIndex + j];
-      if (!target) continue;
-      var targetRect = target.getBoundingClientRect();
-      old.el.style.position = 'fixed';
-      old.el.style.left = old.x + 'px';
-      old.el.style.top = old.y + 'px';
-      old.el.style.width = targetRect.width + 'px';
-      old.el.style.height = targetRect.height + 'px';
-      old.el.style.zIndex = '1003';
-      old.el.style.pointerEvents = 'none';
-      old.el.style.transition = 'left 350ms cubic-bezier(.2,.8,.25,1), top 350ms cubic-bezier(.2,.8,.25,1)';
-      requestAnimationFrame((function(el, rect) {
-        return function() {
-          el.style.left = rect.left + 'px';
-          el.style.top = rect.top + 'px';
-        };
-      })(old.el, targetRect));
-      setTimeout((function(el) {
-        return function() { el.remove(); };
-      })(old.el), 380);
-    }
-  });
-}
 
 
 state.justFled = false;
