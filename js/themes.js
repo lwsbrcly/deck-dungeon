@@ -30,7 +30,7 @@ const THEMES = {
             gameTitle: 'DECK DUNGEON',
             location: 'Dungeon',
             monster: 'Monster',
-            weapon: 'Weaon',
+            weapon: 'Weapon',
             potion: 'Food',
             equip: 'equips',
             discard: 'discards',
@@ -67,6 +67,77 @@ const THEMES = {
                 hearts: {
                     2: 'Stale Bread', 3: 'Sus Mushrooms', 4: 'Apple', 5: 'Fresh Bread',
                     6: 'Cooked Meats', 7: 'Roast Chicken', 8: 'Hearty Stew', 9: 'Healing Elixir', 10: 'Magic Potion'
+                }
+            }
+        }
+    },
+    shaun: {
+        
+        name: 'Shaun of the Deck',
+        description: 'Go to the Winchester, have a nice cold pint, and wait for all of this to blow over.',
+
+        artwork: {
+            logo: 'assets/shaun/logo.png',
+            card: 'assets/shaun/card.png',
+            back: 'assets/shaun/back.png',
+        },
+
+        //audio: {},
+            
+        colours: {
+            bg: '#121214',
+            cardBg: '#1e1e24',
+            panelBg: '#18181c',
+            border: '#2e2e38',
+            text: '#e1e1e6',
+            muted: '#8d8d99',
+            accent: '#6A557F',
+            gold: '#f1c40f',
+            danger: '#e55555',
+            success: '#47d16c'
+        },
+
+        text: {
+            gameTitle: 'Shaun of the Deck',
+            location: 'The Pub',
+            monster: 'Zombie',
+            weapon: 'Weapon',
+            potion: 'Food',
+            equip: 'grabs',
+            discard: 'chucks',
+            fight: 'whacks',
+            fist: 'tussles with',
+            heal: 'consumes',
+            flee: 'Ran for it',
+            enter: 'Heads out armed with',
+            draw: 'No one survived etc',
+            lose: 'The dungeon has defeated you',
+            win: 'You have defeated the dungeon!',
+        },
+
+        cards: {
+            monsters: {
+                clubs: {
+                    2: 'Jill', 3: 'Derek', 4: 'Spinster', 5: 'Noel',
+                    6: 'Danny', 7: 'Snakehips', 8: 'Nelson', 9: 'Mary',
+                    10: 'Trish', J: 'John', Q: 'Barbara', K: 'Philip', A: 'Pete'
+                },
+                spades: {
+                    2: 'Football Kid', 3: 'Groom', 4: 'Homeless', 5: 'Shopkeeper',
+                    6: 'Hoodie', 7: 'Youth', 8: 'Courier', 9: 'Stalker',
+                    10: 'White Lies', J: 'Pigeon Guy', Q: 'Florist', K: 'White Eyes', A: 'The Twins'
+                }
+            },
+            weapons: {
+                diamonds: {
+                    2: 'Vinyl Record', 3: 'Dart', 4: 'Swingball', 5: 'Golf Club',
+                    6: 'Hockey Stick', 7: 'Pool Cue', 8: 'Shovel', 9: 'Cricket Bat', 10: 'Winchester'
+                }
+            },
+            potions: {
+                hearts: {
+                    2: 'Peanuts', 3: 'Fulcis Fish', 4: 'Guinness', 5: 'Regular Coke',
+                    6: 'Toastie', 7: 'Cold Pint', 8: 'Meat Pie', 9: 'Pork Scratchings', 10: 'Cornetto'
                 }
             }
         }
