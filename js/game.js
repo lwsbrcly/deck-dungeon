@@ -415,7 +415,7 @@ function undoFromGameOver() {
 if (historyStack.length === 0) return;
 state = historyStack.pop();
 state.over = false;
-document.getElementByID('overlay').classList.remove('show');
+document.getElementById('overlay').classList.remove('show');
 log('Undid fatal last action.', false);
 render();
 }
