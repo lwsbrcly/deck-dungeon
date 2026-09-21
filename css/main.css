@@ -580,6 +580,28 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .modal-overlay.peek-hidden { opacity: 0; pointer-events: none; }
 
 .modal { background: rgba(24, 24, 28, 0.95); border: 1px solid var(--border); border-radius: 8px; padding: 20px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+.modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+.modal-actions button {
+  width: 100%;
+}
+.secondary-btn {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font: inherit;
+  cursor: pointer;
+}
+.secondary-btn:hover {
+  color: #fff;
+  border-color: var(--muted);
+}
 .modal h2 { margin-bottom: 4px; color: #fff; font-size: 1.2rem; }
 .modal p { color: var(--muted); margin-bottom: 12px; font-size: 0.85rem; line-height: 1.4; }
 .score-banner { font-size: 1.5rem; font-weight: bold; margin: 6px 0 12px 0; color: var(--highlight); }
