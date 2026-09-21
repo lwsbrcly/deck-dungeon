@@ -157,13 +157,11 @@ button.primary-btn {
   display: flex;
   justify-content: space-evenly;
   align-items: stretch;
-  gap: 10px;
   width: 100%;
 }
 
 .player-card-slot {
-  flex: 1 1 0;
-  min-width: 0;
+  flex: 0 0 calc((100% - 18px) / 4);
   aspect-ratio: 2 / 3;
   background: var(--bg);
   border: 1px dashed var(--border);
