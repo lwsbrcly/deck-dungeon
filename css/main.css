@@ -384,6 +384,7 @@ button.primary-btn {
 .enter-card {
   animation: enter-card 700ms cubic-bezier(.2,.8,.25,1) forwards;
   will-change: transform, opacity;
+  opacity: 1 !important;
 }
 @keyframes enter-card {
   0% { transform: translate3d(var(--dx),var(--dy),0) rotate(7deg) scale(.94); opacity: 1; }
