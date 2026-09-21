@@ -1400,11 +1400,19 @@ var isSolo = state.mode !== 'coop';
 
 var d = document.getElementById('dungeon');
 d.innerHTML = '';
+var slots = document.querySelectorAll('.dungeon-slot');
+var boardRect = document.querySelector('.dungeon-board').getBoundingClientRect();
+
 for (var i = 0; i < 4; i++) {
   (function(index) {
     var c = state.dungeon[index];
+    var slotRect = slots[index].getBoundingClientRect();
     var wrap = document.createElement('div');
     wrap.className = 'dungeon-card-wrap';
+    wrap.style.left = (slotRect.left - boardRect.left) + 'px';
+    wrap.style.top = (slotRect.top - boardRect.top) + 'px';
+    wrap.style.width = slotRect.width + 'px';
+    wrap.style.height = slotRect.height + 'px';
    
     if (c) {
       wrap.innerHTML = cardHTML(c);
