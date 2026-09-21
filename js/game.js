@@ -760,10 +760,9 @@ if (animateRoom) animateRoomEntry(skipFirst);
 
 function animateCardAction(cardEl, targetEl, className, done, icon) {
 if (!cardEl) { done(); return; }
-// Remove the selection highlight before the action animation begins.
+// Remove the selection highlight without re-rendering the dungeon.
 if (state.selected !== null) {
-  state.selected = null;
-  render();
+  cardEl.classList.remove('selected');
 }
 var a = cardEl.getBoundingClientRect();
 var b = targetEl ? targetEl.getBoundingClientRect() : null;
