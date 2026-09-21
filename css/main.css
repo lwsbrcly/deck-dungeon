@@ -177,6 +177,7 @@ button.primary-btn {
 
 .dungeon-card-wrap .card {
   position: absolute;
+  background-image: none;
   inset: 0;
   width: 100%;
   height: 100%;
@@ -188,7 +189,11 @@ button.primary-btn {
   width: 100%; 
   /*max-width: 80px;*/ 
   aspect-ratio: 2 / 3; 
-  background: var(--card-bg); 
+  /*background: var(--card-bg);*/
+  background-image: url("../assets/dungeon/back.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border: 1.5px solid var(--border); 
   border-radius: 5px; 
   padding: 4px; 
