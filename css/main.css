@@ -197,7 +197,7 @@ button.primary-btn {
   height: 100%;
   object-fit: cover;
   border-radius: 5px;
-  transform: translate(calc(var(--deck-offset) * -1), calc(var(--deck-offset) * -1));
+  transform: translate(calc(var(--deck-offset) * -0.5), calc(var(--deck-offset) * -0.5));
 }
 
 
