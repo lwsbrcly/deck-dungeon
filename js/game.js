@@ -732,6 +732,8 @@ function animateDungeonShift(oldPositions) {
 if (!oldPositions || !oldPositions.size) return;
 
 var wraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
+var moving = [];
+
 for (var i = 0; i < wraps.length; i++) {
   var card = state.dungeon[i];
   var oldRect = oldPositions.get(card);
@@ -744,21 +746,30 @@ for (var i = 0; i < wraps.length; i++) {
 
   wraps[i].style.transform = 'translate3d(' + dx + 'px, ' + dy + 'px, 0)';
   wraps[i].style.transition = 'none';
-
-  requestAnimationFrame(function(el) {
-    return function() {
-      el.style.transition = 'transform 300ms cubic-bezier(.2,.8,.25,1)';
-      el.style.transform = 'translate3d(0, 0, 0)';
-    };
-  }(wraps[i]));
-
-  setTimeout(function(el) {
-    return function() {
-      el.style.transform = '';
-      el.style.transition = '';
-    };
-  }(wraps[i]), 320);
+  moving.push(wraps[i]);
 }
+
+// Force the browser to acknowledge the starting positions before changing them.
+for (var j = 0; j < moving.length; j++) {
+  moving[j].offsetHeight;
+}
+
+requestAnimationFrame(function() {
+  requestAnimationFrame(function() {
+    for (var k = 0; k < moving.length; k++) {
+      var el = moving[k];
+      el.style.transition = 'transform 450ms cubic-bezier(.2,.8,.25,1)';
+      el.style.transform = 'translate3d(0, 0, 0)';
+    }
+  });
+});
+
+setTimeout(function() {
+  for (var m = 0; m < moving.length; m++) {
+    moving[m].style.transform = '';
+    moving[m].style.transition = '';
+  }
+}, 480);
 }
 
 function renderAfterAction() {
