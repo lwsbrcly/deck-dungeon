@@ -1331,7 +1331,7 @@ var isSolo = state.mode !== 'coop';
   for (var i = 1; i <= state.maxHP; i++) {
   
     if (i <= p.hp) {
-      healthPath += '█';
+      healthPath += '▓';
     } else {
       healthPath += '░';
     }
