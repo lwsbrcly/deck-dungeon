@@ -474,9 +474,17 @@ document.getElementById('game').style.display = 'none';
 toggleModeInputs();
 }
 
-function restartSetup() {
+function replayGame() {
 document.getElementById('overlay').classList.remove('show');
-showSetupScreen();
+showScreen('game-ui');
+startGame();
+}
+
+function backToMenu() {
+document.getElementById('overlay').classList.remove('show');
+document.getElementById('game').style.display = 'none';
+document.getElementById('setupScreen').style.display = 'block';
+showScreen('game-selector');
 }
 
 function makeDeck(excludeDagger) {
