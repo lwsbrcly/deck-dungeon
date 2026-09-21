@@ -729,9 +729,56 @@ return c;
 function renderAfterAction() {
 var animateRoom = !!state._roomWasDealt;
 var skipFirst = !!state._skipFirstRoomCard;
+
+// Capture where the existing dungeon cards are before the state-driven render.
+var before = {};
+var currentWraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
+for (var i = 0; i < currentWraps.length; i++) {
+  var wrap = currentWraps[i];
+  if (wrap._cardKey) before[wrap._cardKey] = wrap.getBoundingClientRect();
+}
+
 state._roomWasDealt = false;
 state._skipFirstRoomCard = false;
 render();
+
+// FLIP the cards that survived the action. The real card elements stay alive;
+// only their position changes, so the browser animates the slide naturally.
+var moved = [];
+var afterWraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
+for (var j = 0; j < afterWraps.length; j++) {
+  var afterWrap = afterWraps[j];
+  var oldRect = before[afterWrap._cardKey];
+  if (!oldRect) continue;
+
+  var newRect = afterWrap.getBoundingClientRect();
+  var dx = oldRect.left - newRect.left;
+  var dy = oldRect.top - newRect.top;
+
+  if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5) {
+    afterWrap.style.transition = 'none';
+    afterWrap.style.transform = 'translate(' + dx + 'px, ' + dy + 'px)';
+    moved.push(afterWrap);
+  }
+}
+
+if (moved.length) {
+  // Force the starting transform to be painted before releasing it.
+  void document.getElementById('dungeon').offsetWidth;
+  requestAnimationFrame(function() {
+    for (var m = 0; m < moved.length; m++) {
+      moved[m].style.transition = 'transform 420ms cubic-bezier(.22,.8,.28,1)';
+      moved[m].style.transform = 'translate(0, 0)';
+    }
+    setTimeout(function() {
+      for (var n = 0; n < moved.length; n++) {
+        moved[n].style.transition = '';
+        moved[n].style.transform = '';
+      }
+    }, 450);
+  });
+}
+
 if (animateRoom) animateRoomEntry(skipFirst);
 }
 
@@ -1411,34 +1458,60 @@ var isSolo = state.mode !== 'coop';
 });
 
 var d = document.getElementById('dungeon');
-d.innerHTML = '';
 var slots = document.querySelectorAll('.dungeon-slot');
 var boardRect = document.querySelector('.dungeon-board').getBoundingClientRect();
 
+// Keep existing dungeon card elements alive when the same card moves to a
+// different slot. This lets action renders animate the real cards instead
+// of destroying and recreating them.
+var existing = {};
+var existingWraps = Array.prototype.slice.call(d.children);
+for (var e = 0; e < existingWraps.length; e++) {
+  if (existingWraps[e]._cardKey) existing[existingWraps[e]._cardKey] = existingWraps[e];
+}
+
+var used = {};
 for (var i = 0; i < 4; i++) {
   (function(index) {
     var c = state.dungeon[index];
+    var cardKey = c ? (c.suit + '_' + c.rank) : ('empty_' + index);
+    var wrap = existing[cardKey];
+
+    if (!wrap) {
+      wrap = document.createElement('div');
+      wrap.className = 'dungeon-card-wrap';
+      wrap._cardKey = cardKey;
+      if (c) {
+        wrap.innerHTML = cardHTML(c);
+      } else {
+        wrap.innerHTML = '<div class="card empty"></div>';
+      }
+      d.appendChild(wrap);
+    }
+
+    used[cardKey] = true;
+
     var slotRect = slots[index].getBoundingClientRect();
-    var wrap = document.createElement('div');
-    wrap.className = 'dungeon-card-wrap';
     wrap.style.left = (slotRect.left - boardRect.left) + 'px';
     wrap.style.top = (slotRect.top - boardRect.top) + 'px';
     wrap.style.width = slotRect.width + 'px';
     wrap.style.height = slotRect.height + 'px';
-   
-    if (c) {
-      wrap.innerHTML = cardHTML(c);
-      var cardEl = wrap.querySelector('.card');
-      if (index === state.selected) cardEl.classList.add('selected');
+
+    var cardEl = wrap.querySelector('.card');
+    if (cardEl && c) {
+      cardEl.classList.toggle('selected', index === state.selected);
       cardEl.onclick = function(e) {
         if (e) e.stopPropagation();
         selectCard(index);
       };
-    } else {
-      wrap.innerHTML = '<div class="card empty"></div>';
     }
-    d.appendChild(wrap);
   })(i);
+}
+
+// Remove cards that are no longer present in the dungeon.
+for (var r = 0; r < existingWraps.length; r++) {
+  var oldWrap = existingWraps[r];
+  if (oldWrap._cardKey && !used[oldWrap._cardKey]) oldWrap.remove();
 }
 
 var progress = document.getElementById('deckProgress');
