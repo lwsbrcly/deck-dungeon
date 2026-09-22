@@ -495,26 +495,24 @@ button.primary-btn {
     opacity: 1;
   }
 
-  /* Slam it down onto the monster. */
+  /* Slam it down onto the monster — back to normal size. */
   62% {
-    transform: translate3d(var(--strike-dx),var(--strike-dy),0) scale(.88) rotate(0deg);
+    transform: translate3d(var(--strike-dx),var(--strike-dy),0) scale(1) rotate(0deg);
     opacity: 1;
   }
-  69% {
-    transform: translate3d(var(--strike-dx),var(--strike-dy),0) scale(1.10) rotate(0deg);
-    opacity: 1;
-  }
-  78% {
-    transform: translate3d(var(--strike-dx),var(--strike-dy),0) scale(.97) rotate(0deg);
+
+  /* Hold the impact briefly before returning home. */
+  72% {
+    transform: translate3d(var(--strike-dx),var(--strike-dy),0) scale(1) rotate(0deg);
     opacity: 1;
   }
 
   /* Now do the bit an equip animation doesn't need: get the weapon home. */
-  82% {
-    transform: translate3d(calc(var(--strike-dx) * .72),calc(var(--strike-dy) * .72),0) scale(1.02) rotate(0deg);
+  84% {
+    transform: translate3d(calc(var(--strike-dx) * .72),calc(var(--strike-dy) * .72),0) scale(1) rotate(0deg);
     opacity: 1;
   }
-  91% {
+  92% {
     transform: translate3d(calc(var(--strike-dx) * .34),calc(var(--strike-dy) * .34),0) scale(1) rotate(0deg);
     opacity: 1;
   }
