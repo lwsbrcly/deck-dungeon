@@ -1299,6 +1299,25 @@ if (player === 'both') {
   }
 
   saveState();
+
+  // Weapon kills create the monster's "memory" before the animation starts.
+  // It stays out of the live dungeon until the weapon returns home, when the
+  // ghost is materialised on top of the previous-monster stack.
+  var ghostInfo = null;
+  if (player === 'p1' && mode === 'weapon') {
+    var previousMonster = JSON.parse(JSON.stringify(c));
+    var pileIndex = p.previousMonsters.length;
+    previousMonster.stackX = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
+    previousMonster.stackY = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
+    previousMonster.stackRotation = pileIndex === 0 ? 0 : (Math.random() * 10 - 5);
+    p.previousMonsters.push(previousMonster);
+
+    ghostInfo = {
+      targetEl: document.getElementById('p1PreviousMonster'),
+      monster: previousMonster
+    };
+  }
+
   animateAttack(player, targetEl, function() {
     if (mode === 'weapon') {
       damage = Math.max(0, c.value - p.weapon.value);
@@ -1316,27 +1335,14 @@ if (player === 'both') {
     } else {
       log(name(player) + ' enters Fist Fight with ' + c.name + ' and takes ' + damage + ' damage.', true, 'fist');
     }
-    if (player === 'p1' && mode === 'weapon') {
-      var previousMonster = JSON.parse(JSON.stringify(c));
-      var pileIndex = p.previousMonsters.length;
-      previousMonster.stackX = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
-      previousMonster.stackY = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
-      previousMonster.stackRotation = pileIndex === 0 ? 0 : (Math.random() * 10 - 5);
-      p.previousMonsters.push(previousMonster);
 
-      removeSelected();
-      animateMonsterToPrevious(targetEl, document.getElementById('p1PreviousMonster'), previousMonster, function() {
-        checkGame();
-        renderAfterAction();
-      });
-      return;
-    }
-
-    // Fist fights clear the monster normally.
+    // Fist fights clear the monster normally. Weapon kills have already
+    // prepared the previous-monster memory and now just reveal it through
+    // the ghost materialisation inside animateAttack().
     removeSelected();
     checkGame();
     renderAfterAction();
-  }, mode !== 'weapon');
+  }, mode !== 'weapon', ghostInfo);
 }
 }
 
