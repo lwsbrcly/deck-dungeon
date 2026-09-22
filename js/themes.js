@@ -396,9 +396,78 @@ const THEMES = {
             border: "#6a5a56",
             text: "#ecd7de",
             muted: "#493231",
-            red: "#1a1a1a",
-            highlight: "#f6ee55",
-            rooms: "#aca17c",
+            red: "#ab0431",
+            highlight: "#1a1a1a",
+            rooms: "#f6ee55",
+        },
+
+        text: {
+            gameTitle: 'Shaun of the Deck',
+            location: 'The Pub',
+            monster: 'Zombie',
+            weapon: 'Weapon',
+            potion: 'Food',
+            equip: 'grabs',
+            discard: 'chucks',
+            fight: 'whacks',
+            fist: 'tussles with',
+            heal: 'consumes',
+            flee: 'Ran for it',
+            enter: 'Heads out armed with',
+            draw: 'No one survived etc',
+            lose: 'The dungeon has defeated you',
+            win: 'You have defeated the dungeon!',
+        },
+
+        cards: {
+            monsters: {
+                clubs: {
+                    2: 'Jill', 3: 'Derek', 4: 'Spinster', 5: 'Noel',
+                    6: 'Danny', 7: 'Snakehips', 8: 'Nelson', 9: 'Mary',
+                    10: 'Trish', J: 'John', Q: 'Barbara', K: 'Philip', A: 'Pete'
+                },
+                spades: {
+                    2: 'Football Kid', 3: 'Groom', 4: 'Homeless', 5: 'Shopkeeper',
+                    6: 'Hoodie', 7: 'Youth', 8: 'Courier', 9: 'Stalker',
+                    10: 'White Lies', J: 'Pigeon Guy', Q: 'Florist', K: 'White Eyes', A: 'The Twins'
+                }
+            },
+            weapons: {
+                diamonds: {
+                    2: 'Vinyl Record', 3: 'Dart', 4: 'Swingball', 5: 'Golf Club',
+                    6: 'Hockey Stick', 7: 'Pool Cue', 8: 'Shovel', 9: 'Cricket Bat', 10: 'Winchester'
+                }
+            },
+            potions: {
+                hearts: {
+                    2: 'Peanuts', 3: 'Fulcis Fish', 4: 'Guinness', 5: 'Regular Coke',
+                    6: 'Toastie', 7: 'Cold Pint', 8: 'Meat Pie', 9: 'Pork Scratchings', 10: 'Cornetto'
+                }
+            }
+        }
+    },
+    space: {
+        
+        name: 'Space Deck',
+        description: 'Go to the Winchester, have a nice cold pint, and wait for all of this to blow over.',
+
+        artwork: {
+            logo: 'assets/shaun/logo.png',
+            card: 'assets/shaun/card.png',
+            back: 'assets/shaun/back.png',
+        },
+
+        //audio: {},
+            
+        colours: {
+            bg: "#19191A",
+            panelBg: "#ab0431",
+            border: "#6a5a56",
+            text: "#ecd7de",
+            muted: "#493231",
+            red: "#ab0431",
+            highlight: "#1a1a1a",
+            rooms: "#f6ee55",
         },
 
         text: {
