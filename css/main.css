@@ -199,6 +199,11 @@ button.primary-btn {
   filter: grayscale(1);
 }
 
+/* Hide a newly-created memory while its ghost clone materialises. */
+.ghost-memory-hidden .previous-monster-card {
+  visibility: hidden;
+}
+
 .previous-monster-card .card {
   width: 100%;
   height: 100%;
