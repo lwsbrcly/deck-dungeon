@@ -17,8 +17,8 @@ function applySelectedTheme() {
     root.style.setProperty('--red', colours.red || '');
     root.style.setProperty('--rooms', colours.rooms || '');
 
-    root.style.setProperty('--card-image', 'url("' + theme.artwork.card + '")');
-    root.style.setProperty('--card-back-image', 'url("' + theme.artwork.back + '")');
+    root.style.setProperty('--card-image', 'url(''' + theme.artwork.card + ''')');
+    root.style.setProperty('--card-back-image', 'url(''' + theme.artwork.back + ''')');
 }
 
 function selectTheme(theme) {
@@ -709,7 +709,7 @@ var cardArtwork = (THEMES[selectedTheme || 'dungeon'] && THEMES[selectedTheme ||
   ? THEMES[selectedTheme || 'dungeon'].artwork.card
   : 'assets/dungeon/card.png';
 
-return '<div class="card ' + (red ? 'red' : 'black') + '" style="background-image: url("' + cardArtwork + '");">' +
+return '<div class="card ' + (red ? 'red' : 'black') + '" style="background-image: url(' + cardArtwork + ');">' +
   '<div class="card-rank">' + cornerText + '</div>' +
   centerArt +
   '<div class="card-title">' + c.name + '</div>' +
