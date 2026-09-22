@@ -14,16 +14,14 @@ const THEMES = {
         //audio: {},
             
         colours: {
-            bg: '#121214',
-            cardBg: '#1e1e24',
-            panelBg: '#18181c',
-            border: '#2e2e38',
-            text: '#e1e1e6',
-            muted: '#8d8d99',
-            accent: '#6A557F',
-            gold: '#f1c40f',
-            danger: '#e55555',
-            success: '#47d16c'
+            bg: "#19191A",
+            panelBg: "#0E253D",
+            border: "#B0843C",
+            text: "#CDA655",
+            muted: "#8f8e8d",
+            red: "#963221",
+            highlight: "#eb6b20",
+            rooms: "#a0723f",
         },
 
         text: {
@@ -85,16 +83,14 @@ const THEMES = {
         //audio: {},
             
         colours: {
-            bg: '#121214',
-            cardBg: '#1e1e24',
-            panelBg: '#18181c',
-            border: '#2e2e38',
-            text: '#e1e1e6',
-            muted: '#8d8d99',
-            accent: '#6A557F',
-            gold: '#f1c40f',
-            danger: '#e55555',
-            success: '#47d16c'
+            bg: "#19191A",
+            panelBg: "#80855e",
+            border: "#851819",
+            text: "#e4ded0",
+            muted: "#847a68",
+            red: "#652b27",
+            highlight: "#ac8754",
+            rooms: "#2c2417",
         },
 
         text: {
