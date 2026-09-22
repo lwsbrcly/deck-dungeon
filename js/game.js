@@ -111,19 +111,16 @@ function toggleModeInputs() {
       '<ul>' +
         '<li><strong>Standard deck of cards:</strong> J, Q, K, A of both Diamonds & Hearts are removed. The remaining 44 cards form <strong><em>the deck.</em></strong></li>' + 
         '<li><strong>♣ ♠ Clubs & Spades (Monsters):</strong> Fight them with your equipped weapon, or bare-handed.</li>' +
-        '<li><strong>♦ Diamonds (Weapons):</strong> Equip one at a time. Deflect incoming damage, up to your weapon\'s value. Can only be used against monsters ' +
-        'less than or equal to previous monster slain.</li>' +
+        '<li><strong>♦ Diamonds (Weapons):</strong> Equip one at a time. Deflect incoming damage, up to your weapon\'s value. Can only be used against monsters <em>less than or equal</em> to previous monster slain.</li>' +
         '<li><strong>♥ Hearts (Consumables):</strong> Restore lost HP, up to your maximum health. Only 1 per room allowed!</li>' +
       '</ul>' +
       '<h3>Game Mechanics</h3>' +
       '<ul>' +
         '<li><strong>Rooms:</strong> Each room has 4 cards - action 3 of them to move on. The 4th card becomes the 1st card in the next room - 3 new cards are dealt.</li>' +
-        '<li><strong>Damage:</strong> Monsters deal damage equal to their value minus your equipped weapon\'s value. Fight bare-handed to take their full amount </li>' +
-        'of damage - without lowering your equipped weapon\'s "previous monster value".</li>' +
+        '<li><strong>Damage:</strong> Monsters deal damage equal to their value minus your equipped weapon\'s value. Fight bare-handed to take their full amount of damage - without lowering your equipped weapon\'s "previous monster value".</li>' +
         '<li><strong>Health Points:</strong> Start with 20 HP. Heals cannot take you above this. If your HP reaches 0 it\'s game over!</li>' +
         '<li><strong>Discard:</strong> Don\'t want to replace your current weapon? Don\'t want to fight that last monster? <strong>Discard</strong> unwanted weapon/consumable cards to action them and move on.</li>' +
-        '<li><strong>Fleeing:</strong> Press <em>Flee</em> to skip a room - 4 new cards are dealt. Fled cards are shuffled back into the deck for later.' +
-        ' You cannot flee twice in a row, so use it wisely!</li>' +
+        '<li><strong>Fleeing:</strong> Press <em>Flee</em> to skip a room - 4 new cards are dealt. Fled cards are shuffled back into the deck for later. You cannot flee twice in a row, so use it wisely!</li>' +
       '</ul>';
     
     if (mode === 'coop') {
