@@ -462,6 +462,12 @@ if (b) {
     var sr = slot ? slot.getBoundingClientRect() : b;
     targetX = sr.left + sr.width / 2;
     targetY = sr.top + sr.height / 2;
+  } else if (className.indexOf('consume') !== -1) {
+    // Aim at the player's card row rather than the panel centre.
+    var cardSlots = targetEl.querySelector('.player-card-slots');
+    var cr = cardSlots ? cardSlots.getBoundingClientRect() : b;
+    targetX = cr.left + cr.width / 2;
+    targetY = cr.top + cr.height / 2;
   }
   clone.style.setProperty('--dx', (targetX - (a.left + a.width/2)) + 'px');
   clone.style.setProperty('--dy', (targetY - (a.top + a.height/2)) + 'px');
