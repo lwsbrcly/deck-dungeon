@@ -564,7 +564,7 @@ button.primary-btn {
   pointer-events: none;
   margin: 0 !important;
   transform-origin: center center;
-  animation: combat-ghost-materialise 900ms ease-in forwards;
+  animation: combat-ghost-materialise 650ms ease-in forwards;
   will-change: opacity;
 }
 
