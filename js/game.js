@@ -37,26 +37,7 @@ function enterGame() {
     startGame();
 }
 
-const CARD_NAMES = {
-clubs: {
-  '2': 'Rat', '3': 'Cave Spider', '4': 'Wolf', '5': 'Goblin',
-  '6': 'Orc', '7': 'Shaman', '8': 'Bandit', '9': 'Gladiator',
-  '10': 'Dark Wizard', 'J': 'Minotaur', 'Q': 'Ogre', 'K': 'Giant', 'A': 'Dragon'
-},
-spades: {
-  '2': 'Spooky Fog', '3': 'Slime', '4': 'Snakes', '5': 'Skeleton',
-  '6': 'Zombie', '7': 'Ghost', '8': 'Ghoul', '9': 'Wraith',
-  '10': 'Necromancer', 'J': 'Vampire', 'Q': 'Mummy', 'K': 'Lich King', 'A': 'Bone Dragon'
-},
-diamonds: {
-  '2': 'Dagger', '3': 'Club', '4': 'Short Sword', '5': 'Mace',
-  '6': 'Longsword', '7': 'Battle Axe', '8': 'Warhammer', '9': 'Great Axe', '10': 'Greatsword'
-},
-hearts: {
-  '2': 'Stale Bread', '3': 'Sus Mushrooms', '4': 'Apple', '5': 'Fresh Bread',
-  '6': 'Cooked Meats', '7': 'Roast Chicken', '8': 'Hearty Stew', '9': 'Healing Elixir', '10': 'Magic Potion'
-}
-};
+
 
 // Custom SVG Dragon for Ace cards
 const DRAGON_SVG = `<svg viewBox="0 0 723 702" xmlns="http://www.w3.org/2000/svg">
