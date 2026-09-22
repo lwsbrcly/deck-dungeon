@@ -1175,7 +1175,7 @@ setTimeout(function() {
   document.body.appendChild(impact);
   setTimeout(function() { impact.remove(); }, 280);
   setTimeout(function() { document.getElementById('game').classList.remove('combat-shake'); }, 160);
-}, isFistFight ? 210 : 360);
+}, isFistFight ? 210 : 380);
 
 setTimeout(function() {
   clone.remove();
