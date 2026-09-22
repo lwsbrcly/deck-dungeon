@@ -1125,7 +1125,7 @@ state.weaponUsage[weaponName].uses += 1;
 state.weaponUsage[weaponName].ptsSlain += monsterValue;
 }
 
-function animateAttack(player, targetEl, done, isFistFight) {
+function animateAttack(player, targetEl, done, isFistFight, ghostInfo) {
 if (!targetEl) { done(); return; }
 
 var sourceEl = null;
@@ -1140,7 +1140,9 @@ if (isFistFight) {
     ? document.getElementById('p1Panel').getBoundingClientRect()
     : document.getElementById(player + 'Panel').getBoundingClientRect());
 } else if (player === 'p1' || player === 'p2') {
-  // Weapon combat: the player's weapon card lunges down at the monster.
+  // Weapon combat: the weapon travels to the monster while rising,
+  // then slams down. The monster can disappear at impact and reappear
+  // on the previous-monster stack once the weapon returns.
   sourceEl = document.querySelector('#' + player + 'Weapon .card');
   targetRect = targetEl.getBoundingClientRect();
 }
@@ -1168,19 +1170,15 @@ clone.style.setProperty('--dx', (targetX - sourceX) + 'px');
 clone.style.setProperty('--dy', (targetY - sourceY) + 'px');
 clone.style.setProperty('--hit-x', isFistFight ? '-5px' : '5px');
 
-// Weapon attacks use the same physical "lift and slam" language as
-// equipping a card. Strike from the centre of the weapon to the centre of
-// the monster; without rotation, there is no reason to offset the contact point.
 if (!isFistFight) {
   var strikeDx = targetX - sourceX;
   var strikeDy = targetY - sourceY;
-
   clone.style.setProperty('--strike-dx', strikeDx + 'px');
   clone.style.setProperty('--strike-dy', strikeDy + 'px');
 }
 clone.style.setProperty('--hit-y', isFistFight ? '3px' : '-3px');
 
-// Hide the real card while its animated copy is moving, so there is only one card on screen.
+// Hide the real card while its animated copy is moving.
 sourceEl.classList.add('combat-hidden');
 document.body.appendChild(clone);
 
@@ -1188,23 +1186,54 @@ if (isFistFight) ughSound(); else punchSound();
 
 setTimeout(function() {
   document.getElementById('game').classList.add('combat-shake');
+
   var impact = document.createElement('div');
   impact.className = 'combat-impact';
   impact.textContent = isFistFight ? '💥' : '⚔';
   impact.style.left = targetX + 'px';
   impact.style.top = targetY + 'px';
   document.body.appendChild(impact);
+
+  // A weapon kill makes the monster leave the board at the moment of impact.
+  if (!isFistFight) {
+    targetEl.classList.add('combat-hidden');
+  }
+
   setTimeout(function() { impact.remove(); }, 280);
   setTimeout(function() { document.getElementById('game').classList.remove('combat-shake'); }, 160);
-}, isFistFight ? 210 : 435);
+}, isFistFight ? 210 : 476);
 
 setTimeout(function() {
   clone.remove();
   sourceEl.classList.remove('combat-hidden');
+
+  if (!isFistFight && ghostInfo && ghostInfo.targetEl && ghostInfo.monster) {
+    var ghostTarget = ghostInfo.targetEl.getBoundingClientRect();
+    var ghost = targetEl.cloneNode(true);
+    ghost.classList.add('combat-ghost');
+    ghost.style.left = ghostTarget.left + 'px';
+    ghost.style.top = ghostTarget.top + 'px';
+    ghost.style.width = ghostTarget.width + 'px';
+    ghost.style.height = ghostTarget.height + 'px';
+    ghost.style.setProperty('--ghost-x', (ghostInfo.monster.stackX || 0) + 'px');
+    ghost.style.setProperty('--ghost-y', (ghostInfo.monster.stackY || 0) + 'px');
+    ghost.style.setProperty('--ghost-rotation', (ghostInfo.monster.stackRotation || 0) + 'deg');
+    document.body.appendChild(ghost);
+
+    setTimeout(function() {
+      ghost.remove();
+      targetEl.classList.remove('combat-hidden');
+      done();
+    }, 320);
+    return;
+  }
+
+  if (!isFistFight) {
+    targetEl.classList.remove('combat-hidden');
+  }
   done();
 }, isFistFight ? 430 : 700);
 }
-
 function getDungeonCardElement(slotIndex) {
 var wraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
 for (var i = 0; i < wraps.length; i++) {
