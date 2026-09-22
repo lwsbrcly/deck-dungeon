@@ -186,12 +186,17 @@ button.primary-btn {
   height: 100%;
 }
 
-.previous-monster-card {
+ .previous-monster-card {
   position: absolute;
   inset: 0;
   transform: translate(var(--stack-x), var(--stack-y)) rotate(var(--stack-rotation));
   transform-origin: center center;
   pointer-events: none;
+}
+
+/* Dead monsters are memories now: the entire stack stays ghostly. */
+.previous-monster-card .card {
+  filter: grayscale(1);
 }
 
 .previous-monster-card .card {
@@ -398,7 +403,10 @@ button.primary-btn {
 
 @keyframes previous-monster-discard-card {
   0% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 1; }
-  28% { transform: translate3d(8px,18px,0) rotate(22deg) scale(1.02); opacity: 1; }
+  18% { transform: translate3d(8px,18px,0) rotate(22deg) scale(1.02); opacity: .96; }
+  42% { transform: translate3d(calc(var(--dx) * .42),calc(var(--dy) * .42),0) rotate(38deg) scale(.99); opacity: .78; }
+  68% { transform: translate3d(calc(var(--dx) * .68),calc(var(--dy) * .68),0) rotate(55deg) scale(.96); opacity: .48; }
+  84% { transform: translate3d(calc(var(--dx) * .84),calc(var(--dy) * .84),0) rotate(67deg) scale(.94); opacity: .22; }
   100% { transform: translate3d(var(--dx),var(--dy),0) rotate(78deg) scale(.92); opacity: 0; }
 }
 @keyframes discard-card {
