@@ -138,7 +138,10 @@ function toggleModeInputs() {
             '<li><strong>Revives:</strong> Revive a downed ally with (Card Value / 2) + 1 HP.</li>' +
           '</ul>';
       }
-    } 
+    };
+    if (setupRules) {
+        setupRules.innerHTML = baseRules
+    }
 }
 
 function showSetupScreen() {
