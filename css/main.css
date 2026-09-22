@@ -478,30 +478,33 @@ button.primary-btn {
     opacity: 1;
   }
 
-  /* Spin on the spot first. The computed angle makes the card's top edge
-     point directly at the monster before it starts moving. */
-  24% {
-    transform: translate3d(0,0,0) rotate(var(--attack-angle)) scale(1.04);
+  /* Wind up, but don't wait for the spin to finish before moving. */
+  18% {
+    transform: translate3d(0,0,0) rotate(calc(var(--attack-angle) * .68)) scale(1.03);
     opacity: 1;
   }
-  31% {
-    transform: translate3d(0,0,0) rotate(var(--attack-angle)) scale(1.04);
+  30% {
+    transform: translate3d(calc(var(--dx) * .10),calc(var(--dy) * .10),0) rotate(calc(var(--attack-angle) * .92)) scale(1.06);
     opacity: 1;
   }
 
-  /* Then launch head-first. */
+  /* The lunge is already underway as the weapon completes its rotation. */
+  42% {
+    transform: translate3d(calc(var(--dx) * .48),calc(var(--dy) * .48),0) rotate(var(--attack-angle)) scale(1.10);
+    opacity: 1;
+  }
+
+  /* Head-first impact. */
   54% {
-    transform: translate3d(var(--dx),var(--dy),0) rotate(var(--attack-angle)) scale(1.08);
+    transform: translate3d(var(--dx),var(--dy),0) rotate(var(--attack-angle)) scale(1.14);
     opacity: 1;
   }
-
-  /* Hard impact, with a tiny overrun. */
   61% {
-    transform: translate3d(calc(var(--dx) + var(--hit-x)),calc(var(--dy) + var(--hit-y)),0) rotate(var(--attack-angle)) scale(1.14);
+    transform: translate3d(calc(var(--dx) + var(--hit-x)),calc(var(--dy) + var(--hit-y)),0) rotate(var(--attack-angle)) scale(1.17);
     opacity: 1;
   }
   67% {
-    transform: translate3d(calc(var(--dx) - 3px),calc(var(--dy) - 2px),0) rotate(var(--attack-angle)) scale(1.08);
+    transform: translate3d(calc(var(--dx) - 3px),calc(var(--dy) - 2px),0) rotate(var(--attack-angle)) scale(1.09);
     opacity: 1;
   }
 
