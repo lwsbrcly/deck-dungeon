@@ -1346,7 +1346,29 @@ if (monster && isSolo) {
       false
     );
   } 
-}  
+}
+
+// The action buttons can slightly change the layout on desktop when their
+// label changes (for example, Weapon -> Consume). Re-measure the fixed
+// dungeon slots after the buttons have been updated so the free-positioned
+// card wrappers always stay aligned with their dotted slots.
+var syncBoard = document.querySelector('.dungeon-board');
+var syncDungeon = document.getElementById('dungeon');
+var syncSlots = document.querySelectorAll('.dungeon-slot');
+if (syncBoard && syncDungeon && syncSlots.length) {
+  var syncBoardRect = syncBoard.getBoundingClientRect();
+  var syncWraps = syncDungeon.querySelectorAll('.dungeon-card-wrap');
+  for (var sw = 0; sw < syncWraps.length; sw++) {
+    var syncWrap = syncWraps[sw];
+    var syncIndex = syncWrap._slotIndex;
+    if (syncIndex === undefined || !syncSlots[syncIndex]) continue;
+    var syncRect = syncSlots[syncIndex].getBoundingClientRect();
+    syncWrap.style.left = (syncRect.left - syncBoardRect.left) + 'px';
+    syncWrap.style.top = (syncRect.top - syncBoardRect.top) + 'px';
+    syncWrap.style.width = syncRect.width + 'px';
+    syncWrap.style.height = syncRect.height + 'px';
+  }
+}
 
       //weaponGrid.innerHTML = 
       //'<button type="button" onclick="equipWeapon(\'p1\')"' + (state.p1.hp === 0 ? ' disabled' : '') + '>' + state.p1Name + ' Equip</button>' +
