@@ -1228,13 +1228,13 @@ setTimeout(function() {
   sourceEl.classList.remove('combat-hidden');
 
   if (!isFistFight && ghost) {
-    // Let the ghost finish its slow fade before the action is committed to
-    // the normal board render.
+    // The ghost is purely visual. Let the game state/UI commit immediately
+    // when the weapon returns; the ghost can finish fading independently.
     setTimeout(function() {
       ghost.remove();
-      targetEl.classList.remove('combat-hidden');
-      done();
-    }, 900);
+    }, 650);
+    targetEl.classList.remove('combat-hidden');
+    done();
     return;
   }
 
