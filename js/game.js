@@ -60,8 +60,8 @@ function stopDeckDungeonTheme() {
 }
 
 function saveState() {
-historyStack.push(JSON.parse(JSON.stringify(state)));
-if (historyStack.length > 30) historyStack.shift();
+    historyStack.push(JSON.parse(JSON.stringify(state)));
+    if (historyStack.length > 30) historyStack.shift();
 }
 
 function resetDungeonDom() {
@@ -81,88 +81,83 @@ function resetDungeonDom() {
 }
 
 function undoLastAction() {
-if (historyStack.length === 0) return;
-resetDungeonDom();
-state = historyStack.pop();
-log('Undid last action.', false);
-render();
+    if (historyStack.length === 0) return;
+    resetDungeonDom();
+    state = historyStack.pop();
+    log('Undid last action.', false);
+    render();
 }
 
 function undoFromGameOver() {
-if (historyStack.length === 0) return;
-resetDungeonDom();
-state = historyStack.pop();
-state.over = false;
-document.getElementById('overlay').classList.remove('show');
-log('Undid fatal last action.', false);
-render();
+    if (historyStack.length === 0) return;
+    resetDungeonDom();
+    state = historyStack.pop();
+    state.over = false;
+    document.getElementById('overlay').classList.remove('show');
+    log('Undid fatal last action.', false);
+    render();
 }
 
 function toggleModeInputs() {
-var modeSelect = document.getElementById('modeSelect');
-var mode = modeSelect ? modeSelect.value : 'solo_dagger';
-var p2Group = document.getElementById('p2Group');
-var p1Label = document.querySelector('#p1Group label');
-var setupRules = document.getElementById('setupRulesText');
-
-var baseRules = '<h3>Goal of the Game</h3>' +
-  '<p style="margin-bottom: 8px;">Escape the dungeon by clearing all cards in the deck!</p>' +
-  '<h3>Card Types</h3>' +
-  '<ul>' +
-    '<li><strong>♠ Clubs & Spades (Monsters):</strong> Deal damage equal to their value (2 to 14) minus your equipped weapon strength.</li>' +
-    '<li><strong>♦ Diamonds (Weapons):</strong> Wear down over time — only effective against monsters less than or equal to the previous monster.</li>' +
-    '<li><strong>♥ Hearts (Consumables):</strong> Restore lost HP. Only 1 heal per room allowed!</li>' +
-  '</ul>' +
-  '<h3>Room Mechanics</h3>' +
-  '<ul>' +
-    '<li><strong>Clear Room:</strong> Action 3 cards to move on.</li>' +
-    '<li><strong>Fleeing:</strong> Press <em>Flee</em> to skip a room until later. You cannot flee twice in a row!</li>' +
-  '</ul>';
-
-if (mode === 'coop') {
-  if (p2Group) p2Group.style.display = 'block';
-  if (p1Label) p1Label.textContent = 'Player 1 Name';
-  if (setupRules) {
-    setupRules.innerHTML = baseRules + 
-      '<h3>Co-op Hardcore Rules</h3>' +
+    var modeSelect = document.getElementById('modeSelect');
+    var mode = modeSelect ? modeSelect.value : 'solo_dagger';
+    var p2Group = document.getElementById('p2Group');
+    var p1Label = document.querySelector('#p1Group label');
+    var setupRules = document.getElementById('setupRulesText');
+    
+    var baseRules = '<h3>Goal of the Game</h3>' +
+      '<p style="margin-bottom: 8px;">Clear all cards to complete the deck!</p>' +
+      '<h3>Cards & Rules</h3>' +
       '<ul>' +
-        '<li><strong>HP Limit:</strong> Both heroes start with 10 HP.</li>' +
-        '<li><strong>Starting Weapons:</strong> Both heroes begin with a <strong>2♦ Dagger</strong> equipped.</li>' +
-        '<li><strong>2v1 Attacks:</strong> Team up with weapons or fists against a monster to split incoming damage evenly.</li>' +
-        '<li><strong>Revives:</strong> Revive a downed ally with (Card Value / 2) + 1 HP.</li>' +
+        '<li><strong>Standard deck of cards:</strong> J, Q, K, A of both Diamonds & Hearts are removed. The remaining 44 cards form <strong>the deck.</strong></li>' + 
+        '<li><strong>♠ Clubs & Spades = Monsters:</strong> Fight them with your equipped weapon, or bare-handed.</li>' +
+        '<li><strong>♦ Diamonds = Weapons:</strong> Equip one at a time. Deflect incoming damage, up to your weapon\'s value. Can only be used against monsters' +
+        'less than or equal to previous monster slain.</li>' +
+        '<li><strong>♥ Hearts = Consumables:</strong> Restore lost HP, up to your maximum health. Only 1 per room allowed!</li>' +
+      '</ul>' +
+      '<h3>Game Mechanics</h3>' +
+      '<ul>' +,
+        '<li><strong>Clear Room:</strong> Action 3 cards to clear room. The 4th card becomes the 1st card in the next room - 3 new cards are dealt.</li>' +
+        '<li><strong>Damage:</strong> Monsters deal damage equal to their value minus your equipped weapon\'s value.</li>' +
+        '<li><strong>Health Points:</strong> Start with 20 HP. Cannot heal above that limit. If you reach 0 it\'s game over!</li>' +
+        '<li><strong>Discard:</strong> Don\'t want to lose your current weapon? Don\'t want to fight that last monster? <em>Discard</em> unwanted weapon/consumable cards to action them and move on.</li>' +
+        '<li><strong>Fleeing:</strong> Press <em>Flee</em> to skip a room - 4 new cards are dealt. Fled cards are shuffled back into the deck for later.' +
+        'You cannot flee twice in a row, so use it wisely!.</li>' +
       '</ul>';
-  }
-} else if (mode === 'solo_dagger') {
-  if (p2Group) p2Group.style.display = 'none';
-  if (p1Label) p1Label.textContent = 'Player Name';
-  if (setupRules) {
-    setupRules.innerHTML = baseRules + 
-      '<h3>Starter Dagger Rules</h3>' +
-      '<ul>' +
-        '<li><strong>HP Limit:</strong> Start with 20 HP.</li>' +
-        '<li><strong>Pre-equipped:</strong> Enter the dungeon with the <strong>2♦ Dagger</strong> equipped!</li>' +
-      '</ul>';
-  }
-}
+    
+    if (mode === 'coop') {
+      if (p2Group) p2Group.style.display = 'block';
+      if (p1Label) p1Label.textContent = 'Player 1 Name';
+      if (setupRules) {
+        setupRules.innerHTML = baseRules + 
+          '<h3>Co-op Hardcore Rules</h3>' +
+          '<ul>' +
+            '<li><strong>HP Limit:</strong> Both heroes start with 10 HP.</li>' +
+            '<li><strong>Starting Weapons:</strong> Both heroes begin with a <strong>2♦ Dagger</strong> equipped.</li>' +
+            '<li><strong>2v1 Attacks:</strong> Team up with weapons or fists against a monster to split incoming damage evenly.</li>' +
+            '<li><strong>Revives:</strong> Revive a downed ally with (Card Value / 2) + 1 HP.</li>' +
+          '</ul>';
+      }
+    } 
 }
 
 function showSetupScreen() {
-document.getElementById('setupScreen').style.display = 'block';
-document.getElementById('game').style.display = 'none';
-toggleModeInputs();
+    document.getElementById('setupScreen').style.display = 'block';
+    document.getElementById('game').style.display = 'none';
+    toggleModeInputs();
 }
 
 function replayGame() {
-document.getElementById('overlay').classList.remove('show');
-showScreen('game-ui');
-startGame();
+    document.getElementById('overlay').classList.remove('show');
+    showScreen('game-ui');
+    startGame();
 }
 
 function backToMenu() {
-document.getElementById('overlay').classList.remove('show');
-document.getElementById('game').style.display = 'none';
-document.getElementById('setupScreen').style.display = 'block';
-showScreen('game-selector');
+    document.getElementById('overlay').classList.remove('show');
+    document.getElementById('game').style.display = 'none';
+    document.getElementById('setupScreen').style.display = 'block';
+    showScreen('game-selector');
 }
 
 function startGame() {
@@ -270,118 +265,118 @@ requestAnimationFrame(function() {
 }
 
 function resetRoomLimits() {
-state.p1.consumedThisRoom = false;
-state.p2.consumedThisRoom = false;
-state.combinedUsedThisRoom = false;
+    state.p1.consumedThisRoom = false;
+    state.p2.consumedThisRoom = false;
+    state.combinedUsedThisRoom = false;
 }
 
 function fillDungeon() {
-if (state.dungeon.length === 0 || state.dungeon.length === 1) {
-  if (state.dungeon.length === 1) {
-    state.roomsCleared++;
-  }
-  resetRoomLimits();
-  while (state.dungeon.length < 4 && state.deck.length) {
-    state.dungeon.push(state.deck.pop());
-  }
-}
+    if (state.dungeon.length === 0 || state.dungeon.length === 1) {
+      if (state.dungeon.length === 1) {
+        state.roomsCleared++;
+      }
+      resetRoomLimits();
+      while (state.dungeon.length < 4 && state.deck.length) {
+        state.dungeon.push(state.deck.pop());
+      }
+    }
 }
 
 function refreshDungeon() {
-if (state.justFled || state.over || state.dungeon.length < 4 || state.deck.length === 0) return;
-saveState();
+    if (state.justFled || state.over || state.dungeon.length < 4 || state.deck.length === 0) return;
+    saveState();
+    
+    var oldCardEls = Array.prototype.slice.call(document.querySelectorAll('#dungeon .dungeon-card-wrap .card'));
+    var fledCards = state.dungeon.slice();
+    state.dungeon = [];
+    
+    resetRoomLimits();
+    
+    // Deal the replacement room from the untouched deck first. Normally there
+    // are at least 4 cards available, so this simply deals a full room. At the
+    // end of a Starter Dagger run there can be exactly 3 cards left: deal those
+    // 3 first, then shuffle the fled room back in and draw one random card to
+    // make the replacement room a full 4 cards.
+    while (state.dungeon.length < 4 && state.deck.length > 0) {
+      state.dungeon.push(state.deck.pop());
+    }
 
-var oldCardEls = Array.prototype.slice.call(document.querySelectorAll('#dungeon .dungeon-card-wrap .card'));
-var fledCards = state.dungeon.slice();
-state.dungeon = [];
-
-resetRoomLimits();
-
-// Deal the replacement room from the untouched deck first. Normally there
-// are at least 4 cards available, so this simply deals a full room. At the
-// end of a Starter Dagger run there can be exactly 3 cards left: deal those
-// 3 first, then shuffle the fled room back in and draw one random card to
-// make the replacement room a full 4 cards.
-while (state.dungeon.length < 4 && state.deck.length > 0) {
-  state.dungeon.push(state.deck.pop());
-}
-
-// Now return the fled room to the deck. If only 3 untouched cards remained,
-// this also supplies the fourth card needed for the new room.
-state.deck.push.apply(state.deck, fledCards);
-shuffle(state.deck);
-
-while (state.dungeon.length < 4 && state.deck.length > 0) {
-  state.dungeon.push(state.deck.pop());
-}
-
-state.selected = null;
-state.justFled = true;
-state.roomsFled++;
-log('Fled the room.', true, 'flee');
-checkGame();
-// Flee animation is purely visual; deal the new room after the old cards leave.
-animateFlee(oldCardEls).then(function() {
-  // Do not render the replacement room until every fleeing card has
-  // reported that its animation is finished. Then wait one paint frame
-  // before starting the first incoming card.
-  render();
-  animateRoomEntry();
-});
+    // Now return the fled room to the deck. If only 3 untouched cards remained,
+    // this also supplies the fourth card needed for the new room.
+    state.deck.push.apply(state.deck, fledCards);
+    shuffle(state.deck);
+    
+    while (state.dungeon.length < 4 && state.deck.length > 0) {
+      state.dungeon.push(state.deck.pop());
+    }
+    
+    state.selected = null;
+    state.justFled = true;
+    state.roomsFled++;
+    log('Fled the room.', true, 'flee');
+    checkGame();
+    // Flee animation is purely visual; deal the new room after the old cards leave.
+    animateFlee(oldCardEls).then(function() {
+      // Do not render the replacement room until every fleeing card has
+      // reported that its animation is finished. Then wait one paint frame
+      // before starting the first incoming card.
+      render();
+      animateRoomEntry();
+    });
 }
 
 function selectCard(i) {
-if (state.over) return;
-state.selected = i;
-render();
+    if (state.over) return;
+    state.selected = i;
+    render();
 }
 
 function cardHTML(c, customCornerText) {
-if (!c) return '';
-var red = c.suit === 'hearts' || c.suit === 'diamonds';
-var cornerText = customCornerText !== undefined ? customCornerText : (c.rank + '<br>' + SUITS[c.suit]);
-
-// Render custom SVG Artwork for the selected theme.
-var centerArt = '';
-var theme = THEMES[selectedTheme || 'dungeon'];
-var svgArt = theme && theme.artwork && theme.artwork.svgCards
-  ? theme.artwork.svgCards[c.suit + '_' + c.rank]
-  : null;
-
-if (svgArt) {
-  centerArt = '<div class="card-art">' + svgArt + '</div>';
-} else {
-  centerArt = '<div class="suitbig">' + SUITS[c.suit] + '</div>';
-}
-var cardArtwork = (THEMES[selectedTheme || 'dungeon'] && THEMES[selectedTheme || 'dungeon'].artwork)
-  ? THEMES[selectedTheme || 'dungeon'].artwork.card
-  : 'assets/dungeon/card.png';
-
-return '<div class="card ' + (red ? 'red' : 'black') + '" style="background-image: url(' + cardArtwork + ');">' +
-  '<div class="card-rank">' + cornerText + '</div>' +
-  centerArt +
-  '<div class="card-title">' + c.name + '</div>' +
-'</div>';
-}
-
+    if (!c) return '';
+    var red = c.suit === 'hearts' || c.suit === 'diamonds';
+    var cornerText = customCornerText !== undefined ? customCornerText : (c.rank + '<br>' + SUITS[c.suit]);
+    
+    // Render custom SVG Artwork for the selected theme.
+    var centerArt = '';
+    var theme = THEMES[selectedTheme || 'dungeon'];
+    var svgArt = theme && theme.artwork && theme.artwork.svgCards
+      ? theme.artwork.svgCards[c.suit + '_' + c.rank]
+      : null;
+    
+    if (svgArt) {
+      centerArt = '<div class="card-art">' + svgArt + '</div>';
+    } else {
+      centerArt = '<div class="suitbig">' + SUITS[c.suit] + '</div>';
+    }
+    var cardArtwork = (THEMES[selectedTheme || 'dungeon'] && THEMES[selectedTheme || 'dungeon'].artwork)
+      ? THEMES[selectedTheme || 'dungeon'].artwork.card
+      : 'assets/dungeon/card.png';
+    
+    return '<div class="card ' + (red ? 'red' : 'black') + '" style="background-image: url(' + cardArtwork + ');">' +
+      '<div class="card-rank">' + cornerText + '</div>' +
+      centerArt +
+      '<div class="card-title">' + c.name + '</div>' +
+    '</div>';
+    }
+    
 function removeSelected() {
-var c = state.dungeon.splice(state.selected, 1)[0];
-state.selected = null;
-state.justFled = false;
-var before = state.dungeon.length;
-
-// If this action just killed the player(s), do not deal another room.
-// checkGame() will show the game-over overlay immediately afterwards.
-var isSolo = state.mode !== 'coop';
-var isDead = isSolo ? state.p1.hp <= 0 : (state.p1.hp <= 0 && state.p2.hp <= 0);
-
-if (!isDead) {
-  fillDungeon();
-}
-
-state._roomWasDealt = !isDead && (before <= 1 && state.dungeon.length > before);
-state._skipFirstRoomCard = state._roomWasDealt && before === 1;
-return c;
+    var c = state.dungeon.splice(state.selected, 1)[0];
+    state.selected = null;
+    state.justFled = false;
+    var before = state.dungeon.length;
+    
+    // If this action just killed the player(s), do not deal another room.
+    // checkGame() will show the game-over overlay immediately afterwards.
+    var isSolo = state.mode !== 'coop';
+    var isDead = isSolo ? state.p1.hp <= 0 : (state.p1.hp <= 0 && state.p2.hp <= 0);
+    
+    if (!isDead) {
+      fillDungeon();
+    }
+    
+    state._roomWasDealt = !isDead && (before <= 1 && state.dungeon.length > before);
+    state._skipFirstRoomCard = state._roomWasDealt && before === 1;
+    return c;
 }
 
 function renderAfterAction() {
@@ -518,16 +513,16 @@ setTimeout(function() { clone.remove(); cardEl.classList.remove('action-hidden')
 }
 
 function waitForAnimation(el) {
-return new Promise(function(resolve) {
-  var finished = false;
-  function done() {
-    if (finished) return;
-    finished = true;
-    el.removeEventListener('animationend', done);
-    resolve();
-  }
-  el.addEventListener('animationend', done);
-});
+    return new Promise(function(resolve) {
+      var finished = false;
+      function done() {
+        if (finished) return;
+        finished = true;
+        el.removeEventListener('animationend', done);
+        resolve();
+      }
+      el.addEventListener('animationend', done);
+    });
 }
 
 async function animateRoomEntry(skipFirst) {
@@ -721,54 +716,54 @@ animateCardAction(cardEl, targetEl, 'equip-clone', finishEquip);
 }
 
 function discardDungeonWeapon() {
-if (state.over || state.selected === null) return;
-var cardEl = getDungeonCardElement(state.selected);
-saveState();
-animateCardAction(cardEl, null, 'discard-clone', function() {
-  var c = removeSelected(); log('Discarded the ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').'); checkGame(); renderAfterAction();
-});
+    if (state.over || state.selected === null) return;
+    var cardEl = getDungeonCardElement(state.selected);
+    saveState();
+    animateCardAction(cardEl, null, 'discard-clone', function() {
+      var c = removeSelected(); log('Discarded the ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').'); checkGame(); renderAfterAction();
+    });
 }
 
 function discardDungeonPotion() {
-if (state.over || state.selected === null) return;
-var cardEl = getDungeonCardElement(state.selected);
-saveState();
-animateCardAction(cardEl, null, 'discard-clone', function() {
-  var c = removeSelected(); log('Discarded the ' + c.name + ' (' + c.value + ' HP).'); checkGame(); renderAfterAction();
-});
+    if (state.over || state.selected === null) return;
+    var cardEl = getDungeonCardElement(state.selected);
+    saveState();
+    animateCardAction(cardEl, null, 'discard-clone', function() {
+      var c = removeSelected(); log('Discarded the ' + c.name + ' (' + c.value + ' HP).'); checkGame(); renderAfterAction();
+    });
 }
 
 function drinkDirectPotion(target) {
-if (state.over || state.selected === null) return;
-var t = state[target];
-var cardEl = getDungeonCardElement(state.selected);
-var targetEl = document.getElementById(target + 'Panel');
-saveState();
-var c = state.dungeon[state.selected];
-animateCardAction(cardEl, targetEl, 'consume-clone', function() {
-  var isDowned = t.hp === 0; var amount = 0;
-  if (!t.consumedThisRoom) {
-    amount = isDowned ? Math.floor(c.value / 2) + 1 : c.value;
-    var actualHeal = Math.min(state.maxHP - t.hp, amount); t.hp = Math.min(state.maxHP, t.hp + amount); t.consumedThisRoom = true;
-    if (actualHeal > 0) state.foodConsumed += actualHeal;
-    if (isDowned) log(name(target) + ' was revived by ' + c.name + ' with ' + amount + ' HP!', true, 'potion');
-    else log(name(target) + ' consumes ' + c.name + ', restoring ' + amount + ' HP.', true, 'potion');
-  } else log(name(target) + ' consumed ' + c.name + ', but to no effect.', false, 'potion');
-  removeSelected(); checkGame(); renderAfterAction();
-}, '♥');
+    if (state.over || state.selected === null) return;
+    var t = state[target];
+    var cardEl = getDungeonCardElement(state.selected);
+    var targetEl = document.getElementById(target + 'Panel');
+    saveState();
+    var c = state.dungeon[state.selected];
+    animateCardAction(cardEl, targetEl, 'consume-clone', function() {
+      var isDowned = t.hp === 0; var amount = 0;
+      if (!t.consumedThisRoom) {
+        amount = isDowned ? Math.floor(c.value / 2) + 1 : c.value;
+        var actualHeal = Math.min(state.maxHP - t.hp, amount); t.hp = Math.min(state.maxHP, t.hp + amount); t.consumedThisRoom = true;
+        if (actualHeal > 0) state.foodConsumed += actualHeal;
+        if (isDowned) log(name(target) + ' was revived by ' + c.name + ' with ' + amount + ' HP!', true, 'potion');
+        else log(name(target) + ' consumes ' + c.name + ', restoring ' + amount + ' HP.', true, 'potion');
+      } else log(name(target) + ' consumed ' + c.name + ', but to no effect.', false, 'potion');
+      removeSelected(); checkGame(); renderAfterAction();
+    }, '♥');
 }
 
 function validWeapon(p, c) {
-if (!p.weapon || p.ceiling === null) return false;
-return state.hardMode ? c.value < p.ceiling : c.value <= p.ceiling;
+    if (!p.weapon || p.ceiling === null) return false;
+    return state.hardMode ? c.value < p.ceiling : c.value <= p.ceiling;
 }
 
 function trackWeaponKill(weaponName, monsterValue) {
-if (!state.weaponUsage[weaponName]) {
-  state.weaponUsage[weaponName] = { uses: 0, ptsSlain: 0 };
-}
-state.weaponUsage[weaponName].uses += 1;
-state.weaponUsage[weaponName].ptsSlain += monsterValue;
+    if (!state.weaponUsage[weaponName]) {
+      state.weaponUsage[weaponName] = { uses: 0, ptsSlain: 0 };
+    }
+    state.weaponUsage[weaponName].uses += 1;
+    state.weaponUsage[weaponName].ptsSlain += monsterValue;
 }
 
 function animateAttack(player, targetEl, done, isFistFight, ghostInfo) {
@@ -895,124 +890,125 @@ setTimeout(function() {
   done();
 }, isFistFight ? 430 : 700);
 }
+
 function getDungeonCardElement(slotIndex) {
-var wraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
-for (var i = 0; i < wraps.length; i++) {
-  if (wraps[i]._slotIndex === slotIndex) {
-    return wraps[i].querySelector('.card');
-  }
-}
-return null;
+    var wraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
+    for (var i = 0; i < wraps.length; i++) {
+      if (wraps[i]._slotIndex === slotIndex) {
+        return wraps[i].querySelector('.card');
+      }
+    }
+    return null;
 }
 
 function fight(player, mode) {
-if (state.over || state.selected === null) return;
-var c = state.dungeon[state.selected];
-if (['spades','clubs'].indexOf(c.suit) === -1) return;
-
-var targetEl = getDungeonCardElement(state.selected);
-
-if (player === 'both') {
-  var a = state.p1, b = state.p2;
-  if (state.combinedUsedThisRoom) { log('Combined action already used this room.'); return; }
-  if (a.hp <= 0 || b.hp <= 0) { log('Both players must be standing.'); return; }
-
-  if (mode === 'combined_bare') {
-    saveState();
-    animateAttack('both', targetEl, function() {
-      var totalDamage = c.value;
-      applySharedDamage(totalDamage, 'p1');
-      state.combinedUsedThisRoom = true;
-      state.monstersSlain++;
-      trackWeaponKill('Bare Fists', c.value);
-      removeSelected();
-      log('Both heroes team up vs ' + c.name + '. Took ' + totalDamage + ' damage split between them.', true, 'fist');
-      checkGame();
-      renderAfterAction();
-    }, true);
-  } else {
-    if (!a.weapon || !b.weapon || a.ceiling === null || b.ceiling === null || c.value > (a.ceiling + b.ceiling)) { log('Cannot combine weapons.'); return; }
-    saveState();
-    animateAttack('p1', targetEl, function() {
-      var power = a.weapon.value + b.weapon.value;
-      var damage = Math.max(0, c.value - power);
-      applySharedDamage(damage, 'p1');
-      var targetCeiling = Math.floor(c.value / 2);
-      a.ceiling = Math.min(a.ceiling, targetCeiling);
-      b.ceiling = Math.min(b.ceiling, targetCeiling);
-      state.combinedUsedThisRoom = true;
-      state.monstersSlain++;
-      trackWeaponKill(a.weapon.name, Math.floor(c.value / 2));
-      trackWeaponKill(b.weapon.name, Math.ceil(c.value / 2));
-      removeSelected();
-      log('Combined weapons (' + power + ' pwr) vs ' + c.name + '. Taken ' + damage + ' damage.', true, 'monster');
-      checkGame();
-      renderAfterAction();
-    });
-  }
-} else {
-  var p = state[player];
-  if (p.hp <= 0) { log(name(player) + ' is Downed.'); return; }
-  var damage = c.value;
-
-  if (mode === 'weapon') {
-    if (!validWeapon(p, c)) { log('Monster value exceeds weapon ceiling.'); return; }
-  }
-
-  saveState();
-
-  // Weapon kills create the monster's "memory" before the animation starts.
-  // It stays out of the live dungeon until the weapon returns home, when the
-  // ghost is materialised on top of the previous-monster stack.
-  var ghostInfo = null;
-  if (player === 'p1' && mode === 'weapon') {
-    var previousMonster = JSON.parse(JSON.stringify(c));
-    previousMonster._ghostId = 'ghost_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-    var pileIndex = p.previousMonsters.length;
-    previousMonster.stackX = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
-    previousMonster.stackY = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
-    previousMonster.stackRotation = pileIndex === 0 ? 0 : (Math.random() * 10 - 5);
-    p.previousMonsters.push(previousMonster);
-
-    ghostInfo = {
-      targetEl: document.getElementById('p1PreviousMonster'),
-      monster: previousMonster
-    };
-  }
-
-  animateAttack(player, targetEl, function() {
-    if (mode === 'weapon') {
-      damage = Math.max(0, c.value - p.weapon.value);
-      p.ceiling = Math.min(p.ceiling, c.value);
-      trackWeaponKill(p.weapon.name, c.value);
+    if (state.over || state.selected === null) return;
+    var c = state.dungeon[state.selected];
+    if (['spades','clubs'].indexOf(c.suit) === -1) return;
+    
+    var targetEl = getDungeonCardElement(state.selected);
+    
+    if (player === 'both') {
+      var a = state.p1, b = state.p2;
+      if (state.combinedUsedThisRoom) { log('Combined action already used this room.'); return; }
+      if (a.hp <= 0 || b.hp <= 0) { log('Both players must be standing.'); return; }
+    
+      if (mode === 'combined_bare') {
+        saveState();
+        animateAttack('both', targetEl, function() {
+          var totalDamage = c.value;
+          applySharedDamage(totalDamage, 'p1');
+          state.combinedUsedThisRoom = true;
+          state.monstersSlain++;
+          trackWeaponKill('Bare Fists', c.value);
+          removeSelected();
+          log('Both heroes team up vs ' + c.name + '. Took ' + totalDamage + ' damage split between them.', true, 'fist');
+          checkGame();
+          renderAfterAction();
+        }, true);
+      } else {
+        if (!a.weapon || !b.weapon || a.ceiling === null || b.ceiling === null || c.value > (a.ceiling + b.ceiling)) { log('Cannot combine weapons.'); return; }
+        saveState();
+        animateAttack('p1', targetEl, function() {
+          var power = a.weapon.value + b.weapon.value;
+          var damage = Math.max(0, c.value - power);
+          applySharedDamage(damage, 'p1');
+          var targetCeiling = Math.floor(c.value / 2);
+          a.ceiling = Math.min(a.ceiling, targetCeiling);
+          b.ceiling = Math.min(b.ceiling, targetCeiling);
+          state.combinedUsedThisRoom = true;
+          state.monstersSlain++;
+          trackWeaponKill(a.weapon.name, Math.floor(c.value / 2));
+          trackWeaponKill(b.weapon.name, Math.ceil(c.value / 2));
+          removeSelected();
+          log('Combined weapons (' + power + ' pwr) vs ' + c.name + '. Taken ' + damage + ' damage.', true, 'monster');
+          checkGame();
+          renderAfterAction();
+        });
+      }
     } else {
-      trackWeaponKill('Bare Fists', c.value);
+      var p = state[player];
+      if (p.hp <= 0) { log(name(player) + ' is Downed.'); return; }
+      var damage = c.value;
+    
+      if (mode === 'weapon') {
+        if (!validWeapon(p, c)) { log('Monster value exceeds weapon ceiling.'); return; }
+      }
+    
+      saveState();
+    
+      // Weapon kills create the monster's "memory" before the animation starts.
+      // It stays out of the live dungeon until the weapon returns home, when the
+      // ghost is materialised on top of the previous-monster stack.
+      var ghostInfo = null;
+      if (player === 'p1' && mode === 'weapon') {
+        var previousMonster = JSON.parse(JSON.stringify(c));
+        previousMonster._ghostId = 'ghost_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+        var pileIndex = p.previousMonsters.length;
+        previousMonster.stackX = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
+        previousMonster.stackY = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
+        previousMonster.stackRotation = pileIndex === 0 ? 0 : (Math.random() * 10 - 5);
+        p.previousMonsters.push(previousMonster);
+    
+        ghostInfo = {
+          targetEl: document.getElementById('p1PreviousMonster'),
+          monster: previousMonster
+        };
+      }
+    
+      animateAttack(player, targetEl, function() {
+        if (mode === 'weapon') {
+          damage = Math.max(0, c.value - p.weapon.value);
+          p.ceiling = Math.min(p.ceiling, c.value);
+          trackWeaponKill(p.weapon.name, c.value);
+        } else {
+          trackWeaponKill('Bare Fists', c.value);
+        }
+    
+        p.hp = Math.max(0, p.hp - damage);
+        state.monstersSlain++;
+    
+        if (mode === 'weapon') {
+          log(name(player) + ' uses ' + p.weapon.name + ' vs ' + c.name + '. Damage taken: ' + damage + '.', true, 'monster');
+        } else {
+          log(name(player) + ' enters Fist Fight with ' + c.name + ' and takes ' + damage + ' damage.', true, 'fist');
+        }
+    
+        // Fist fights clear the monster normally. Weapon kills have already
+        // prepared the previous-monster memory and now just reveal it through
+        // the ghost materialisation inside animateAttack().
+        removeSelected();
+        checkGame();
+        renderAfterAction();
+      }, mode !== 'weapon', ghostInfo);
     }
-
-    p.hp = Math.max(0, p.hp - damage);
-    state.monstersSlain++;
-
-    if (mode === 'weapon') {
-      log(name(player) + ' uses ' + p.weapon.name + ' vs ' + c.name + '. Damage taken: ' + damage + '.', true, 'monster');
-    } else {
-      log(name(player) + ' enters Fist Fight with ' + c.name + ' and takes ' + damage + ' damage.', true, 'fist');
-    }
-
-    // Fist fights clear the monster normally. Weapon kills have already
-    // prepared the previous-monster memory and now just reveal it through
-    // the ghost materialisation inside animateAttack().
-    removeSelected();
-    checkGame();
-    renderAfterAction();
-  }, mode !== 'weapon', ghostInfo);
-}
 }
 
 function applySharedDamage(damage, acting) {
-var a = Math.floor(damage / 2), b = Math.floor(damage / 2);
-if (damage % 2) { if (acting === 'p2') b++; else a++; }
-state.p1.hp = Math.max(0, state.p1.hp - a);
-state.p2.hp = Math.max(0, state.p2.hp - b);
+    var a = Math.floor(damage / 2), b = Math.floor(damage / 2);
+    if (damage % 2) { if (acting === 'p2') b++; else a++; }
+    state.p1.hp = Math.max(0, state.p1.hp - a);
+    state.p2.hp = Math.max(0, state.p2.hp - b);
 }
 
 function checkGame() {
@@ -1116,23 +1112,25 @@ if (isDead || isCleared || allMonstersSlain) {
 }
 }
 
-function name(p) { return p === 'p1' ? state.p1Name : state.p2Name; }
+function name(p) { 
+    return p === 'p1' ? state.p1Name : state.p2Name; 
+}
 
 function hideContextActions() {
-var btn1 = document.getElementById('action1');
-var btn2 = document.getElementById('action2');
-
-btn1.classList.add('action-button-hidden');
-btn2.classList.add('action-button-hidden');
+    var btn1 = document.getElementById('action1');
+    var btn2 = document.getElementById('action2');
+    
+    btn1.classList.add('action-button-hidden');
+    btn2.classList.add('action-button-hidden');
 }
 
 function setContextAction(number, label, onclick, disabled) {
-var btn = document.getElementById('action' + number);
-
-btn.textContent = label;
-btn.onclick = onclick;
-btn.disabled = !!disabled;
-btn.classList.remove('action-button-hidden');
+    var btn = document.getElementById('action' + number);
+    
+    btn.textContent = label;
+    btn.onclick = onclick;
+    btn.disabled = !!disabled;
+    btn.classList.remove('action-button-hidden');
 }
 
 function render() {
@@ -1374,159 +1372,159 @@ if (monster && isSolo) {
 
 
 function log(text, recordEvent, eventType, weaponStrengths) {
-var box = document.getElementById('log');
-if (box) box.innerHTML = '<div class="logline">• ' + text + '</div>' + box.innerHTML;
-
-// Keep a compact structured history alongside the visible text log.
-// The graph uses event order as the run's X-axis because the game has no
-// real-world clock/timestamp associated with individual actions.
-if (recordEvent !== false && state && state.p1 && Array.isArray(state.eventHistory)) {
-  state.eventHistory.push({
-    text: String(text),
-    type: (arguments.length >= 3 && arguments[2]) ? arguments[2] : 'other',
-    p1hp: state.p1.hp,
-    p2hp: state.p2 ? state.p2.hp : null,
-    p1Ceiling: state.p1.ceiling,
-    p2Ceiling: state.p2 ? state.p2.ceiling : null,
-    p1WeaponStrength: (arguments.length >= 4 && arguments[3]) ? arguments[3].p1 : null,
-    p2WeaponStrength: (arguments.length >= 4 && arguments[3]) ? arguments[3].p2 : null,
-    monstersSlain: state.monstersSlain || 0,
-    roomsCleared: state.roomsCleared || 0
-  });
-}
+    var box = document.getElementById('log');
+    if (box) box.innerHTML = '<div class="logline">• ' + text + '</div>' + box.innerHTML;
+    
+    // Keep a compact structured history alongside the visible text log.
+    // The graph uses event order as the run's X-axis because the game has no
+    // real-world clock/timestamp associated with individual actions.
+    if (recordEvent !== false && state && state.p1 && Array.isArray(state.eventHistory)) {
+      state.eventHistory.push({
+        text: String(text),
+        type: (arguments.length >= 3 && arguments[2]) ? arguments[2] : 'other',
+        p1hp: state.p1.hp,
+        p2hp: state.p2 ? state.p2.hp : null,
+        p1Ceiling: state.p1.ceiling,
+        p2Ceiling: state.p2 ? state.p2.ceiling : null,
+        p1WeaponStrength: (arguments.length >= 4 && arguments[3]) ? arguments[3].p1 : null,
+        p2WeaponStrength: (arguments.length >= 4 && arguments[3]) ? arguments[3].p2 : null,
+        monstersSlain: state.monstersSlain || 0,
+        roomsCleared: state.roomsCleared || 0
+      });
+    }
 }
 
 function xmlEscape(text) {
-return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 function renderRunChart() {
-var target = document.getElementById('runChart');
-var legend = document.getElementById('runChartLegend');
-if (!target) return;
-
-var events = Array.isArray(state.eventHistory) ? state.eventHistory : [];
-if (!events.length) {
-  target.innerHTML = '<div style="padding:10px;color:var(--muted);font-size:0.75rem;">No run history recorded.</div>';
-  if (legend) legend.innerHTML = '';
-  return;
-}
-
-var isSolo = state.mode !== 'coop';
-var W = 720, H = 300;
-var left = 54, right = 12, top = 22, bottom = 252;
-var plotW = W - left - right;
-var hpH = bottom - top;
-var maxHP = state.maxHP || 20;
-var n = events.length;
-var x = function(i) { return left + (n === 1 ? plotW / 2 : (i / (n - 1)) * plotW); };
-var hpY = function(v) { return bottom - (Math.max(0, Math.min(maxHP, v)) / maxHP) * hpH; };
-
-var parts = [];
-parts.push('<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Run log">');
-parts.push('<line class="grid-line" x1="' + left + '" y1="' + hpY(maxHP) + '" x2="' + (W-right) + '" y2="' + hpY(maxHP) + '"/>');
-//parts.push('<line class="grid-line" x1="' + left + '" y1="' + hpY(maxHP/2) + '" x2="' + (W-right) + '" y2="' + hpY(maxHP/2) + '"/>');
-parts.push('<line class="grid-line" x1="' + left + '" y1="' + hpY(0) + '" x2="' + (W-right) + '" y2="' + hpY(0) + '"/>');
-parts.push('<line class="axis-line" x1="' + left + '" y1="' + top + '" x2="' + left + '" y2="' + bottom + '"/>');
-parts.push('<line class="axis-line" x1="' + left + '" y1="' + bottom + '" x2="' + (W-right) + '" y2="' + bottom + '"/>');
-//parts.push('<text class="panel-label" x="' + left + '" y="13">Health</text>');
-parts.push('<text class="axis-label" text-anchor="end" x="' + (left-7) + '" y="' + (hpY(maxHP)+4) + '">' + maxHP + '</text>');
-//parts.push('<text class="axis-label" text-anchor="end" x="' + (left-7) + '" y="' + (hpY(maxHP/2)+4) + '">' + Math.round(maxHP/2) + '</text>');
-parts.push('<text class="axis-label" text-anchor="end" x="' + (left-7) + '" y="' + (hpY(0)+4) + '">0</text>');
-
-var p1HpPoints = events.map(function(e,i){ return x(i)+','+hpY(e.p1hp); }).join(' ');
-parts.push('<polyline class="hp-line" points="' + p1HpPoints + '"/>');
-if (!isSolo) {
-  var p2HpPoints = events.map(function(e,i){ return x(i)+','+hpY(e.p2hp == null ? 0 : e.p2hp); }).join(' ');
-  parts.push('<polyline class="hp-line p2" points="' + p2HpPoints + '"/>');
-}
-
-events.forEach(function(e,i){
-  var cls = ['weapon','monster','fist','potion','flee'].indexOf(e.type) >= 0 ? e.type : 'other';
-  var py = hpY(e.p1hp);
-  var title = 'Event ' + (i+1) + ': ' + e.text;
-  parts.push('<circle class="event-dot ' + cls + '" cx="' + x(i) + '" cy="' + py + '" r="6"><title>' + xmlEscape(title) + '</title></circle>');
-  if (!isSolo && e.p2hp != null) {
-    parts.push('<circle class="event-dot ' + cls + ' alt" cx="' + x(i) + '" cy="' + hpY(e.p2hp) + '" r="3.7"><title>' + xmlEscape(title) + '</title></circle>');
-  }
-});
-
-var ticks = n === 1 ? [0] : [0, Math.floor((n-1)/2), n-1];
-var used = {};
-ticks.forEach(function(i){
-  if (used[i]) return; used[i]=true;
-  parts.push('<line class="axis-line" x1="' + x(i) + '" y1="' + bottom + '" x2="' + x(i) + '" y2="' + (bottom+4) + '"/>');
-  parts.push('<text class="axis-label" text-anchor="middle" x="' + x(i) + '" y="' + (bottom+17) + '">' + (i+1) + '</text>');
-});
-//parts.push('<text class="axis-label" text-anchor="middle" x="' + (W/2) + '" y="' + (H-5) + '">Event order</text>');
-parts.push('</svg>');
-target.innerHTML = parts.join('');
-
-if (legend) {
-  var legendHtml = '';
-  legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-line"></span>' + xmlEscape(state.p1Name || 'Player 1') + '</span>';
-  if (!isSolo) legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-line p2"></span>' + xmlEscape(state.p2Name || 'Player 2') + '</span>';
-  legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot monster"></span>Weapon fight</span>';
-  legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot fist"></span>Fist fight</span>';
-  legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot weapon"></span>Weapon equipped</span>';
-  legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot potion"></span>HP restored</span>';
-  legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot flee"></span>Room fled</span>';
-  legend.innerHTML = legendHtml;
-}
+    var target = document.getElementById('runChart');
+    var legend = document.getElementById('runChartLegend');
+    if (!target) return;
+    
+    var events = Array.isArray(state.eventHistory) ? state.eventHistory : [];
+    if (!events.length) {
+      target.innerHTML = '<div style="padding:10px;color:var(--muted);font-size:0.75rem;">No run history recorded.</div>';
+      if (legend) legend.innerHTML = '';
+      return;
+    }
+    
+    var isSolo = state.mode !== 'coop';
+    var W = 720, H = 300;
+    var left = 54, right = 12, top = 22, bottom = 252;
+    var plotW = W - left - right;
+    var hpH = bottom - top;
+    var maxHP = state.maxHP || 20;
+    var n = events.length;
+    var x = function(i) { return left + (n === 1 ? plotW / 2 : (i / (n - 1)) * plotW); };
+    var hpY = function(v) { return bottom - (Math.max(0, Math.min(maxHP, v)) / maxHP) * hpH; };
+    
+    var parts = [];
+    parts.push('<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Run log">');
+    parts.push('<line class="grid-line" x1="' + left + '" y1="' + hpY(maxHP) + '" x2="' + (W-right) + '" y2="' + hpY(maxHP) + '"/>');
+    //parts.push('<line class="grid-line" x1="' + left + '" y1="' + hpY(maxHP/2) + '" x2="' + (W-right) + '" y2="' + hpY(maxHP/2) + '"/>');
+    parts.push('<line class="grid-line" x1="' + left + '" y1="' + hpY(0) + '" x2="' + (W-right) + '" y2="' + hpY(0) + '"/>');
+    parts.push('<line class="axis-line" x1="' + left + '" y1="' + top + '" x2="' + left + '" y2="' + bottom + '"/>');
+    parts.push('<line class="axis-line" x1="' + left + '" y1="' + bottom + '" x2="' + (W-right) + '" y2="' + bottom + '"/>');
+    //parts.push('<text class="panel-label" x="' + left + '" y="13">Health</text>');
+    parts.push('<text class="axis-label" text-anchor="end" x="' + (left-7) + '" y="' + (hpY(maxHP)+4) + '">' + maxHP + '</text>');
+    //parts.push('<text class="axis-label" text-anchor="end" x="' + (left-7) + '" y="' + (hpY(maxHP/2)+4) + '">' + Math.round(maxHP/2) + '</text>');
+    parts.push('<text class="axis-label" text-anchor="end" x="' + (left-7) + '" y="' + (hpY(0)+4) + '">0</text>');
+    
+    var p1HpPoints = events.map(function(e,i){ return x(i)+','+hpY(e.p1hp); }).join(' ');
+    parts.push('<polyline class="hp-line" points="' + p1HpPoints + '"/>');
+    if (!isSolo) {
+      var p2HpPoints = events.map(function(e,i){ return x(i)+','+hpY(e.p2hp == null ? 0 : e.p2hp); }).join(' ');
+      parts.push('<polyline class="hp-line p2" points="' + p2HpPoints + '"/>');
+    }
+    
+    events.forEach(function(e,i){
+      var cls = ['weapon','monster','fist','potion','flee'].indexOf(e.type) >= 0 ? e.type : 'other';
+      var py = hpY(e.p1hp);
+      var title = 'Event ' + (i+1) + ': ' + e.text;
+      parts.push('<circle class="event-dot ' + cls + '" cx="' + x(i) + '" cy="' + py + '" r="6"><title>' + xmlEscape(title) + '</title></circle>');
+      if (!isSolo && e.p2hp != null) {
+        parts.push('<circle class="event-dot ' + cls + ' alt" cx="' + x(i) + '" cy="' + hpY(e.p2hp) + '" r="3.7"><title>' + xmlEscape(title) + '</title></circle>');
+      }
+    });
+    
+    var ticks = n === 1 ? [0] : [0, Math.floor((n-1)/2), n-1];
+    var used = {};
+    ticks.forEach(function(i){
+      if (used[i]) return; used[i]=true;
+      parts.push('<line class="axis-line" x1="' + x(i) + '" y1="' + bottom + '" x2="' + x(i) + '" y2="' + (bottom+4) + '"/>');
+      parts.push('<text class="axis-label" text-anchor="middle" x="' + x(i) + '" y="' + (bottom+17) + '">' + (i+1) + '</text>');
+    });
+    //parts.push('<text class="axis-label" text-anchor="middle" x="' + (W/2) + '" y="' + (H-5) + '">Event order</text>');
+    parts.push('</svg>');
+    target.innerHTML = parts.join('');
+    
+    if (legend) {
+      var legendHtml = '';
+      legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-line"></span>' + xmlEscape(state.p1Name || 'Player 1') + '</span>';
+      if (!isSolo) legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-line p2"></span>' + xmlEscape(state.p2Name || 'Player 2') + '</span>';
+      legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot monster"></span>Weapon fight</span>';
+      legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot fist"></span>Fist fight</span>';
+      legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot weapon"></span>Weapon equipped</span>';
+      legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot potion"></span>HP restored</span>';
+      legendHtml += '<span class="run-chart-legend-item"><span class="run-chart-legend-dot flee"></span>Room fled</span>';
+      legend.innerHTML = legendHtml;
+    }
 }
 
 // Peek Event Handlers (Keyboard + Touch/Mouse)
 function setupPeekHandlers() {
-var overlay = document.getElementById('overlay');
-var peekBtn = document.getElementById('peekBtn');
-
-var setPeek = function(isPeeking) {
-  if (isPeeking) {
-    overlay.classList.add('peek-hidden');
-  } else {
-    overlay.classList.remove('peek-hidden');
-  }
-};
-
-// Keyboard handlers [V]
-window.addEventListener('keydown', function(e) {
-  if (e.key === 'v' || e.key === 'V') setPeek(true);
-});
-window.addEventListener('keyup', function(e) {
-  if (e.key === 'v' || e.key === 'V') setPeek(false);
-});
-
-// Touch & Mouse events for peek button
-peekBtn.addEventListener('mousedown', function() { setPeek(true); });
-peekBtn.addEventListener('mouseup', function() { setPeek(false); });
-peekBtn.addEventListener('touchstart', function(e) { e.preventDefault(); setPeek(true); });
-peekBtn.addEventListener('touchend', function(e) { e.preventDefault(); setPeek(false); });
+    var overlay = document.getElementById('overlay');
+    var peekBtn = document.getElementById('peekBtn');
+    
+    var setPeek = function(isPeeking) {
+      if (isPeeking) {
+        overlay.classList.add('peek-hidden');
+      } else {
+        overlay.classList.remove('peek-hidden');
+      }
+    };
+    
+    // Keyboard handlers [V]
+    window.addEventListener('keydown', function(e) {
+      if (e.key === 'v' || e.key === 'V') setPeek(true);
+    });
+    window.addEventListener('keyup', function(e) {
+      if (e.key === 'v' || e.key === 'V') setPeek(false);
+    });
+    
+    // Touch & Mouse events for peek button
+    peekBtn.addEventListener('mousedown', function() { setPeek(true); });
+    peekBtn.addEventListener('mouseup', function() { setPeek(false); });
+    peekBtn.addEventListener('touchstart', function(e) { e.preventDefault(); setPeek(true); });
+    peekBtn.addEventListener('touchend', function(e) { e.preventDefault(); setPeek(false); });
 }
 
 // Initial load execution
 window.onload = function() {
-toggleModeInputs();
-setupPeekHandlers();
-
-var splash = document.getElementById('splashScreen');
-var app = document.querySelector('.container');
-var splashStarted = false;
-
-function beginFromSplash() {
-  if (splashStarted) return;
-  splashStarted = true;
-
-  // This click is the browser-approved user gesture that unlocks Web Audio.
-  getAudioContext();
-  deckDungeonTheme();
-
-  app.classList.remove('splash-hidden');
-  splash.classList.add('fade-out');
-  setTimeout(function() { splash.remove(); }, 500);
-}
-
-splash.addEventListener('click', beginFromSplash);
-splash.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); beginFromSplash(); }
-});
+    toggleModeInputs();
+    setupPeekHandlers();
+    
+    var splash = document.getElementById('splashScreen');
+    var app = document.querySelector('.container');
+    var splashStarted = false;
+    
+    function beginFromSplash() {
+      if (splashStarted) return;
+      splashStarted = true;
+    
+      // This click is the browser-approved user gesture that unlocks Web Audio.
+      getAudioContext();
+      deckDungeonTheme();
+    
+      app.classList.remove('splash-hidden');
+      splash.classList.add('fade-out');
+      setTimeout(function() { splash.remove(); }, 500);
+    }
+    
+    splash.addEventListener('click', beginFromSplash);
+    splash.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); beginFromSplash(); }
+    });
 };
