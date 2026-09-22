@@ -319,7 +319,7 @@ button.primary-btn {
   will-change: transform, opacity;
 }
 .equip-clone { animation: equip-card 650ms cubic-bezier(.18,.92,.22,1) forwards; }
-.monster-equip-clone { animation: monster-equip-card 300ms cubic-bezier(.22,.8,.25,1) forwards; }
+.monster-equip-clone { animation: monster-equip-card 520ms cubic-bezier(.22,.8,.25,1) forwards; }
 
 @keyframes monster-equip-card {
   /* Quick, smooth board movement — gently lift, then settle onto the pile. */
@@ -349,7 +349,7 @@ button.primary-btn {
   100% {
     transform: translate3d(var(--dx),var(--dy),0)
       rotate(var(--stack-rotation));
-    opacity: 1;
+    opacity: 0;
   }
 }
 @keyframes equip-card {
@@ -564,8 +564,9 @@ button.primary-btn {
   pointer-events: none;
   margin: 0 !important;
   transform-origin: center center;
-  animation: combat-ghost-materialise 650ms ease-in forwards;
-  will-change: opacity;
+  animation: combat-ghost-materialise 1000ms ease-in forwards;
+  filter: grayscale(1);
+  will-change: opacity, filter;
 }
 
 @keyframes combat-ghost-materialise {
@@ -576,6 +577,7 @@ button.primary-btn {
   100% {
     transform: translate3d(var(--ghost-x),var(--ghost-y),0) rotate(var(--ghost-rotation)) scale(1);
     opacity: 1;
+    filter: grayscale(1);
   }
 }
 .combat-monster {
