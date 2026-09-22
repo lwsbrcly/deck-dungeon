@@ -1151,11 +1151,46 @@ clone.style.setProperty('--dy', (targetY - sourceY) + 'px');
 clone.style.setProperty('--hit-x', isFistFight ? '-5px' : '5px');
 
 // For a weapon attack, rotate the card so its top edge points toward the
-// monster. This makes the card travel "head first", rather than arriving
-// edge-on or with its bottom edge leading.
+// monster. The strike point is the leading top corner of the card, aimed at
+// the middle of the monster, rather than the two card centres meeting.
 if (!isFistFight) {
   var attackAngle = Math.atan2(targetX - sourceX, -(targetY - sourceY)) * 180 / Math.PI;
+  var angleRad = attackAngle * Math.PI / 180;
+  var halfW = sourceRect.width / 2;
+  var halfH = sourceRect.height / 2;
+
+  // Pick whichever top corner is further along the direction of travel.
+  var corners = [
+    { x: -halfW, y: -halfH },
+    { x:  halfW, y: -halfH }
+  ];
+  var dirX = targetX - sourceX;
+  var dirY = targetY - sourceY;
+  var dirLen = Math.sqrt(dirX * dirX + dirY * dirY) || 1;
+  dirX /= dirLen;
+  dirY /= dirLen;
+
+  var bestCorner = corners[0];
+  var bestDot = -Infinity;
+  for (var cornerIndex = 0; cornerIndex < corners.length; cornerIndex++) {
+    var corner = corners[cornerIndex];
+    var rotatedX = corner.x * Math.cos(angleRad) - corner.y * Math.sin(angleRad);
+    var rotatedY = corner.x * Math.sin(angleRad) + corner.y * Math.cos(angleRad);
+    var dot = rotatedX * dirX + rotatedY * dirY;
+    if (dot > bestDot) {
+      bestDot = dot;
+      bestCorner = corner;
+    }
+  }
+
+  var strikeCornerX = bestCorner.x * Math.cos(angleRad) - bestCorner.y * Math.sin(angleRad);
+  var strikeCornerY = bestCorner.x * Math.sin(angleRad) + bestCorner.y * Math.cos(angleRad);
+  var strikeDx = (targetX - sourceX) - strikeCornerX;
+  var strikeDy = (targetY - sourceY) - strikeCornerY;
+
   clone.style.setProperty('--attack-angle', attackAngle + 'deg');
+  clone.style.setProperty('--strike-dx', strikeDx + 'px');
+  clone.style.setProperty('--strike-dy', strikeDy + 'px');
 }
 clone.style.setProperty('--hit-y', isFistFight ? '3px' : '-3px');
 
