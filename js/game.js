@@ -1132,6 +1132,7 @@ var sourceEl = null;
 var sourceRect;
 var targetRect;
 var clone;
+var ghost = null;
 
 if (isFistFight) {
   // Bare-handed combat: the monster itself lunges up at the player.
@@ -1141,8 +1142,8 @@ if (isFistFight) {
     : document.getElementById(player + 'Panel').getBoundingClientRect());
 } else if (player === 'p1' || player === 'p2') {
   // Weapon combat: the weapon travels to the monster while rising,
-  // then slams down. The monster can disappear at impact and reappear
-  // on the previous-monster stack once the weapon returns.
+  // then slams down. The monster disappears at impact and its memory
+  // begins materialising on the previous-monster stack immediately.
   sourceEl = document.querySelector('#' + player + 'Weapon .card');
   targetRect = targetEl.getBoundingClientRect();
 }
@@ -1178,7 +1179,7 @@ if (!isFistFight) {
 }
 clone.style.setProperty('--hit-y', isFistFight ? '3px' : '-3px');
 
-// Hide the real card while its animated copy is moving.
+// Hide the real weapon while its animated copy is moving.
 sourceEl.classList.add('combat-hidden');
 document.body.appendChild(clone);
 
@@ -1195,8 +1196,24 @@ setTimeout(function() {
   document.body.appendChild(impact);
 
   // A weapon kill makes the monster leave the board at the moment of impact.
+  // At the same moment, its memory is placed on the stack and begins a
+  // long, quiet fade into existence.
   if (!isFistFight) {
     targetEl.classList.add('combat-hidden');
+
+    if (ghostInfo && ghostInfo.targetEl && ghostInfo.monster) {
+      var ghostTarget = ghostInfo.targetEl.getBoundingClientRect();
+      ghost = targetEl.cloneNode(true);
+      ghost.classList.add('combat-ghost');
+      ghost.style.left = ghostTarget.left + 'px';
+      ghost.style.top = ghostTarget.top + 'px';
+      ghost.style.width = ghostTarget.width + 'px';
+      ghost.style.height = ghostTarget.height + 'px';
+      ghost.style.setProperty('--ghost-x', (ghostInfo.monster.stackX || 0) + 'px');
+      ghost.style.setProperty('--ghost-y', (ghostInfo.monster.stackY || 0) + 'px');
+      ghost.style.setProperty('--ghost-rotation', (ghostInfo.monster.stackRotation || 0) + 'deg');
+      document.body.appendChild(ghost);
+    }
   }
 
   setTimeout(function() { impact.remove(); }, 280);
@@ -1207,24 +1224,14 @@ setTimeout(function() {
   clone.remove();
   sourceEl.classList.remove('combat-hidden');
 
-  if (!isFistFight && ghostInfo && ghostInfo.targetEl && ghostInfo.monster) {
-    var ghostTarget = ghostInfo.targetEl.getBoundingClientRect();
-    var ghost = targetEl.cloneNode(true);
-    ghost.classList.add('combat-ghost');
-    ghost.style.left = ghostTarget.left + 'px';
-    ghost.style.top = ghostTarget.top + 'px';
-    ghost.style.width = ghostTarget.width + 'px';
-    ghost.style.height = ghostTarget.height + 'px';
-    ghost.style.setProperty('--ghost-x', (ghostInfo.monster.stackX || 0) + 'px');
-    ghost.style.setProperty('--ghost-y', (ghostInfo.monster.stackY || 0) + 'px');
-    ghost.style.setProperty('--ghost-rotation', (ghostInfo.monster.stackRotation || 0) + 'deg');
-    document.body.appendChild(ghost);
-
+  if (!isFistFight && ghost) {
+    // Let the ghost finish its slow fade before the action is committed to
+    // the normal board render.
     setTimeout(function() {
       ghost.remove();
       targetEl.classList.remove('combat-hidden');
       done();
-    }, 320);
+    }, 900);
     return;
   }
 
