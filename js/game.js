@@ -1188,9 +1188,34 @@ if (!isFistFight) {
   var strikeDx = (targetX - sourceX) - strikeCornerX;
   var strikeDy = (targetY - sourceY) - strikeCornerY;
 
+  // Give the swing a slight outward arc rather than sending the weapon
+  // straight down the centre line. The arc is chosen toward the nearest
+  // outer edge of the screen, so the swing feels like one natural axe stroke.
+  var travelLen = Math.sqrt(strikeDx * strikeDx + strikeDy * strikeDy) || 1;
+  var travelX = strikeDx / travelLen;
+  var travelY = strikeDy / travelLen;
+  var perpX = -travelY;
+  var perpY = travelX;
+  var arcAmount = Math.max(34, Math.min(68, travelLen * 0.15));
+  var viewportX = window.innerWidth / 2;
+  var viewportY = window.innerHeight / 2;
+  var midX = sourceX + strikeDx * 0.48;
+  var midY = sourceY + strikeDy * 0.48;
+
+  var arcPlusX = midX + perpX * arcAmount;
+  var arcPlusY = midY + perpY * arcAmount;
+  var arcMinusX = midX - perpX * arcAmount;
+  var arcMinusY = midY - perpY * arcAmount;
+  var plusDistance = Math.pow(arcPlusX - viewportX, 2) + Math.pow(arcPlusY - viewportY, 2);
+  var minusDistance = Math.pow(arcMinusX - viewportX, 2) + Math.pow(arcMinusY - viewportY, 2);
+  var arcX = plusDistance >= minusDistance ? perpX * arcAmount : -perpX * arcAmount;
+  var arcY = plusDistance >= minusDistance ? perpY * arcAmount : -perpY * arcAmount;
+
   clone.style.setProperty('--attack-angle', attackAngle + 'deg');
   clone.style.setProperty('--strike-dx', strikeDx + 'px');
   clone.style.setProperty('--strike-dy', strikeDy + 'px');
+  clone.style.setProperty('--arc-x', arcX + 'px');
+  clone.style.setProperty('--arc-y', arcY + 'px');
 }
 clone.style.setProperty('--hit-y', isFistFight ? '3px' : '-3px');
 
@@ -1210,13 +1235,13 @@ setTimeout(function() {
   document.body.appendChild(impact);
   setTimeout(function() { impact.remove(); }, 280);
   setTimeout(function() { document.getElementById('game').classList.remove('combat-shake'); }, 160);
-}, isFistFight ? 210 : 380);
+}, isFistFight ? 210 : 285);
 
 setTimeout(function() {
   clone.remove();
   sourceEl.classList.remove('combat-hidden');
   done();
-}, isFistFight ? 430 : 720);
+}, isFistFight ? 430 : 560);
 }
 
 function fight(player, mode) {
