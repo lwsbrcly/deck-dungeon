@@ -1204,6 +1204,9 @@ setTimeout(function() {
     if (ghostInfo && ghostInfo.targetEl && ghostInfo.monster) {
       var ghostTarget = ghostInfo.targetEl.getBoundingClientRect();
       ghost = targetEl.cloneNode(true);
+      // targetEl is already hidden at impact, so remove that state from the
+      // clone. The ghost must be visible at opacity 0 for the full fade.
+      ghost.classList.remove('combat-hidden');
       ghost.classList.add('combat-ghost');
       ghost.style.left = ghostTarget.left + 'px';
       ghost.style.top = ghostTarget.top + 'px';
