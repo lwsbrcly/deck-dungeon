@@ -706,7 +706,11 @@ if (c.suit === 'clubs' && c.rank === 'A') {
   centerArt = '<div class="suitbig">' + SUITS[c.suit] + '</div>';
 }
 
-return '<div class="card ' + (red ? 'red' : 'black') + '">' +
+var cardArtwork = (THEMES[selectedTheme || 'dungeon'] && THEMES[selectedTheme || 'dungeon'].artwork)
+  ? THEMES[selectedTheme || 'dungeon'].artwork.card
+  : 'assets/dungeon/card.png';
+
+return '<div class="card ' + (red ? 'red' : 'black') + '" style="background-image: url("' + cardArtwork + '");">' +
   '<div class="card-rank">' + cornerText + '</div>' +
   centerArt +
   '<div class="card-title">' + c.name + '</div>' +
