@@ -1202,9 +1202,12 @@ setTimeout(function() {
     targetEl.classList.add('combat-hidden');
 
     if (ghostInfo && ghostInfo.targetEl && ghostInfo.monster) {
-      // The real memory is already in state, so hide the eventual stack card
-      // while the separate ghost clone materialises over it.
-      ghostInfo.targetEl.classList.add('ghost-memory-hidden');
+      // The real memory is already in state. Hide only the newly-created
+      // top card while the separate ghost clone materialises over it; older
+      // memories in the stack must remain visible underneath.
+      var memoryCards = ghostInfo.targetEl.querySelectorAll('.previous-monster-card');
+      var memoryEl = memoryCards.length ? memoryCards[memoryCards.length - 1] : null;
+      if (memoryEl) memoryEl.classList.add('ghost-memory-hidden');
       var ghostTarget = ghostInfo.targetEl.getBoundingClientRect();
       ghost = targetEl.cloneNode(true);
       // targetEl is already hidden at impact, so remove that state from the
@@ -1235,8 +1238,8 @@ setTimeout(function() {
     // when the weapon returns; the ghost can finish fading independently.
     setTimeout(function() {
       ghost.remove();
-      if (ghostInfo && ghostInfo.targetEl) {
-        ghostInfo.targetEl.classList.remove('ghost-memory-hidden');
+      if (memoryEl) {
+        memoryEl.classList.remove('ghost-memory-hidden');
       }
     }, 1000);
     targetEl.classList.remove('combat-hidden');
