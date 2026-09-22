@@ -1,39 +1,45 @@
 let selectedTheme = null;
 
+function applySelectedTheme() {
+    var theme = THEMES[selectedTheme || 'dungeon'];
+    if (!theme) return;
+
+    var colours = theme.colours || {};
+    var root = document.documentElement;
+
+    root.style.setProperty('--bg', colours.bg || '');
+    root.style.setProperty('--card-bg', colours.cardBg || '');
+    root.style.setProperty('--panel-bg', colours.panelBg || '');
+    root.style.setProperty('--border', colours.border || '');
+    root.style.setProperty('--text', colours.text || '');
+    root.style.setProperty('--muted', colours.muted || '');
+    root.style.setProperty('--highlight', colours.gold || '');
+    root.style.setProperty('--red', colours.danger || '');
+    root.style.setProperty('--rooms', colours.accent || '');
+    root.style.setProperty('--accent', colours.accent || '');
+
+    root.style.setProperty('--card-image', 'url("' + theme.artwork.card + '")');
+    root.style.setProperty('--card-back-image', 'url("' + theme.artwork.back + '")');
+}
+
 function selectTheme(theme) {
-    
-    if (theme === "dungeon") {
+    if (!THEMES[theme]) return;
 
-        // Store the selected theme
-        window.selectedTheme = "dungeon";
-
-        // Go to your existing rules screen
-        showRules("dungeon");
-    }
+    selectedTheme = theme;
+    applySelectedTheme();
+    showScreen('rules');
 }
 
 function showScreen(screenId) {
-
-    // Hide every screen
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
     });
 
-    // Show the requested screen
     document.getElementById(screenId).classList.add('active');
 }
 
-function selectTheme(theme) {
-
-    selectedTheme = theme;
-
-    showScreen('rules');
-}
-
 function enterGame() {
-
     showScreen('game-ui');
-
     startGame();
 }
 
@@ -909,7 +915,7 @@ for (var i = startIndex; i < cards.length; i++) {
   // entire animation; the wrapper itself performs the Y rotation.
   var back = document.createElement('img');
   back.className = 'deal-card-back';
-  back.src = 'assets/dungeon/back.png';
+  back.src = THEMES[selectedTheme || 'dungeon'].artwork.back;
   back.alt = '';
 
   var front = card.cloneNode(true);
@@ -1503,7 +1509,7 @@ var isSolo = state.mode !== 'coop';
       var deckDepth = Math.ceil(state.deck.length / 3);
       var deckLayers = '';
       for (var layer = 0; layer <= deckDepth; layer++) {
-        deckLayers += '<img src="assets/dungeon/back.png" alt="" style="--deck-offset:' + layer + 'px; z-index:' + (layer + 1) + ';">';
+        deckLayers += '<img src="' + THEMES[selectedTheme || 'dungeon'].artwork.back + '" alt="" style="--deck-offset:' + layer + 'px; z-index:' + (layer + 1) + ';">';
       }
       deckEl.innerHTML = '<div class="deck-card" style="--deck-depth:' + deckDepth + 'px;">' + deckLayers + '</div>';
     } else {
