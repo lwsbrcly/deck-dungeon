@@ -116,7 +116,7 @@ function toggleModeInputs() {
         '<li><strong>♥ Hearts = Consumables:</strong> Restore lost HP, up to your maximum health. Only 1 per room allowed!</li>' +
       '</ul>' +
       '<h3>Game Mechanics</h3>' +
-      '<ul>' +,
+      '<ul>' +
         '<li><strong>Clear Room:</strong> Action 3 cards to clear room. The 4th card becomes the 1st card in the next room - 3 new cards are dealt.</li>' +
         '<li><strong>Damage:</strong> Monsters deal damage equal to their value minus your equipped weapon\'s value.</li>' +
         '<li><strong>Health Points:</strong> Start with 20 HP. Cannot heal above that limit. If you reach 0 it\'s game over!</li>' +
