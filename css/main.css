@@ -467,80 +467,59 @@ button.primary-btn {
   100% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 0; }
 }
 
-/* Weapon attacks: one continuous axe-like swing on a shallow outward arc. */
+/* Weapon attacks: reuse the tabletop-feeling lift-and-slam from equipping,
+   then send the card straight back to its weapon slot. */
 .combat-weapon {
-  animation: combat-weapon-charge 560ms cubic-bezier(.2,.88,.22,1) forwards;
+  animation: combat-weapon-slam 700ms cubic-bezier(.18,.92,.22,1) forwards;
   will-change: transform;
 }
-@keyframes combat-weapon-charge {
+@keyframes combat-weapon-slam {
   0% {
-    transform: translate3d(0,0,0) rotate(0deg) scale(1);
+    transform: translate3d(0,0,0) scale(1) rotate(0deg);
     opacity: 1;
   }
 
-  /* The card starts moving and rotating immediately. No separate spin/pause. */
-  16% {
-    transform: translate3d(
-      calc(var(--strike-dx) * .08 + var(--arc-x) * .22),
-      calc(var(--strike-dy) * .08 + var(--arc-y) * .22),
-      0
-    ) rotate(calc(var(--attack-angle) * .28)) scale(1.03);
+  /* Lift the weapon off the table. */
+  18% {
+    transform: translate3d(0,-68px,0) scale(1.34) rotate(-3deg);
     opacity: 1;
   }
 
-  /* Swing out into the arc while continuing the rotation. */
-  34% {
-    transform: translate3d(
-      calc(var(--strike-dx) * .30 + var(--arc-x) * .82),
-      calc(var(--strike-dy) * .30 + var(--arc-y) * .82),
-      0
-    ) rotate(calc(var(--attack-angle) * .58)) scale(1.07);
+  /* Carry it across while still lifted. */
+  40% {
+    transform: translate3d(var(--strike-dx),calc(var(--strike-dy) - 42px),0) scale(1.34) rotate(2deg);
+    opacity: 1;
+  }
+  51% {
+    transform: translate3d(var(--strike-dx),calc(var(--strike-dy) - 42px),0) scale(1.34) rotate(0deg);
     opacity: 1;
   }
 
-  /* Curve back toward the monster as the weapon completes its rotation. */
-  49% {
-    transform: translate3d(
-      calc(var(--strike-dx) * .66 + var(--arc-x) * .48),
-      calc(var(--strike-dy) * .66 + var(--arc-y) * .48),
-      0
-    ) rotate(calc(var(--attack-angle) * .86)) scale(1.10);
+  /* Slam it down onto the monster. */
+  62% {
+    transform: translate3d(var(--strike-dx),var(--strike-dy),0) scale(.88) rotate(0deg);
+    opacity: 1;
+  }
+  69% {
+    transform: translate3d(var(--strike-dx),var(--strike-dy),0) scale(1.10) rotate(0deg);
+    opacity: 1;
+  }
+  78% {
+    transform: translate3d(var(--strike-dx),var(--strike-dy),0) scale(.97) rotate(0deg);
     opacity: 1;
   }
 
-  /* Top corner meets the centre of the monster. */
-  55% {
-    transform: translate3d(var(--strike-dx),var(--strike-dy),0) rotate(var(--attack-angle)) scale(1.13);
-    opacity: 1;
-  }
-
-  /* Tiny impact overrun. */
-  60% {
-    transform: translate3d(
-      calc(var(--strike-dx) + var(--hit-x)),
-      calc(var(--strike-dy) + var(--hit-y)),
-      0
-    ) rotate(var(--attack-angle)) scale(1.16);
-    opacity: 1;
-  }
-
-  /* Recoil, then get out of the way. */
-  66% {
-    transform: translate3d(
-      calc(var(--strike-dx) - 3px),
-      calc(var(--strike-dy) - 2px),
-      0
-    ) rotate(calc(var(--attack-angle) * .94)) scale(1.08);
-    opacity: 1;
-  }
-
+  /* Now do the bit an equip animation doesn't need: get the weapon home. */
   82% {
-    transform: translate3d(0,0,0) rotate(calc(var(--attack-angle) * .72)) scale(1.02);
+    transform: translate3d(calc(var(--strike-dx) * .72),calc(var(--strike-dy) * .72),0) scale(1.02) rotate(0deg);
     opacity: 1;
   }
-
+  91% {
+    transform: translate3d(calc(var(--strike-dx) * .34),calc(var(--strike-dy) * .34),0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
   100% {
-    transform: translate3d(0,0,0) rotate(0deg) scale(1);
+    transform: translate3d(0,0,0) scale(1) rotate(0deg);
     opacity: 1;
   }
 }
