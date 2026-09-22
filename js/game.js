@@ -1149,6 +1149,14 @@ clone.style.height = sourceRect.height + 'px';
 clone.style.setProperty('--dx', (targetX - sourceX) + 'px');
 clone.style.setProperty('--dy', (targetY - sourceY) + 'px');
 clone.style.setProperty('--hit-x', isFistFight ? '-5px' : '5px');
+
+// For a weapon attack, rotate the card so its top edge points toward the
+// monster. This makes the card travel "head first", rather than arriving
+// edge-on or with its bottom edge leading.
+if (!isFistFight) {
+  var attackAngle = Math.atan2(targetX - sourceX, -(targetY - sourceY)) * 180 / Math.PI;
+  clone.style.setProperty('--attack-angle', attackAngle + 'deg');
+}
 clone.style.setProperty('--hit-y', isFistFight ? '3px' : '-3px');
 
 // Hide the real card while its animated copy is moving, so there is only one card on screen.
@@ -1167,13 +1175,13 @@ setTimeout(function() {
   document.body.appendChild(impact);
   setTimeout(function() { impact.remove(); }, 280);
   setTimeout(function() { document.getElementById('game').classList.remove('combat-shake'); }, 160);
-}, isFistFight ? 210 : 270);
+}, isFistFight ? 210 : 360);
 
 setTimeout(function() {
   clone.remove();
   sourceEl.classList.remove('combat-hidden');
   done();
-}, isFistFight ? 430 : 560);
+}, isFistFight ? 430 : 720);
 }
 
 function fight(player, mode) {
