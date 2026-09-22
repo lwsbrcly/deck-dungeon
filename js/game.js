@@ -1137,7 +1137,11 @@ var targetY = targetRect.top + targetRect.height / 2;
 
 clone = sourceEl.cloneNode(true);
 clone.classList.add('combat-clone');
-if (isFistFight) clone.classList.add('combat-monster');
+if (isFistFight) {
+  clone.classList.add('combat-monster');
+} else {
+  clone.classList.add('combat-weapon');
+}
 clone.style.left = sourceRect.left + 'px';
 clone.style.top = sourceRect.top + 'px';
 clone.style.width = sourceRect.width + 'px';
@@ -1163,13 +1167,13 @@ setTimeout(function() {
   document.body.appendChild(impact);
   setTimeout(function() { impact.remove(); }, 280);
   setTimeout(function() { document.getElementById('game').classList.remove('combat-shake'); }, 160);
-}, 210);
+}, isFistFight ? 210 : 270);
 
 setTimeout(function() {
   clone.remove();
   sourceEl.classList.remove('combat-hidden');
   done();
-}, 430);
+}, isFistFight ? 430 : 560);
 }
 
 function fight(player, mode) {
