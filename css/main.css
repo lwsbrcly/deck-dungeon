@@ -200,7 +200,7 @@ button.primary-btn {
 }
 
 /* Hide a newly-created memory while its ghost clone materialises. */
-.ghost-memory-hidden .previous-monster-card {
+.ghost-memory-hidden {
   visibility: hidden;
 }
 
