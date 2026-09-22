@@ -1151,13 +1151,11 @@ clone.style.setProperty('--dy', (targetY - sourceY) + 'px');
 clone.style.setProperty('--hit-x', isFistFight ? '-5px' : '5px');
 
 // Weapon attacks use the same physical "lift and slam" language as
-// equipping a card. Keep the strike aimed at the monster's centre, with the
-// leading top corner of the card making contact.
+// equipping a card. Strike from the centre of the weapon to the centre of
+// the monster; without rotation, there is no reason to offset the contact point.
 if (!isFistFight) {
-  var cornerX = targetX >= sourceX ? sourceRect.width / 2 : -sourceRect.width / 2;
-  var cornerY = -sourceRect.height / 2;
-  var strikeDx = (targetX - sourceX) - cornerX;
-  var strikeDy = (targetY - sourceY) - cornerY;
+  var strikeDx = targetX - sourceX;
+  var strikeDy = targetY - sourceY;
 
   clone.style.setProperty('--strike-dx', strikeDx + 'px');
   clone.style.setProperty('--strike-dy', strikeDy + 'px');
