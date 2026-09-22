@@ -319,15 +319,38 @@ button.primary-btn {
   will-change: transform, opacity;
 }
 .equip-clone { animation: equip-card 650ms cubic-bezier(.18,.92,.22,1) forwards; }
-.monster-equip-clone { animation: monster-equip-card 650ms cubic-bezier(.18,.92,.22,1) forwards; }
+.monster-equip-clone { animation: monster-equip-card 300ms cubic-bezier(.22,.8,.25,1) forwards; }
 
 @keyframes monster-equip-card {
-  /* Straight, continuous travel — gently lift, then gently descend. */
-  0%   { transform: translate3d(0,0,0) scale(1) rotate(0deg); opacity: 1; }
-  20%  { transform: translate3d(calc(var(--dx) * .20),calc(var(--dy) * .20 - 28px),0) scale(1.06) rotate(-1deg); opacity: 1; }
-  45%  { transform: translate3d(calc(var(--dx) * .45),calc(var(--dy) * .45 - 28px),0) scale(1.08) rotate(0deg); opacity: 1; }
-  70%  { transform: translate3d(calc(var(--dx) * .70),calc(var(--dy) * .70 - 18px),0) scale(1.04) rotate(var(--stack-rotation)); opacity: 1; }
-  100% { transform: translate3d(var(--dx),var(--dy),0) scale(1) rotate(var(--stack-rotation)); opacity: 1; }
+  /* Quick, smooth board movement — gently lift, then settle onto the pile. */
+  0% {
+    transform: translate3d(0,0,0) rotate(0deg);
+    opacity: 1;
+  }
+
+  15% {
+    transform: translate3d(
+      calc(var(--dx) * .15),
+      calc(var(--dy) * .15 - 18px),
+      0
+    ) rotate(-1deg);
+    opacity: 1;
+  }
+
+  70% {
+    transform: translate3d(
+      calc(var(--dx) * .70),
+      calc(var(--dy) * .70 - 8px),
+      0
+    ) rotate(var(--stack-rotation));
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate3d(var(--dx),var(--dy),0)
+      rotate(var(--stack-rotation));
+    opacity: 1;
+  }
 }
 @keyframes equip-card {
   /* Lift it right off the table. */
