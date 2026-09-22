@@ -1150,72 +1150,17 @@ clone.style.setProperty('--dx', (targetX - sourceX) + 'px');
 clone.style.setProperty('--dy', (targetY - sourceY) + 'px');
 clone.style.setProperty('--hit-x', isFistFight ? '-5px' : '5px');
 
-// For a weapon attack, rotate the card so its top edge points toward the
-// monster. The strike point is the leading top corner of the card, aimed at
-// the middle of the monster, rather than the two card centres meeting.
+// Weapon attacks use the same physical "lift and slam" language as
+// equipping a card. Keep the strike aimed at the monster's centre, with the
+// leading top corner of the card making contact.
 if (!isFistFight) {
-  var attackAngle = Math.atan2(targetX - sourceX, -(targetY - sourceY)) * 180 / Math.PI;
-  var angleRad = attackAngle * Math.PI / 180;
-  var halfW = sourceRect.width / 2;
-  var halfH = sourceRect.height / 2;
+  var cornerX = targetX >= sourceX ? sourceRect.width / 2 : -sourceRect.width / 2;
+  var cornerY = -sourceRect.height / 2;
+  var strikeDx = (targetX - sourceX) - cornerX;
+  var strikeDy = (targetY - sourceY) - cornerY;
 
-  // Pick whichever top corner is further along the direction of travel.
-  var corners = [
-    { x: -halfW, y: -halfH },
-    { x:  halfW, y: -halfH }
-  ];
-  var dirX = targetX - sourceX;
-  var dirY = targetY - sourceY;
-  var dirLen = Math.sqrt(dirX * dirX + dirY * dirY) || 1;
-  dirX /= dirLen;
-  dirY /= dirLen;
-
-  var bestCorner = corners[0];
-  var bestDot = -Infinity;
-  for (var cornerIndex = 0; cornerIndex < corners.length; cornerIndex++) {
-    var corner = corners[cornerIndex];
-    var rotatedX = corner.x * Math.cos(angleRad) - corner.y * Math.sin(angleRad);
-    var rotatedY = corner.x * Math.sin(angleRad) + corner.y * Math.cos(angleRad);
-    var dot = rotatedX * dirX + rotatedY * dirY;
-    if (dot > bestDot) {
-      bestDot = dot;
-      bestCorner = corner;
-    }
-  }
-
-  var strikeCornerX = bestCorner.x * Math.cos(angleRad) - bestCorner.y * Math.sin(angleRad);
-  var strikeCornerY = bestCorner.x * Math.sin(angleRad) + bestCorner.y * Math.cos(angleRad);
-  var strikeDx = (targetX - sourceX) - strikeCornerX;
-  var strikeDy = (targetY - sourceY) - strikeCornerY;
-
-  // Give the swing a slight outward arc rather than sending the weapon
-  // straight down the centre line. The arc is chosen toward the nearest
-  // outer edge of the screen, so the swing feels like one natural axe stroke.
-  var travelLen = Math.sqrt(strikeDx * strikeDx + strikeDy * strikeDy) || 1;
-  var travelX = strikeDx / travelLen;
-  var travelY = strikeDy / travelLen;
-  var perpX = -travelY;
-  var perpY = travelX;
-  var arcAmount = Math.max(34, Math.min(68, travelLen * 0.15));
-  var viewportX = window.innerWidth / 2;
-  var viewportY = window.innerHeight / 2;
-  var midX = sourceX + strikeDx * 0.48;
-  var midY = sourceY + strikeDy * 0.48;
-
-  var arcPlusX = midX + perpX * arcAmount;
-  var arcPlusY = midY + perpY * arcAmount;
-  var arcMinusX = midX - perpX * arcAmount;
-  var arcMinusY = midY - perpY * arcAmount;
-  var plusDistance = Math.pow(arcPlusX - viewportX, 2) + Math.pow(arcPlusY - viewportY, 2);
-  var minusDistance = Math.pow(arcMinusX - viewportX, 2) + Math.pow(arcMinusY - viewportY, 2);
-  var arcX = plusDistance >= minusDistance ? perpX * arcAmount : -perpX * arcAmount;
-  var arcY = plusDistance >= minusDistance ? perpY * arcAmount : -perpY * arcAmount;
-
-  clone.style.setProperty('--attack-angle', attackAngle + 'deg');
   clone.style.setProperty('--strike-dx', strikeDx + 'px');
   clone.style.setProperty('--strike-dy', strikeDy + 'px');
-  clone.style.setProperty('--arc-x', arcX + 'px');
-  clone.style.setProperty('--arc-y', arcY + 'px');
 }
 clone.style.setProperty('--hit-y', isFistFight ? '3px' : '-3px');
 
@@ -1235,13 +1180,13 @@ setTimeout(function() {
   document.body.appendChild(impact);
   setTimeout(function() { impact.remove(); }, 280);
   setTimeout(function() { document.getElementById('game').classList.remove('combat-shake'); }, 160);
-}, isFistFight ? 210 : 285);
+}, isFistFight ? 210 : 435);
 
 setTimeout(function() {
   clone.remove();
   sourceEl.classList.remove('combat-hidden');
   done();
-}, isFistFight ? 430 : 560);
+}, isFistFight ? 430 : 700);
 }
 
 function fight(player, mode) {
