@@ -466,6 +466,38 @@ button.primary-btn {
   68%  { transform: translate3d(calc(var(--dx) + var(--hit-x)),calc(var(--dy) + var(--hit-y)),0) rotate(-7deg) scale(1.14); }
   100% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 0; }
 }
+
+/* Weapon attacks: a clear wind-up, hard swing, impact, recoil, then a solid return home. */
+.combat-weapon {
+  animation: combat-weapon-charge 560ms cubic-bezier(.2,.9,.25,1) forwards;
+  will-change: transform;
+}
+@keyframes combat-weapon-charge {
+  0% {
+    transform: translate3d(0,0,0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  14% {
+    transform: translate3d(calc(var(--dx) * -.08),calc(var(--dy) * -.08 - 16px),0) rotate(-12deg) scale(1.04);
+    opacity: 1;
+  }
+  34% {
+    transform: translate3d(calc(var(--dx) * .42),calc(var(--dy) * .42 - 18px),0) rotate(24deg) scale(1.12);
+    opacity: 1;
+  }
+  50% {
+    transform: translate3d(calc(var(--dx) + var(--hit-x)),calc(var(--dy) + var(--hit-y)),0) rotate(-10deg) scale(1.22);
+    opacity: 1;
+  }
+  58% {
+    transform: translate3d(calc(var(--dx) - 3px),calc(var(--dy) - 2px),0) rotate(-4deg) scale(1.10);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(0,0,0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
 .combat-monster {
   animation: combat-monster-charge 420ms cubic-bezier(.22,.8,.25,1) forwards;
 }
