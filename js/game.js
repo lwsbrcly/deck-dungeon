@@ -17,8 +17,8 @@ function applySelectedTheme() {
     root.style.setProperty('--red', colours.red || '');
     root.style.setProperty('--rooms', colours.rooms || '');
 
-    root.style.setProperty('--card-image', 'url(''' + theme.artwork.card + ''')');
-    root.style.setProperty('--card-back-image', 'url(''' + theme.artwork.back + ''')');
+    root.style.setProperty('--card-image', 'url("' + theme.artwork.card + '")');
+    root.style.setProperty('--card-back-image', 'url("' + theme.artwork.back + '")');
 }
 
 function selectTheme(theme) {
