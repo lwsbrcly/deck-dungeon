@@ -400,8 +400,25 @@ historyStack.push(JSON.parse(JSON.stringify(state)));
 if (historyStack.length > 30) historyStack.shift();
 }
 
+function resetDungeonDom() {
+  // Undo is a hard state restoration. Any FLIP transform left on a reused
+  // card belongs to the action we are undoing, not to the restored state.
+  var dungeonEl = document.getElementById('dungeon');
+  if (!dungeonEl) return;
+  var wraps = dungeonEl.querySelectorAll('.dungeon-card-wrap');
+  for (var i = 0; i < wraps.length; i++) {
+    wraps[i].style.transition = 'none';
+    wraps[i].style.transform = 'none';
+    wraps[i].style.left = '';
+    wraps[i].style.top = '';
+    wraps[i].style.width = '';
+    wraps[i].style.height = '';
+  }
+}
+
 function undoLastAction() {
 if (historyStack.length === 0) return;
+resetDungeonDom();
 state = historyStack.pop();
 log('Undid last action.', false);
 render();
@@ -409,6 +426,7 @@ render();
 
 function undoFromGameOver() {
 if (historyStack.length === 0) return;
+resetDungeonDom();
 state = historyStack.pop();
 state.over = false;
 document.getElementById('overlay').classList.remove('show');
@@ -1504,6 +1522,8 @@ for (var i = 0; i < 4; i++) {
       d.appendChild(wrap);
     }
 
+    // The game state owns the logical slot. The DOM wrapper only mirrors it.
+    wrap._slotIndex = index;
     used[cardKey] = true;
 
     var slotRect = slots[index].getBoundingClientRect();
