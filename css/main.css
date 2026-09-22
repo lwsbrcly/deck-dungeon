@@ -467,9 +467,9 @@ button.primary-btn {
   100% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 0; }
 }
 
-/* Weapon attacks: a clear wind-up, hard swing, impact, recoil, then a solid return home. */
+/* Weapon attacks: one continuous axe-like swing on a shallow outward arc. */
 .combat-weapon {
-  animation: combat-weapon-charge 540ms cubic-bezier(.18,.9,.2,1) forwards;
+  animation: combat-weapon-charge 560ms cubic-bezier(.2,.88,.22,1) forwards;
   will-change: transform;
 }
 @keyframes combat-weapon-charge {
@@ -478,41 +478,67 @@ button.primary-btn {
     opacity: 1;
   }
 
-  /* Wind up, with the launch beginning before the rotation is finished. */
+  /* The card starts moving and rotating immediately. No separate spin/pause. */
   16% {
-    transform: translate3d(0,0,0) rotate(calc(var(--attack-angle) * .62)) scale(1.03);
-    opacity: 1;
-  }
-  27% {
-    transform: translate3d(calc(var(--strike-dx) * .10),calc(var(--strike-dy) * .10),0) rotate(calc(var(--attack-angle) * .88)) scale(1.06);
-    opacity: 1;
-  }
-  39% {
-    transform: translate3d(calc(var(--strike-dx) * .48),calc(var(--strike-dy) * .48),0) rotate(var(--attack-angle)) scale(1.10);
+    transform: translate3d(
+      calc(var(--strike-dx) * .08 + var(--arc-x) * .22),
+      calc(var(--strike-dy) * .08 + var(--arc-y) * .22),
+      0
+    ) rotate(calc(var(--attack-angle) * .28)) scale(1.03);
     opacity: 1;
   }
 
-  /* The leading top corner hits the middle of the monster. */
+  /* Swing out into the arc while continuing the rotation. */
+  34% {
+    transform: translate3d(
+      calc(var(--strike-dx) * .30 + var(--arc-x) * .82),
+      calc(var(--strike-dy) * .30 + var(--arc-y) * .82),
+      0
+    ) rotate(calc(var(--attack-angle) * .58)) scale(1.07);
+    opacity: 1;
+  }
+
+  /* Curve back toward the monster as the weapon completes its rotation. */
   49% {
-    transform: translate3d(var(--strike-dx),var(--strike-dy),0) rotate(var(--attack-angle)) scale(1.12);
+    transform: translate3d(
+      calc(var(--strike-dx) * .66 + var(--arc-x) * .48),
+      calc(var(--strike-dy) * .66 + var(--arc-y) * .48),
+      0
+    ) rotate(calc(var(--attack-angle) * .86)) scale(1.10);
     opacity: 1;
   }
+
+  /* Top corner meets the centre of the monster. */
   55% {
-    transform: translate3d(calc(var(--strike-dx) + var(--hit-x)),calc(var(--strike-dy) + var(--hit-y)),0) rotate(var(--attack-angle)) scale(1.16);
-    opacity: 1;
-  }
-  61% {
-    transform: translate3d(calc(var(--strike-dx) - 2px),calc(var(--strike-dy) - 2px),0) rotate(var(--attack-angle)) scale(1.08);
+    transform: translate3d(var(--strike-dx),var(--strike-dy),0) rotate(var(--attack-angle)) scale(1.13);
     opacity: 1;
   }
 
-  /* Zip straight back while still facing the monster. */
+  /* Tiny impact overrun. */
+  60% {
+    transform: translate3d(
+      calc(var(--strike-dx) + var(--hit-x)),
+      calc(var(--strike-dy) + var(--hit-y)),
+      0
+    ) rotate(var(--attack-angle)) scale(1.16);
+    opacity: 1;
+  }
+
+  /* Recoil, then get out of the way. */
+  66% {
+    transform: translate3d(
+      calc(var(--strike-dx) - 3px),
+      calc(var(--strike-dy) - 2px),
+      0
+    ) rotate(calc(var(--attack-angle) * .94)) scale(1.08);
+    opacity: 1;
+  }
+
   82% {
-    transform: translate3d(0,0,0) rotate(var(--attack-angle)) scale(1.02);
+    transform: translate3d(0,0,0) rotate(calc(var(--attack-angle) * .72)) scale(1.02);
     opacity: 1;
   }
 
-  /* Finally snap its orientation back to the normal weapon position. */
   100% {
     transform: translate3d(0,0,0) rotate(0deg) scale(1);
     opacity: 1;
