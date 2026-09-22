@@ -1029,7 +1029,7 @@ function equipWeapon(player) {
 if (state.over || state.selected === null) return;
 var c = state.dungeon[state.selected], p = state[player];
 if (p.hp <= 0) { log(name(player) + ' is Downed and cannot take weapons.'); return; }
-var cardEl = document.querySelector('#dungeon .dungeon-card-wrap:nth-child(' + (state.selected + 1) + ') .card');
+var cardEl = getDungeonCardElement(state.selected);
 var targetEl = document.getElementById(player + 'Weapon');
 saveState();
 var old = p.weapon;
@@ -1076,7 +1076,7 @@ animateCardAction(cardEl, targetEl, 'equip-clone', finishEquip);
 
 function discardDungeonWeapon() {
 if (state.over || state.selected === null) return;
-var cardEl = document.querySelector('#dungeon .dungeon-card-wrap:nth-child(' + (state.selected + 1) + ') .card');
+var cardEl = getDungeonCardElement(state.selected);
 saveState();
 animateCardAction(cardEl, null, 'discard-clone', function() {
   var c = removeSelected(); log('Discarded the ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').'); checkGame(); renderAfterAction();
@@ -1085,7 +1085,7 @@ animateCardAction(cardEl, null, 'discard-clone', function() {
 
 function discardDungeonPotion() {
 if (state.over || state.selected === null) return;
-var cardEl = document.querySelector('#dungeon .dungeon-card-wrap:nth-child(' + (state.selected + 1) + ') .card');
+var cardEl = getDungeonCardElement(state.selected);
 saveState();
 animateCardAction(cardEl, null, 'discard-clone', function() {
   var c = removeSelected(); log('Discarded the ' + c.name + ' (' + c.value + ' HP).'); checkGame(); renderAfterAction();
@@ -1095,7 +1095,7 @@ animateCardAction(cardEl, null, 'discard-clone', function() {
 function drinkDirectPotion(target) {
 if (state.over || state.selected === null) return;
 var t = state[target];
-var cardEl = document.querySelector('#dungeon .dungeon-card-wrap:nth-child(' + (state.selected + 1) + ') .card');
+var cardEl = getDungeonCardElement(state.selected);
 var targetEl = document.getElementById(target + 'Panel');
 saveState();
 var c = state.dungeon[state.selected];
@@ -1205,12 +1205,22 @@ setTimeout(function() {
 }, isFistFight ? 430 : 700);
 }
 
+function getDungeonCardElement(slotIndex) {
+var wraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
+for (var i = 0; i < wraps.length; i++) {
+  if (wraps[i]._slotIndex === slotIndex) {
+    return wraps[i].querySelector('.card');
+  }
+}
+return null;
+}
+
 function fight(player, mode) {
 if (state.over || state.selected === null) return;
 var c = state.dungeon[state.selected];
 if (['spades','clubs'].indexOf(c.suit) === -1) return;
 
-var targetEl = document.querySelector('#dungeon .dungeon-card-wrap:nth-child(' + (state.selected + 1) + ') .card');
+var targetEl = getDungeonCardElement(state.selected);
 
 if (player === 'both') {
   var a = state.p1, b = state.p2;
