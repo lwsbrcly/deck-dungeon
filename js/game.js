@@ -1232,7 +1232,7 @@ setTimeout(function() {
     // when the weapon returns; the ghost can finish fading independently.
     setTimeout(function() {
       ghost.remove();
-    }, 650);
+    }, 1000);
     targetEl.classList.remove('combat-hidden');
     done();
     return;
