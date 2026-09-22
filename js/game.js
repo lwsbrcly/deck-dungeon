@@ -383,6 +383,8 @@ const GREATSWORD_SVG = `<svg viewBox="0 0 358 947">
 </g>
 </svg>`;
 
+var activeGhostMemoryId = null;
+
 var state = {};
 var historyStack = [];
 
@@ -1202,12 +1204,9 @@ setTimeout(function() {
     targetEl.classList.add('combat-hidden');
 
     if (ghostInfo && ghostInfo.targetEl && ghostInfo.monster) {
-      // The real memory is already in state. Hide only the newly-created
-      // top card while the separate ghost clone materialises over it; older
-      // memories in the stack must remain visible underneath.
-      var memoryCards = ghostInfo.targetEl.querySelectorAll('.previous-monster-card');
-      var memoryEl = memoryCards.length ? memoryCards[memoryCards.length - 1] : null;
-      if (memoryEl) memoryEl.classList.add('ghost-memory-hidden');
+      // Keep the newly-created memory hidden across the normal game render
+      // while the separate ghost clone materialises over the existing stack.
+      activeGhostMemoryId = ghostInfo.monster._ghostId;
       var ghostTarget = ghostInfo.targetEl.getBoundingClientRect();
       ghost = targetEl.cloneNode(true);
       // targetEl is already hidden at impact, so remove that state from the
@@ -1238,9 +1237,8 @@ setTimeout(function() {
     // when the weapon returns; the ghost can finish fading independently.
     setTimeout(function() {
       ghost.remove();
-      if (memoryEl) {
-        memoryEl.classList.remove('ghost-memory-hidden');
-      }
+      activeGhostMemoryId = null;
+      render();
     }, 1000);
     targetEl.classList.remove('combat-hidden');
     done();
@@ -1325,6 +1323,7 @@ if (player === 'both') {
   var ghostInfo = null;
   if (player === 'p1' && mode === 'weapon') {
     var previousMonster = JSON.parse(JSON.stringify(c));
+    previousMonster._ghostId = 'ghost_' + Date.now() + '_' + Math.random().toString(36).slice(2);
     var pileIndex = p.previousMonsters.length;
     previousMonster.stackX = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
     previousMonster.stackY = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
@@ -1535,7 +1534,8 @@ var isSolo = state.mode !== 'coop';
       var previousMonsterHtml = '<div class="previous-monster-stack">';
       for (var m = 0; m < p.previousMonsters.length; m++) {
         var monsterCard = p.previousMonsters[m];
-        previousMonsterHtml += '<div class="previous-monster-card" style="--stack-x:' + monsterCard.stackX + 'px; --stack-y:' + monsterCard.stackY + 'px; --stack-rotation:' + monsterCard.stackRotation + 'deg; z-index:' + (m + 1) + ';">' + cardHTML(monsterCard) + '</div>';
+        var ghostClass = (activeGhostMemoryId && monsterCard._ghostId === activeGhostMemoryId) ? ' ghost-memory-hidden' : '';
+        previousMonsterHtml += '<div class="previous-monster-card' + ghostClass + '" style="--stack-x:' + monsterCard.stackX + 'px; --stack-y:' + monsterCard.stackY + 'px; --stack-rotation:' + monsterCard.stackRotation + 'deg; z-index:' + (m + 1) + ';">' + cardHTML(monsterCard) + '</div>';
       }
       previousMonsterHtml += '</div>';
       previousMonsterEl.innerHTML = previousMonsterHtml;
