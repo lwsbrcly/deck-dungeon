@@ -553,7 +553,7 @@ for (var i = startIndex; i < cards.length; i++) {
   clone.style.top = dealStartTop + 'px';
   clone.style.width = rect.width + 'px';
   clone.style.height = rect.height + 'px';
-  clone.style.setProperty('--deal-delay', ((i - startIndex) * 150) + 'ms');
+  clone.style.setProperty('--deal-delay', ((i - startIndex) * 50) + 'ms');
 
   if (deckRect) {
     // Use top-left coordinates so the flight path is exact.
