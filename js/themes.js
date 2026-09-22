@@ -392,13 +392,13 @@ const THEMES = {
             
         colours: {
             bg: "#19191A",
-            panelBg: "#80855e",
-            border: "#851819",
+            panelBg: "#363a0d",
+            border: "#30261b",
             text: "#e4ded0",
             muted: "#847a68",
-            red: "#652b27",
+            red: "#851819",
             highlight: "#ac8754",
-            rooms: "#2c2417",
+            rooms: "#42200a",
         },
 
         text: {
