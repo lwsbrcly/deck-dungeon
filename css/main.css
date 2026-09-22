@@ -322,17 +322,16 @@ button.primary-btn {
 .monster-equip-clone { animation: monster-equip-card 650ms cubic-bezier(.18,.92,.22,1) forwards; }
 
 @keyframes monster-equip-card {
-  /* Lift gently off the table. */
+  /* Lift while already moving — no pause at the start. */
   0%   { transform: translate3d(0,0,0) scale(1) rotate(0deg); opacity: 1; }
-  20%  { transform: translate3d(0,-38px,0) scale(1.10) rotate(-2deg); opacity: 1; }
+  18%  { transform: translate3d(calc(var(--dx) * .18),-30px,0) scale(1.07) rotate(-2deg); opacity: 1; }
 
-  /* Cruise across while gently elevated. */
-  45%  { transform: translate3d(var(--dx),calc(var(--dy) - 38px),0) scale(1.10) rotate(2deg); opacity: 1; }
-  58%  { transform: translate3d(var(--dx),calc(var(--dy) - 32px),0) scale(1.08) rotate(1deg); opacity: 1; }
+  /* Arc smoothly through the journey: rise, cruise, then descend. */
+  38%  { transform: translate3d(calc(var(--dx) * .38),-42px,0) scale(1.10) rotate(1deg); opacity: 1; }
+  58%  { transform: translate3d(calc(var(--dx) * .58),-38px,0) scale(1.08) rotate(1deg); opacity: 1; }
+  78%  { transform: translate3d(calc(var(--dx) * .78),-20px,0) scale(1.04) rotate(var(--stack-rotation)); opacity: 1; }
 
-  /* Gentle descent onto the pile — no slam or bounce. */
-  76%  { transform: translate3d(var(--dx),calc(var(--dy) - 12px),0) scale(1.03) rotate(var(--stack-rotation)); opacity: 1; }
-  88%  { transform: translate3d(var(--dx),var(--dy),0) scale(1) rotate(var(--stack-rotation)); opacity: 1; }
+  /* Touch down softly into the pile. */
   100% { transform: translate3d(var(--dx),var(--dy),0) scale(1) rotate(var(--stack-rotation)); opacity: 1; }
 }
 @keyframes equip-card {
