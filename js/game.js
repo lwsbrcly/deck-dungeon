@@ -1202,6 +1202,9 @@ setTimeout(function() {
     targetEl.classList.add('combat-hidden');
 
     if (ghostInfo && ghostInfo.targetEl && ghostInfo.monster) {
+      // The real memory is already in state, so hide the eventual stack card
+      // while the separate ghost clone materialises over it.
+      ghostInfo.targetEl.classList.add('ghost-memory-hidden');
       var ghostTarget = ghostInfo.targetEl.getBoundingClientRect();
       ghost = targetEl.cloneNode(true);
       // targetEl is already hidden at impact, so remove that state from the
@@ -1232,6 +1235,9 @@ setTimeout(function() {
     // when the weapon returns; the ghost can finish fading independently.
     setTimeout(function() {
       ghost.remove();
+      if (ghostInfo && ghostInfo.targetEl) {
+        ghostInfo.targetEl.classList.remove('ghost-memory-hidden');
+      }
     }, 1000);
     targetEl.classList.remove('combat-hidden');
     done();
