@@ -493,6 +493,7 @@ button.primary-btn {
 .combat-weapon {
   animation: combat-weapon-slam 700ms cubic-bezier(.18,.92,.22,1) forwards;
   will-change: transform;
+  z-index: 1003;
 }
 @keyframes combat-weapon-slam {
   0% {
@@ -563,18 +564,14 @@ button.primary-btn {
   pointer-events: none;
   margin: 0 !important;
   transform-origin: center center;
-  animation: combat-ghost-materialise 320ms ease-out forwards;
-  will-change: transform, opacity;
+  animation: combat-ghost-materialise 900ms ease-in forwards;
+  will-change: opacity;
 }
 
 @keyframes combat-ghost-materialise {
   0% {
-    transform: translate3d(var(--ghost-x),var(--ghost-y),0) rotate(var(--ghost-rotation)) scale(.96);
+    transform: translate3d(var(--ghost-x),var(--ghost-y),0) rotate(var(--ghost-rotation)) scale(1);
     opacity: 0;
-  }
-  45% {
-    transform: translate3d(var(--ghost-x),var(--ghost-y),0) rotate(var(--ghost-rotation)) scale(.98);
-    opacity: .35;
   }
   100% {
     transform: translate3d(var(--ghost-x),var(--ghost-y),0) rotate(var(--ghost-rotation)) scale(1);
