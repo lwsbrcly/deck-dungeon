@@ -13,10 +13,9 @@ function applySelectedTheme() {
     root.style.setProperty('--border', colours.border || '');
     root.style.setProperty('--text', colours.text || '');
     root.style.setProperty('--muted', colours.muted || '');
-    root.style.setProperty('--highlight', colours.gold || '');
-    root.style.setProperty('--red', colours.danger || '');
-    root.style.setProperty('--rooms', colours.accent || '');
-    root.style.setProperty('--accent', colours.accent || '');
+    root.style.setProperty('--highlight', colours.highlight || '');
+    root.style.setProperty('--red', colours.red || '');
+    root.style.setProperty('--rooms', colours.rooms || '');
 
     root.style.setProperty('--card-image', 'url("' + theme.artwork.card + '")');
     root.style.setProperty('--card-back-image', 'url("' + theme.artwork.back + '")');
