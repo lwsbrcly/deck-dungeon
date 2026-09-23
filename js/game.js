@@ -1263,7 +1263,7 @@ var totalRooms = 14;
 // Build the dungeon progress track from small pixel-art image assets.
 // Completed rooms use the filled tile, the current room uses the red tile,
 // and future rooms use the empty tile, with a connector between each room.
-var dungeonPath = '';
+var dungeonPath = '<div class="room-track">';
 
 for (var i = 0; i < totalRooms; i++) {
   var roomImage = '';
@@ -1276,13 +1276,14 @@ for (var i = 0; i < totalRooms; i++) {
     roomImage = 'assets/rooms/room_empty.png';
   }
 
-  dungeonPath += '<img src="' + roomImage + '" alt="Room ' + (i + 1) + '">';
+  dungeonPath += '<img class="room-tile" src="' + roomImage + '" alt="Room ' + (i + 1) + '">';
 
   if (i < totalRooms - 1) {
     dungeonPath += '<img class="room-connector" src="assets/rooms/connector.png" alt="">';
   }
 }
 
+dungeonPath += '</div>';
 progress.innerHTML = dungeonPath;
 
 var skipBtn = document.getElementById('refreshBtn');
