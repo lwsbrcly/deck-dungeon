@@ -1144,30 +1144,62 @@ var isSolo = state.mode !== 'coop';
   if (isSolo && id === 'p2') return;
   var p = state[id];
   var healthbar = document.getElementById(id + 'Bar');
-  var healthPath = '<div class="health-track">';
+  var track = healthbar.querySelector('.health-track');
   
-  for (var i = 1; i <= 20; i++) {
-    var hpImage = i <= p.hp
-      ? 'assets/rooms/hp.png'
-      : 'assets/rooms/hp_gone.png';
-    healthPath += '<img class="health-tile" src="' + hpImage + '" alt="">';
+  // Build the 20 fixed heart elements once. After that, only the hearts
+  // whose state actually changed are updated, so the bar itself never jumps.
+  if (!track) {
+    track = document.createElement('div');
+    track.className = 'health-track';
+    
+    for (var i = 1; i <= 20; i++) {
+      var tile = document.createElement('img');
+      tile.className = 'health-tile';
+      tile.alt = '';
+      track.appendChild(tile);
+    }
+    
+    healthbar.innerHTML = '';
+    healthbar.appendChild(track);
   }
   
-  healthPath += '</div>';
-  healthbar.innerHTML = healthPath;
+  var tiles = track.querySelectorAll('.health-tile');
+  for (var i = 0; i < tiles.length; i++) {
+    var tile = tiles[i];
+    var shouldBeAlive = i < p.hp;
+    var nextSrc = shouldBeAlive
+      ? 'assets/rooms/hp.png'
+      : 'assets/rooms/hp_gone.png';
+    var nextState = shouldBeAlive ? 'alive' : 'gone';
+    
+    if (tile.dataset.hpState !== nextState) {
+      tile.dataset.hpState = nextState;
+      tile.src = nextSrc;
+      tile.classList.remove('health-changing');
+      
+      // Restart the tiny pop animation for this heart only.
+      void tile.offsetWidth;
+      tile.classList.add('health-changing');
+      tile.addEventListener('animationend', function() {
+        this.classList.remove('health-changing');
+      }, { once: true });
+    } else if (!tile.src) {
+      tile.src = nextSrc;
+    }
+  }
   
   requestAnimationFrame(function() {
-    var track = healthbar.querySelector('.health-track');
-    if (!track) return;
+    var currentTrack = healthbar.querySelector('.health-track');
+    if (!currentTrack) return;
     
-    track.style.transform = 'scale(1)';
+    currentTrack.style.transform = 'scale(1)';
     var available = healthbar.clientWidth;
-    var trackWidth = track.scrollWidth;
+    var trackWidth = currentTrack.scrollWidth;
     
-    track.style.transformOrigin = 'left center';
+    currentTrack.style.transformOrigin = 'left center';
     
     if (trackWidth > available && available > 0) {
-      track.style.transform = 'scale(' + (available / trackWidth) + ')';
+      currentTrack.style.transform = 'scale(' + (available / trackWidth) + ')';
     }
   });
   
