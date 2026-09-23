@@ -254,7 +254,20 @@ button.primary-btn {
   border-color: var(--red);
 }
 
+.player-card-surface {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 5px;
+  pointer-events: none;
+  z-index: 0;
+}
+
 .player-character-inner {
+  position: relative;
+  z-index: 1;
   width: 100%;
   height: 100%;
   display: flex;
