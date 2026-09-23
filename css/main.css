@@ -22,7 +22,7 @@
 }
 
 body { 
-  background: var(--bg); 
+  background: var(--bg) url("../assets/dungeon/background.png") top center / 500px auto no-repeat; 
   color: var(--text); 
   display: flex; 
   justify-content: center; 
