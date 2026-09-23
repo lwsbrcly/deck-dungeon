@@ -1271,7 +1271,7 @@ for (var i = 0; i < totalRooms; i++) {
   if (i < rooms) {
     roomImage = 'assets/rooms/room_filled.png';
   } else if (i === rooms) {
-    roomImage = 'assets/rooms/room_current.png';
+    roomImage = 'assets/rooms/room_current_2.png';
   } else {
     roomImage = 'assets/rooms/room_empty.png';
   }
@@ -1279,7 +1279,7 @@ for (var i = 0; i < totalRooms; i++) {
   dungeonPath += '<img class="room-tile" src="' + roomImage + '" alt="Room ' + (i + 1) + '">';
 
   if (i < totalRooms - 1) {
-    dungeonPath += '<img class="room-connector" src="assets/rooms/connector.png" alt="">';
+    dungeonPath += '<img class="room-connector" src="assets/rooms/connector_short.png" alt="">';
   }
 }
 
