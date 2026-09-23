@@ -656,6 +656,7 @@ button.primary-btn {
 }
 
 .card.selected { border-color: var(--highlight); box-shadow: none; outline: 2px solid var(--highlight); outline-offset: 0; }
+.card.selected.selection-hidden { border-color: transparent; box-shadow: none; outline: none; }
 .card.red { color: var(--red); }
 .card.black { color: #000; }
 .card.empty {
