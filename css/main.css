@@ -22,7 +22,7 @@
 }
 
 body { 
-  background: var(--bg) url("../assets/dungeon/background.png") top center / 500px auto no-repeat; 
+  background: var(--bg);
   color: var(--text); 
   display: flex; 
   justify-content: center; 
@@ -30,14 +30,14 @@ body {
   min-height: 100vh; 
 }
 
-.container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 10px; }
+.container { width: 100%; max-width: 667px; display: flex; flex-direction: column; gap: 10px; }
 header { position: relative; text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; color: var(--highlight); }
 .version-label { position: absolute; right: 2px; top: 2px; font-size: 0.62rem; color: var(--muted); font-weight: normal; letter-spacing: 0.2px; }
 h1 { font-size: 1.5rem; letter-spacing: 1px; color: var(--highlight); }
 
 main {
   width: 100%;
-  max-width: 500px;
+  max-width: 667px;
   min-width: 0;
 }
 
@@ -96,31 +96,146 @@ button.primary-btn {
 }
 .hard-mode-label strong { color: var(--highlight); }
 
-/* Game Layout */
-.game-layout { display: flex; flex-direction: column; gap: 10px; }
+/* Game Layout — 667 × 1000 master canvas */
+.game-layout {
+  width: 100%;
+}
 
-.players-container { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.players-container.solo-mode { grid-template-columns: 1fr; }
+.game-canvas {
+  position: relative;
+  width: min(667px, calc(100vw - 20px));
+  aspect-ratio: 667 / 1000;
+  margin: 0 auto;
+  overflow: hidden;
+  background: var(--bg) url("../assets/dungeon/background.png") top center / 100% 100% no-repeat;
+}
 
-.player-panel { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 8px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.player-panel.downed { opacity: 0.5; border-color: var(--red); }
+/* The six regions below use the 667 × 1000 artwork as their coordinate system. */
+.canvas-health-track {
+  position: absolute;
+  left: 12.8935%;
+  top: 21.6%;
+  width: 74.9625%;
+  height: 5.4%;
+}
+
+.canvas-player-area {
+  position: absolute;
+  left: 11.0945%;
+  top: 27.8%;
+  width: 77.961% ;
+  height: 16.5%;
+}
+
+.canvas-room-track {
+  position: absolute;
+  left: 12.8935%;
+  top: 45.2%;
+  width: 74.9625%;
+  height: 5.4%;
+}
+
+.canvas-dungeon-area {
+  position: absolute;
+  left: 11.0945%;
+  top: 51.5%;
+  width: 77.961%;
+  height: 16.5%;
+}
+
+.canvas-action-area {
+  position: absolute;
+  left: 9.895%;
+  top: 72.4%;
+  width: 80.2099%;
+  height: 5.6%;
+}
+
+.canvas-log-area {
+  position: absolute;
+  left: 16.4917%;
+  top: 81%;
+  width: 66.8666%;
+  height: 8.1%;
+}
+
+/* Four-card player window. The four cards keep the game's 2:3 proportions. */
+.player-area {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 0;
+}
+
+.player-card-slot {
+  flex: 0 0 21.1538%;
+  width: 21.1538%;
+  height: 100%;
+  aspect-ratio: auto;
+  background: transparent;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  min-width: 0;
+}
+
+.player-card-slot .card {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 5px;
+}
+
+.player-character-card {
+  cursor: pointer;
+}
+
+.player-character-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4%;
+  text-align: center;
+}
+
 .player-header {
-  font-size: 1.3rem; 
+  width: 100%;
+  font-size: 1.15rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 6px;
 }
 
-.ascii-health-bar {
+.player-character-mark {
+  font-size: 2.6rem;
+  opacity: .28;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* HP and room rails */
+.ascii-health-bar,
+.ascii-dungeon-progress {
   width: 100%;
   max-width: 100%;
   min-width: 0;
   overflow: hidden;
-  padding: 4px 0;
   box-sizing: border-box;
+  padding: 4px 0;
 }
 
-.health-track {
+.health-track,
+.ascii-dungeon-progress .room-track {
   width: max-content;
   display: flex;
   align-items: center;
@@ -143,36 +258,9 @@ button.primary-btn {
 }
 
 @keyframes health-tile-change {
-  0% {
-    transform: scale(.72);
-    opacity: .35;
-  }
-  55% {
-    transform: scale(1.12);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.ascii-dungeon-progress {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  overflow: hidden;
-  padding: 4px 0;
-  box-sizing: border-box;
-}
-
-.ascii-dungeon-progress .room-track {
-  width: max-content;
-  display: flex;
-  align-items: center;
-  min-width: max-content;
-  margin: 0;
-  transform-origin: left center;
+  0% { transform: scale(.72); opacity: .35; }
+  55% { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 .ascii-dungeon-progress .room-track .room-tile {
@@ -191,130 +279,44 @@ button.primary-btn {
   image-rendering: pixelated;
 }
 
-/* Weapon & Item Display Slot */
-.slot { 
-  background: var(--bg); 
-  border: 1px dashed var(--border); 
-  border-radius: 6px; 
-  padding: 6px; 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  justify-content: center; 
-  text-align: center; 
-}
-.slot .card {
-  width: calc((100% - 30px) / 4);
-}
-.slot-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
-
-/* Persistent solo card slots inside the existing full-width slot */
-.player-card-slots {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  width: 100%;
-}
-
-.player-card-slot {
-  flex: 0 0 calc((100% - 30px) / 4);
-  aspect-ratio: 2 / 3;
-  background: var(--bg);
-  border: 1px dashed var(--border);
-  border-radius: 6px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Dungeon four-card window */
+.dungeon-section {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  min-width: 0;
   overflow: visible;
 }
 
-.player-card-slot .card {
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  border: 0;
-  border-radius: 5px;
-}
-
-.previous-monster-stack {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
- .previous-monster-card {
-  position: absolute;
-  inset: 0;
-  transform: translate(var(--stack-x), var(--stack-y)) rotate(var(--stack-rotation));
-  transform-origin: center center;
-  pointer-events: none;
-}
-
-/* Dead monsters are memories now: the entire stack stays ghostly. */
-.previous-monster-card .card {
-  filter: grayscale(1);
-}
-
-/* Hide a newly-created memory while its ghost clone materialises. */
-.ghost-memory-hidden {
-  visibility: hidden;
-}
-
-.previous-monster-card .card {
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  border: 0;
-  border-radius: 5px;
-}
-
-.deck-card {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  z-index: 1001;
-  --deck-depth: 0px;
-}
-
-.deck-card img {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 5px;
-  transform: translate(calc(var(--deck-offset) * -0.5), calc(var(--deck-offset) * -0.5));
-}
-
-
-/* Dungeon & Cards */
-.dungeon-section { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; min-width: 0; overflow: hidden; }
-.dungeon-header { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
-.dungeon-title-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
 .dungeon-board {
   position: relative;
   width: 100%;
+  height: 100%;
   min-width: 0;
 }
-.dungeon-slots,
-.dungeon-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-}
+
 .dungeon-slots {
   position: relative;
   z-index: 0;
-}
-.dungeon-slot {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 0;
   width: 100%;
-  aspect-ratio: 2 / 3;
+  height: 100%;
+}
+
+.dungeon-slot {
+  flex: 0 0 21.1538%;
+  width: 21.1538%;
+  height: 100%;
+  aspect-ratio: auto;
   border: 1.5px dashed var(--border);
   border-radius: 5px;
   box-sizing: border-box;
 }
+
 .dungeon-grid {
   display: block;
   position: absolute;
@@ -322,60 +324,83 @@ button.primary-btn {
   z-index: 1;
   pointer-events: none;
 }
+
 .dungeon-card-wrap {
   position: absolute;
   box-sizing: border-box;
   pointer-events: none;
 }
+
 .dungeon-card-wrap .card {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   max-width: none;
+  aspect-ratio: auto;
   z-index: 1;
   pointer-events: auto;
 }
-/* Cards */
-.card { 
-  width: 100%; 
-  /*max-width: 80px;*/ 
-  aspect-ratio: 2 / 3; 
-  /*background: var(--card-bg);*/
-  background-image: var(--card-image);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  border: 1.5px solid var(--border); 
-  border-radius: 5px; 
-  padding: 4px; 
-  display: flex; 
-  flex-direction: column; 
-  justify-content: space-between; 
-  cursor: pointer; 
-  user-select: none; 
-  -webkit-user-select: none;
-  position: relative; 
+
+/* Buttons and log occupy their artwork-defined regions. */
+.action-panel {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+}
+
+.action-row {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+}
+
+.action-buttons {
+  width: 100%;
+  height: 100%;
+  flex: none;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.action-buttons button {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
   box-sizing: border-box;
-  overflow: hidden;
+  padding: 0 10px;
+  line-height: 1;
+  white-space: nowrap;
 }
 
-.card-rank {
-    position: absolute;
-    top: 10%;
-    left: 10%;
-    font-weight: bold; font-size: 0.6rem; line-height: 1.05; z-index: 2;
+.action-button-hidden { visibility: hidden; }
+
+.log-box {
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,.18);
+  border: 0;
+  border-radius: 0;
+  overflow-y: auto;
+  padding: 8px 10px;
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--muted);
 }
 
-.card-title {
-    position: absolute;
-    bottom: 10%;
-    left: 10%;
-    right: 10%;
-    text-align: center;
-    font-weight: bold; font-size: 0.55rem; line-height: 1.05; z-index: 2;
-}
+.logline { margin-bottom: 2px; }
 
+.coop-compat-panel {
+  display: none;
+}
 /* Combat animation */
 .combat-hidden { visibility: hidden !important; }
 .action-hidden { visibility: hidden !important; }
