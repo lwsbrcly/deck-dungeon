@@ -821,7 +821,7 @@ button.primary-btn {
   top: 8%;
   left: 10%;
   font-weight: bold;
-  font-size: 0.93rem;
+  font-size: 0.9rem;
   line-height: 1.05;
   z-index: 2;
   text-align: left;
@@ -832,7 +832,7 @@ button.primary-btn {
   left: 5%;
   bottom: 8%;
   width: 90%;
-  font-size: 1.05rem;
+  font-size: 0.8rem;
   font-weight: bold;
   text-align: center;
   line-height: 1.05;
