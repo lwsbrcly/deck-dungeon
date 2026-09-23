@@ -49,70 +49,6 @@ var activeGhostMemoryId = null;
 
 var state = {};
 var historyStack = [];
-var layoutDebugLog = [];
-
-function layoutDebugSnapshot(label) {
-  function measure(el) {
-    if (!el) return null;
-    var r = el.getBoundingClientRect();
-    return {
-      left: +r.left.toFixed(2), top: +r.top.toFixed(2),
-      width: +r.width.toFixed(2), height: +r.height.toFixed(2),
-      clientWidth: el.clientWidth, scrollWidth: el.scrollWidth,
-      clientHeight: el.clientHeight, scrollHeight: el.scrollHeight
-    };
-  }
-  var board = document.querySelector('.dungeon-board');
-  var slots = document.querySelectorAll('.dungeon-slot');
-  var dungeonSection = document.querySelector('.dungeon-section');
-  var progress = document.getElementById('deckProgress');
-  var track = progress ? progress.querySelector('.room-track') : null;
-  var p1 = document.getElementById('p1Panel');
-  var p1Slot = p1 ? p1.querySelector('.slot') : null;
-  var p1Cards = p1 ? p1.querySelector('.player-card-slots') : null;
-  var actions = document.querySelector('.action-panel');
-  var game = document.getElementById('game');
-  var entry = {
-    label: label,
-    time: new Date().toISOString(),
-    viewport: { innerWidth: window.innerWidth, innerHeight: window.innerHeight, devicePixelRatio: window.devicePixelRatio },
-    game: measure(game), dungeonSection: measure(dungeonSection), board: measure(board),
-    progress: measure(progress), roomTrack: measure(track),
-    p1Panel: measure(p1), p1Slot: measure(p1Slot), p1CardSlots: measure(p1Cards),
-    actionPanel: measure(actions),
-    slots: Array.prototype.map.call(slots, function(el) { return measure(el); }),
-    overflow: {
-      windowInnerWidth: window.innerWidth,
-      documentClientWidth: document.documentElement.clientWidth,
-      documentScrollWidth: document.documentElement.scrollWidth,
-      bodyClientWidth: document.body.clientWidth,
-      bodyScrollWidth: document.body.scrollWidth,
-      bodyRect: measure(document.body),
-      consumeClones: Array.prototype.map.call(document.querySelectorAll('.consume-clone'), function(el) { return measure(el); }),
-      actionClones: Array.prototype.map.call(document.querySelectorAll('.action-clone'), function(el) { return measure(el); })
-    }
-  };
-  layoutDebugLog.push(entry);
-  return entry;
-}
-
-function downloadLayoutDebug() {
-  if (!layoutDebugLog.length) layoutDebugSnapshot('manual');
-  var text = 'Deck Dungeon Layout Debug\\n\\n' + layoutDebugLog.map(function(entry, i) {
-    return '--- Snapshot ' + (i + 1) + ': ' + entry.label + ' ---\\n' + JSON.stringify(entry, null, 2);
-  }).join('\\n\\n');
-  var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = 'deck-dungeon-layout-debug.txt';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
-}
-
-
 function stopDeckDungeonTheme() {
     if (!themeNodes.length || !audioContext) return;
     const now = audioContext.currentTime;
@@ -225,7 +161,6 @@ function backToMenu() {
 }
 
 function startGame() {
-layoutDebugLog = [];
 stopDeckDungeonTheme();
 var modeInput = document.getElementById('modeSelect');
 var mode = modeInput ? modeInput.value : 'solo_dagger';
@@ -806,10 +741,6 @@ function drinkDirectPotion(target) {
     var targetEl = document.getElementById(target + 'Panel');
     saveState();
     var c = state.dungeon[state.selected];
-    layoutDebugSnapshot('consume: before animation');
-    setTimeout(function() { layoutDebugSnapshot('consume: 100ms'); }, 100);
-    setTimeout(function() { layoutDebugSnapshot('consume: 250ms'); }, 250);
-    setTimeout(function() { layoutDebugSnapshot('consume: 400ms'); }, 400);
     animateCardAction(cardEl, targetEl, 'consume-clone', function() {
       var isDowned = t.hp === 0; var amount = 0;
       if (!t.consumedThisRoom) {
@@ -820,11 +751,7 @@ function drinkDirectPotion(target) {
         else log(name(target) + ' consumes ' + c.name + ', restoring ' + amount + ' HP.', true, 'potion');
       } else log(name(target) + ' consumed ' + c.name + ', but to no effect.', false, 'potion');
       removeSelected();
-      layoutDebugSnapshot('consume: before renderAfterAction');
       checkGame(); renderAfterAction();
-      requestAnimationFrame(function() {
-        layoutDebugSnapshot('consume: after renderAfterAction');
-      });
     }, '♥');
 }
 
