@@ -780,12 +780,24 @@ var ghost = null;
 if (isFistFight) {
   // Bare-handed combat: the monster itself lunges up at the player.
   sourceEl = targetEl;
+
+  // The monster and player now have stable animation destinations defined by
+  // the fixed board slots. Use those anchors rather than the old card/panel
+  // layout calculations.
+  var sourcePosition = getCardPosition('dungeon', state.selected);
+  var targetPosition = getCardPosition(
+    'player',
+    null,
+    player === 'both' ? 'p1' : player
+  );
+  if (!sourcePosition || !targetPosition) { done(); return; }
+
+  sourceRect = sourcePosition;
+  targetRect = targetPosition;
+
   // Fist-fight animations clone the selected monster, so suppress the halo
   // visually without touching state.selected.
   sourceEl.classList.add('selection-hidden');
-  targetRect = (player === 'both'
-    ? document.getElementById('p1Panel').getBoundingClientRect()
-    : document.getElementById(player + 'Panel').getBoundingClientRect());
 } else if (player === 'p1' || player === 'p2') {
   // Weapon combat: the weapon travels to the monster while rising,
   // then slams down. The monster disappears at impact and its memory
