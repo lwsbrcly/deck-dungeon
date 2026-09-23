@@ -505,7 +505,22 @@ button.primary-btn {
   100% {
     transform: translate3d(var(--dx),var(--dy),0) rotateY(180deg);
   }
-}.action-impact.heart-impact {
+}.action-impact {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1002;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+  transform-origin: center center;
+  animation: action-impact 280ms ease-out forwards;
+  will-change: transform, opacity;
+}
+.action-impact.heart-impact {
   color: #e74c3c;
   text-shadow: 0 0 8px rgba(231,76,60,.65);
 }
