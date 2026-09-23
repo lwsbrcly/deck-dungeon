@@ -438,10 +438,9 @@ if (animateRoom) animateRoomEntry(skipFirst);
 
 function animateCardAction(cardEl, targetEl, className, done, icon) {
 if (!cardEl) { done(); return; }
-// Remove the selection highlight without re-rendering the dungeon.
-if (state.selected !== null) {
-  cardEl.classList.remove('selected');
-}
+// Hide the selection halo for the duration of the action, without changing
+// the actual selected state. The normal game render clears selection later.
+cardEl.classList.add('selection-hidden');
 var a = cardEl.getBoundingClientRect();
 var b = targetEl ? targetEl.getBoundingClientRect() : null;
 var clone = cardEl.cloneNode(true);
@@ -612,6 +611,8 @@ var waits = [];
 for (var i = 0; i < cards.length; i++) {
   var card = cards[i];
   var rect = card.getBoundingClientRect();
+  // Keep the selected state intact, but hide its visual halo while the card flies.
+  card.classList.add('selection-hidden');
   var clone = card.cloneNode(true);
   clone.classList.add('action-clone','flee-clone');
   clone.style.left = rect.left + 'px';
@@ -779,6 +780,9 @@ var ghost = null;
 if (isFistFight) {
   // Bare-handed combat: the monster itself lunges up at the player.
   sourceEl = targetEl;
+  // Fist-fight animations clone the selected monster, so suppress the halo
+  // visually without touching state.selected.
+  sourceEl.classList.add('selection-hidden');
   targetRect = (player === 'both'
     ? document.getElementById('p1Panel').getBoundingClientRect()
     : document.getElementById(player + 'Panel').getBoundingClientRect());
