@@ -1178,13 +1178,14 @@ var isSolo = state.mode !== 'coop';
       tile.src = nextSrc;
       tile.classList.remove('health-changing');
       
-      // Damage ripples from the right edge of the live hearts inward;
-      // healing ripples from left to right as hearts return.
+      // Damage: start with the first heart that is disappearing and
+      // continue left-to-right through the hearts being lost.
+      // Healing: start with the first missing heart and continue left-to-right.
       var oldHp = parseInt(previousHp, 10);
       var newHp = p.hp;
       var changeIndex = newHp < oldHp
-        ? (oldHp - 1 - i)
-        : (i - newHp);
+        ? (i - newHp)
+        : (i - oldHp);
       var changeDelay = Math.max(0, changeIndex) * 55;
       tile.style.animationDelay = changeDelay + 'ms';
       void tile.offsetWidth;
