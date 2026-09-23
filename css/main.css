@@ -795,6 +795,7 @@ button.primary-btn {
 
 /* Base card presentation. Card dimensions are controlled by their containing slot. */
 .card {
+  position: relative;
   box-sizing: border-box;
   background-position: center;
   background-size: cover;
