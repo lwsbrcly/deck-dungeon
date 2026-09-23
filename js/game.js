@@ -1345,6 +1345,15 @@ var isSolo = state.mode !== 'coop';
   }
 });
 
+var playerSurface = document.querySelector('#p1Panel .player-card-surface');
+if (playerSurface) {
+  var playerTheme = THEMES[selectedTheme || 'dungeon'];
+  var playerCardArtwork = playerTheme && playerTheme.artwork
+    ? playerTheme.artwork.card
+    : 'assets/dungeon/card.png';
+  playerSurface.style.backgroundImage = 'url("' + playerCardArtwork + '")';
+}
+
 var d = document.getElementById('dungeon');
 var slots = document.querySelectorAll('.dungeon-slot');
 var boardRect = document.querySelector('.dungeon-board').getBoundingClientRect();
