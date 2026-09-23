@@ -1299,7 +1299,10 @@ requestAnimationFrame(function() {
   var trackWidth = track.scrollWidth;
 
   if (trackWidth > available && available > 0) {
-    track.style.transform = 'scale(' + (available / trackWidth) + ')';
+    // Leave a tiny amount of breathing room so the final room is not
+    // clipped by rounding/sub-pixel layout at either edge.
+    var fitWidth = Math.max(0, available - 2);
+    track.style.transform = 'scale(' + (fitWidth / trackWidth) + ')';
   }
 });
 
