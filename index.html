@@ -162,82 +162,72 @@
         <section id="game-ui" class="screen">
   
             <div id="game" style="display: none;" class="game-layout">
-        
-                <!-- Players Container -->
-                <div class="players-container" id="playersContainer">
-                  <!-- Player 1 -->
-                  <div id="p1Panel" class="player-panel">
-                    <div class="player-header">
-                      <strong id="p1DisplayName">Hero 1</strong>
-                      <span id="p1Down"></span>
-                    </div>
-                    <div>
-                      <div id="p1Bar" class="ascii-health-bar"></div>
-                    </div>
-                    <div class="slot">
-                      <div class="player-card-slots" aria-label="Player card slots">
+                <div class="game-canvas">
+
+                    <!-- 1. HP TRACK -->
+                    <div id="p1Bar" class="ascii-health-bar canvas-health-track"></div>
+
+                    <!-- 2. PLAYER AREA — four fixed destinations -->
+                    <div class="player-area canvas-player-area" id="playersContainer">
                         <div id="p1Deck" class="player-card-slot" aria-label="Deck"></div>
+
+                        <div id="p1Panel" class="player-card-slot player-character-card" aria-label="Player">
+                            <div class="player-character-inner">
+                                <div class="player-header">
+                                    <strong id="p1DisplayName">Hero 1</strong>
+                                    <span id="p1Down"></span>
+                                </div>
+                                <div class="player-character-mark" aria-hidden="true">✦</div>
+                            </div>
+                        </div>
+
                         <div id="p1Weapon" class="player-card-slot" aria-label="Weapon"></div>
+
                         <div id="p1PreviousMonster" class="player-card-slot" aria-label="Previous Monster"></div>
-                      </div>
                     </div>
-                  </div>
-            
-                  <!-- Player 2 -->
-                  <div id="p2Panel" class="player-panel">
+
+                    <!-- 3. ROOM TRACK -->
+                    <div id="deckProgress" class="ascii-dungeon-progress canvas-room-track"></div>
+
+                    <!-- 4. DUNGEON AREA — four fixed destinations -->
+                    <div class="dungeon-section canvas-dungeon-area">
+                        <div class="dungeon-board">
+                            <div class="dungeon-slots" aria-hidden="true">
+                                <div class="dungeon-slot"></div>
+                                <div class="dungeon-slot"></div>
+                                <div class="dungeon-slot"></div>
+                                <div class="dungeon-slot"></div>
+                            </div>
+                            <div class="dungeon-grid" id="dungeon"></div>
+                        </div>
+                    </div>
+
+                    <!-- 5. BUTTONS -->
+                    <div class="action-panel canvas-action-area">
+                        <div class="action-row">
+                            <div class="action-buttons">
+                                <button id="action1" class="context-action"></button>
+                                <button id="action2" class="context-action"></button>
+                                <button type="button" id="undoBtn" onclick="undoLastAction()" disabled>↩ Undo</button>
+                                <button type="button" id="refreshBtn" onclick="refreshDungeon()">Flee</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 6. LOG -->
+                    <div class="log-box canvas-log-area" id="log"></div>
+                </div>
+
+                <!-- Co-op compatibility elements; solo layout is the canonical design for now. -->
+                <div id="p2Panel" class="coop-compat-panel">
                     <div class="player-header">
-                      <strong id="p2DisplayName">Hero 2</strong>
-                      <span id="p2Down"></span>
+                        <strong id="p2DisplayName">Hero 2</strong>
+                        <span id="p2Down"></span>
                     </div>
-                    <div>
-                      <div id="p2Bar" class="ascii-health-bar"></div>
-                    </div>
-                    <div class="slot">
-                      <div id="p2Weapon" style="width: 100%; display: flex; justify-content: center;"></div>
-                    </div>
-                  </div>
+                    <div id="p2Bar" class="ascii-health-bar"></div>
+                    <div id="p2Weapon"></div>
                 </div>
-        
-                <!-- Dungeon Room -->
-                <div class="dungeon-section">
-                  <div class="dungeon-header">
-                    <div id="deckProgress" class="ascii-dungeon-progress"></div>
-                  </div>
-                  <div class="dungeon-board">
-                    <div class="dungeon-slots" aria-hidden="true">
-                      <div class="dungeon-slot"></div>
-                      <div class="dungeon-slot"></div>
-                      <div class="dungeon-slot"></div>
-                      <div class="dungeon-slot"></div>
-                    </div>
-                    <div class="dungeon-grid" id="dungeon"></div>
-                  </div>
-                </div>
-            
-                <!-- Controls -->
-                <div class="action-panel">
-                  <div class="action-row">
-                    <div class="action-buttons">
-                      
-                      <!-- Contextual actions -->
-                      <button id="action1" class="context-action"></button>
-                      <button id="action2" class="context-action"></button>
-                     
-                      <!-- Always available -->
-                      <button type="button" id="undoBtn"
-                              onclick="undoLastAction()" disabled>↩ Undo</button>
-                      <button type="button" id="refreshBtn"
-                              onclick="refreshDungeon()">Flee</button>
-                      
-                    </div>
-                  </div>
-                </div>
-        
-                <!-- Log -->
-                <div class="log-box" id="log"></div>
-              </div>
-            </div>
-        
+            </div>        
             <!-- Modal Dialog -->
             <div class="modal-overlay" id="overlay">
               <div class="modal">
