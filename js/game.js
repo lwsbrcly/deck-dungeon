@@ -1260,20 +1260,26 @@ var progress = document.getElementById('deckProgress');
 var rooms = state.roomsCleared || 0;
 var totalRooms = 14;
 
+// Build the dungeon progress track from small pixel-art image assets.
+// Completed rooms use the filled tile, the current room uses the red tile,
+// and future rooms use the empty tile, with a connector between each room.
 var dungeonPath = '';
 
 for (var i = 0; i < totalRooms; i++) {
+  var roomImage = '';
 
   if (i < rooms) {
-    dungeonPath += '<span class="room-complete">█</span>';
+    roomImage = 'assets/rooms/room_filled.png';
   } else if (i === rooms) {
-    dungeonPath += '<span class="room-current"></span>';
+    roomImage = 'assets/rooms/room_current.png';
   } else {
-    dungeonPath += '<span class="room-future">░</span>';
+    roomImage = 'assets/rooms/room_empty.png';
   }
 
+  dungeonPath += '<img src="' + roomImage + '" alt="Room ' + (i + 1) + '">';
+
   if (i < totalRooms - 1) {
-    dungeonPath += '═';
+    dungeonPath += '<img class="room-connector" src="assets/rooms/connector.png" alt="">';
   }
 }
 
