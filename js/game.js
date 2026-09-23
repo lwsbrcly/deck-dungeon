@@ -1144,21 +1144,32 @@ var isSolo = state.mode !== 'coop';
   if (isSolo && id === 'p2') return;
   var p = state[id];
   var healthbar = document.getElementById(id + 'Bar');
-  var healthPath = 'HP║';
+  var healthPath = '<div class="health-track">';
   
-  for (var i = 1; i <= state.maxHP; i++) {
-  
-    if (i <= p.hp) {
-      healthPath += '█';
-    } else {
-      healthPath += '░';
-    }
+  for (var i = 1; i <= 20; i++) {
+    var hpImage = i <= p.hp
+      ? 'assets/rooms/hp.png'
+      : 'assets/rooms/hp_gone.png';
+    healthPath += '<img class="health-tile" src="' + hpImage + '" alt="">';
   }
-
-  healthPath += p.hp < 10 ? '║ ' : '║';
-  healthPath += p.hp
   
-  healthbar.textContent = healthPath;
+  healthPath += '</div>';
+  healthbar.innerHTML = healthPath;
+  
+  requestAnimationFrame(function() {
+    var track = healthbar.querySelector('.health-track');
+    if (!track) return;
+    
+    track.style.transform = 'scale(1)';
+    var available = healthbar.clientWidth;
+    var trackWidth = track.scrollWidth;
+    
+    track.style.transformOrigin = 'center center';
+    
+    if (trackWidth > available && available > 0) {
+      track.style.transform = 'scale(' + (available / trackWidth) + ')';
+    }
+  });
   
   document.getElementById(id + 'Panel').classList.toggle('downed', p.hp === 0);
   document.getElementById(id + 'Down').innerHTML = p.hp === 0 ? '<span class="badge">DOWN</span>' : '';
