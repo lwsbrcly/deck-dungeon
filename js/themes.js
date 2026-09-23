@@ -322,8 +322,8 @@ const THEMES = {
         //audio: {},
             
         colours: {
-            bg: "#19191A",
-            panelBg: "#0E253D",
+            bg: "transparent",
+            panelBg: "transparent",
             border: "#B0843C",
             text: "#CDA655",
             muted: "#8f8e8d",
@@ -391,8 +391,8 @@ const THEMES = {
         //audio: {},
             
         colours: {
-            bg: "#19191A",
-            panelBg: "#ab0431",
+            bg: "transparent",
+            panelBg: "transparent",
             border: "#6a5a56",
             text: "#ecd7de",
             muted: "#493231",
@@ -460,8 +460,8 @@ const THEMES = {
         //audio: {},
             
         colours: {
-            bg: "#19191A",
-            panelBg: "#ab0431",
+            bg: "transparent",
+            panelBg: "transparent",
             border: "#6a5a56",
             text: "#ecd7de",
             muted: "#493231",
