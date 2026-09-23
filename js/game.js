@@ -1138,6 +1138,50 @@ function setContextAction(number, label, onclick, disabled) {
     btn.classList.remove('action-button-hidden');
 }
 
+/*
+ * Fixed card-position helpers.
+ *
+ * These deliberately measure the layout rather than storing pixel coordinates.
+ * The canvas can be scaled, so animation code should use these as its source
+ * and destination points instead of calculating positions itself.
+ */
+function getCardPosition(kind, index, playerId) {
+  var id = playerId || 'p1';
+  var el = null;
+
+  if (kind === 'deck') {
+    el = document.getElementById(id + 'Deck');
+  } else if (kind === 'player') {
+    el = document.getElementById(id + 'Panel');
+  } else if (kind === 'weapon') {
+    el = document.getElementById(id + 'Weapon');
+  } else if (kind === 'previousMonster') {
+    el = document.getElementById(id + 'PreviousMonster');
+  } else if (kind === 'dungeon') {
+    var slots = document.querySelectorAll('.dungeon-slot');
+    el = slots[index] || null;
+  }
+
+  if (!el) return null;
+
+  var rect = el.getBoundingClientRect();
+  return {
+    left: rect.left,
+    top: rect.top,
+    width: rect.width,
+    height: rect.height,
+    right: rect.right,
+    bottom: rect.bottom,
+    centerX: rect.left + rect.width / 2,
+    centerY: rect.top + rect.height / 2
+  };
+}
+
+function getCardCenter(kind, index, playerId) {
+  var position = getCardPosition(kind, index, playerId);
+  return position ? { x: position.centerX, y: position.centerY } : null;
+}
+
 function resizeGameCanvas() {
   var gameEl = document.getElementById('game');
   var canvas = document.querySelector('.game-canvas');
