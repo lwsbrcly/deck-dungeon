@@ -814,6 +814,35 @@ button.primary-btn {
 }
 
 .corner { font-weight: bold; font-size: 0.62rem; line-height: 1.05; z-index: 2; }
+
+/* Card text is positioned explicitly so it stays anchored inside the card. */
+.card-rank {
+  position: absolute;
+  top: 6%;
+  left: 8%;
+  font-weight: bold;
+  font-size: 0.62rem;
+  line-height: 1.05;
+  z-index: 2;
+  text-align: left;
+}
+
+.card-title {
+  position: absolute;
+  left: 5%;
+  bottom: 2%;
+  width: 90%;
+  font-size: 0.7rem;
+  text-align: center;
+  line-height: 1.05;
+  white-space: normal;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+  z-index: 2;
+}
 .suitbig { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 2rem; opacity: 0.35; pointer-events: none; }
 
 /* SVG Custom Artwork Styling */
