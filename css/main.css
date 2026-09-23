@@ -102,7 +102,7 @@ button.primary-btn {
 .players-container { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .players-container.solo-mode { grid-template-columns: 1fr; }
 
-.player-panel { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+.player-panel { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 8px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .player-panel.downed { opacity: 0.5; border-color: var(--red); }
 .player-header {
   font-size: 1.3rem; 
@@ -112,14 +112,29 @@ button.primary-btn {
 }
 
 .ascii-health-bar {
-  font-family: monospace;
-  font-size: 18px;
-  letter-spacing: 0;
-  white-space: nowrap;
-  text-align: center;
-  overflow-x: auto;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
   padding: 4px 0;
-  color: var(--red);
+  box-sizing: border-box;
+}
+
+.health-track {
+  width: max-content;
+  display: flex;
+  align-items: center;
+  min-width: max-content;
+  margin: 0 auto;
+  transform-origin: center center;
+}
+
+.health-track .health-tile {
+  display: block;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  image-rendering: pixelated;
 }
 
 .ascii-dungeon-progress {
