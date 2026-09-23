@@ -125,8 +125,8 @@ button.primary-btn {
   display: flex;
   align-items: center;
   min-width: max-content;
-  margin: 0 auto;
-  transform-origin: center center;
+  margin: 0;
+  transform-origin: left center;
 }
 
 .health-track .health-tile {
