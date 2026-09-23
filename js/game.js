@@ -1295,14 +1295,17 @@ requestAnimationFrame(function() {
 
   track.style.transform = 'scale(1)';
 
-  var available = progress.clientWidth;
+  // The progress track should line up exactly with dungeon slots A-D.
+  // Use the board width as the available space, then scale the complete
+  // track from its left edge so neither end can be clipped.
+  var board = document.querySelector('.dungeon-board');
+  var available = board ? board.clientWidth : progress.clientWidth;
   var trackWidth = track.scrollWidth;
 
+  track.style.transformOrigin = 'left center';
+
   if (trackWidth > available && available > 0) {
-    // Leave a tiny amount of breathing room so the final room is not
-    // clipped by rounding/sub-pixel layout at either edge.
-    var fitWidth = Math.max(0, available - 2);
-    track.style.transform = 'scale(' + (fitWidth / trackWidth) + ')';
+    track.style.transform = 'scale(' + (available / trackWidth) + ')';
   }
 });
 
