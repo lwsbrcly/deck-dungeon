@@ -1286,6 +1286,23 @@ for (var i = 0; i < totalRooms; i++) {
 dungeonPath += '</div>';
 progress.innerHTML = dungeonPath;
 
+// Fit the complete 14-room track inside its own box without cropping
+// either end. The track is scaled as one unit, so rooms and connectors
+// always keep their original proportions.
+requestAnimationFrame(function() {
+  var track = progress.querySelector('.room-track');
+  if (!track) return;
+
+  track.style.transform = 'scale(1)';
+
+  var available = progress.clientWidth;
+  var trackWidth = track.scrollWidth;
+
+  if (trackWidth > available && available > 0) {
+    track.style.transform = 'scale(' + (available / trackWidth) + ')';
+  }
+});
+
 var skipBtn = document.getElementById('refreshBtn');
 skipBtn.textContent = state.justFled ? "Fled" : "Flee";
 skipBtn.disabled = state.justFled || state.over || state.dungeon.length < 4 || state.deck.length === 0;
