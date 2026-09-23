@@ -1164,39 +1164,49 @@ var isSolo = state.mode !== 'coop';
   }
   
   var tiles = track.querySelectorAll('.health-tile');
+  var oldHp = parseInt(tiles.length ? tiles[0].dataset.previousHp : p.hp, 10);
+  if (isNaN(oldHp)) oldHp = p.hp;
+  
   for (var i = 0; i < tiles.length; i++) {
     var tile = tiles[i];
-    var previousHp = tile.dataset.previousHp;
     var shouldBeAlive = i < p.hp;
     var nextSrc = shouldBeAlive
       ? 'assets/rooms/hp.png'
       : 'assets/rooms/hp_gone.png';
     var nextState = shouldBeAlive ? 'alive' : 'gone';
     
+    if (tile._hpTimer) {
+      clearTimeout(tile._hpTimer);
+      tile._hpTimer = null;
+    }
+    
     if (tile.dataset.hpState !== nextState) {
-      tile.dataset.hpState = nextState;
-      tile.src = nextSrc;
-      tile.classList.remove('health-changing');
-      
-      // Damage: turn hearts off from right to left, starting at HP 20.
-      // Healing: turn hearts on from left to right, starting at HP 1.
-      var oldHp = parseInt(previousHp, 10);
-      var newHp = p.hp;
-      var changeIndex = newHp < oldHp
-        ? (19 - i)
-        : i;
+      // Only the hearts whose state changed are animated. The image itself
+      // changes when that heart's turn arrives, rather than all at once.
+      var changeIndex = p.hp < oldHp
+        ? (oldHp - 1 - i)
+        : (i - oldHp);
       var changeDelay = Math.max(0, changeIndex) * 55;
-      tile.style.animationDelay = changeDelay + 'ms';
-      void tile.offsetWidth;
-      tile.classList.add('health-changing');
-      tile.addEventListener('animationend', function() {
-        this.classList.remove('health-changing');
-      }, { once: true });
+      
+      tile._hpTimer = setTimeout(function(targetTile, src, stateName) {
+        return function() {
+          targetTile.src = src;
+          targetTile.dataset.hpState = stateName;
+          targetTile.classList.remove('health-changing');
+          void targetTile.offsetWidth;
+          targetTile.classList.add('health-changing');
+          targetTile._hpTimer = null;
+        };
+      }(tile, nextSrc, nextState), changeDelay);
     } else if (!tile.src) {
       tile.src = nextSrc;
     }
   }
   
+  for (var j = 0; j < tiles.length; j++) {
+    tiles[j].dataset.previousHp = p.hp;
+  }
+
   requestAnimationFrame(function() {
     var currentTrack = healthbar.querySelector('.health-track');
     if (!currentTrack) return;
