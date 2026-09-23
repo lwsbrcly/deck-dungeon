@@ -1195,8 +1195,32 @@ function resizeGameCanvas() {
   canvas.style.transform = 'scale(' + scale + ')';
 }
 
+function syncPlayerCardSlots() {
+  var board = document.getElementById('playersContainer');
+  var grid = document.getElementById('playerCardGrid');
+  if (!board || !grid) return;
+
+  var slots = board.querySelectorAll('.player-slot');
+  var boardRect = board.getBoundingClientRect();
+
+  var ids = ['p1Deck', 'p1Panel', 'p1Weapon', 'p1PreviousMonster'];
+
+  for (var i = 0; i < ids.length; i++) {
+    var wrap = document.getElementById(ids[i]);
+    var slot = slots[i];
+    if (!wrap || !slot) continue;
+
+    var rect = slot.getBoundingClientRect();
+    wrap.style.left = (rect.left - boardRect.left) + 'px';
+    wrap.style.top = (rect.top - boardRect.top) + 'px';
+    wrap.style.width = rect.width + 'px';
+    wrap.style.height = rect.height + 'px';
+  }
+}
+
 function render() {
 resizeGameCanvas();
+syncPlayerCardSlots();
 var isSolo = state.mode !== 'coop';
 ['p1','p2'].forEach(function(id) {
   if (isSolo && id === 'p2') return;
