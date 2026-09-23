@@ -818,10 +818,10 @@ button.primary-btn {
 /* Card text is positioned explicitly so it stays anchored inside the card. */
 .card-rank {
   position: absolute;
-  top: 6%;
-  left: 8%;
+  top: 8%;
+  left: 10%;
   font-weight: bold;
-  font-size: 0.62rem;
+  font-size: 0.93rem;
   line-height: 1.05;
   z-index: 2;
   text-align: left;
@@ -830,9 +830,10 @@ button.primary-btn {
 .card-title {
   position: absolute;
   left: 5%;
-  bottom: 2%;
+  bottom: 8%;
   width: 90%;
-  font-size: 0.7rem;
+  font-size: 1.05rem;
+  font-weight: bold;
   text-align: center;
   line-height: 1.05;
   white-space: normal;
