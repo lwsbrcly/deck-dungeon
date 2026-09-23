@@ -1275,7 +1275,7 @@ for (var i = 0; i < totalRooms; i++) {
   if (i < rooms) {
     roomImage = 'assets/rooms/room_filled.png';
   } else if (i === rooms) {
-    roomImage = 'assets/rooms/room_current_2.png';
+    roomImage = 'assets/rooms/room_current_yellow.png';
   } else {
     roomImage = 'assets/rooms/room_empty.png';
   }
