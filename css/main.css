@@ -187,8 +187,11 @@ button.primary-btn {
 }
 
 .player-card-slot .card {
+  width: auto;
+  height: 100%;
   max-width: 100%;
   max-height: 100%;
+  flex: 0 1 auto;
   aspect-ratio: 2 / 3;
   object-fit: contain;
   border: 0;
@@ -365,6 +368,9 @@ button.primary-btn {
 .dungeon-card-wrap .card {
   position: absolute;
   inset: 0;
+  margin: auto;
+  width: auto;
+  height: 100%;
   max-width: 100%;
   max-height: 100%;
   min-width: 0;
@@ -431,6 +437,29 @@ button.primary-btn {
 }
 
 .logline { margin-bottom: 2px; }
+
+/* Previous-monster pile stays inside its player slot. */
+.previous-monster-stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.previous-monster-card {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: translate(var(--stack-x), var(--stack-y)) rotate(var(--stack-rotation));
+  transform-origin: center center;
+  overflow: hidden;
+}
+
+.previous-monster-card .card {
+  width: 100%;
+  height: 100%;
+}
 
 .coop-compat-panel {
   display: none;
@@ -764,6 +793,16 @@ button.primary-btn {
   0% { transform: translate(-50%,-50%) scale(.5) rotate(-10deg); opacity: 0; }
   35% { transform: translate(-50%,-50%) scale(1.35) rotate(8deg); opacity: 1; }
   100% { transform: translate(-50%,-70%) scale(.8) rotate(18deg); opacity: 0; }
+}
+
+/* Base card presentation. Card dimensions are controlled by their containing slot. */
+.card {
+  box-sizing: border-box;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  display: block;
 }
 
 .card.selected { border-color: var(--highlight); box-shadow: none; outline: 2px solid var(--highlight); outline-offset: 0; }
