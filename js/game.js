@@ -80,7 +80,17 @@ function layoutDebugSnapshot(label) {
     progress: measure(progress), roomTrack: measure(track),
     p1Panel: measure(p1), p1Slot: measure(p1Slot), p1CardSlots: measure(p1Cards),
     actionPanel: measure(actions),
-    slots: Array.prototype.map.call(slots, function(el) { return measure(el); })
+    slots: Array.prototype.map.call(slots, function(el) { return measure(el); }),
+    overflow: {
+      windowInnerWidth: window.innerWidth,
+      documentClientWidth: document.documentElement.clientWidth,
+      documentScrollWidth: document.documentElement.scrollWidth,
+      bodyClientWidth: document.body.clientWidth,
+      bodyScrollWidth: document.body.scrollWidth,
+      bodyRect: measure(document.body),
+      consumeClones: Array.prototype.map.call(document.querySelectorAll('.consume-clone'), function(el) { return measure(el); }),
+      actionClones: Array.prototype.map.call(document.querySelectorAll('.action-clone'), function(el) { return measure(el); })
+    }
   };
   layoutDebugLog.push(entry);
   return entry;
@@ -797,6 +807,9 @@ function drinkDirectPotion(target) {
     saveState();
     var c = state.dungeon[state.selected];
     layoutDebugSnapshot('consume: before animation');
+    setTimeout(function() { layoutDebugSnapshot('consume: 100ms'); }, 100);
+    setTimeout(function() { layoutDebugSnapshot('consume: 250ms'); }, 250);
+    setTimeout(function() { layoutDebugSnapshot('consume: 400ms'); }, 400);
     animateCardAction(cardEl, targetEl, 'consume-clone', function() {
       var isDowned = t.hp === 0; var amount = 0;
       if (!t.consumedThisRoom) {
