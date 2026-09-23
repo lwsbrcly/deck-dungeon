@@ -1164,7 +1164,7 @@ var isSolo = state.mode !== 'coop';
     var available = healthbar.clientWidth;
     var trackWidth = track.scrollWidth;
     
-    track.style.transformOrigin = 'center center';
+    track.style.transformOrigin = 'left center';
     
     if (trackWidth > available && available > 0) {
       track.style.transform = 'scale(' + (available / trackWidth) + ')';
