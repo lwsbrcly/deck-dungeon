@@ -162,31 +162,56 @@ button.primary-btn {
   height: 8.1%;
 }
 
-/* Four-card player window. The four cards keep the game's 2:3 proportions. */
+/* Player board: fixed slots stay still; cards live on a separate layer. */
 .player-area {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+}
+
+.player-slots {
+  position: relative;
+  z-index: 0;
   display: flex;
   align-items: stretch;
   justify-content: space-between;
   gap: 0;
+  width: 100%;
+  height: 100%;
 }
 
-.player-card-slot {
+.player-slot {
   flex: 0 0 21.1538%;
   width: 21.1538%;
   height: 100%;
-  aspect-ratio: auto;
   background: transparent;
   border: 1px dashed var(--border);
   border-radius: 6px;
   box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: visible;
   min-width: 0;
 }
 
-.player-card-slot .card {
+.player-card-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.player-card-wrap {
+  position: absolute;
+  box-sizing: border-box;
+  pointer-events: none;
+  overflow: visible;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-card-wrap > .card {
   width: auto;
   height: 100%;
   max-width: 100%;
@@ -196,6 +221,7 @@ button.primary-btn {
   object-fit: contain;
   border: 0;
   border-radius: 5px;
+  pointer-events: auto;
 }
 
 /* Keep the physical deck inside its four-card slot. The card-back PNG is
@@ -221,6 +247,7 @@ button.primary-btn {
 
 .player-character-card {
   cursor: pointer;
+  pointer-events: auto;
 }
 .player-character-card.downed {
   opacity: 0.5;
