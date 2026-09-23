@@ -137,6 +137,26 @@ button.primary-btn {
   image-rendering: pixelated;
 }
 
+.health-track .health-tile.health-changing {
+  animation: health-tile-change 220ms cubic-bezier(.22,.8,.25,1);
+  will-change: transform, opacity;
+}
+
+@keyframes health-tile-change {
+  0% {
+    transform: scale(.72);
+    opacity: .35;
+  }
+  55% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .ascii-dungeon-progress {
   width: 100%;
   max-width: 100%;
