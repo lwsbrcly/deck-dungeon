@@ -255,11 +255,13 @@ button.primary-btn {
 
 
 /* Dungeon & Cards */
-.dungeon-section { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+.dungeon-section { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px; min-width: 0; overflow: hidden; }
 .dungeon-header { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
 .dungeon-title-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
 .dungeon-board {
   position: relative;
+  width: 100%;
+  min-width: 0;
 }
 .dungeon-slots,
 .dungeon-grid {
