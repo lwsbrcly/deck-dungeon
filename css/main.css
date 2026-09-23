@@ -132,14 +132,16 @@ button.primary-btn {
 }
 
 .ascii-dungeon-progress .room-track {
-  width: 100%;
+  width: max-content;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 0;
+  min-width: max-content;
+  margin: 0 auto;
+  transform-origin: center center;
 }
 
-.ascii-dungeon-progress .room-track img {
+.ascii-dungeon-progress .room-track .room-tile {
   display: block;
   width: 22px;
   height: 22px;
@@ -148,19 +150,22 @@ button.primary-btn {
 }
 
 .ascii-dungeon-progress .room-track .room-connector {
+  display: block;
   width: 16px;
-  height: 22px;
+  height: auto;
+  flex: 0 0 auto;
+  image-rendering: pixelated;
 }
 
 @media (max-width: 480px) {
-  .ascii-dungeon-progress .room-track img {
+  .ascii-dungeon-progress .room-track .room-tile {
     width: 18px;
     height: 18px;
   }
 
   .ascii-dungeon-progress .room-track .room-connector {
     width: 10px;
-    height: 18px;
+    height: auto;
   }
 }
 
