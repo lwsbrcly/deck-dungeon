@@ -98,16 +98,19 @@ button.primary-btn {
 
 /* Game Layout — 667 × 1000 master canvas */
 .game-layout {
-  width: 100%;
+  width: 667px;
+  height: 1000px;
+  margin: 0 auto;
 }
 
 .game-canvas {
   position: relative;
-  width: min(667px, calc(100vw - 20px));
-  aspect-ratio: 667 / 1000;
+  width: 667px;
+  height: 1000px;
+  transform-origin: top center;
   margin: 0 auto;
   overflow: hidden;
-  background: var(--bg) url("../assets/dungeon/background.png") top center / 100% 100% no-repeat;
+  background: var(--bg) url("../assets/dungeon/background.png") top center / 667px 1000px no-repeat;
 }
 
 /* The six regions below use the 667 × 1000 artwork as their coordinate system. */
@@ -194,6 +197,10 @@ button.primary-btn {
 
 .player-character-card {
   cursor: pointer;
+}
+.player-character-card.downed {
+  opacity: 0.5;
+  border-color: var(--red);
 }
 
 .player-character-inner {
