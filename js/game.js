@@ -1178,14 +1178,13 @@ var isSolo = state.mode !== 'coop';
       tile.src = nextSrc;
       tile.classList.remove('health-changing');
       
-      // Damage: start with the first heart that is disappearing and
-      // continue left-to-right through the hearts being lost.
-      // Healing: start with the first missing heart and continue left-to-right.
+      // Damage: turn hearts off from right to left, starting at HP 20.
+      // Healing: turn hearts on from left to right, starting at HP 1.
       var oldHp = parseInt(previousHp, 10);
       var newHp = p.hp;
       var changeIndex = newHp < oldHp
-        ? (i - newHp)
-        : (i - oldHp);
+        ? (19 - i)
+        : i;
       var changeDelay = Math.max(0, changeIndex) * 55;
       tile.style.animationDelay = changeDelay + 'ms';
       void tile.offsetWidth;
