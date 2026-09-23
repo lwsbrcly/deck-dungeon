@@ -1138,7 +1138,21 @@ function setContextAction(number, label, onclick, disabled) {
     btn.classList.remove('action-button-hidden');
 }
 
+function resizeGameCanvas() {
+  var gameEl = document.getElementById('game');
+  var canvas = document.querySelector('.game-canvas');
+  if (!gameEl || !canvas) return;
+
+  var available = Math.max(1, Math.min(667, window.innerWidth - 20));
+  var scale = available / 667;
+
+  gameEl.style.width = (667 * scale) + 'px';
+  gameEl.style.height = (1000 * scale) + 'px';
+  canvas.style.transform = 'scale(' + scale + ')';
+}
+
 function render() {
+resizeGameCanvas();
 var isSolo = state.mode !== 'coop';
 ['p1','p2'].forEach(function(id) {
   if (isSolo && id === 'p2') return;
@@ -1621,6 +1635,8 @@ function setupPeekHandlers() {
 }
 
 // Initial load execution
+window.addEventListener('resize', resizeGameCanvas);
+
 window.onload = function() {
     toggleModeInputs();
     setupPeekHandlers();
