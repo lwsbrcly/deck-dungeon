@@ -1178,8 +1178,14 @@ var isSolo = state.mode !== 'coop';
       tile.src = nextSrc;
       tile.classList.remove('health-changing');
       
-      // Stagger each changed heart so damage/healing ripples across the bar.
-      var changeDelay = Math.abs(i - (p.hp < (tile.dataset.previousHp || p.hp) ? p.hp : (tile.dataset.previousHp || p.hp))) * 55;
+      // Damage ripples from the right edge of the live hearts inward;
+      // healing ripples from left to right as hearts return.
+      var oldHp = parseInt(previousHp, 10);
+      var newHp = p.hp;
+      var changeIndex = newHp < oldHp
+        ? (oldHp - 1 - i)
+        : (i - newHp);
+      var changeDelay = Math.max(0, changeIndex) * 55;
       tile.style.animationDelay = changeDelay + 'ms';
       void tile.offsetWidth;
       tile.classList.add('health-changing');
