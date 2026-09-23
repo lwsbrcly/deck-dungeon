@@ -138,7 +138,7 @@ button.primary-btn {
 }
 
 .health-track .health-tile.health-changing {
-  animation: health-tile-change 220ms cubic-bezier(.22,.8,.25,1);
+  animation: health-tile-change 220ms cubic-bezier(.22,.8,.25,1) both;
   will-change: transform, opacity;
 }
 
