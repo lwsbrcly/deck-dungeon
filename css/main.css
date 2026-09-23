@@ -833,6 +833,42 @@ button.primary-btn {
   100% { transform: translate(-50%,-70%) scale(.8) rotate(18deg); opacity: 0; }
 }
 
+/* Keep the fixed destination boxes wider than the actual cards.
+   The cards themselves must retain the 2:3 playing-card shape. */
+.deck-card {
+  width: auto;
+  height: 100%;
+  aspect-ratio: 2 / 3;
+  margin: 0 auto;
+}
+
+.deck-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.previous-monster-stack {
+  width: auto;
+  height: 100%;
+  aspect-ratio: 2 / 3;
+  margin: 0 auto;
+}
+
+.player-card-surface,
+.player-character-inner {
+  width: auto;
+  height: 100%;
+  aspect-ratio: 2 / 3;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.player-character-inner {
+  position: absolute;
+  top: 0;
+}
+
 /* Base card presentation. Card dimensions are controlled by their containing slot. */
 .card {
   position: relative;
