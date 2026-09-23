@@ -1166,6 +1166,7 @@ var isSolo = state.mode !== 'coop';
   var tiles = track.querySelectorAll('.health-tile');
   for (var i = 0; i < tiles.length; i++) {
     var tile = tiles[i];
+    var previousHp = tile.dataset.previousHp;
     var shouldBeAlive = i < p.hp;
     var nextSrc = shouldBeAlive
       ? 'assets/rooms/hp.png'
@@ -1177,7 +1178,9 @@ var isSolo = state.mode !== 'coop';
       tile.src = nextSrc;
       tile.classList.remove('health-changing');
       
-      // Restart the tiny pop animation for this heart only.
+      // Stagger each changed heart so damage/healing ripples across the bar.
+      var changeDelay = Math.abs(i - (p.hp < (tile.dataset.previousHp || p.hp) ? p.hp : (tile.dataset.previousHp || p.hp))) * 55;
+      tile.style.animationDelay = changeDelay + 'ms';
       void tile.offsetWidth;
       tile.classList.add('health-changing');
       tile.addEventListener('animationend', function() {
