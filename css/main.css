@@ -365,6 +365,7 @@ button.primary-btn {
   transform: translate(var(--stack-x), var(--stack-y)) rotate(var(--stack-rotation));
   transform-origin: center center;
   overflow: hidden;
+  filter: grayscale(1);
 }
 
 .previous-monster-card .card {
