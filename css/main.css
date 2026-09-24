@@ -215,14 +215,36 @@ button.primary-btn {
 .player-character-inner {
   position: absolute;
   inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  text-align: center;
+  color: #000;
+}
+
+.player-header {
+  position: absolute;
+  top: 25%;
+  left: 8%;
+  right: 8%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4%;
+  line-height: 1.1;
+}
+
+.player-header strong,
+.player-hp {
+  color: #000;
+}
+
+.player-hp {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 8%;
   text-align: center;
-  z-index: 1;
-  pointer-events: none;
+  line-height: 1.1;
 }
 
 /* Deck and previous-monster cards live inside their ordinary card anchors. */
