@@ -189,47 +189,54 @@ button.primary-btn {
   border: 1px dashed var(--border);
   border-radius: 6px;
   box-sizing: border-box;
-  min-width: 0;
 }
 
 .player-card-grid {
+  display: block;
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
 }
 
+/* Exactly the same containment model as dungeon-card-wrap. The wrapper
+   occupies the measured slot; the actual card keeps its 2:3 shape inside it. */
 .player-card-wrap {
   position: absolute;
   box-sizing: border-box;
   pointer-events: none;
-  overflow: visible;
+  overflow: hidden;
   min-width: 0;
   min-height: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .player-card-wrap > .card {
+  position: absolute;
+  inset: 0;
+  margin: auto;
   width: auto;
   height: 100%;
   max-width: 100%;
   max-height: 100%;
-  flex: 0 1 auto;
+  min-width: 0;
+  min-height: 0;
   aspect-ratio: 2 / 3;
   object-fit: contain;
-  border: 0;
-  border-radius: 5px;
+  z-index: 1;
   pointer-events: auto;
+  overflow: hidden;
 }
 
-/* Keep the physical deck inside its four-card slot. The card-back PNG is
-   otherwise free to render at its intrinsic image size. */
+/* Deck: the wrapper is the slot, but the physical card is 2:3 and centred. */
 .deck-card {
-  position: relative;
-  width: 100%;
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: auto;
   height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 2 / 3;
   min-width: 0;
   min-height: 0;
 }
@@ -254,9 +261,16 @@ button.primary-btn {
   border-color: var(--red);
 }
 
+/* Player card artwork/content follows the same 2:3 card geometry. */
 .player-card-surface {
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: auto;
+  height: 100%;
+  aspect-ratio: 2 / 3;
+  transform: translateX(-50%);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -266,16 +280,21 @@ button.primary-btn {
 }
 
 .player-character-inner {
-  position: relative;
-  z-index: 1;
-  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: auto;
   height: 100%;
+  aspect-ratio: 2 / 3;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 4%;
   text-align: center;
+  z-index: 1;
 }
 
 .player-header {
