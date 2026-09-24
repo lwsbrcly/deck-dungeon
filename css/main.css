@@ -39,6 +39,7 @@ main {
   width: 100%;
   max-width: 667px;
   min-width: 0;
+  background: var(--bg);
 }
 
 /* Setup Screen */
