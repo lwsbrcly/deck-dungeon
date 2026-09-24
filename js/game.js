@@ -797,11 +797,9 @@ if (isFistFight) {
   // The monster and player now have stable animation destinations defined by
   // the fixed board slots. Use those anchors rather than the old card/panel
   // layout calculations.
-  var sourcePosition = getCardPosition('dungeon', state.selected);
-  var targetPosition = getCardPosition(
-    'player',
-    null,
-    player === 'both' ? 'p1' : player
+  var sourcePosition = getCanvasAnimationRect(sourceEl);
+  var targetPosition = getCanvasAnimationRect(
+    document.getElementById((player === 'both' ? 'p1' : player) + 'Panel')
   );
   if (!sourcePosition || !targetPosition) { done(); return; }
 
