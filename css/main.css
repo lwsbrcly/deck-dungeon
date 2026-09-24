@@ -162,7 +162,11 @@ button.primary-btn {
   transform-origin: top left;
   margin: 0;
   overflow: hidden;
-  background: var(--bg) url("../assets/dungeon/background.png") top left / 667px 1000px no-repeat;
+  background-color: var(--bg);
+  background-image: var(--background-image, url("../assets/dungeon/background.png"));
+  background-position: top left;
+  background-size: 667px 1000px;
+  background-repeat: no-repeat;
 }
 
 /* The six regions below use the 667 × 1000 artwork as their coordinate system. */
