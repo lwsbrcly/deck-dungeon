@@ -1207,34 +1207,8 @@ function resizeGameCanvas() {
   canvas.style.transform = 'scale(' + scale + ')';
 }
 
-function syncPlayerCardSlots() {
-  var board = document.getElementById('playersContainer');
-  var grid = document.getElementById('playerCardGrid');
-  if (!board || !grid) return;
-
-  var slots = board.querySelectorAll('.player-slot');
-  var boardRect = board.getBoundingClientRect();
-
-  var ids = ['p1Deck', 'p1Panel', 'p1Weapon', 'p1PreviousMonster'];
-
-  for (var i = 0; i < ids.length; i++) {
-    var wrap = document.getElementById(ids[i]);
-    var slot = slots[i];
-    if (!wrap || !slot) continue;
-
-    // Use the slot's own layout coordinates, not getBoundingClientRect().
-    // The game canvas is scaled with CSS, so viewport rects are already scaled
-    // and must not be written back as unscaled CSS pixel dimensions.
-    wrap.style.left = slot.offsetLeft + 'px';
-    wrap.style.top = slot.offsetTop + 'px';
-    wrap.style.width = slot.offsetWidth + 'px';
-    wrap.style.height = slot.offsetHeight + 'px';
-  }
-}
-
 function render() {
 resizeGameCanvas();
-syncPlayerCardSlots();
 var isSolo = state.mode !== 'coop';
 ['p1','p2'].forEach(function(id) {
   if (isSolo && id === 'p2') return;
