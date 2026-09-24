@@ -908,7 +908,7 @@ setTimeout(function() {
   impact.textContent = isFistFight ? '💥' : '⚔';
   impact.style.left = targetX + 'px';
   impact.style.top = targetY + 'px';
-  document.body.appendChild(impact);
+  document.querySelector('.game-canvas').appendChild(impact);
 
   // A weapon kill makes the monster leave the board at the moment of impact.
   // At the same moment, its memory is placed on the stack and begins a
