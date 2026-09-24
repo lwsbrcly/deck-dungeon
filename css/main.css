@@ -340,6 +340,7 @@ button.primary-btn {
   width: 16.5cqw;
   height: 16.5cqh;
   box-sizing: border-box;
+  overflow: visible;
 }
 
 .deck-card img {
