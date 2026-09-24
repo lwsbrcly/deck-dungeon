@@ -67,7 +67,7 @@ select, input { width: 100%; padding: 8px; background: var(--bg); border: 1px so
   grid-template-columns: repeat(3, 1fr);
   gap: 2px;
   padding: 2px;
-  background: var(--bg);
+  background: #fff;
   border: 1px solid var(--border);
   border-radius: 6px;
   overflow: hidden;
@@ -80,7 +80,7 @@ select, input { width: 100%; padding: 8px; background: var(--bg); border: 1px so
   padding: 0;
   border: 1px solid transparent;
   border-radius: 2px;
-  background: transparent;
+  background: #fff;
   cursor: pointer;
   overflow: hidden;
   touch-action: manipulation;
@@ -97,6 +97,7 @@ select, input { width: 100%; padding: 8px; background: var(--bg); border: 1px so
   object-fit: contain;
   image-rendering: pixelated;
   pointer-events: none;
+  background: #fff;
 }
 
 button.primary-btn { 
