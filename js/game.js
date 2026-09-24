@@ -1190,7 +1190,7 @@ function resizeGameCanvas() {
   var canvas = document.querySelector('.game-canvas');
   if (!gameEl || !canvas) return;
 
-  var available = Math.max(1, Math.min(667, window.innerWidth - 20));
+  var available = Math.min(667, window.innerWidth);
   var scale = available / 667;
 
   gameEl.style.width = (667 * scale) + 'px';
