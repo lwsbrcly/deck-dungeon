@@ -748,28 +748,26 @@ function clearPreviousMonsters() {
 
   discardSound();
 
-  var canvas = document.querySelector('.game-canvas');
-  if (!canvas) return;
-
+  // These are purely visual fade clones. Keep them in viewport coordinates,
+  // just like the flee animation, so canvas scaling/stack transforms cannot
+  // alter their position.
   for (var i = 0; i < stackCards.length; i++) {
     var monsterCardEl = stackCards[i];
-    var rect = getCanvasAnimationRect(monsterCardEl);
-    if (!rect) continue;
+    var rect = monsterCardEl.getBoundingClientRect();
 
     var clone = monsterCardEl.cloneNode(true);
     clone.classList.remove('selected', 'selection-hidden', 'action-hidden');
     clone.classList.add('action-clone', 'previous-monster-fade-clone');
 
+    clone.style.position = 'fixed';
     clone.style.left = rect.left + 'px';
     clone.style.top = rect.top + 'px';
     clone.style.width = rect.width + 'px';
     clone.style.height = rect.height + 'px';
 
     monsterCardEl.classList.add('action-hidden');
-    canvas.appendChild(clone);
+    document.body.appendChild(clone);
 
-    // animationend is the normal cleanup path; the timeout is a safety net
-    // so a hidden/removed animation can never leave a clone behind.
     var cleaned = false;
     var cleanup = function(el) {
       return function() {
