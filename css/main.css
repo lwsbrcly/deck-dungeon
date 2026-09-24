@@ -337,10 +337,12 @@ button.primary-btn {
 
 /* Deck and previous-monster cards live inside their ordinary card anchors. */
 .deck-card {
+  position: relative;
   width: 16.5cqw;
   height: 16.5cqh;
   box-sizing: border-box;
   overflow: visible;
+  z-index: 1100;
 }
 
 .deck-card img {
