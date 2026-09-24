@@ -1222,11 +1222,13 @@ function syncPlayerCardSlots() {
     var slot = slots[i];
     if (!wrap || !slot) continue;
 
-    var rect = slot.getBoundingClientRect();
-    wrap.style.left = (rect.left - boardRect.left) + 'px';
-    wrap.style.top = (rect.top - boardRect.top) + 'px';
-    wrap.style.width = rect.width + 'px';
-    wrap.style.height = rect.height + 'px';
+    // Use the slot's own layout coordinates, not getBoundingClientRect().
+    // The game canvas is scaled with CSS, so viewport rects are already scaled
+    // and must not be written back as unscaled CSS pixel dimensions.
+    wrap.style.left = slot.offsetLeft + 'px';
+    wrap.style.top = slot.offsetTop + 'px';
+    wrap.style.width = slot.offsetWidth + 'px';
+    wrap.style.height = slot.offsetHeight + 'px';
   }
 }
 
