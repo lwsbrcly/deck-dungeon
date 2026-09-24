@@ -431,14 +431,35 @@ if (moved.length) {
 if (animateRoom) animateRoomEntry(skipFirst);
 }
 
+function getCanvasAnimationRect(el) {
+  var canvas = document.querySelector('.game-canvas');
+  if (!canvas || !el) return null;
+
+  var canvasRect = canvas.getBoundingClientRect();
+  var scale = canvasRect.width / 667;
+  if (!scale) scale = 1;
+
+  var rect = el.getBoundingClientRect();
+  return {
+    left: (rect.left - canvasRect.left) / scale,
+    top: (rect.top - canvasRect.top) / scale,
+    width: rect.width / scale,
+    height: rect.height / scale,
+    right: (rect.right - canvasRect.left) / scale,
+    bottom: (rect.bottom - canvasRect.top) / scale,
+    centerX: (rect.left - canvasRect.left + rect.width / 2) / scale,
+    centerY: (rect.top - canvasRect.top + rect.height / 2) / scale
+  };
+}
+
 function animateCardAction(cardEl, targetEl, className, done, icon) {
 if (!cardEl) { done(); return; }
 // Hide the selection halo for the duration of the action, without changing
 // the actual selected state. The normal game render clears selection later.
 cardEl.classList.add('selection-hidden');
-var a = cardEl.getBoundingClientRect();
+var a = getCanvasAnimationRect(cardEl);
 var targetCard = targetEl ? (targetEl.classList.contains('card') ? targetEl : targetEl.querySelector('.card')) : null;
-var b = targetCard ? targetCard.getBoundingClientRect() : (targetEl ? targetEl.getBoundingClientRect() : null);
+var b = targetCard ? getCanvasAnimationRect(targetCard) : (targetEl ? getCanvasAnimationRect(targetEl) : null);
 var clone = cardEl.cloneNode(true);
 clone.classList.add('action-clone', className);
 clone.style.left = a.left + 'px';
@@ -461,7 +482,7 @@ if (b) {
   clone.style.setProperty('--hit-y', '0px');
 }
 cardEl.classList.add('action-hidden');
-document.body.appendChild(clone);
+document.querySelector('.game-canvas').appendChild(clone);
 if (icon && b) {
   setTimeout(function() {
     var impact = document.createElement('div');
@@ -469,7 +490,7 @@ if (icon && b) {
     impact.textContent = icon;
     impact.style.left = (b.left + b.width/2) + 'px';
     impact.style.top = (b.top + b.height/2) + 'px';
-    document.body.appendChild(impact);
+    document.querySelector('.game-canvas').appendChild(impact);
     setTimeout(function(){ impact.remove(); }, 280);
   }, 230);
 }
@@ -481,7 +502,7 @@ if (className.indexOf('equip') !== -1 && b) {
     sparks.className = 'equip-sparks';
     sparks.style.left = (b.left + b.width / 2) + 'px';
     sparks.style.top = (b.top + b.height / 2) + 'px';
-    document.body.appendChild(sparks);
+    document.querySelector('.game-canvas').appendChild(sparks);
     var game = document.getElementById('game');
     if (game) {
       game.classList.remove('combat-shake');
@@ -634,8 +655,8 @@ await Promise.all(waits);
 function animateMonsterToPrevious(cardEl, targetEl, monster, done) {
 if (!cardEl || !targetEl) { done(); return; }
 
-var a = cardEl.getBoundingClientRect();
-var b = targetEl.getBoundingClientRect();
+var a = getCanvasAnimationRect(cardEl);
+var b = getCanvasAnimationRect(targetEl);
 var clone = cardEl.cloneNode(true);
 clone.classList.add('action-clone', 'monster-equip-clone');
 clone.style.left = a.left + 'px';
@@ -650,7 +671,7 @@ clone.style.setProperty('--dy', (targetY - (a.top + a.height / 2)) + 'px');
 clone.style.setProperty('--stack-rotation', (monster.stackRotation || 0) + 'deg');
 
 cardEl.classList.add('action-hidden');
-document.body.appendChild(clone);
+document.querySelector('.game-canvas').appendChild(clone);
 
 setTimeout(function() {
   clone.remove();
@@ -795,12 +816,12 @@ if (isFistFight) {
   // then slams down. The monster disappears at impact and its memory
   // begins materialising on the previous-monster stack immediately.
   sourceEl = document.querySelector('#' + player + 'Weapon .card');
-  targetRect = targetEl.getBoundingClientRect();
+  targetRect = getCanvasAnimationRect(targetEl);
 }
 
 if (!sourceEl) { done(); return; }
 
-sourceRect = sourceEl.getBoundingClientRect();
+sourceRect = getCanvasAnimationRect(sourceEl);
 var sourceX = sourceRect.left + sourceRect.width / 2;
 var sourceY = sourceRect.top + sourceRect.height / 2;
 var targetX = targetRect.left + targetRect.width / 2;
@@ -831,7 +852,7 @@ clone.style.setProperty('--hit-y', isFistFight ? '3px' : '-3px');
 
 // Hide the real weapon while its animated copy is moving.
 sourceEl.classList.add('combat-hidden');
-document.body.appendChild(clone);
+document.querySelector('.game-canvas').appendChild(clone);
 
 if (isFistFight) ughSound(); else punchSound();
 
