@@ -385,6 +385,9 @@ function cardHTML(c, customCornerText) {
     var centerArt = '';
     var theme = THEMES[selectedTheme || 'dungeon'];
     var cardKey = c.suit + '_' + c.rank;
+    var monsterArt = theme && theme.artwork && theme.artwork.monsters
+      ? theme.artwork.monsters[c.name]
+      : null;
     var pngArt = theme && theme.artwork && theme.artwork.weapons
       ? theme.artwork.weapons[cardKey]
       : null;
@@ -392,7 +395,9 @@ function cardHTML(c, customCornerText) {
       ? theme.artwork.svgCards[cardKey]
       : null;
     
-    if (pngArt) {
+    if (monsterArt) {
+      centerArt = '<div class="card-art monster-art"><img src="' + monsterArt + '" alt=""></div>';
+    } else if (pngArt) {
       centerArt = '<div class="card-art png-art"><img src="' + pngArt + '" alt=""></div>';
     } else if (svgArt) {
       centerArt = '<div class="card-art">' + svgArt + '</div>';
