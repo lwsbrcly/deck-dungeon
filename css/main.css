@@ -65,7 +65,7 @@ select, input { width: 100%; padding: 8px; background: var(--bg); border: 1px so
   height: 200px;
   display: block;
   padding: 0;
-  background: #fff;
+  background: #D4C095;
   border: 1px solid var(--border);
   border-radius: 6px;
   overflow: hidden;
@@ -79,7 +79,7 @@ select, input { width: 100%; padding: 8px; background: var(--bg); border: 1px so
   padding: 0;
   border: 0;
   border-radius: 0;
-  background: #fff;
+  background: #D4C095;
   cursor: pointer;
   overflow: hidden;
   touch-action: manipulation;
@@ -96,7 +96,7 @@ select, input { width: 100%; padding: 8px; background: var(--bg); border: 1px so
   object-fit: contain;
   image-rendering: pixelated;
   pointer-events: none;
-  background: #fff;
+  background: #D4C095;
 }
 
 button.primary-btn { 
