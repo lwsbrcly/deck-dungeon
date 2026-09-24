@@ -390,7 +390,7 @@ function cardHTML(c, customCornerText) {
       : null;
     
     if (pngArt) {
-      centerArt = '<div class="card-art png-art" style="--card-art-image: url(\'' + pngArt + '\');"></div>';
+      centerArt = '<div class="card-art png-art"><img src="' + pngArt + '" alt=""></div>';
     } else if (svgArt) {
       centerArt = '<div class="card-art">' + svgArt + '</div>';
     } else {
