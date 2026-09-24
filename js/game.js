@@ -27,6 +27,7 @@ function selectTheme(theme) {
     selectedTheme = theme;
     applySelectedTheme();
     showScreen('rules');
+    showSetupScreen();
 }
 
 function showScreen(screenId) {
