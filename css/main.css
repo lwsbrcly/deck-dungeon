@@ -953,6 +953,7 @@ button.primary-btn {
   object-fit: contain;
   display: block;
   image-rendering: pixelated;
+  opacity: 0.8;
 }
 
 button { 
