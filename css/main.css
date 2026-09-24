@@ -907,16 +907,11 @@ button.primary-btn {
   stroke: currentColor;
 }
 
-.card-art.png-art {
-  background-color: currentColor;
-  -webkit-mask-image: var(--card-art-image);
-  mask-image: var(--card-art-image);
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: contain;
-  mask-size: contain;
+.card-art.png-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 button { 
