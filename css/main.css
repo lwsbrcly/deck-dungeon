@@ -926,8 +926,8 @@ button.primary-btn {
   top: 54%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 68%;
-  height: 68%;
+  width: 52%;
+  height: 52%;
   pointer-events: none;
   opacity: 0.95;
   display: flex;
