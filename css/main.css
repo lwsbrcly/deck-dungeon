@@ -47,6 +47,57 @@ main {
 label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
 select, input { width: 100%; padding: 8px; background: var(--bg); border: 1px solid var(--border); color: #fff; border-radius: 6px; font-size: 0.9rem; -webkit-appearance: none; appearance: none; }
 
+.player-setup-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.player-setup-row > input[type="text"] {
+  flex: 1;
+  min-width: 0;
+}
+
+.portrait-picker {
+  flex: 0 0 52px;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  padding: 2px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.portrait-option {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+.portrait-option.selected {
+  border-color: var(--highlight);
+}
+
+.portrait-option img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
 button.primary-btn { 
   width: 100%; 
   padding: 12px; 
@@ -223,7 +274,7 @@ button.primary-btn {
 
 .player-header {
   position: absolute;
-  top: 20%;
+  top: 22%;
   left: 8%;
   right: 8%;
   display: flex;
@@ -252,8 +303,8 @@ button.primary-btn {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 90px;
-  height: 90px;
+  width: 85px;
+  height: 85px;
   object-fit: contain;
   transform: translate(-50%, -50%);
   image-rendering: pixelated;
