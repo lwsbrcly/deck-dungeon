@@ -107,10 +107,10 @@ button.primary-btn {
   position: relative;
   width: 667px;
   height: 1000px;
-  transform-origin: top center;
-  margin: 0 auto;
+  transform-origin: top left;
+  margin: 0;
   overflow: hidden;
-  background: var(--bg) url("../assets/dungeon/background.png") top center / 667px 1000px no-repeat;
+  background: var(--bg) url("../assets/dungeon/background.png") top left / 667px 1000px no-repeat;
 }
 
 /* The six regions below use the 667 × 1000 artwork as their coordinate system. */
