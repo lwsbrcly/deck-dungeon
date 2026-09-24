@@ -95,6 +95,7 @@
 
 .screen {
     display: none;
+    background: var(--bg);
 }
 
 .screen.active {
