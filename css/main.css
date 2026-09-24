@@ -218,8 +218,11 @@ button.primary-btn {
 
 .player-card-wrap > .card {
   position: absolute;
-  inset: 0;
-  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  right: auto;
+  margin: 0;
   width: auto;
   height: 100%;
   max-width: 100%;
@@ -227,18 +230,28 @@ button.primary-btn {
   min-width: 0;
   min-height: 0;
   aspect-ratio: 2 / 3;
+  transform: translateX(-50%);
   object-fit: contain;
   z-index: 1;
   pointer-events: auto;
   overflow: hidden;
 }
 
-/* Deck: the wrapper is the slot, but the physical card is 2:3 and centred. */
+/* The wrapper is the dotted destination slot. The physical card inside it
+   is always 2:3, centred in exactly the same way as a dungeon card. */
 .deck-card {
   position: absolute;
-  inset: 0;
-  width: 100%;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  right: auto;
+  margin: 0;
+  width: auto;
   height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 2 / 3;
+  transform: translateX(-50%);
   box-sizing: border-box;
 }
 
@@ -265,7 +278,14 @@ button.primary-btn {
 /* Player card artwork/content follows the same 2:3 card geometry. */
 .player-card-surface {
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  right: auto;
+  width: auto;
+  height: 100%;
+  aspect-ratio: 2 / 3;
+  transform: translateX(-50%);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -276,7 +296,14 @@ button.primary-btn {
 
 .player-character-inner {
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  right: auto;
+  width: auto;
+  height: 100%;
+  aspect-ratio: 2 / 3;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -415,8 +442,11 @@ button.primary-btn {
 
 .dungeon-card-wrap .card {
   position: absolute;
-  inset: 0;
-  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  right: auto;
+  margin: 0;
   width: auto;
   height: 100%;
   max-width: 100%;
@@ -424,6 +454,7 @@ button.primary-btn {
   min-width: 0;
   min-height: 0;
   aspect-ratio: 2 / 3;
+  transform: translateX(-50%);
   object-fit: contain;
   z-index: 1;
   pointer-events: auto;
@@ -486,9 +517,15 @@ button.primary-btn {
 
 /* Previous-monster pile stays inside its player slot. */
 .previous-monster-stack {
-  position: relative;
-  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  right: auto;
+  width: auto;
   height: 100%;
+  aspect-ratio: 2 / 3;
+  transform: translateX(-50%);
   overflow: visible;
 }
 
