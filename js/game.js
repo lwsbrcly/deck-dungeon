@@ -588,7 +588,8 @@ var cards = document.querySelectorAll('#dungeon .dungeon-card-wrap .card:not(.em
 var startIndex = skipFirst ? 1 : 0;
 var animated = [];
 var deckEl = document.getElementById('p1Deck');
-var deckRect = deckEl ? deckEl.getBoundingClientRect() : null;
+var deckCardEl = deckEl ? deckEl.querySelector('.deck-card') : null;
+var deckRect = deckCardEl ? deckCardEl.getBoundingClientRect() : (deckEl ? deckEl.getBoundingClientRect() : null);
 
 // Deal each card from the deck, with a small stagger so they arrive
 // one at a time rather than looking like a single group movement.
