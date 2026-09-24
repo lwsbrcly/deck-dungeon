@@ -662,14 +662,17 @@ if (!cards || !cards.length) return;
 fleeSound();
 
 var deckEl = document.getElementById('p1Deck');
-var deckRect = deckEl ? deckEl.getBoundingClientRect() : null;
+var deckCardEl = deckEl ? deckEl.querySelector('.deck-card') : null;
+var deckRect = deckCardEl ? getCanvasAnimationRect(deckCardEl) : (deckEl ? getCanvasAnimationRect(deckEl) : null);
 
 // All four cards return to the deck together. The only wait here is until
 // the entire fleeing room has finished, so the replacement room cannot appear early.
 var waits = [];
 for (var i = 0; i < cards.length; i++) {
   var card = cards[i];
-  var rect = card.getBoundingClientRect();
+  var rect = getCanvasAnimationRect(card);
+  if (!rect) continue;
+
   // Keep the selected state intact, but hide its visual halo while the card flies.
   card.classList.add('selection-hidden');
   var clone = card.cloneNode(true);
@@ -688,7 +691,7 @@ for (var i = 0; i < cards.length; i++) {
   }
 
   card.classList.add('action-hidden');
-  document.body.appendChild(clone);
+  document.querySelector('.game-canvas').appendChild(clone);
   waits.push(waitForAnimation(clone).then(function(c, el) {
     return function() {
       c.remove();
