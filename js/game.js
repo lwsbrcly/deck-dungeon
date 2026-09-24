@@ -735,29 +735,49 @@ var targetEl = document.getElementById(player + 'Weapon');
 saveState();
 var old = p.weapon;
 
-var previousStack = player === 'p1' ? document.querySelectorAll('#p1PreviousMonster .previous-monster-card .card') : [];
-
 function clearPreviousMonsters() {
-  if (!previousStack.length) return;
+  if (player !== 'p1') return;
+
+  var stackCards = Array.prototype.slice.call(
+    document.querySelectorAll('#p1PreviousMonster .previous-monster-card .card')
+  );
+  if (!stackCards.length) return;
 
   discardSound();
-  for (var i = 0; i < previousStack.length; i++) {
-    var monsterCardEl = previousStack[i];
-    var rect = monsterCardEl.getBoundingClientRect();
+
+  var canvas = document.querySelector('.game-canvas');
+  if (!canvas) return;
+
+  for (var i = 0; i < stackCards.length; i++) {
+    var monsterCardEl = stackCards[i];
+    var rect = getCanvasAnimationRect(monsterCardEl);
+    if (!rect) continue;
+
     var clone = monsterCardEl.cloneNode(true);
-    clone.classList.add('action-clone', 'previous-monster-discard-clone');
+    clone.classList.remove('selected', 'selection-hidden', 'action-hidden');
+    clone.classList.add('action-clone', 'previous-monster-fade-clone');
+
     clone.style.left = rect.left + 'px';
     clone.style.top = rect.top + 'px';
     clone.style.width = rect.width + 'px';
     clone.style.height = rect.height + 'px';
-    clone.style.setProperty('--dx', (window.innerWidth - rect.left + 80) + 'px');
-    clone.style.setProperty('--dy', ((i % 2 ? -1 : 1) * (8 + i * 3)) + 'px');
-    monsterCardEl.classList.add('action-hidden');
-    document.body.appendChild(clone);
 
-    clone.addEventListener('animationend', function() {
-      clone.remove();
-    }, { once: true });
+    monsterCardEl.classList.add('action-hidden');
+    canvas.appendChild(clone);
+
+    // animationend is the normal cleanup path; the timeout is a safety net
+    // so a hidden/removed animation can never leave a clone behind.
+    var cleaned = false;
+    var cleanup = function(el) {
+      return function() {
+        if (cleaned) return;
+        cleaned = true;
+        el.remove();
+      };
+    }(clone);
+
+    clone.addEventListener('animationend', cleanup, { once: true });
+    setTimeout(cleanup, 650);
   }
 }
 
@@ -770,7 +790,8 @@ var finishEquip = function() {
   checkGame(); renderAfterAction();
 };
 
-// Start both animations together.
+// Start the previous-monster fade at the same time as the weapon equip.
+// It is purely visual and never holds up the board/state update.
 clearPreviousMonsters();
 animateCardAction(cardEl, targetEl, 'equip-clone', finishEquip);
 }
@@ -839,26 +860,17 @@ var ghost = null;
 if (isFistFight) {
   // Bare-handed combat: the monster itself lunges up at the player.
   sourceEl = targetEl;
-
-  // The monster and player now have stable animation destinations defined by
-  // the fixed board slots. Use those anchors rather than the old card/panel
-  // layout calculations.
   var sourcePosition = getCanvasAnimationRect(sourceEl);
   var targetPosition = getCanvasAnimationRect(
     document.getElementById((player === 'both' ? 'p1' : player) + 'Panel')
   );
   if (!sourcePosition || !targetPosition) { done(); return; }
-
   sourceRect = sourcePosition;
   targetRect = targetPosition;
-
-  // Fist-fight animations clone the selected monster, so suppress the halo
-  // visually without touching state.selected.
   sourceEl.classList.add('selection-hidden');
 } else if (player === 'p1' || player === 'p2') {
   // Weapon combat: the weapon travels to the monster while rising,
-  // then slams down. The monster disappears at impact and its memory
-  // begins materialising on the previous-monster stack immediately.
+  // slams down, then returns to its starting position.
   sourceEl = document.querySelector('#' + player + 'Weapon .card');
   targetRect = getCanvasAnimationRect(targetEl);
 }
@@ -873,11 +885,9 @@ var targetY = targetRect.top + targetRect.height / 2;
 
 clone = sourceEl.cloneNode(true);
 clone.classList.add('combat-clone');
-if (isFistFight) {
-  clone.classList.add('combat-monster');
-} else {
-  clone.classList.add('combat-weapon');
-}
+if (isFistFight) clone.classList.add('combat-monster');
+else clone.classList.add('combat-weapon');
+
 clone.style.left = sourceRect.left + 'px';
 clone.style.top = sourceRect.top + 'px';
 clone.style.width = sourceRect.width + 'px';
@@ -887,14 +897,11 @@ clone.style.setProperty('--dy', (targetY - sourceY) + 'px');
 clone.style.setProperty('--hit-x', isFistFight ? '-5px' : '5px');
 
 if (!isFistFight) {
-  var strikeDx = targetX - sourceX;
-  var strikeDy = targetY - sourceY;
-  clone.style.setProperty('--strike-dx', strikeDx + 'px');
-  clone.style.setProperty('--strike-dy', strikeDy + 'px');
+  clone.style.setProperty('--strike-dx', (targetX - sourceX) + 'px');
+  clone.style.setProperty('--strike-dy', (targetY - sourceY) + 'px');
 }
 clone.style.setProperty('--hit-y', isFistFight ? '3px' : '-3px');
 
-// Hide the real weapon while its animated copy is moving.
 sourceEl.classList.add('combat-hidden');
 document.querySelector('.game-canvas').appendChild(clone);
 
@@ -910,30 +917,29 @@ setTimeout(function() {
   impact.style.top = targetY + 'px';
   document.querySelector('.game-canvas').appendChild(impact);
 
-  // A weapon kill makes the monster leave the board at the moment of impact.
-  // At the same moment, its memory is placed on the stack and begins a
-  // long, quiet fade into existence.
   if (!isFistFight) {
+    // The monster disappears exactly when the weapon lands on it.
     targetEl.classList.add('combat-hidden');
 
     if (ghostInfo && ghostInfo.targetEl && ghostInfo.monster) {
-      // Keep the newly-created memory hidden across the normal game render
-      // while the separate ghost clone materialises over the existing stack.
-      activeGhostMemoryId = ghostInfo.monster._ghostId;
-      var ghostTarget = ghostInfo.targetEl.getBoundingClientRect();
-      ghost = targetEl.cloneNode(true);
-      // targetEl is already hidden at impact, so remove that state from the
-      // clone. The ghost must be visible at opacity 0 for the full fade.
-      ghost.classList.remove('combat-hidden', 'selected', 'selection-hidden');
-      ghost.classList.add('combat-ghost');
-      ghost.style.left = ghostTarget.left + 'px';
-      ghost.style.top = ghostTarget.top + 'px';
-      ghost.style.width = ghostTarget.width + 'px';
-      ghost.style.height = ghostTarget.height + 'px';
-      ghost.style.setProperty('--ghost-x', (ghostInfo.monster.stackX || 0) + 'px');
-      ghost.style.setProperty('--ghost-y', (ghostInfo.monster.stackY || 0) + 'px');
-      ghost.style.setProperty('--ghost-rotation', (ghostInfo.monster.stackRotation || 0) + 'deg');
-      document.body.appendChild(ghost);
+      var canvas = document.querySelector('.game-canvas');
+      var ghostTarget = getCanvasAnimationRect(ghostInfo.targetEl);
+
+      if (canvas && ghostTarget) {
+        activeGhostMemoryId = ghostInfo.monster._ghostId;
+
+        ghost = targetEl.cloneNode(true);
+        ghost.classList.remove('combat-hidden', 'selected', 'selection-hidden');
+        ghost.classList.add('combat-ghost');
+        ghost.style.left = ghostTarget.left + 'px';
+        ghost.style.top = ghostTarget.top + 'px';
+        ghost.style.width = ghostTarget.width + 'px';
+        ghost.style.height = ghostTarget.height + 'px';
+        ghost.style.setProperty('--ghost-x', (ghostInfo.monster.stackX || 0) + 'px');
+        ghost.style.setProperty('--ghost-y', (ghostInfo.monster.stackY || 0) + 'px');
+        ghost.style.setProperty('--ghost-rotation', (ghostInfo.monster.stackRotation || 0) + 'deg');
+        canvas.appendChild(ghost);
+      }
     }
   }
 
@@ -946,21 +952,20 @@ setTimeout(function() {
   sourceEl.classList.remove('combat-hidden');
 
   if (!isFistFight && ghost) {
-    // The ghost is purely visual. Let the game state/UI commit immediately
-    // when the weapon returns; the ghost can finish fading independently.
+    // The board is allowed to update immediately. The real state card stays
+    // hidden until the 900ms visual materialisation has finished.
+    targetEl.classList.remove('combat-hidden');
+    done();
+
     setTimeout(function() {
       ghost.remove();
       activeGhostMemoryId = null;
       render();
-    }, 1000);
-    targetEl.classList.remove('combat-hidden');
-    done();
+    }, 950);
     return;
   }
 
-  if (!isFistFight) {
-    targetEl.classList.remove('combat-hidden');
-  }
+  if (!isFistFight) targetEl.classList.remove('combat-hidden');
   done();
 }, isFistFight ? 430 : 700);
 }
@@ -1041,7 +1046,7 @@ function fight(player, mode) {
         var pileIndex = p.previousMonsters.length;
         previousMonster.stackX = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
         previousMonster.stackY = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
-        previousMonster.stackRotation = pileIndex === 0 ? 0 : (Math.random() * 10 - 5);
+        previousMonster.stackRotation = (Math.random() < 0.5 ? -1 : 1) * (3 + Math.random() * 4);
         p.previousMonsters.push(previousMonster);
     
         ghostInfo = {
