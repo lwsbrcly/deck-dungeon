@@ -447,12 +447,7 @@ clone.style.height = a.height + 'px';
 if (b) {
   var targetX = b.left + b.width / 2;
   var targetY = b.top + b.height / 2;
-  if (className.indexOf('equip') !== -1) {
-    var slot = targetEl.parentElement;
-    var sr = slot ? slot.getBoundingClientRect() : b;
-    targetX = sr.left + sr.width / 2;
-    targetY = sr.top + sr.height / 2;
-  } else if (className.indexOf('consume') !== -1) {
+  if (className.indexOf('consume') !== -1) {
     // Aim at the player's card row rather than the panel centre.
     var cardSlots = targetEl.querySelector('.player-card-slots');
     var cr = cardSlots ? cardSlots.getBoundingClientRect() : b;
@@ -1166,8 +1161,8 @@ function getCardPosition(kind, index, playerId) {
   } else if (kind === 'previousMonster') {
     el = document.getElementById(id + 'PreviousMonster');
   } else if (kind === 'dungeon') {
-    var slots = document.querySelectorAll('.dungeon-slot');
-    el = slots[index] || null;
+    var cards = document.querySelectorAll('#dungeon .dungeon-card-wrap');
+    el = cards[index] || null;
   }
 
   if (!el) return null;
