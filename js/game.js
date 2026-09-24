@@ -229,6 +229,12 @@ var p2Panel = document.getElementById('p2Panel');
 document.getElementById('p1DisplayName').textContent = p1Name;
 document.getElementById('p2DisplayName').textContent = p2Name;
 
+var p1Portrait = document.getElementById('p1Portrait');
+if (p1Portrait) {
+  var portraitNumber = Math.floor(Math.random() * 15) + 1;
+  p1Portrait.src = 'assets/portraits/' + portraitNumber + '.png';
+}
+
 if (mode !== 'coop') {
   p2Panel.style.display = 'none';
   playersContainer.classList.add('solo-mode');
