@@ -12,14 +12,14 @@ const THEMES = {
 
                 monsters: {
         'Rat': 'assets/dungeon/monsters/rat.png',
-        'Cave Spider': 'assets/dungeon/monsters/cave-spider.png',
+        'Cave Spider': 'assets/dungeon/monsters/cave_spider.png',
         'Wolf': 'assets/dungeon/monsters/wolf.png',
         'Goblin': 'assets/dungeon/monsters/goblin.png',
         'Orc': 'assets/dungeon/monsters/something.png',
         'Shaman': 'assets/dungeon/monsters/shaman.png',
         'Bandit': 'assets/dungeon/monsters/bandit.png',
         'Gladiator': 'assets/dungeon/monsters/gladiator.png',
-        'Dark Wizard': 'assets/dungeon/monsters/dark-wizard.png',
+        'Dark Wizard': 'assets/dungeon/monsters/dark_wizard.png',
         'Minotaur': 'assets/dungeon/monsters/minotaur.png',
         'Ogre': 'assets/dungeon/monsters/ogre.png',
         'Giant': 'assets/dungeon/monsters/giant.png',
@@ -36,8 +36,8 @@ const THEMES = {
         'Necromancer': 'assets/dungeon/monsters/necromancer.png',
         'Vampire': 'assets/dungeon/monsters/vampire.png',
         'Mummy': 'assets/dungeon/monsters/mummy.png',
-        'Lich King': 'assets/dungeon/monsters/lich-king.png',
-        'Bone Dragon': 'assets/dungeon/monsters/bone-dragon.png'
+        'Lich King': 'assets/dungeon/monsters/lich_king.png',
+        'Bone Dragon': 'assets/dungeon/monsters/bone_dragon.png'
     },
             
 
