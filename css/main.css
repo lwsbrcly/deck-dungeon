@@ -173,7 +173,7 @@ button.primary-btn {
   width: 74.9625%;
   height: 5.4%;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .canvas-room-track {
@@ -184,6 +184,20 @@ button.primary-btn {
   height: 5.4%;
   display: flex;
   align-items: center;
+}
+
+.room-track {
+  display: flex;
+  align-items: flex-start;
+}
+
+.room-tile {
+  display: block;
+}
+
+.room-connector {
+  display: block;
+  align-self: center;
 }
 
 .canvas-player-area {
