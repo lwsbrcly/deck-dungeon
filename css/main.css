@@ -562,7 +562,6 @@ button.primary-btn {
 .discard-clone { animation: discard-card 560ms cubic-bezier(.35,.05,.75,.2) forwards; }
 
 .previous-monster-fade-clone {
-  transform: none !important;
   animation: previous-monster-fade 550ms ease-out forwards;
 }
 
