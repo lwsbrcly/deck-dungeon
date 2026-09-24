@@ -437,7 +437,8 @@ if (!cardEl) { done(); return; }
 // the actual selected state. The normal game render clears selection later.
 cardEl.classList.add('selection-hidden');
 var a = cardEl.getBoundingClientRect();
-var b = targetEl ? targetEl.getBoundingClientRect() : null;
+var targetCard = targetEl ? (targetEl.classList.contains('card') ? targetEl : targetEl.querySelector('.card')) : null;
+var b = targetCard ? targetCard.getBoundingClientRect() : (targetEl ? targetEl.getBoundingClientRect() : null);
 var clone = cardEl.cloneNode(true);
 clone.classList.add('action-clone', className);
 clone.style.left = a.left + 'px';
@@ -448,11 +449,11 @@ if (b) {
   var targetX = b.left + b.width / 2;
   var targetY = b.top + b.height / 2;
   if (className.indexOf('consume') !== -1) {
-    // Aim at the player's card row rather than the panel centre.
-    var cardSlots = targetEl.querySelector('.player-card-slots');
-    var cr = cardSlots ? cardSlots.getBoundingClientRect() : b;
-    targetX = cr.left + cr.width / 2;
-    targetY = cr.top + cr.height / 2;
+    // Consume is a card-to-card animation. The player panel is itself the
+    // physical target card, so use its actual card rect rather than a
+    // legacy inner-slot element.
+    targetX = b.left + b.width / 2;
+    targetY = b.top + b.height / 2;
   }
   clone.style.setProperty('--dx', (targetX - (a.left + a.width/2)) + 'px');
   clone.style.setProperty('--dy', (targetY - (a.top + a.height/2)) + 'px');
