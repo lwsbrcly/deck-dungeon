@@ -10,13 +10,110 @@ const THEMES = {
             card: 'assets/dungeon/card.png',
             back: 'assets/dungeon/back.png',
 
-            weapons: {
-                'diamonds_5': 'assets/dungeon/mace.png',
-                'diamonds_7': 'assets/dungeon/battleaxe.png',
-                'diamonds_8': 'assets/dungeon/warhammer.png',
-            },
             
-            svgCards: {
+Generated image: Monochrome Retro RPG Character Grid
+
+
+Add to Favorites
+
+
+1000042799.png
+ok, but more in this sort of style. a head portrait, rather than full body but yeh mostly monochrome pixel art is what i'm after
+
+Generated image: Monochrome Pixel RPG Portrait Sheet
+
+
+Add to Favorites
+
+
+772437a2-715e-4359-9657-d2dedd5b1812.jpeg
+37c8172f-607d-4d44-8747-ac994d973f6f.jpeg
+c3bc9d4b-5a69-45a0-82c4-ef110ed3105d.jpeg
+ok nice. i feel like we need to complete the picture stack asap. i've added 3 picture examples, wolf, dragon, and bone-dragon. can you read the remaining monster list in the themes and draw pictures for each? much like you did for the player portraits earlier. 90s video game pixel art, mostly monochrome, head/face portraits, square ratio
+
+Generated image: Monochrome Pixel Monster Portrait Grid
+
+
+
+Add to Favorites
+
+
+Generated image: Monochrome Pixel Monster Sprite Sheet
+
+
+Add to Favorites
+
+
+Generated image: Monochrome Pixel Horror Portrait Grid
+
+
+
+Add to Favorites
+
+
+Generated image: Monochrome RPG Monster Icon Sheet
+
+
+Add to Favorites
+
+
+Generated image: Monochrome Pixel Monster Portrait Grid
+
+
+Add to Favorites
+
+
+cool thanks. so for the weapons and food, we have some svgs in code, but for the monsters we'll have these probably saved as png - how do we best code that in? to get the correct picture on each card?
+
+Yes — and I think PNG is actually the better approach for the monsters given the style you're going for.
+
+The nice thing is that your existing theme structure already gives us a very clean place to hook this in.
+
+I'd structure the monster artwork like this
+For the Dungeon theme, we'd add something alongside card, back, etc.:
+
+artwork: {
+    logo: 'assets/dungeon/logo.png',
+    card: 'assets/dungeon/card.png',
+    back: 'assets/dungeon/back.png',
+
+    monsters: {
+        'Rat': 'assets/dungeon/monsters/rat.png',
+        'Cave Spider': 'assets/dungeon/monsters/cave-spider.png',
+        'Wolf': 'assets/dungeon/monsters/wolf.png',
+        'Goblin': 'assets/dungeon/monsters/goblin.png',
+        'Orc': 'assets/dungeon/monsters/something.png',
+        'Shaman': 'assets/dungeon/monsters/shaman.png',
+        'Bandit': 'assets/dungeon/monsters/bandit.png',
+        'Gladiator': 'assets/dungeon/monsters/gladiator.png',
+        'Dark Wizard': 'assets/dungeon/monsters/dark-wizard.png',
+        'Minotaur': 'assets/dungeon/monsters/minotaur.png',
+        'Ogre': 'assets/dungeon/monsters/ogre.png',
+        'Giant': 'assets/dungeon/monsters/giant.png',
+        'Dragon': 'assets/dungeon/monsters/dragon.png',
+
+        'Spooky Fog': 'assets/dungeon/monsters/fog.png',
+        'Slime': 'assets/dungeon/monsters/slime.png',
+        'Snakes': 'assets/dungeon/monsters/snakes.png',
+        'Skeleton': 'assets/dungeon/monsters/skeleton.png',
+        'Zombie': 'assets/dungeon/monsters/zombie.png',
+        'Ghost': 'assets/dungeon/monsters/ghost.png',
+        'Ghoul': 'assets/dungeon/monsters/ghoul.png',
+        'Wraith': 'assets/dungeon/monsters/wraith.png',
+        'Necromancer': 'assets/dungeon/monsters/necromancer.png',
+        'Vampire': 'assets/dungeon/monsters/vampire.png',
+        'Mummy': 'assets/dungeon/monsters/mummy.png',
+        'Lich King': 'assets/dungeon/monsters/lich-king.png',
+        'Bone Dragon': 'assets/dungeon/monsters/bone-dragon.png'
+    },
+            
+    weapons: {
+        'diamonds_5': 'assets/dungeon/mace.png',
+        'diamonds_7': 'assets/dungeon/battleaxe.png',
+        'diamonds_8': 'assets/dungeon/warhammer.png',
+    },
+    
+    svgCards: {
                 old_clubs_A: `<svg viewBox="0 0 723 702" xmlns="http://www.w3.org/2000/svg">
 <g stroke="currentColor" stroke-width="21" stroke-linecap="round" stroke-linejoin="round" fill="none" transform="translate(-414 -1110)">
   <path d="M763.5 1800.5C800.039 1754.83 834.091 1714.13 843.848 1669.8 853.605 1625.47 834.283 1595.24 820.891 1573.5"/>
