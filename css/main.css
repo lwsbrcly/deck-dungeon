@@ -176,6 +176,22 @@ button.primary-btn {
   align-items: flex-end;
 }
 
+.health-track {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.health-tile {
+  flex: 1 1 0;
+  min-width: 0;
+  width: 0;
+  height: 100%;
+  object-fit: fill;
+  display: block;
+}
+
 .canvas-room-track {
   position: absolute;
   left: 12.8935%;
