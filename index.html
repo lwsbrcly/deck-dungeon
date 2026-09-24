@@ -167,20 +167,12 @@
                     <!-- 1. HP TRACK -->
                     <div id="p1Bar" class="ascii-health-bar canvas-health-track"></div>
 
-                    <!-- 2. PLAYER BOARD — four fixed destinations + independent card layer -->
-                    <div class="player-area canvas-player-area" id="playersContainer">
-                        <div class="player-slots" aria-hidden="true">
-                            <div class="player-slot"></div>
-                            <div class="player-slot"></div>
-                            <div class="player-slot"></div>
-                            <div class="player-slot"></div>
-                        </div>
+                    <!-- 2. PLAYER CARDS — four cards in the artwork-defined player area -->
+                    <div class="card-area canvas-player-area" id="playersContainer">
+                        <div class="card-grid" id="playerCardGrid">
+                            <div id="p1Deck" class="card-anchor" aria-label="Deck"></div>
 
-                        <div class="player-card-grid" id="playerCardGrid">
-                            <div id="p1Deck" class="player-card-wrap" aria-label="Deck"></div>
-
-                            <div id="p1Panel" class="player-card-wrap player-character-card" aria-label="Player">
-                                <div class="player-card-surface" aria-hidden="true"></div>
+                            <div id="p1Panel" class="card player-character-card" aria-label="Player">
                                 <div class="player-character-inner">
                                     <div class="player-header">
                                         <strong id="p1DisplayName">Hero 1</strong>
@@ -190,26 +182,17 @@
                                 </div>
                             </div>
 
-                            <div id="p1Weapon" class="player-card-wrap" aria-label="Weapon"></div>
-
-                            <div id="p1PreviousMonster" class="player-card-wrap" aria-label="Previous Monster"></div>
+                            <div id="p1Weapon" class="card-anchor" aria-label="Weapon"></div>
+                            <div id="p1PreviousMonster" class="card-anchor" aria-label="Previous Monster"></div>
                         </div>
                     </div>
 
                     <!-- 3. ROOM TRACK -->
                     <div id="deckProgress" class="ascii-dungeon-progress canvas-room-track"></div>
 
-                    <!-- 4. DUNGEON AREA — four fixed destinations -->
-                    <div class="dungeon-section canvas-dungeon-area">
-                        <div class="dungeon-board">
-                            <div class="dungeon-slots" aria-hidden="true">
-                                <div class="dungeon-slot"></div>
-                                <div class="dungeon-slot"></div>
-                                <div class="dungeon-slot"></div>
-                                <div class="dungeon-slot"></div>
-                            </div>
-                            <div class="dungeon-grid" id="dungeon"></div>
-                        </div>
+                    <!-- 4. DUNGEON CARDS — four cards in the artwork-defined dungeon area -->
+                    <div class="card-area canvas-dungeon-area">
+                        <div class="card-grid" id="dungeon"></div>
                     </div>
 
                     <!-- 5. BUTTONS -->
