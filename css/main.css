@@ -206,6 +206,7 @@ button.primary-btn {
   top: 27.8%;
   width: 77.961% ;
   height: 16.5%;
+  overflow: visible;
 }
 
 
@@ -264,6 +265,7 @@ button.primary-btn {
   height: 16.5cqh;
   min-width: 0;
   min-height: 0;
+  overflow: visible;
   pointer-events: none;
 }
 
@@ -349,6 +351,7 @@ button.primary-btn {
   max-width: none;
   max-height: none;
   object-fit: cover;
+  transform: translate(calc(var(--deck-offset) * -0.5), calc(var(--deck-offset) * -0.5));
 }
 
 .previous-monster-stack {
