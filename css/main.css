@@ -235,16 +235,17 @@ button.primary-btn {
 
 .player-header strong,
 .player-hp {
-  color: #000;
-}
-
-.player-hp {
   position: absolute;
-  left: 8%;
-  right: 8%;
-  bottom: 8%;
+  left: 5%;
+  right: 5%;
+  bottom: 10%;
+  width: 90%;
+  color: #000;
+  font-size: 0.8rem;
+  font-weight: bold;
   text-align: center;
-  line-height: 1.1;
+  line-height: 1.05;
+  white-space: nowrap;
 }
 
 /* Deck and previous-monster cards live inside their ordinary card anchors. */
