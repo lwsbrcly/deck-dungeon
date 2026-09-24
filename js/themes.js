@@ -424,6 +424,7 @@ const THEMES = {
             logo: 'assets/shaun/logo.png',
             card: 'assets/shaun/card.png',
             back: 'assets/shaun/back.png',
+            background: 'assets/shaun/background.webp',
         },
 
         //audio: {},
