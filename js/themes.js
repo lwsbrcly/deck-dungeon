@@ -11,9 +11,9 @@ const THEMES = {
             back: 'assets/dungeon/back.png',
 
             weapons: {
-                'Mace': 'assets/dungeon/mace.png',
-                'Battle Axe': 'assets/dungeon/battleaxe.png',
-                'Warhammer': 'assets/dungeon/warhammer.png',
+                'diamonds_5': 'assets/dungeon/mace.png',
+                'diamonds_7': 'assets/dungeon/battleaxe.png',
+                'diamonds_8': 'assets/dungeon/warhammer.png',
             }
             
             svgCards: {
