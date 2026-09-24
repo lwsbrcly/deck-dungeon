@@ -322,8 +322,8 @@ const THEMES = {
         //audio: {},
             
         colours: {
-            bg: "transparent", //"19191a",
-            panelBg: "0E253D",
+            bg: "#19191a",
+            panelBg: "#0E253D",
             border: "#B0843C",
             text: "#CDA655",
             muted: "#8f8e8d",
