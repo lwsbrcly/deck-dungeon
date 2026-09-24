@@ -1046,7 +1046,7 @@ function fight(player, mode) {
         var pileIndex = p.previousMonsters.length;
         previousMonster.stackX = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
         previousMonster.stackY = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
-        previousMonster.stackRotation = (Math.random() < 0.5 ? -1 : 1) * (3 + Math.random() * 4);
+        previousMonster.stackRotation = pileIndex === 0 ? 0 : (Math.random() < 0.5 ? -1 : 1) * (2 + Math.random() * 3);
         p.previousMonsters.push(previousMonster);
     
         ghostInfo = {
