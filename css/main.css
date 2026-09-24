@@ -432,7 +432,12 @@ button.primary-btn {
   padding: 0 6px;
   line-height: 1;
   white-space: nowrap;
-  font-size: 0.72rem;
+  font-size: 0.94rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
 }
 
 .action-button-hidden { visibility: hidden; }
