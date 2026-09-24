@@ -869,6 +869,17 @@ button.primary-btn {
   text-align: left;
 }
 
+.card-value-corner {
+  position: absolute;
+  top: 7%;
+  right: 10%;
+  font-weight: bold;
+  font-size: 0.75rem;
+  line-height: 1.05;
+  z-index: 2;
+  text-align: right;
+}
+
 .card-title {
   position: absolute;
   left: 5%;
