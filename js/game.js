@@ -93,6 +93,42 @@ function undoFromGameOver() {
     render();
 }
 
+function initPortraitPicker(playerId) {
+  var picker = document.getElementById(playerId + 'PortraitPicker');
+  var input = document.getElementById(playerId + 'PortraitInput');
+  if (!picker || !input) return;
+
+  picker.innerHTML = '';
+  for (var i = 1; i <= 15; i++) {
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'portrait-option';
+    button.dataset.portrait = String(i);
+    button.title = 'Portrait ' + i;
+    button.setAttribute('aria-label', 'Portrait ' + i);
+
+    var img = document.createElement('img');
+    img.src = 'assets/portraits/' + i + '.png';
+    img.alt = '';
+    button.appendChild(img);
+
+    button.onclick = function() {
+      input.value = this.dataset.portrait;
+      var options = picker.querySelectorAll('.portrait-option');
+      for (var j = 0; j < options.length; j++) {
+        options[j].classList.toggle('selected', options[j] === this);
+      }
+    };
+
+    picker.appendChild(button);
+  }
+
+  var initial = Math.floor(Math.random() * 15) + 1;
+  input.value = String(initial);
+  var selected = picker.querySelector('.portrait-option[data-portrait="' + initial + '"]');
+  if (selected) selected.classList.add('selected');
+}
+
 function toggleModeInputs() {
     var modeSelect = document.getElementById('modeSelect');
     var mode = modeSelect ? modeSelect.value : 'solo_dagger';
@@ -139,6 +175,8 @@ function toggleModeInputs() {
 
 function showSetupScreen() {
     document.getElementById('setupScreen').style.display = 'block';
+    initPortraitPicker('p1');
+    initPortraitPicker('p2');
     document.getElementById('game').style.display = 'none';
     toggleModeInputs();
 }
@@ -162,6 +200,8 @@ var modeInput = document.getElementById('modeSelect');
 var mode = modeInput ? modeInput.value : 'solo_dagger';
 var p1Val = document.getElementById('p1NameInput').value.trim();
 var p2Val = document.getElementById('p2NameInput').value.trim();
+var p1Portrait = document.getElementById('p1PortraitInput').value || String(Math.floor(Math.random() * 15) + 1);
+var p2Portrait = document.getElementById('p2PortraitInput').value || String(Math.floor(Math.random() * 15) + 1);
 var hardMode = document.getElementById('hardModeInput').checked;
 var p1Name = p1Val || (mode === 'coop' ? 'Player 1' : 'Player');
 var p2Name = p2Val || 'Player 2';
@@ -202,6 +242,8 @@ state = {
   maxHP: maxHP,
   p1Name: p1Name,
   p2Name: p2Name,
+  p1Portrait: p1Portrait,
+  p2Portrait: p2Portrait,
   deck: initialDeck,
   totalDeckSize: initialDeck.length,
   dungeon: [], selected: null, justFled: false, over: false,
@@ -229,10 +271,9 @@ var p2Panel = document.getElementById('p2Panel');
 document.getElementById('p1DisplayName').textContent = p1Name;
 document.getElementById('p2DisplayName').textContent = p2Name;
 
-var p1Portrait = document.getElementById('p1Portrait');
-if (p1Portrait) {
-  var portraitNumber = Math.floor(Math.random() * 15) + 1;
-  p1Portrait.src = 'assets/portraits/' + portraitNumber + '.png';
+var p1PortraitImage = document.getElementById('p1Portrait');
+if (p1PortraitImage) {
+  p1PortraitImage.src = 'assets/portraits/' + state.p1Portrait + '.png';
 }
 
 if (mode !== 'coop') {
