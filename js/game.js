@@ -1527,7 +1527,7 @@ if (monster && isSolo) {
 // label changes (for example, Weapon -> Consume). Re-measure the fixed
 // dungeon slots after the buttons have been updated so the free-positioned
 // card wrappers always stay aligned with their dotted slots.
-var syncBoard = document.querySelector('.dungeon-board');
+/*var syncBoard = document.querySelector('.dungeon-board');
 var syncDungeon = document.getElementById('dungeon');
 var syncSlots = document.querySelectorAll('.dungeon-slot');
 if (syncBoard && syncDungeon && syncSlots.length) {
@@ -1542,7 +1542,7 @@ if (syncBoard && syncDungeon && syncSlots.length) {
     syncWrap.style.top = (syncRect.top - syncBoardRect.top) + 'px';
     syncWrap.style.width = syncRect.width + 'px';
     syncWrap.style.height = syncRect.height + 'px';
-  }
+  }*/
 }
 
       //weaponGrid.innerHTML = 
