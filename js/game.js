@@ -663,19 +663,22 @@ fleeSound();
 
 var deckEl = document.getElementById('p1Deck');
 var deckCardEl = deckEl ? deckEl.querySelector('.deck-card') : null;
-var deckRect = deckCardEl ? deckCardEl.getBoundingClientRect() : (deckEl ? deckEl.getBoundingClientRect() : null);
+var deckRect = deckCardEl ? getCanvasAnimationRect(deckCardEl) : (deckEl ? getCanvasAnimationRect(deckEl) : null);
+var canvas = document.querySelector('.game-canvas');
+if (!canvas) return;
 
-// Flee clones use viewport coordinates because they are appended to the body.
-// This keeps the flight independent of the scaled game canvas.
+// Flee clones live inside the game canvas so their z-order can be placed
+// beneath the deck while remaining above the artwork/background.
 var waits = [];
 for (var i = 0; i < cards.length; i++) {
   var card = cards[i];
-  var rect = card.getBoundingClientRect();
+  var rect = getCanvasAnimationRect(card);
+  if (!rect) continue;
 
   card.classList.add('selection-hidden');
   var clone = card.cloneNode(true);
   clone.classList.add('action-clone','flee-clone');
-  clone.style.position = 'fixed';
+  clone.style.position = 'absolute';
   clone.style.left = rect.left + 'px';
   clone.style.top = rect.top + 'px';
   clone.style.width = rect.width + 'px';
@@ -690,9 +693,10 @@ for (var i = 0; i < cards.length; i++) {
   }
 
   card.classList.add('action-hidden');
-  document.body.appendChild(clone);
-  // Put the fleeing card underneath the visible deck layers as it arrives.
-  clone.style.zIndex = '0';
+  // Keep the fleeing card below the deck stack, but above the artwork.
+  clone.style.zIndex = '1050';
+  canvas.appendChild(clone);
+
   waits.push(waitForAnimation(clone).then(function(c, el) {
     return function() {
       c.remove();
@@ -702,7 +706,6 @@ for (var i = 0; i < cards.length; i++) {
 }
 await Promise.all(waits);
 }
-
 function animateMonsterToPrevious(cardEl, targetEl, monster, done) {
 if (!cardEl || !targetEl) { done(); return; }
 
