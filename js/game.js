@@ -1305,6 +1305,8 @@ var isSolo = state.mode !== 'coop';
   
   document.getElementById(id + 'Panel').classList.toggle('downed', p.hp === 0);
   document.getElementById(id + 'Down').innerHTML = p.hp === 0 ? '<span class="badge">DOWN</span>' : '';
+  var hpDisplay = document.getElementById(id + 'HpDisplay');
+  if (hpDisplay) hpDisplay.textContent = 'HP ' + p.hp + '/' + state.maxHP;
   
   if (isSolo && id === 'p1') {
     var deckEl = document.getElementById('p1Deck');
