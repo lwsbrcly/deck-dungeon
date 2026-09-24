@@ -72,10 +72,6 @@ function resetDungeonDom() {
   for (var i = 0; i < wraps.length; i++) {
     wraps[i].style.transition = 'none';
     wraps[i].style.transform = 'none';
-    wraps[i].style.left = '';
-    wraps[i].style.top = '';
-    wraps[i].style.width = '';
-    wraps[i].style.height = '';
   }
 }
 
@@ -1303,7 +1299,7 @@ var isSolo = state.mode !== 'coop';
       for (var layer = 0; layer <= deckDepth; layer++) {
         deckLayers += '<img src="' + THEMES[selectedTheme || 'dungeon'].artwork.back + '" alt="" style="--deck-offset:' + layer + 'px; z-index:' + (layer + 1) + ';">';
       }
-      deckEl.innerHTML = '<div class="deck-card" style="--deck-depth:' + deckDepth + 'px;">' + deckLayers + '</div>';
+      deckEl.innerHTML = '<div class="card deck-card" style="--deck-depth:' + deckDepth + 'px;">' + deckLayers + '</div>';
     } else {
       deckEl.innerHTML = '';
     }
@@ -1333,22 +1329,16 @@ var isSolo = state.mode !== 'coop';
   }
 });
 
-var playerSurface = document.querySelector('#p1Panel .player-card-surface');
-if (playerSurface) {
+var playerPanel = document.getElementById('p1Panel');
+if (playerPanel) {
   var playerTheme = THEMES[selectedTheme || 'dungeon'];
-  var playerCardArtwork = playerTheme && playerTheme.artwork
-    ? playerTheme.artwork.card
-    : 'assets/dungeon/card.png';
-  playerSurface.style.backgroundImage = 'url("' + playerCardArtwork + '")';
+  playerPanel.style.backgroundImage = 'url("' + (playerTheme && playerTheme.artwork ? playerTheme.artwork.card : 'assets/dungeon/card.png') + '")';
 }
 
 var d = document.getElementById('dungeon');
-var slots = document.querySelectorAll('.dungeon-slot');
-var boardRect = document.querySelector('.dungeon-board').getBoundingClientRect();
 
-// Keep existing dungeon card elements alive when the same card moves to a
-// different slot. This lets action renders animate the real cards instead
-// of destroying and recreating them.
+// The grid owns card positions. JavaScript only keeps the four logical
+// anchors alive so surviving cards can still use the existing FLIP animation.
 var existing = {};
 var existingWraps = Array.prototype.slice.call(d.children);
 for (var e = 0; e < existingWraps.length; e++) {
@@ -1366,23 +1356,12 @@ for (var i = 0; i < 4; i++) {
       wrap = document.createElement('div');
       wrap.className = 'dungeon-card-wrap';
       wrap._cardKey = cardKey;
-      if (c) {
-        wrap.innerHTML = cardHTML(c);
-      } else {
-        wrap.innerHTML = '<div class="card empty"></div>';
-      }
       d.appendChild(wrap);
     }
 
-    // The game state owns the logical slot. The DOM wrapper only mirrors it.
     wrap._slotIndex = index;
     used[cardKey] = true;
-
-    var slotRect = slots[index].getBoundingClientRect();
-    wrap.style.left = (slotRect.left - boardRect.left) + 'px';
-    wrap.style.top = (slotRect.top - boardRect.top) + 'px';
-    wrap.style.width = slotRect.width + 'px';
-    wrap.style.height = slotRect.height + 'px';
+    wrap.innerHTML = c ? cardHTML(c) : '<div class="card empty"></div>';
 
     var cardEl = wrap.querySelector('.card');
     if (cardEl && c) {
@@ -1395,7 +1374,6 @@ for (var i = 0; i < 4; i++) {
   })(i);
 }
 
-// Remove cards that are no longer present in the dungeon.
 for (var r = 0; r < existingWraps.length; r++) {
   var oldWrap = existingWraps[r];
   if (oldWrap._cardKey && !used[oldWrap._cardKey]) oldWrap.remove();
