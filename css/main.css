@@ -173,7 +173,7 @@ button.primary-btn {
   width: 74.9625%;
   height: 5.4%;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .health-track {
