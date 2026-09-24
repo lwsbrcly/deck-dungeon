@@ -379,6 +379,7 @@ function cardHTML(c, customCornerText) {
     if (!c) return '';
     var red = c.suit === 'hearts' || c.suit === 'diamonds';
     var cornerText = customCornerText !== undefined ? customCornerText : (c.rank + '<br>' + SUITS[c.suit]);
+    var valueCorner = (c.value && c.value > 10) ? '<div class="card-value-corner">(' + c.value + ')</div>' : '';
     
     // Render custom PNG artwork first, then fall back to the existing SVG artwork.
     var centerArt = '';
@@ -404,6 +405,7 @@ function cardHTML(c, customCornerText) {
     
     return '<div class="card ' + (red ? 'red' : 'black') + '" style="background-image: url(' + cardArtwork + ');">' +
       '<div class="card-rank">' + cornerText + '</div>' +
+      valueCorner +
       centerArt +
       '<div class="card-title">' + c.name + '</div>' +
     '</div>';
