@@ -663,35 +663,34 @@ fleeSound();
 
 var deckEl = document.getElementById('p1Deck');
 var deckCardEl = deckEl ? deckEl.querySelector('.deck-card') : null;
-var deckRect = deckCardEl ? getCanvasAnimationRect(deckCardEl) : (deckEl ? getCanvasAnimationRect(deckEl) : null);
+var deckRect = deckCardEl ? deckCardEl.getBoundingClientRect() : (deckEl ? deckEl.getBoundingClientRect() : null);
 
-// All four cards return to the deck together. The only wait here is until
-// the entire fleeing room has finished, so the replacement room cannot appear early.
+// Flee clones use viewport coordinates because they are appended to the body.
+// This keeps the flight independent of the scaled game canvas.
 var waits = [];
 for (var i = 0; i < cards.length; i++) {
   var card = cards[i];
-  var rect = getCanvasAnimationRect(card);
-  if (!rect) continue;
+  var rect = card.getBoundingClientRect();
 
-  // Keep the selected state intact, but hide its visual halo while the card flies.
   card.classList.add('selection-hidden');
   var clone = card.cloneNode(true);
   clone.classList.add('action-clone','flee-clone');
+  clone.style.position = 'fixed';
   clone.style.left = rect.left + 'px';
   clone.style.top = rect.top + 'px';
   clone.style.width = rect.width + 'px';
   clone.style.height = rect.height + 'px';
 
   if (deckRect) {
-    clone.style.setProperty('--target-left', deckRect.left + 'px');
-    clone.style.setProperty('--target-top', deckRect.top + 'px');
+    clone.style.setProperty('--target-left', (deckRect.left + deckRect.width / 2 - rect.width / 2) + 'px');
+    clone.style.setProperty('--target-top', (deckRect.top + deckRect.height / 2 - rect.height / 2) + 'px');
   } else {
     clone.style.setProperty('--target-left', -(rect.width + 80) + 'px');
     clone.style.setProperty('--target-top', rect.top + ((i%2 ? -1 : 1) * (8 + i*3)) + 'px');
   }
 
   card.classList.add('action-hidden');
-  document.querySelector('.game-canvas').appendChild(clone);
+  document.body.appendChild(clone);
   waits.push(waitForAnimation(clone).then(function(c, el) {
     return function() {
       c.remove();
