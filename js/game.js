@@ -378,14 +378,20 @@ function cardHTML(c, customCornerText) {
     var red = c.suit === 'hearts' || c.suit === 'diamonds';
     var cornerText = customCornerText !== undefined ? customCornerText : (c.rank + '<br>' + SUITS[c.suit]);
     
-    // Render custom SVG Artwork for the selected theme.
+    // Render custom PNG artwork first, then fall back to the existing SVG artwork.
     var centerArt = '';
     var theme = THEMES[selectedTheme || 'dungeon'];
+    var cardKey = c.suit + '_' + c.rank;
+    var pngArt = theme && theme.artwork && theme.artwork.weapons
+      ? theme.artwork.weapons[cardKey]
+      : null;
     var svgArt = theme && theme.artwork && theme.artwork.svgCards
-      ? theme.artwork.svgCards[c.suit + '_' + c.rank]
+      ? theme.artwork.svgCards[cardKey]
       : null;
     
-    if (svgArt) {
+    if (pngArt) {
+      centerArt = '<div class="card-art png-art" style="--card-art-image: url("' + pngArt + '");"></div>';
+    } else if (svgArt) {
       centerArt = '<div class="card-art">' + svgArt + '</div>';
     } else {
       centerArt = '<div class="suitbig">' + SUITS[c.suit] + '</div>';
