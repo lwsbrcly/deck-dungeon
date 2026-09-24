@@ -926,8 +926,8 @@ button.primary-btn {
   top: 54%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 52%;
-  height: 52%;
+  width: 68%;
+  height: 68%;
   pointer-events: none;
   opacity: 0.95;
   display: flex;
@@ -948,8 +948,8 @@ button.primary-btn {
 }
 
 .card-art.monster-art img {
-  width: 75%;
-  height: 75%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   display: block;
   image-rendering: pixelated;
