@@ -41,6 +41,7 @@ function showScreen(screenId) {
 function enterGame() {
     showScreen('game-ui');
     startGame();
+    initialiseGameCanvas();
 }
 
 
@@ -261,6 +262,7 @@ state = {
 
 document.getElementById('setupScreen').style.display = 'none';
 document.getElementById('game').style.display = 'flex';
+initialiseGameCanvas();
 document.getElementById('log').innerHTML = '';
 document.getElementById('runChart').innerHTML = '';
 
@@ -1774,6 +1776,19 @@ function setupPeekHandlers() {
 
 // Initial load execution
 window.addEventListener('resize', resizeGameCanvas);
+
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', resizeGameCanvas);
+}
+
+function initialiseGameCanvas() {
+    resizeGameCanvas();
+    requestAnimationFrame(function() {
+        resizeGameCanvas();
+        requestAnimationFrame(resizeGameCanvas);
+    });
+    setTimeout(resizeGameCanvas, 100);
+}
 
 window.onload = function() {
     toggleModeInputs();
