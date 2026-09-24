@@ -322,7 +322,7 @@ const THEMES = {
         //audio: {},
             
         colours: {
-            bg: "19191a",
+            bg: "transparent", //"19191a",
             panelBg: "0E253D",
             border: "#B0843C",
             text: "#CDA655",
