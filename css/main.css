@@ -947,6 +947,14 @@ button.primary-btn {
   display: block;
 }
 
+.card-art.monster-art img {
+  width: 75%;
+  height: 75%;
+  object-fit: contain;
+  display: block;
+  image-rendering: pixelated;
+}
+
 button { 
   padding: 8px 10px; 
   background: #2a2a36; 
