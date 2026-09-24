@@ -1542,8 +1542,8 @@ if (syncBoard && syncDungeon && syncSlots.length) {
     syncWrap.style.top = (syncRect.top - syncBoardRect.top) + 'px';
     syncWrap.style.width = syncRect.width + 'px';
     syncWrap.style.height = syncRect.height + 'px';
-  }*/
-}
+  }
+}*/
 
       //weaponGrid.innerHTML = 
       //'<button type="button" onclick="equipWeapon(\'p1\')"' + (state.p1.hp === 0 ? ' disabled' : '') + '>' + state.p1Name + ' Equip</button>' +
