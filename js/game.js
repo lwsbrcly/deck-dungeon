@@ -99,34 +99,32 @@ function initPortraitPicker(playerId) {
   if (!picker || !input) return;
 
   picker.innerHTML = '';
-  for (var i = 1; i <= 15; i++) {
-    var button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'portrait-option';
-    button.dataset.portrait = String(i);
-    button.title = 'Portrait ' + i;
-    button.setAttribute('aria-label', 'Portrait ' + i);
 
-    var img = document.createElement('img');
-    img.src = 'assets/portraits/' + i + '.png';
-    img.alt = '';
-    button.appendChild(img);
+  var button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'portrait-option';
+  button.title = 'Click to change portrait';
+  button.setAttribute('aria-label', 'Change portrait');
 
-    button.onclick = function() {
-      input.value = this.dataset.portrait;
-      var options = picker.querySelectorAll('.portrait-option');
-      for (var j = 0; j < options.length; j++) {
-        options[j].classList.toggle('selected', options[j] === this);
-      }
-    };
+  var img = document.createElement('img');
+  img.alt = 'Selected player portrait';
+  button.appendChild(img);
+  picker.appendChild(button);
 
-    picker.appendChild(button);
+  var current = Math.floor(Math.random() * 15) + 1;
+
+  function showPortrait() {
+    input.value = String(current);
+    img.src = 'assets/portraits/' + current + '.png';
+    img.alt = 'Player portrait ' + current;
   }
 
-  var initial = Math.floor(Math.random() * 15) + 1;
-  input.value = String(initial);
-  var selected = picker.querySelector('.portrait-option[data-portrait="' + initial + '"]');
-  if (selected) selected.classList.add('selected');
+  button.onclick = function() {
+    current = (current % 15) + 1;
+    showPortrait();
+  };
+
+  showPortrait();
 }
 
 function toggleModeInputs() {
