@@ -905,7 +905,19 @@ button.primary-btn {
   width: 100%;
   height: 100%;
   stroke: currentColor;
-}   
+}
+
+.card-art.png-art {
+  background-color: currentColor;
+  -webkit-mask-image: var(--card-art-image);
+  mask-image: var(--card-art-image);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
 
 button { 
   padding: 8px 10px; 
