@@ -691,6 +691,8 @@ for (var i = 0; i < cards.length; i++) {
 
   card.classList.add('action-hidden');
   document.body.appendChild(clone);
+  // Put the fleeing card underneath the visible deck layers as it arrives.
+  clone.style.zIndex = '0';
   waits.push(waitForAnimation(clone).then(function(c, el) {
     return function() {
       c.remove();
