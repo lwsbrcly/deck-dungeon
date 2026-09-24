@@ -9,6 +9,8 @@ const THEMES = {
             logo: 'assets/dungeon/logo.png',
             card: 'assets/dungeon/card.png',
             back: 'assets/dungeon/back.png',
+            background: 'assets/dungeon/background.png',
+        
 
                 monsters: {
         'Rat': 'assets/dungeon/monsters/rat.png',
@@ -424,7 +426,7 @@ const THEMES = {
             logo: 'assets/shaun/logo.png',
             card: 'assets/shaun/card.png',
             back: 'assets/shaun/back.png',
-            background: 'assets/shaun/background.webp',
+            background: 'assets/shaun/background.png',
         },
 
         //audio: {},
