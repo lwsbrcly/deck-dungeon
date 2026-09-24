@@ -10,74 +10,7 @@ const THEMES = {
             card: 'assets/dungeon/card.png',
             back: 'assets/dungeon/back.png',
 
-            
-Generated image: Monochrome Retro RPG Character Grid
-
-
-Add to Favorites
-
-
-1000042799.png
-ok, but more in this sort of style. a head portrait, rather than full body but yeh mostly monochrome pixel art is what i'm after
-
-Generated image: Monochrome Pixel RPG Portrait Sheet
-
-
-Add to Favorites
-
-
-772437a2-715e-4359-9657-d2dedd5b1812.jpeg
-37c8172f-607d-4d44-8747-ac994d973f6f.jpeg
-c3bc9d4b-5a69-45a0-82c4-ef110ed3105d.jpeg
-ok nice. i feel like we need to complete the picture stack asap. i've added 3 picture examples, wolf, dragon, and bone-dragon. can you read the remaining monster list in the themes and draw pictures for each? much like you did for the player portraits earlier. 90s video game pixel art, mostly monochrome, head/face portraits, square ratio
-
-Generated image: Monochrome Pixel Monster Portrait Grid
-
-
-
-Add to Favorites
-
-
-Generated image: Monochrome Pixel Monster Sprite Sheet
-
-
-Add to Favorites
-
-
-Generated image: Monochrome Pixel Horror Portrait Grid
-
-
-
-Add to Favorites
-
-
-Generated image: Monochrome RPG Monster Icon Sheet
-
-
-Add to Favorites
-
-
-Generated image: Monochrome Pixel Monster Portrait Grid
-
-
-Add to Favorites
-
-
-cool thanks. so for the weapons and food, we have some svgs in code, but for the monsters we'll have these probably saved as png - how do we best code that in? to get the correct picture on each card?
-
-Yes — and I think PNG is actually the better approach for the monsters given the style you're going for.
-
-The nice thing is that your existing theme structure already gives us a very clean place to hook this in.
-
-I'd structure the monster artwork like this
-For the Dungeon theme, we'd add something alongside card, back, etc.:
-
-artwork: {
-    logo: 'assets/dungeon/logo.png',
-    card: 'assets/dungeon/card.png',
-    back: 'assets/dungeon/back.png',
-
-    monsters: {
+                monsters: {
         'Rat': 'assets/dungeon/monsters/rat.png',
         'Cave Spider': 'assets/dungeon/monsters/cave-spider.png',
         'Wolf': 'assets/dungeon/monsters/wolf.png',
@@ -106,6 +39,8 @@ artwork: {
         'Lich King': 'assets/dungeon/monsters/lich-king.png',
         'Bone Dragon': 'assets/dungeon/monsters/bone-dragon.png'
     },
+            
+
             
     weapons: {
         'diamonds_5': 'assets/dungeon/mace.png',
