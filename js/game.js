@@ -254,8 +254,8 @@ state = {
   maxFoodHP: 54,
   weaponUsage: {},
   eventHistory: [],
-  p1: { hp: maxHP, weapon: starterWeaponP1, ceiling: starterCeilingP1, consumedThisRoom: false, previousMonsters: [] },
-  p2: { hp: maxHP, weapon: starterWeaponP2, ceiling: starterCeilingP2, consumedThisRoom: false, previousMonsters: [] },
+  p1: { hp: maxHP, weapon: starterWeaponP1, ceiling: starterCeilingP1, consumedThisRoom: false, previousMonsters: [], previousMonsterRotationDirection: Math.random() < 0.5 ? -1 : 1 },
+  p2: { hp: maxHP, weapon: starterWeaponP2, ceiling: starterCeilingP2, consumedThisRoom: false, previousMonsters: [], previousMonsterRotationDirection: Math.random() < 0.5 ? -1 : 1 },
   combinedUsedThisRoom: false
 };
 
@@ -787,7 +787,12 @@ function clearPreviousMonsters() {
 var finishEquip = function() {
   p.weapon = c;
   p.ceiling = 99;
-  if (player === 'p1') p.previousMonsters = [];
+  if (player === 'p1') {
+    p.previousMonsters = [];
+    // A newly cleared stack gets a fresh random starting side. The first
+    // monster in the new stack is still 0°, then subsequent cards alternate.
+    p.previousMonsterRotationDirection = Math.random() < 0.5 ? -1 : 1;
+  }
   removeSelected();
   log(name(player) + ' equips ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').' + (old ? ' (' + old.name + ' discarded)' : ''), true, 'weapon', player === 'p1' ? {p1:c.value,p2:null} : {p1:null,p2:c.value});
   checkGame(); renderAfterAction();
@@ -1049,7 +1054,17 @@ function fight(player, mode) {
         var pileIndex = p.previousMonsters.length;
         previousMonster.stackX = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
         previousMonster.stackY = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
-        previousMonster.stackRotation = pileIndex === 0 ? 0 : (Math.random() < 0.5 ? -1 : 1) * (2 + Math.random() * 3);
+
+        if (pileIndex === 0) {
+          previousMonster.stackRotation = 0;
+        } else {
+          // Pick the side once for this stack, then alternate it for every
+          // subsequent monster. The degree amount is independently random.
+          var rotationDirection = p.previousMonsterRotationDirection || 1;
+          previousMonster.stackRotation = rotationDirection * (2 + Math.random() * 3);
+          p.previousMonsterRotationDirection = -rotationDirection;
+        }
+
         p.previousMonsters.push(previousMonster);
     
         ghostInfo = {
