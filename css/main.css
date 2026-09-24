@@ -162,93 +162,73 @@ button.primary-btn {
   height: 8.1%;
 }
 
-/* Player board: fixed slots stay still; cards live on a separate layer. */
-.player-area {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  min-width: 0;
+/* Shared card layout.
+   The six canvas areas define where groups of cards live.
+   The cards themselves are always the same size relative to the master canvas. */
+.game-canvas {
+  container-type: size;
 }
 
-.player-slots {
-  position: relative;
-  z-index: 0;
+.card-area {
+  position: absolute;
+  min-width: 0;
+  min-height: 0;
+}
+
+.card-grid {
+  width: 100%;
+  height: 100%;
   display: flex;
-  align-items: stretch;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 0;
-  width: 100%;
-  height: 100%;
+  pointer-events: none;
 }
 
-.player-slot {
-  flex: 0 0 21.1538%;
-  width: 21.1538%;
-  height: 100%;
-  background: transparent;
-  border: 1px dashed var(--border);
-  border-radius: 6px;
-  box-sizing: border-box;
+.card-anchor {
+  position: relative;
+  flex: 0 0 16.5cqw;
+  width: 16.5cqw;
+  height: 16.5cqh;
+  min-width: 0;
+  min-height: 0;
+  pointer-events: none;
 }
 
-.player-card-grid {
+.card-grid > .card {
+  flex: 0 0 16.5cqw;
+  width: 16.5cqw;
+  height: 16.5cqh;
+  pointer-events: auto;
+}
+
+.player-character-card {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.player-character-card.downed {
+  opacity: 0.5;
+  border-color: var(--red);
+}
+
+.player-character-inner {
   position: absolute;
   inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4%;
+  text-align: center;
   z-index: 1;
-  display: block;
   pointer-events: none;
 }
 
-/* Exactly the same containment model as dungeon-card-wrap. The wrapper
-   occupies the measured slot; the actual card keeps its 2:3 shape inside it. */
-.player-card-wrap {
-  position: relative;
-  flex: 0 0 21.1538%;
-  width: 21.1538%;
-  height: 100%;
-  box-sizing: border-box;
-  pointer-events: none;
-  overflow: hidden;
-  min-width: 0;
-  min-height: 0;
-}
-
-.player-card-wrap > .card {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  right: auto;
-  margin: 0;
-  width: auto;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  min-width: 0;
-  min-height: 0;
-  aspect-ratio: 2 / 3;
-  transform: translateX(-50%);
-  object-fit: contain;
-  z-index: 1;
-  pointer-events: auto;
-  overflow: hidden;
-}
-
-/* The wrapper is the dotted destination slot. The physical card inside it
-   is always 2:3, centred in exactly the same way as a dungeon card. */
+/* Deck and previous-monster cards live inside their ordinary card anchors. */
 .deck-card {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  right: auto;
-  margin: 0;
-  width: auto;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  aspect-ratio: 2 / 3;
-  transform: translateX(-50%);
+  width: 16.5cqw;
+  height: 16.5cqh;
   box-sizing: border-box;
 }
 
@@ -263,199 +243,42 @@ button.primary-btn {
   object-fit: cover;
 }
 
-.player-character-card {
-  cursor: pointer;
-  pointer-events: auto;
-}
-.player-character-card.downed {
-  opacity: 0.5;
-  border-color: var(--red);
-}
-
-/* Player card artwork/content follows the same 2:3 card geometry. */
-.player-card-surface {
+.previous-monster-stack {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  right: auto;
-  width: auto;
-  height: 100%;
-  aspect-ratio: 2 / 3;
-  transform: translateX(-50%);
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  border-radius: 5px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.player-character-inner {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  right: auto;
-  width: auto;
-  height: 100%;
-  aspect-ratio: 2 / 3;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4%;
-  text-align: center;
-  z-index: 1;
-}
-
-.player-header {
-  width: 100%;
-  font-size: 1.15rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
-}
-
-.player-character-mark {
-  font-size: 2.6rem;
-  opacity: .28;
-  line-height: 1;
-  pointer-events: none;
-}
-
-/* HP and room rails */
-.ascii-health-bar,
-.ascii-dungeon-progress {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  overflow: hidden;
-  box-sizing: border-box;
-  padding: 4px 0;
-}
-
-.health-track,
-.ascii-dungeon-progress .room-track {
-  width: max-content;
-  display: flex;
-  align-items: center;
-  min-width: max-content;
-  margin: 0;
-  transform-origin: left center;
-}
-
-.health-track .health-tile {
-  display: block;
-  width: 24px;
-  height: 24px;
-  flex: 0 0 auto;
-  image-rendering: pixelated;
-}
-
-.health-track .health-tile.health-changing {
-  animation: health-tile-change 220ms cubic-bezier(.22,.8,.25,1) both;
-  will-change: transform, opacity;
-}
-
-@keyframes health-tile-change {
-  0% { transform: scale(.72); opacity: .35; }
-  55% { transform: scale(1.12); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.ascii-dungeon-progress .room-track .room-tile {
-  display: block;
-  width: 24px;
-  height: 24px;
-  flex: 0 0 auto;
-  image-rendering: pixelated;
-}
-
-.ascii-dungeon-progress .room-track .room-connector {
-  display: block;
-  width: 12px;
-  height: 8px;
-  flex: 0 0 auto;
-  image-rendering: pixelated;
-}
-
-/* Dungeon four-card window */
-.dungeon-section {
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-  padding: 0;
-  min-width: 0;
+  inset: 0;
   overflow: visible;
 }
 
-.dungeon-board {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-}
-
-.dungeon-slots {
-  position: relative;
-  z-index: 0;
-  display: flex;
-  align-items: stretch;
-  justify-content: space-between;
-  gap: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.dungeon-slot {
-  flex: 0 0 21.1538%;
-  width: 21.1538%;
-  height: 100%;
-  aspect-ratio: auto;
-  border: 1.5px dashed var(--border);
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-
-.dungeon-grid {
-  display: block;
+.previous-monster-card {
   position: absolute;
   inset: 0;
-  z-index: 1;
-  pointer-events: none;
+  width: 16.5cqw;
+  height: 16.5cqh;
+  transform: translate(var(--stack-x), var(--stack-y)) rotate(var(--stack-rotation));
+  transform-origin: center center;
+  overflow: hidden;
 }
 
+.previous-monster-card .card {
+  width: 16.5cqw;
+  height: 16.5cqh;
+}
+
+/* Dungeon cards use the exact same anchor model as player cards. */
 .dungeon-card-wrap {
-  position: absolute;
+  position: relative;
+  flex: 0 0 16.5cqw;
+  width: 16.5cqw;
+  height: 16.5cqh;
   box-sizing: border-box;
   pointer-events: none;
-  overflow: hidden;
-  min-width: 0;
-  min-height: 0;
+  overflow: visible;
 }
 
 .dungeon-card-wrap .card {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  right: auto;
-  margin: 0;
-  width: auto;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  min-width: 0;
-  min-height: 0;
-  aspect-ratio: 2 / 3;
-  transform: translateX(-50%);
-  object-fit: contain;
-  z-index: 1;
+  width: 16.5cqw;
+  height: 16.5cqh;
   pointer-events: auto;
-  overflow: hidden;
 }
 
 /* Buttons and log occupy their artwork-defined regions. */
@@ -879,6 +702,11 @@ button.primary-btn {
 .card {
   position: relative;
   box-sizing: border-box;
+  width: 16.5cqw;
+  height: 16.5cqh;
+  max-width: none;
+  max-height: none;
+  aspect-ratio: 2 / 3;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
