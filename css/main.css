@@ -163,7 +163,7 @@ button.primary-btn {
   margin: 0;
   overflow: hidden;
   background-color: var(--bg);
-  background-image: var(--background-image, url("../assets/dungeon/background.png"));
+  background-image: url("../assets/dungeon/background.png");
   background-position: top left;
   background-size: 667px 1000px;
   background-repeat: no-repeat;
