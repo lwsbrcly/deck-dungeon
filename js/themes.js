@@ -14,7 +14,7 @@ const THEMES = {
                 'diamonds_5': 'assets/dungeon/mace.png',
                 'diamonds_7': 'assets/dungeon/battleaxe.png',
                 'diamonds_8': 'assets/dungeon/warhammer.png',
-            }
+            },
             
             svgCards: {
                 old_clubs_A: `<svg viewBox="0 0 723 702" xmlns="http://www.w3.org/2000/svg">
