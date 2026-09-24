@@ -19,7 +19,11 @@ function applySelectedTheme() {
 
     root.style.setProperty('--card-image', 'url("' + theme.artwork.card + '")');
     root.style.setProperty('--card-back-image', 'url("' + theme.artwork.back + '")');
-    root.style.setProperty('--background-image', 'url("' + (theme.artwork.background || 'assets/dungeon/background.png') + '")');
+
+    var canvas = document.querySelector('.game-canvas');
+    if (canvas) {
+        canvas.style.backgroundImage = 'url("' + (theme.artwork.background || 'assets/dungeon/background.png') + '")';
+    }
 }
 
 function selectTheme(theme) {
