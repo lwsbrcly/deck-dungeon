@@ -683,11 +683,11 @@ for (var i = 0; i < cards.length; i++) {
   clone.style.height = rect.height + 'px';
 
   if (deckRect) {
-    clone.style.setProperty('--dx', (deckRect.left + deckRect.width / 2 - (rect.left + rect.width / 2)) + 'px');
-    clone.style.setProperty('--dy', (deckRect.top + deckRect.height / 2 - (rect.top + rect.height / 2)) + 'px');
+    clone.style.setProperty('--target-left', deckRect.left + 'px');
+    clone.style.setProperty('--target-top', deckRect.top + 'px');
   } else {
-    clone.style.setProperty('--dx', -(rect.left + rect.width + 80) + 'px');
-    clone.style.setProperty('--dy', ((i%2 ? -1 : 1) * (8 + i*3)) + 'px');
+    clone.style.setProperty('--target-left', -(rect.width + 80) + 'px');
+    clone.style.setProperty('--target-top', rect.top + ((i%2 ? -1 : 1) * (8 + i*3)) + 'px');
   }
 
   card.classList.add('action-hidden');
