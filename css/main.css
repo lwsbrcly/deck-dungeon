@@ -171,6 +171,18 @@ button.primary-btn {
   top: 21.6%;
   width: 74.9625%;
   height: 5.4%;
+  display: flex;
+  align-items: center;
+}
+
+.canvas-room-track {
+  position: absolute;
+  left: 12.8935%;
+  top: 45.2%;
+  width: 74.9625%;
+  height: 5.4%;
+  display: flex;
+  align-items: center;
 }
 
 .canvas-player-area {
@@ -181,13 +193,7 @@ button.primary-btn {
   height: 16.5%;
 }
 
-.canvas-room-track {
-  position: absolute;
-  left: 12.8935%;
-  top: 45.2%;
-  width: 74.9625%;
-  height: 5.4%;
-}
+
 
 .canvas-dungeon-area {
   position: absolute;
