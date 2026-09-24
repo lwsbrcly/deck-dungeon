@@ -580,8 +580,18 @@ button.primary-btn {
 }
 .flee-clone { animation: flee-card 560ms cubic-bezier(.3,.7,.3,1) forwards; }
 @keyframes flee-card {
-  0% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 1; }
-  100% { transform: translate3d(var(--dx),var(--dy),0) rotate(-8deg) scale(.92); opacity: 1; }
+  0% {
+    left: inherit;
+    top: inherit;
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    left: var(--target-left);
+    top: var(--target-top);
+    transform: rotate(-8deg) scale(.92);
+    opacity: 1;
+  }
 }
 .enter-prep {
   opacity: 0 !important;
