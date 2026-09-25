@@ -431,6 +431,18 @@ const THEMES = {
             background: 'assets/shaun/background.png',
             portraits: 'assets/shaun/portraits/',
             portraitCount: 20,
+
+            weapons: {
+                'diamonds_2': 'assets/shaun/vinyl.png',
+                'diamonds_3': 'assets/shaun/darts.png',
+                'diamonds_4': 'assets/shaun/swingball.png',
+                'diamonds_5': 'assets/shaun/golf_club.png',
+                'diamonds_6': 'assets/shaun/hockey_stick.png',
+                'diamonds_7': 'assets/shaun/pool_cue.png',
+                'diamonds_8': 'assets/shaun/spade.png',
+                'diamonds_9': 'assets/shaun/cricket_bat.png',
+                'diamonds_10': 'assets/shaun/winchester.png',
+            },
         },
 
         //audio: {},
@@ -479,8 +491,8 @@ const THEMES = {
             },
             weapons: {
                 diamonds: {
-                    2: 'Vinyl Record', 3: 'Dart', 4: 'Swingball', 5: 'Golf Club',
-                    6: 'Hockey Stick', 7: 'Pool Cue', 8: 'Shovel', 9: 'Cricket Bat', 10: 'Winchester'
+                    2: 'Vinyl Record', 3: 'Darts', 4: 'Swingball', 5: 'Golf Club',
+                    6: 'Hockey Stick', 7: 'Pool Cue', 8: 'Spade', 9: 'Cricket Bat', 10: 'Winchester'
                 }
             },
             potions: {
