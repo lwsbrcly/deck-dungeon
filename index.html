@@ -62,9 +62,9 @@
                 </button>
     
                 <!-- SPACE DECK -->
-                <button class="theme-card coming-soon"
+                <button class="theme-card deck-space"
                         type="button"
-                        disabled>
+                        onclick="selectTheme('space')">
         
                     <img src="assets/space/logo.png"
                      class="theme-logo"
@@ -75,16 +75,16 @@
                         aboard the ship...
                     </div>
         
-                    <div class="theme-select">
-                        COMING SOON
+                    <div class="theme-description theme-action">
+                        Enter this deck...
                     </div>
         
                 </button>
     
                 <!-- PIRATE -->
-                <button class="theme-card coming-soon"
+                <button class="theme-card deck-pirate"
                         type="button"
-                        disabled>
+                        onclick="selectTheme('pirate')">
         
                     <img src="assets/pirate/logo.png"
                      class="theme-logo"
@@ -95,16 +95,16 @@
                         Face the dangers of the deep.
                     </div>
         
-                    <div class="theme-select">
-                        COMING SOON
+                    <div class="theme-description theme-action">
+                        Enter this deck...
                     </div>
         
                 </button>
     
                 <!-- NINJA -->
-                <button class="theme-card coming-soon"
+                <button class="theme-card deck-ninja"
                         type="button"
-                        disabled>
+                        onclick="selectTheme('ninja')">
         
                     <img src="assets/ninja/logo.png"
                      class="theme-logo"
@@ -115,8 +115,8 @@
                         Choose your weapons carefully.
                     </div>
         
-                    <div class="theme-select">
-                        COMING SOON
+                    <div class="theme-description theme-action">
+                        Enter this deck...
                     </div>
         
                 </button>
@@ -155,7 +155,7 @@
         
             <div class="setup-rules" id="setupRulesText"></div>
         
-            <button type="button" class="primary-btn" id="startBtn" onclick="enterGame()">Enter Dungeon</button>
+            <button type="button" class="primary-btn" id="startBtn" onclick="enterGame()">Enter Game</button>
             
             <div class="hard-mode-option">
               <label class="hard-mode-label">
