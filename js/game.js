@@ -122,7 +122,11 @@ function initPortraitPicker(playerId) {
   button.appendChild(img);
   picker.appendChild(button);
 
-  var current = Math.floor(Math.random() * 15) + 1;
+  var theme = THEMES[selectedTheme || 'dungeon'];
+  var portraitCount = theme && theme.artwork && theme.artwork.portraitCount
+    ? theme.artwork.portraitCount
+    : 15;
+  var current = Math.floor(Math.random() * portraitCount) + 1;
 
   function showPortrait() {
     var theme = THEMES[selectedTheme || 'dungeon'];
@@ -135,7 +139,7 @@ function initPortraitPicker(playerId) {
   }
 
   button.onclick = function() {
-    current = (current % 15) + 1;
+    current = (current % portraitCount) + 1;
     showPortrait();
   };
 
@@ -213,8 +217,12 @@ var modeInput = document.getElementById('modeSelect');
 var mode = modeInput ? modeInput.value : 'solo_dagger';
 var p1Val = document.getElementById('p1NameInput').value.trim();
 var p2Val = document.getElementById('p2NameInput').value.trim();
-var p1Portrait = document.getElementById('p1PortraitInput').value || String(Math.floor(Math.random() * 15) + 1);
-var p2Portrait = document.getElementById('p2PortraitInput').value || String(Math.floor(Math.random() * 15) + 1);
+var portraitTheme = THEMES[selectedTheme || 'dungeon'];
+var portraitCount = portraitTheme && portraitTheme.artwork && portraitTheme.artwork.portraitCount
+  ? portraitTheme.artwork.portraitCount
+  : 15;
+var p1Portrait = document.getElementById('p1PortraitInput').value || String(Math.floor(Math.random() * portraitCount) + 1);
+var p2Portrait = document.getElementById('p2PortraitInput').value || String(Math.floor(Math.random() * portraitCount) + 1);
 var hardMode = document.getElementById('hardModeInput').checked;
 var p1Name = p1Val || (mode === 'coop' ? 'Player 1' : 'Player');
 var p2Name = p2Val || 'Player 2';

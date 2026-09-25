@@ -11,6 +11,7 @@ const THEMES = {
             back: 'assets/dungeon/back.png',
             background: 'assets/dungeon/background.png',
             portraits: 'assets/dungeon/portraits/',
+            portraitCount: 15,
         
 
                 monsters: {
@@ -429,6 +430,7 @@ const THEMES = {
             back: 'assets/shaun/back.png',
             background: 'assets/shaun/background.png',
             portraits: 'assets/shaun/portraits/',
+            portraitCount: 20,
         },
 
         //audio: {},
@@ -500,6 +502,7 @@ const THEMES = {
             back: 'assets/space/back.png',
             background: 'assets/space/background.png',
             portraits: 'assets/space/portraits/',
+            portraitCount: 16,
         },
 
         //audio: {},
@@ -573,6 +576,7 @@ const THEMES = {
             back: 'assets/pirate/back.png',
             background: 'assets/pirate/background.png',
             portraits: 'assets/pirate/portraits/',
+            portraitCount: 16,
         },
 
         //audio: {},
@@ -644,6 +648,7 @@ const THEMES = {
             back: 'assets/ninja/back.png',
             background: 'assets/ninja/background.png',
             portraits: 'assets/ninja/portraits/',
+            portraitCount: 16,
         },
 
         //audio: {},
