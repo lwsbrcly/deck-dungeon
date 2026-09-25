@@ -448,9 +448,9 @@ const THEMES = {
         colours: {
             bg: "#19191a",
             panelBg: "#ab0431",
-            border: "#6a5a56",
+            border: "#3e3e3e",
             text: "#ecd7de",
-            muted: "#493231",
+            muted: "#E6A45D",
             red: "#ab0431",
             highlight: "#FCBC29",
             rooms: "#f6ee55",
