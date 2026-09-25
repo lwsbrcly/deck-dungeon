@@ -68,10 +68,18 @@ select, input { width: 100%; padding: 8px; background: var(--bg); border: 1px so
   gap: 8px;
 }
 
-.player-setup-row > input[type="text"] {
+.player-name-field {
   flex: 0 1 160px;
   width: 160px;
   min-width: 0;
+}
+
+.player-name-field label {
+  margin-bottom: 4px;
+}
+
+.player-name-field input[type="text"] {
+  width: 160px;
 }
 
 .portrait-picker {
