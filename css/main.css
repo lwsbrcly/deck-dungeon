@@ -48,14 +48,29 @@ main {
 label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
 select, input { width: 100%; padding: 8px; background: var(--bg); border: 1px solid var(--border); color: #fff; border-radius: 6px; font-size: 0.9rem; -webkit-appearance: none; appearance: none; }
 
+.setup-screen > .form-group:first-child {
+  width: 160px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.setup-screen > .form-group:first-child select {
+  width: 160px;
+}
+
 .player-setup-row {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
 }
 
 .player-setup-row > input[type="text"] {
-  flex: 1;
+  flex: 0 1 160px;
+  width: 160px;
   min-width: 0;
 }
 
