@@ -48,38 +48,51 @@ main {
 label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
 select, input { width: 100%; padding: 8px; background: var(--bg); border: 1px solid var(--border); color: #fff; border-radius: 6px; font-size: 0.9rem; -webkit-appearance: none; appearance: none; }
 
-.setup-screen > .form-group:first-child {
-  width: 160px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.setup-screen > .form-group:first-child select {
-  width: 160px;
-}
-
-.player-setup-row {
-  width: fit-content;
+.setup-controls {
+  width: 380px;
   max-width: 100%;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
+  margin: 0 auto 12px;
+  display: grid;
+  grid-template-columns: 160px 200px;
+  gap: 20px;
+  align-items: start;
   justify-content: center;
-  gap: 8px;
+  text-align: left;
+}
+
+.setup-fields {
+  width: 160px;
+}
+
+.setup-fields .form-group {
+  width: 160px;
+  margin-bottom: 14px;
+}
+
+.setup-fields select,
+.player-name-field input[type="text"] {
+  width: 160px;
+}
+
+.setup-portrait {
+  width: 200px;
+  text-align: center;
+}
+
+.portrait-hint {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.2;
 }
 
 .player-name-field {
-  flex: 0 1 160px;
   width: 160px;
   min-width: 0;
 }
 
 .player-name-field label {
   margin-bottom: 4px;
-}
-
-.player-name-field input[type="text"] {
-  width: 160px;
 }
 
 .portrait-picker {
