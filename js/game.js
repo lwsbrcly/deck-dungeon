@@ -125,8 +125,12 @@ function initPortraitPicker(playerId) {
   var current = Math.floor(Math.random() * 15) + 1;
 
   function showPortrait() {
+    var theme = THEMES[selectedTheme || 'dungeon'];
+    var portraitBase = theme && theme.artwork && theme.artwork.portraits
+      ? theme.artwork.portraits
+      : 'assets/dungeon/portraits/';
     input.value = String(current);
-    img.src = 'assets/portraits/' + current + '.png';
+    img.src = portraitBase + current + '.png';
     img.alt = 'Player portrait ' + current;
   }
 
@@ -286,7 +290,11 @@ document.getElementById('p2DisplayName').textContent = p2Name;
 
 var p1PortraitImage = document.getElementById('p1Portrait');
 if (p1PortraitImage) {
-  p1PortraitImage.src = 'assets/portraits/' + state.p1Portrait + '.png';
+  var portraitTheme = THEMES[state.theme || 'dungeon'];
+  var portraitBase = portraitTheme && portraitTheme.artwork && portraitTheme.artwork.portraits
+    ? portraitTheme.artwork.portraits
+    : 'assets/dungeon/portraits/';
+  p1PortraitImage.src = portraitBase + state.p1Portrait + '.png';
 }
 
 if (mode !== 'coop') {
