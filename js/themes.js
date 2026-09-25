@@ -44,8 +44,6 @@ const THEMES = {
         'Bone Dragon': 'assets/dungeon/monsters/bone_dragon.png'
     },
             
-
-            
     weapons: {
         'diamonds_5': 'assets/dungeon/mace.png',
         'diamonds_7': 'assets/dungeon/battleaxe.png',
@@ -454,7 +452,7 @@ const THEMES = {
             text: "#ecd7de",
             muted: "#493231",
             red: "#ab0431",
-            highlight: "#1a1a1a",
+            highlight: "#FCBC29",
             rooms: "#f6ee55",
         },
 
