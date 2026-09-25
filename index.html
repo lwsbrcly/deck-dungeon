@@ -127,34 +127,37 @@
         <section id="rules" class="screen">
         
           <div id="setupScreen" class="setup-screen">
-            <div class="form-group">
-              <label for="modeSelect">Game Mode</label>
-              <select id="modeSelect" onchange="toggleModeInputs()">
-                <option value="solo_dagger">Solitaire (1 Player)</option>
-                <option value="coop" disabled>Co-op (2 Players) — Coming later</option>
-              </select>
-            </div>
-            
-            <div class="form-group" id="p1Group">
-              <div class="player-setup-row">
-                <div class="player-name-field">
-                  <label id="p1Label" for="p1NameInput">Player Name</label>
-                  <input type="text" id="p1NameInput" value="Hero 1" maxlength="20">
+            <div class="setup-controls">
+              <div class="setup-fields">
+                <div class="form-group">
+                  <label for="modeSelect">Game Mode</label>
+                  <select id="modeSelect" onchange="toggleModeInputs()">
+                    <option value="solo_dagger">Solitaire (1 Player)</option>
+                    <option value="coop" disabled>Co-op (2 Players) — Coming later</option>
+                  </select>
                 </div>
+
+                <div class="form-group" id="p1Group">
+                  <div class="player-name-field">
+                    <label id="p1Label" for="p1NameInput">Player Name</label>
+                    <input type="text" id="p1NameInput" value="Hero 1" maxlength="20">
+                  </div>
+                  <input type="hidden" id="p1PortraitInput" value="">
+                </div>
+
+                <div class="form-group" id="p2Group" style="display: none;">
+                  <div class="player-name-field">
+                    <label for="p2NameInput">Player 2 Name</label>
+                    <input type="text" id="p2NameInput" value="Hero 2" maxlength="20">
+                  </div>
+                  <input type="hidden" id="p2PortraitInput" value="">
+                </div>
+              </div>
+
+              <div class="setup-portrait">
                 <div class="portrait-picker" id="p1PortraitPicker" aria-label="Choose Player 1 portrait"></div>
+                <div class="portrait-hint"><em>Click to cycle portraits</em></div>
               </div>
-              <input type="hidden" id="p1PortraitInput" value="">
-            </div>
-            
-            <div class="form-group" id="p2Group" style="display: none;">
-              <div class="player-setup-row">
-                <div class="player-name-field">
-                  <label for="p2NameInput">Player 2 Name</label>
-                  <input type="text" id="p2NameInput" value="Hero 2" maxlength="20">
-                </div>
-                <div class="portrait-picker" id="p2PortraitPicker" aria-label="Choose Player 2 portrait"></div>
-              </div>
-              <input type="hidden" id="p2PortraitInput" value="">
             </div>
         
             <div class="setup-rules" id="setupRulesText"></div>
@@ -167,7 +170,7 @@
                 <span><strong>Hard Mode</strong> — Monsters fought with weapon must be strictly <em>less than</em> the previous monster slain value.</span>
               </label>
             </div>
-          </div>
+          </div>          </div>
         </section>
     
         <!-- Game UI -->
