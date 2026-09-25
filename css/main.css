@@ -927,11 +927,11 @@ button.primary-btn {
 /* SVG Custom Artwork Styling */
 .card-art {
   position: absolute;
-  top: 45%;
+  top: 54%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 70%;
-  height: 65%;
+  width: 52%;
+  height: 52%;
   pointer-events: none;
   opacity: 0.95;
   display: flex;
@@ -942,6 +942,12 @@ button.primary-btn {
   width: 100%;
   height: 100%;
   stroke: currentColor;
+}
+
+.card-art.png-art {
+  top: 45%;
+  width: 70%;
+  height: 65%;
 }
 
 .card-art.png-art img {
