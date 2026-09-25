@@ -419,6 +419,9 @@ function cardHTML(c, customCornerText) {
     var pngArt = theme && theme.artwork && theme.artwork.weapons
       ? theme.artwork.weapons[cardKey]
       : null;
+    var foodArt = theme && theme.artwork && theme.artwork.food
+      ? theme.artwork.food[c.name]
+      : null;
     var svgArt = theme && theme.artwork && theme.artwork.svgCards
       ? theme.artwork.svgCards[cardKey]
       : null;
@@ -427,6 +430,8 @@ function cardHTML(c, customCornerText) {
       centerArt = '<div class="card-art monster-art"><img src="' + monsterArt + '" alt=""></div>';
     } else if (pngArt) {
       centerArt = '<div class="card-art png-art"><img src="' + pngArt + '" alt=""></div>';
+    } else if (foodArt) {
+      centerArt = '<div class="card-art png-art"><img src="' + foodArt + '" alt=""></div>';
     } else if (svgArt) {
       centerArt = '<div class="card-art">' + svgArt + '</div>';
     } else {
