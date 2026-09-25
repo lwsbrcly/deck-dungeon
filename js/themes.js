@@ -441,6 +441,18 @@ const THEMES = {
                 'diamonds_9': 'assets/shaun/weapons/cricket_bat.png',
                 'diamonds_10': 'assets/shaun/weapons/winchester.png',
             },
+
+            food: {
+                'Peanuts': 'assets/shaun/food/peanuts.png',
+                'Fulci\'s Fish': 'assets/shaun/food/fish.png',
+                'Guinness': 'assets/shaun/food/guinness.png',
+                'Regular Coke': 'assets/shaun/food/coke.png',
+                'Toastie': 'assets/shaun/food/toastie.png',
+                'Cold Pint': 'assets/shaun/food/pint.png',
+                'Meat Pie': 'assets/shaun/food/meat_pie.png',
+                'Pork Scratchings': 'assets/shaun/food/pork_scratchings.png',
+                'Cornetto': 'assets/shaun/food/cornetto.png',
+            },
         },
 
         //audio: {},
@@ -495,7 +507,7 @@ const THEMES = {
             },
             potions: {
                 hearts: {
-                    2: 'Peanuts', 3: 'Fulcis Fish', 4: 'Guinness', 5: 'Regular Coke',
+                    2: 'Peanuts', 3: 'Fulci\'s Fish', 4: 'Guinness', 5: 'Regular Coke',
                     6: 'Toastie', 7: 'Cold Pint', 8: 'Meat Pie', 9: 'Pork Scratchings', 10: 'Cornetto'
                 }
             }
