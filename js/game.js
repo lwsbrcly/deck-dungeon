@@ -7,6 +7,10 @@ function applySelectedTheme() {
     var colours = theme.colours || {};
     var root = document.documentElement;
 
+    document.title = theme.name || 'Deck Game Engine';
+    var startBtn = document.getElementById('startBtn');
+    if (startBtn) startBtn.textContent = 'Enter ' + (theme.name || 'Game');
+
     root.style.setProperty('--bg', colours.bg || '');
     root.style.setProperty('--card-bg', colours.cardBg || '');
     root.style.setProperty('--panel-bg', colours.panelBg || '');
@@ -211,6 +215,8 @@ var hardMode = document.getElementById('hardModeInput').checked;
 var p1Name = p1Val || (mode === 'coop' ? 'Player 1' : 'Player');
 var p2Name = p2Val || 'Player 2';
 var maxHP = mode === 'coop' ? 10 : 20;
+var currentTheme = THEMES[selectedTheme || 'dungeon'];
+var currentThemeName = currentTheme ? currentTheme.name : 'Deck Dungeon';
 
 var isDaggerMode = true; //mode !== 'coop';
 var initialDeck = makeDeck(isDaggerMode);
@@ -242,6 +248,7 @@ if (isDaggerMode || mode === 'coop') {
 }
 
 state = {
+    theme: selectedTheme || 'dungeon',
   mode: mode,
   hardMode: hardMode,
   maxHP: maxHP,
@@ -294,7 +301,7 @@ fillDungeon();
 var firstRoom = state.dungeon.slice();
 state.dungeon = [];
 
-log('A new ' + (mode === 'coop' ? 'co-op' : 'solo') + ' run begins.',false); 
+log('A new ' + (mode === 'coop' ? 'co-op' : 'solo') + ' ' + currentThemeName + ' run begins.', false); 
 if (isDaggerMode) {
   log(p1Name + ' enters the dungeon wielding a Dagger (2♦).');
 } else if (mode === 'coop') {
