@@ -147,17 +147,18 @@ function initPortraitPicker(playerId) {
 }
 
 function toggleModeInputs() {
-    var modeSelect = document.getElementById('modeSelect');
-    var mode = modeSelect ? modeSelect.value : 'solo_dagger';
     var p2Group = document.getElementById('p2Group');
     var p1Label = document.querySelector('#p1Group label');
     var setupRules = document.getElementById('setupRulesText');
-    
+
+    if (p2Group) p2Group.style.display = 'none';
+    if (p1Label) p1Label.textContent = 'Player Name';
+
     var baseRules = '<h3>Goal of the Game</h3>' +
       '<p style="margin-bottom: 8px;">Defeat all monster cards to complete the game!</p>' +
       '<h3>Cards & Rules</h3>' +
       '<ul>' +
-        '<li><strong>Standard deck of cards:</strong> J, Q, K, A of both Diamonds & Hearts are removed. The remaining 44 cards form <strong><em>the deck.</em></strong></li>' + 
+        '<li><strong>Standard deck of cards:</strong> J, Q, K, A of both Diamonds & Hearts are removed. The remaining 44 cards form <strong><em>the deck.</em></strong></li>' +
         '<li><strong>♣ ♠ Clubs & Spades (Monsters):</strong> Fight them with your equipped weapon, or bare-handed.</li>' +
         '<li><strong>♦ Diamonds (Weapons):</strong> Equip one at a time. Deflect incoming damage, up to your weapon\'s value. Can only be used against monsters <em>less than or equal</em> to previous monster slain.</li>' +
         '<li><strong>♥ Hearts (Consumables):</strong> Restore lost HP, up to your maximum health. Only 1 per room allowed!</li>' +
@@ -170,24 +171,8 @@ function toggleModeInputs() {
         '<li><strong>Discard:</strong> Don\'t want to replace your current weapon? Don\'t want to fight that last monster? <strong>Discard</strong> unwanted weapon/consumable cards to action them and move on.</li>' +
         '<li><strong>Fleeing:</strong> Press <em>Flee</em> to skip a room - 4 new cards are dealt. Fled cards are shuffled back into the deck for later. You cannot flee twice in a row, so use it wisely!</li>' +
       '</ul>';
-    
-    if (mode === 'coop') {
-      if (p2Group) p2Group.style.display = 'block';
-      if (p1Label) p1Label.textContent = 'Player 1 Name';
-      if (setupRules) {
-        setupRules.innerHTML = baseRules + 
-          '<h3>Co-op Hardcore Rules</h3>' +
-          '<ul>' +
-            '<li><strong>HP Limit:</strong> Both heroes start with 10 HP.</li>' +
-            '<li><strong>Starting Weapons:</strong> Both heroes begin with a <strong>2♦ Dagger</strong> equipped.</li>' +
-            '<li><strong>2v1 Attacks:</strong> Team up with weapons or fists against a monster to split incoming damage evenly.</li>' +
-            '<li><strong>Revives:</strong> Revive a downed ally with (Card Value / 2) + 1 HP.</li>' +
-          '</ul>';
-      }
-    };
-    if (setupRules) {
-        setupRules.innerHTML = baseRules
-    }
+
+    if (setupRules) setupRules.innerHTML = baseRules;
 }
 
 function showSetupScreen() {
