@@ -490,19 +490,20 @@ const THEMES = {
     space: {
         
         name: 'Space Deck',
-        description: 'Go to the Winchester, have a nice cold pint, and wait for all of this to blow over.',
+        description: 'You dock your mercenary ship and enter the derelict freighter. Wait. Something\'s moving...',
 
         artwork: {
-            logo: 'assets/shaun/logo.png',
-            card: 'assets/shaun/card.png',
-            back: 'assets/shaun/back.png',
+            logo: 'assets/space/logo.png',
+            card: 'assets/space/card.png',
+            back: 'assets/space/back.png',
+            background: 'assets/space/background.png',
         },
 
         //audio: {},
             
         colours: {
-            bg: "transparent",
-            panelBg: "transparent",
+            bg: "#19191a",
+            panelBg: "#a0723f",
             border: "#6a5a56",
             text: "#ecd7de",
             muted: "#493231",
@@ -532,28 +533,170 @@ const THEMES = {
         cards: {
             monsters: {
                 clubs: {
-                    2: 'Jill', 3: 'Derek', 4: 'Spinster', 5: 'Noel',
-                    6: 'Danny', 7: 'Snakehips', 8: 'Nelson', 9: 'Mary',
-                    10: 'Trish', J: 'John', Q: 'Barbara', K: 'Philip', A: 'Pete'
+                    2: 'Sporeling', 3: 'Scuttler', 4: 'Drone', 5: 'Stinger',
+                    6: 'Skitterer', 7: 'Ravager', 8: 'Stalker', 9: 'Broodguard',
+                    10: 'Warrior', J: 'Crusher', Q: 'Matriarch', K: 'Overmind', A: 'Hive Queen'
                 },
                 spades: {
-                    2: 'Football Kid', 3: 'Groom', 4: 'Homeless', 5: 'Shopkeeper',
-                    6: 'Hoodie', 7: 'Youth', 8: 'Courier', 9: 'Stalker',
-                    10: 'White Lies', J: 'Pigeon Guy', Q: 'Florist', K: 'White Eyes', A: 'The Twins'
+                    2: 'Sporeling', 3: 'Scuttler', 4: 'Drone', 5: 'Stinger',
+                    6: 'Skitterer', 7: 'Ravager', 8: 'Stalker', 9: 'Broodguard',
+                    10: 'Warrior', J: 'Crusher', Q: 'Matriarch', K: 'Overmind', A: 'Broodlord'
                 }
             },
             weapons: {
                 diamonds: {
-                    2: 'Vinyl Record', 3: 'Dart', 4: 'Swingball', 5: 'Golf Club',
-                    6: 'Hockey Stick', 7: 'Pool Cue', 8: 'Shovel', 9: 'Cricket Bat', 10: 'Winchester'
+                    2: 'Combat Knife', 3: 'Shock Baton', 4: 'Scattergun', 5: 'Pulse Rifle',
+                    6: 'Plasma Launcher', 7: 'Grav Hammer', 8: 'Arc Cannon', 9: 'Sonic Railgun',
+                    10: 'Disruptor™ MkII'
                 }
             },
             potions: {
                 hearts: {
-                    2: 'Peanuts', 3: 'Fulcis Fish', 4: 'Guinness', 5: 'Regular Coke',
-                    6: 'Toastie', 7: 'Cold Pint', 8: 'Meat Pie', 9: 'Pork Scratchings', 10: 'Cornetto'
+                    2: 'Nutrient Gel', 3: 'Field Rations', 4: 'Med-Kit', 5: 'Adrenal Shot',
+                    6: 'Pulse Battery', 7: 'Armour Plate', 8: 'Nanobot Repairs', 9: 'Combat Stimulant',
+                    10: 'MechSuit™'
                 }
             }
         }
-    }
+    },
+    pirate: {
+        
+        name: 'All Hands On Deck',
+        description: 'Arrgh me hearties! Sail the 7 seas and protect yer booty from the sea folk!',
+
+        artwork: {
+            logo: 'assets/pirate/logo.png',
+            card: 'assets/pirate/card.png',
+            back: 'assets/pirate/back.png',
+            background: 'assets/pirate/background.png',
+        },
+
+        //audio: {},
+            
+        colours: {
+            bg: "#19191a",
+            panelBg: "#a0723f",
+            border: "#6a5a56",
+            text: "#ecd7de",
+            muted: "#493231",
+            red: "#ab0431",
+            highlight: "#1a1a1a",
+            rooms: "#f6ee55",
+        },
+
+        text: {
+            gameTitle: 'Shaun of the Deck',
+            location: 'The Pub',
+            monster: 'Zombie',
+            weapon: 'Weapon',
+            potion: 'Food',
+            equip: 'grabs',
+            discard: 'chucks',
+            fight: 'whacks',
+            fist: 'tussles with',
+            heal: 'consumes',
+            flee: 'Ran for it',
+            enter: 'Heads out armed with',
+            draw: 'No one survived etc',
+            lose: 'The dungeon has defeated you',
+            win: 'You have defeated the dungeon!',
+        },
+
+        cards: {
+            monsters: {
+                clubs: {
+                    2: 'Merman', 3: 'Merman', 4: 'Merman', 5: 'Merman',
+                    6: 'Merman', 7: 'Merman', 8: 'Merman', 9: 'Merman',
+                    10: 'Merman', J: 'Merman', Q: 'Merman', K: 'Merman', A: 'Merman'
+                },
+                spades: {
+                    2: 'Merman', 3: 'Merman', 4: 'Merman', 5: 'Merman',
+                    6: 'Merman', 7: 'Merman', 8: 'Merman', 9: 'Merman',
+                    10: 'Merman', J: 'Merman', Q: 'Merman', K: 'Merman', A: 'Merman'
+                }
+            },
+            weapons: {
+                diamonds: {
+                    2: 'Cutlass', 3: 'Cutlass', 4: 'Cutlass', 5: 'Cutlass',
+                    6: 'Cutlass', 7: 'Cutlass', 8: 'Cutlass', 9: 'Cutlass', 10: 'Cutlass'
+                }
+            },
+            potions: {
+                hearts: {
+                    2: 'Rum', 3: 'Rum', 4: 'Rum', 5: 'Rum',
+                    6: 'Rum', 7: 'Rum', 8: 'Rum', 9: 'Rum', 10: 'Rum'
+                }
+            }
+        }
+    },
+    ninja: {
+        
+        name: 'Deck of Shadows',
+        description: 'Use your skills to defend your village!',
+
+        artwork: {
+            logo: 'assets/ninja/logo.png',
+            card: 'assets/ninja/card.png',
+            back: 'assets/ninja/back.png',
+            background: 'assets/ninja/background.png',
+        },
+
+        //audio: {},
+            
+        colours: {
+            bg: "#19191a",
+            panelBg: "#a0723f",
+            border: "#6a5a56",
+            text: "#ecd7de",
+            muted: "#493231",
+            red: "#ab0431",
+            highlight: "#1a1a1a",
+            rooms: "#f6ee55",
+        },
+
+        text: {
+            gameTitle: 'Shaun of the Deck',
+            location: 'The Pub',
+            monster: 'Zombie',
+            weapon: 'Weapon',
+            potion: 'Food',
+            equip: 'grabs',
+            discard: 'chucks',
+            fight: 'whacks',
+            fist: 'tussles with',
+            heal: 'consumes',
+            flee: 'Ran for it',
+            enter: 'Heads out armed with',
+            draw: 'No one survived etc',
+            lose: 'The dungeon has defeated you',
+            win: 'You have defeated the dungeon!',
+        },
+
+        cards: {
+            monsters: {
+                clubs: {
+                    2: 'Samurai', 3: 'Samurai', 4: 'Samurai', 5: 'Samurai',
+                    6: 'Samurai', 7: 'Samurai', 8: 'Samurai', 9: 'Samurai',
+                    10: 'Samurai', J: 'Samurai', Q: 'Samurai', K: 'Samurai', A: 'Samurai'
+                },
+                spades: {
+                    2: 'Samurai', 3: 'Samurai', 4: 'Samurai', 5: 'Samurai',
+                    6: 'Samurai', 7: 'Samurai', 8: 'Samurai', 9: 'Samurai',
+                    10: 'Samurai', J: 'Samurai', Q: 'Samurai', K: 'Samurai', A: 'Samurai'
+                }
+            },
+            weapons: {
+                diamonds: {
+                    2: 'Nunchucks', 3: 'Nunchucks', 4: 'Nunchucks', 5: 'Nunchucks',
+                    6: 'Nunchucks', 7: 'Nunchucks', 8: 'Nunchucks', 9: 'Nunchucks', 10: 'Nunchucks'
+                }
+            },
+            potions: {
+                hearts: {
+                    2: 'Sushi', 3: 'Sushi', 4: 'Sushi', 5: 'Sushi',
+                    6: 'Sushi', 7: 'Sushi', 8: 'Sushi', 9: 'Sushi', 10: 'Sushi'
+                }
+            }
+        }
+    },
 };
