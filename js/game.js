@@ -625,17 +625,12 @@ var deckEl = document.getElementById('p1Deck');
 var deckCardEl = deckEl ? deckEl.querySelector('.deck-card') : null;
 var deckRect = deckCardEl ? deckCardEl.getBoundingClientRect() : (deckEl ? deckEl.getBoundingClientRect() : null);
 
-// Deal each card from the deck, with a small stagger so they arrive
-// one at a time rather than looking like a single group movement.
 for (var i = startIndex; i < cards.length; i++) {
   var card = cards[i];
   var rect = card.getBoundingClientRect();
-  var clone = document.createElement('div');
-  clone.className = 'action-clone enter-card';
-  // The top card is the last rendered deck layer. That layer is
-  // offset slightly up/left from the dotted deck box, so start the
-  // animation from the visible centre of that top card rather than
-  // from the bottom layer underneath it.
+  var clone = card.cloneNode(true);
+  clone.classList.add('action-clone', 'enter-card');
+
   var deckDepth = deckRect ? Math.ceil(state.deck.length / 3) : 0;
   var deckTopOffset = -(deckDepth / 2);
   var dealStartLeft = deckRect ? deckRect.left + deckTopOffset : rect.left;
@@ -648,7 +643,6 @@ for (var i = startIndex; i < cards.length; i++) {
   clone.style.setProperty('--deal-delay', ((i - startIndex) * 50) + 'ms');
 
   if (deckRect) {
-    // Use top-left coordinates so the flight path is exact.
     clone.style.setProperty('--dx', (rect.left - dealStartLeft) + 'px');
     clone.style.setProperty('--dy', (rect.top - dealStartTop) + 'px');
   } else {
@@ -656,24 +650,8 @@ for (var i = startIndex; i < cards.length; i++) {
     clone.style.setProperty('--dy', '0px');
   }
 
-  // Build a real two-sided card. Both faces stay in place for the
-  // entire animation; the wrapper itself performs the Y rotation.
-  var back = document.createElement('img');
-  back.className = 'deal-card-back';
-  back.src = THEMES[selectedTheme || 'dungeon'].artwork.back;
-  back.alt = '';
-
-  var front = card.cloneNode(true);
-  front.classList.add('deal-card-front');
-
-  clone.appendChild(back);
-  clone.appendChild(front);
-
   card.classList.add('action-hidden');
 
-  // Keep the deal clone inside the same scaled application stage as the
-  // real card. This keeps its typography and artwork at exactly the same
-  // visual scale as the settled card.
   var appStage = document.querySelector('main');
   if (appStage) {
     var appRect = appStage.getBoundingClientRect();
@@ -691,7 +669,6 @@ for (var i = startIndex; i < cards.length; i++) {
 
 if (!animated.length) return;
 
-// Match the card-entry animation with one whoosh per incoming card.
 dealCardsSound(animated.length);
 
 await new Promise(function(resolve) { requestAnimationFrame(resolve); });
