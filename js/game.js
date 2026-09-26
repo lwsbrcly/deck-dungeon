@@ -390,7 +390,9 @@ function selectCard(i) {
 function cardHTML(c, customCornerText) {
     if (!c) return '';
     var red = c.suit === 'hearts' || c.suit === 'diamonds';
-    var cornerText = customCornerText !== undefined ? customCornerText : (c.rank + '<br>' + SUITS[c.suit]);
+    var cornerText = customCornerText !== undefined ? customCornerText : null;
+    var rankText = customCornerText !== undefined ? customCornerText : c.rank;
+    var suitText = customCornerText !== undefined ? '' : SUITS[c.suit];
     var valueCorner = (c.value && c.value > 10) ? '<div class="card-value-corner">' + c.value + '</div>' : '';
     
     // Render custom PNG artwork first, then fall back to the existing SVG artwork.
@@ -426,7 +428,7 @@ function cardHTML(c, customCornerText) {
       : 'assets/dungeon/card.png';
     
     return '<div class="card ' + (red ? 'red' : 'black') + '" style="background-image: url(' + cardArtwork + ');">' +
-      '<div class="card-rank">' + cornerText + '</div>' +
+      '<div class="card-rank"><span class="card-rank-value">' + rankText + '</span><span class="card-rank-suit">' + suitText + '</span></div>' +
       valueCorner +
       centerArt +
       '<div class="card-title">' + c.name + '</div>' +
