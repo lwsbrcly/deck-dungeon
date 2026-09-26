@@ -673,7 +673,7 @@ button.primary-btn {
   animation: enter-card 800ms cubic-bezier(.2,.8,.25,1) var(--deal-delay, 0ms) forwards;
   will-change: transform;
   transform-style: preserve-3d;
-  perspective: 900px;
+  perspective: none;
   opacity: 1 !important;
 }
 .enter-card .deal-card-back,
