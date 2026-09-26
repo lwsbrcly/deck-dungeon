@@ -28,6 +28,7 @@ body {
   justify-content: center; 
   padding: 10px; 
   min-height: 100vh; 
+  overflow-x: hidden;
 }
 
 .container { width: 100%; max-width: 667px; display: flex; flex-direction: column; gap: 10px; }
