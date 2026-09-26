@@ -26,9 +26,8 @@ body {
   color: var(--text); 
   display: flex; 
   justify-content: center; 
-  padding: 10px; 
-  min-height: 100vh; 
-  overflow-x: hidden;
+  align-items: flex-start;
+  min-height: 100vh;
 }
 
 .container { width: 100%; max-width: 667px; display: flex; flex-direction: column; gap: 10px; }
@@ -37,9 +36,10 @@ header { position: relative; text-align: center; border-bottom: 1px solid var(--
 h1 { font-size: 1.5rem; letter-spacing: 1px; color: var(--highlight); }
 
 main {
-  width: 100%;
-  max-width: 667px;
-  min-width: 0;
+  position: relative;
+  width: 667px;
+  height: 1000px;
+  flex: 0 0 667px;
   background: var(--bg);
 }
 
