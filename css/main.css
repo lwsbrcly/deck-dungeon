@@ -932,11 +932,11 @@ button.primary-btn {
 
 .card-value-corner {
   position: absolute;
-  top: 6.5%;
+  top: 7%;
   right: 9%;
   font-weight: bold;
   font-size: 1.1rem;
-  line-height: 1;
+  line-height: 1.05;
   z-index: 2;
   text-align: right;
 }
