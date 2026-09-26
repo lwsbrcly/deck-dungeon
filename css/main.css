@@ -185,8 +185,8 @@ button.primary-btn {
 
 /* Game Layout — 667 × 1000 master canvas */
 .game-layout {
-  width: min(667px, 100vw);
-  height: min(1000px, 150vw);
+  width: 667px;
+  height: 1000px;
   margin: 0 auto;
 }
 
