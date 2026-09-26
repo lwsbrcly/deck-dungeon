@@ -675,27 +675,6 @@ button.primary-btn {
   opacity: 1 !important;
 }
 
-.enter-card .deal-card-back,
-.enter-card .deal-card-front {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
-  backface-visibility: visible;
-  -webkit-backface-visibility: visible;
-  will-change: transform, opacity;
-}
-
-.enter-card .deal-card-back {
-  object-fit: cover;
-  animation: deal-flip-back 800ms ease-in-out var(--deal-delay, 0ms) forwards;
-}
-
-.enter-card .deal-card-front {
-  animation: deal-flip-front 800ms ease-in-out var(--deal-delay, 0ms) forwards;
-}
-
 @keyframes enter-card {
   0% {
     transform: translate3d(0,0,0);
@@ -704,27 +683,6 @@ button.primary-btn {
     transform: translate3d(var(--dx),var(--dy),0);
   }
 }
-
-@keyframes deal-flip-back {
-  0%, 42% {
-    transform: scaleX(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scaleX(0);
-    opacity: 0;
-  }
-  100% {
-    transform: scaleX(0);
-    opacity: 0;
-  }
-}
-
-@keyframes deal-flip-front {
-  0%, 42% {
-    transform: scaleX(0);
-    opacity: 0;
-  }
   50% {
     transform: scaleX(0);
     opacity: 0;
