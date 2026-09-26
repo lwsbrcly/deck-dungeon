@@ -623,6 +623,14 @@ var startIndex = skipFirst ? 1 : 0;
 var animated = [];
 var deckEl = document.getElementById('p1Deck');
 var deckCardEl = deckEl ? deckEl.querySelector('.deck-card') : null;
+var appStage = document.querySelector('main');
+
+if (!appStage) return;
+
+var appRect = appStage.getBoundingClientRect();
+var scale = appRect.width / 667;
+if (!scale) scale = 1;
+
 var deckRect = deckCardEl ? deckCardEl.getBoundingClientRect() : (deckEl ? deckEl.getBoundingClientRect() : null);
 
 for (var i = startIndex; i < cards.length; i++) {
@@ -631,39 +639,36 @@ for (var i = startIndex; i < cards.length; i++) {
   var clone = card.cloneNode(true);
   clone.classList.add('action-clone', 'enter-card');
 
+  // Work entirely in the application's 667 x 1000 coordinate system.
+  // The real card uses container-query sizing, so the animation clone
+  // needs the same intrinsic dimensions rather than the already-scaled
+  // browser dimensions returned by getBoundingClientRect().
+  var cardWidth = rect.width / scale;
+  var cardHeight = rect.height / scale;
+
   var deckDepth = deckRect ? Math.ceil(state.deck.length / 3) : 0;
   var deckTopOffset = -(deckDepth / 2);
-  var dealStartLeft = deckRect ? deckRect.left + deckTopOffset : rect.left;
-  var dealStartTop = deckRect ? deckRect.top + deckTopOffset : rect.top;
+  var dealStartLeft = deckRect
+    ? (deckRect.left - appRect.left) / scale + deckTopOffset
+    : (rect.left - appRect.left) / scale;
+  var dealStartTop = deckRect
+    ? (deckRect.top - appRect.top) / scale + deckTopOffset
+    : (rect.top - appRect.top) / scale;
 
+  var targetLeft = (rect.left - appRect.left) / scale;
+  var targetTop = (rect.top - appRect.top) / scale;
+
+  clone.style.position = 'absolute';
   clone.style.left = dealStartLeft + 'px';
   clone.style.top = dealStartTop + 'px';
-  clone.style.width = rect.width + 'px';
-  clone.style.height = rect.height + 'px';
+  clone.style.width = cardWidth + 'px';
+  clone.style.height = cardHeight + 'px';
   clone.style.setProperty('--deal-delay', ((i - startIndex) * 50) + 'ms');
-
-  if (deckRect) {
-    clone.style.setProperty('--dx', (rect.left - dealStartLeft) + 'px');
-    clone.style.setProperty('--dy', (rect.top - dealStartTop) + 'px');
-  } else {
-    clone.style.setProperty('--dx', '0px');
-    clone.style.setProperty('--dy', '0px');
-  }
+  clone.style.setProperty('--dx', (targetLeft - dealStartLeft) + 'px');
+  clone.style.setProperty('--dy', (targetTop - dealStartTop) + 'px');
 
   card.classList.add('action-hidden');
-
-  var appStage = document.querySelector('main');
-  if (appStage) {
-    var appRect = appStage.getBoundingClientRect();
-    var scale = appRect.width / 667;
-    if (!scale) scale = 1;
-
-    clone.style.position = 'absolute';
-    clone.style.left = ((dealStartLeft - appRect.left) / scale) + 'px';
-    clone.style.top = ((dealStartTop - appRect.top) / scale) + 'px';
-  }
-
-  (appStage || document.body).appendChild(clone);
+  appStage.appendChild(clone);
   animated.push({ clone: clone, card: card });
 }
 
