@@ -94,6 +94,10 @@
 }
 
 .screen {
+    position: absolute;
+    inset: 0;
+    width: 667px;
+    height: 1000px;
     display: none;
     background: var(--bg);
 }
@@ -102,20 +106,4 @@
     display: block;
 }
 
-/* Mobile */
-
-@media (max-width: 700px) {
-
-    .theme-grid {
-        grid-template-columns: 1fr;
-    }
-
-    #game-selector h1 {
-        font-size: 32px;
-    }
-
-    .theme-card {
-        min-height: 240px;
-    }
-
-}
+/* The selector uses the same fixed application stage as the rules and game screens. */
