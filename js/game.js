@@ -670,7 +670,22 @@ for (var i = startIndex; i < cards.length; i++) {
   clone.appendChild(front);
 
   card.classList.add('action-hidden');
-  document.body.appendChild(clone);
+
+  // Keep the deal clone inside the same scaled application stage as the
+  // real card. This keeps its typography and artwork at exactly the same
+  // visual scale as the settled card.
+  var appStage = document.querySelector('main');
+  if (appStage) {
+    var appRect = appStage.getBoundingClientRect();
+    var scale = appRect.width / 667;
+    if (!scale) scale = 1;
+
+    clone.style.position = 'absolute';
+    clone.style.left = ((dealStartLeft - appRect.left) / scale) + 'px';
+    clone.style.top = ((dealStartTop - appRect.top) / scale) + 'px';
+  }
+
+  (appStage || document.body).appendChild(clone);
   animated.push({ clone: clone, card: card });
 }
 
