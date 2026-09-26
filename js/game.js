@@ -1310,16 +1310,16 @@ function getCardCenter(kind, index, playerId) {
 }
 
 function resizeGameCanvas() {
-  var gameEl = document.getElementById('game');
-  var canvas = document.querySelector('.game-canvas');
-  if (!gameEl || !canvas) return;
+  var app = document.querySelector('main');
+  if (!app) return;
 
-  var available = Math.min(667, window.innerWidth);
+  var available = Math.min(667, document.documentElement.clientWidth);
   var scale = available / 667;
 
-  gameEl.style.width = (667 * scale) + 'px';
-  gameEl.style.height = (1000 * scale) + 'px';
-  canvas.style.transform = 'scale(' + scale + ')';
+  // The selector, rules/setup and game are all children of the same
+  // 667 × 1000 application stage. Scale that stage as one unit so the
+  // browser never has to change page geometry when switching screens.
+  app.style.zoom = scale;
 }
 
 function render() {
