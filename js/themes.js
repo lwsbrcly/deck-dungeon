@@ -430,6 +430,10 @@ const THEMES = {
             portraits: 'assets/shaun/portraits/',
             portraitCount: 20,
 
+            monsters: {
+                'clubs_A': 'assets/shaun/monsters/pete.png',
+            },
+
             weapons: {
                 'diamonds_2': 'assets/shaun/weapons/vinyl.png',
                 'diamonds_3': 'assets/shaun/weapons/darts.png',
