@@ -1801,6 +1801,7 @@ function setupPeekHandlers() {
 window.addEventListener('resize', resizeGameCanvas);
 
 window.onload = function() {
+    resizeGameCanvas();
     toggleModeInputs();
     setupPeekHandlers();
     
