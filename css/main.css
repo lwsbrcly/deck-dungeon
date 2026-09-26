@@ -699,16 +699,16 @@ button.primary-btn {
     transform: translate3d(0,0,0) rotateY(0deg);
   }
   20% {
-    transform: translate3d(calc(var(--dx) * .20),calc(var(--dy) * .20 - 30px),0) rotateY(30deg);
+    transform: translate3d(calc(var(--dx) * .20),calc(var(--dy) * .20),0) rotateY(36deg);
   }
   40% {
-    transform: translate3d(calc(var(--dx) * .40),calc(var(--dy) * .40 - 52px),0) rotateY(72deg);
+    transform: translate3d(calc(var(--dx) * .40),calc(var(--dy) * .40),0) rotateY(72deg);
   }
   60% {
-    transform: translate3d(calc(var(--dx) * .60),calc(var(--dy) * .60 - 52px),0) rotateY(108deg);
+    transform: translate3d(calc(var(--dx) * .60),calc(var(--dy) * .60),0) rotateY(108deg);
   }
   80% {
-    transform: translate3d(calc(var(--dx) * .80),calc(var(--dy) * .80 - 30px),0) rotateY(150deg);
+    transform: translate3d(calc(var(--dx) * .80),calc(var(--dy) * .80),0) rotateY(144deg);
   }
   100% {
     transform: translate3d(var(--dx),var(--dy),0) rotateY(180deg);
