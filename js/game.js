@@ -399,13 +399,13 @@ function cardHTML(c, customCornerText) {
     var theme = THEMES[selectedTheme || 'dungeon'];
     var cardKey = c.suit + '_' + c.rank;
     var monsterArt = theme && theme.artwork && theme.artwork.monsters
-      ? theme.artwork.monsters[c.name]
+      ? theme.artwork.monsters[cardKey]
       : null;
     var pngArt = theme && theme.artwork && theme.artwork.weapons
       ? theme.artwork.weapons[cardKey]
       : null;
     var foodArt = theme && theme.artwork && theme.artwork.food
-      ? theme.artwork.food[c.name]
+      ? theme.artwork.food[cardKey]
       : null;
     var svgArt = theme && theme.artwork && theme.artwork.svgCards
       ? theme.artwork.svgCards[cardKey]
