@@ -647,7 +647,7 @@ button.primary-btn {
   100% { transform: translate3d(30px,105vh,0) rotate(78deg) scale(.92); opacity: 0; }
 }
 .flee-clone {
-  position: fixed !important;
+  position: absolute !important;
   animation: flee-card 560ms cubic-bezier(.3,.7,.3,1) forwards;
 }
 @keyframes flee-card {
