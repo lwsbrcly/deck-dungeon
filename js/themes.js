@@ -552,7 +552,7 @@ const THEMES = {
             text: "#ecd7de",
             muted: "#493231",
             red: "#ab0431",
-            highlight: "#1a1a1a",
+            highlight: "#59d064",
             rooms: "#f6ee55",
         },
 
