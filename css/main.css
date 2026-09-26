@@ -427,7 +427,6 @@ button.primary-btn {
   transform: translate(var(--stack-x), var(--stack-y)) rotate(var(--stack-rotation));
   transform-origin: center center;
   overflow: hidden;
-  filter: grayscale(1) brightness(0.85) contrast(0.55);
 }
 
 .previous-monster-card .card {
@@ -1004,7 +1003,6 @@ button.primary-btn {
   object-fit: contain;
   display: block;
   opacity: 0.8;
-  filter: grayscale(1) contrast(1.4);
 }
 
 button { 
