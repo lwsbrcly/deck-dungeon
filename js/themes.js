@@ -547,11 +547,11 @@ const THEMES = {
             
         colours: {
             bg: "#19191a",
-            panelBg: "#a0723f",
-            border: "#6a5a56",
+            panelBg: "#3a3941",
+            border: "#853237",
             text: "#ecd7de",
-            muted: "#493231",
-            red: "#ab0431",
+            muted: "#7d7330",
+            red: "#f91403",
             highlight: "#59d064",
             rooms: "#f6ee55",
         },
