@@ -541,6 +541,18 @@ const THEMES = {
                 'diamonds_9': 'assets/space/weapons/9.png',
                 'diamonds_10': 'assets/space/weapons/10.png',
             },
+
+            food: {
+                'hearts_2': 'assets/space/food/2.png',
+                'hearts_3': 'assets/space/food/3.png',
+                'hearts_4': 'assets/space/food/4.png',
+                'hearts_5': 'assets/space/food/5.png',
+                'hearts_6': 'assets/space/food/6.png',
+                'hearts_7': 'assets/space/food/7.png',
+                'hearts_8': 'assets/space/food/8.png',
+                'hearts_9': 'assets/space/food/9.png',
+                'hearts_10': 'assets/space/food/10.png',
+            },
         },
 
         //audio: {},
