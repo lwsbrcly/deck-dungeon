@@ -569,21 +569,21 @@ const THEMES = {
         },
 
         text: {
-            gameTitle: 'Shaun of the Deck',
-            location: 'The Pub',
-            monster: 'Zombie',
+            gameTitle: 'Space Deck',
+            location: 'Derelict Freighter',
+            monster: 'Xenomorph',
             weapon: 'Weapon',
-            potion: 'Food',
-            equip: 'grabs',
-            discard: 'chucks',
-            fight: 'whacks',
-            fist: 'tussles with',
-            heal: 'consumes',
-            flee: 'Ran for it',
+            potion: 'Med-kit',
+            equip: 'loads up',
+            discard: 'jetisons',
+            fight: 'targets',
+            fist: 'engages in close combat',
+            heal: 'applies',
+            flee: 'Escapes',
             enter: 'Heads out armed with',
-            draw: 'No one survived etc',
-            lose: 'The dungeon has defeated you',
-            win: 'You have defeated the dungeon!',
+            draw: 'The threats are subdued. For now. Too bad you couldn\'t send out the HAZARDOUS SHIP alert to warn the others...',
+            lose: 'You have fallen. Your body won\'t be found.',
+            win: 'You have escaped the ship with your life!',
         },
 
         cards: {
@@ -609,7 +609,7 @@ const THEMES = {
             potions: {
                 hearts: {
                     2: 'Nutrient Gel', 3: 'Field Rations', 4: 'Med-Kit', 5: 'Adrenal Shot',
-                    6: 'Pulse Battery', 7: 'Armour Plate', 8: 'Nanobot Repairs', 9: 'Combat Stimulant',
+                    6: 'Pulse Battery', 7: 'Armour Plate', 8: 'Nanobot Tube', 9: 'Combat Stimulant',
                     10: 'MechSuit™'
                 }
             }
