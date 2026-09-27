@@ -529,7 +529,37 @@ const THEMES = {
             background: 'assets/space/background.png',
             portraits: 'assets/space/portraits/',
             portraitCount: 16,
-
+            
+            monsters: {
+                'clubs_2': 'assets/space/monsters/2.png',
+                'clubs_3': 'assets/space/monsters/3.png',
+                'clubs_4': 'assets/space/monsters/4.png',
+                'clubs_5': 'assets/space/monsters/5.png',
+                'clubs_6': 'assets/space/monsters/6.png',
+                'clubs_7': 'assets/space/monsters/7.png',
+                'clubs_8': 'assets/space/monsters/8.png',
+                'clubs_9': 'assets/space/monsters/9.png',
+                'clubs_10': 'assets/space/monsters/10.png',
+                'clubs_J': 'assets/space/monsters/J.png',
+                'clubs_Q': 'assets/space/monsters/Q.png',
+                'clubs_K': 'assets/space/monsters/K.png',
+                'clubs_A': 'assets/space/monsters/AC.png',
+        
+                'spades_2': 'assets/space/monsters/2.png',
+                'spades_3': 'assets/space/monsters/3.png',
+                'spades_4': 'assets/space/monsters/4.png',
+                'spades_5': 'assets/space/monsters/5.png',
+                'spades_6': 'assets/space/monsters/6.png',
+                'spades_7': 'assets/space/monsters/7.png',
+                'spades_8': 'assets/space/monsters/8.png',
+                'spades_9': 'assets/space/monsters/9.png',
+                'spades_10': 'assets/space/monsters/10.png',
+                'spades_J': 'assets/space/monsters/J.png',
+                'spades_Q': 'assets/space/monsters/Q.png',
+                'spades_K': 'assets/space/monsters/K.png',
+                'spades_A': 'assets/space/monsters/AS.png'
+            },
+            
             weapons: {
                 'diamonds_2': 'assets/space/weapons/2.png',
                 'diamonds_3': 'assets/space/weapons/3.png',
