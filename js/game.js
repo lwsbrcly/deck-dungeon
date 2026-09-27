@@ -1321,6 +1321,33 @@ function resizeGameCanvas() {
   app.style.zoom = scale;
 }
 
+function setHealthTileImage(tile, alive) {
+  if (!tile) return;
+
+  var themeKey = selectedTheme || 'dungeon';
+  var fileName = alive ? 'hp.png' : 'hp_gone.png';
+  var fallback = 'assets/dungeon/hp/' + fileName;
+  var themed = 'assets/' + themeKey + '/hp/' + fileName;
+
+  // Dungeon is the guaranteed fallback. For other themes, try the
+  // theme-specific HP folder first and fall back automatically if the
+  // corresponding asset does not exist.
+  if (themeKey === 'dungeon') {
+    tile.onerror = null;
+    tile.src = fallback;
+    tile.dataset.hpTheme = themeKey;
+    return;
+  }
+
+  tile.onerror = function() {
+    this.onerror = null;
+    this.src = fallback;
+    this.dataset.hpTheme = 'dungeon';
+  };
+  tile.src = themed;
+  tile.dataset.hpTheme = themeKey;
+}
+
 function render() {
 var isSolo = state.mode !== 'coop';
 ['p1','p2'].forEach(function(id) {
@@ -1353,9 +1380,6 @@ var isSolo = state.mode !== 'coop';
   for (var i = 0; i < tiles.length; i++) {
     var tile = tiles[i];
     var shouldBeAlive = i < p.hp;
-    var nextSrc = shouldBeAlive
-      ? 'assets/rooms/hp.png'
-      : 'assets/rooms/hp_gone.png';
     var nextState = shouldBeAlive ? 'alive' : 'gone';
     
     if (tile._hpTimer) {
@@ -1373,7 +1397,7 @@ var isSolo = state.mode !== 'coop';
       
       tile._hpTimer = setTimeout(function(targetTile, src, stateName) {
         return function() {
-          targetTile.src = src;
+          setHealthTileImage(targetTile, stateName === 'alive');
           targetTile.dataset.hpState = stateName;
           targetTile.classList.remove('health-changing');
           void targetTile.offsetWidth;
@@ -1382,7 +1406,7 @@ var isSolo = state.mode !== 'coop';
         };
       }(tile, nextSrc, nextState), changeDelay);
     } else if (!tile.src) {
-      tile.src = nextSrc;
+      setHealthTileImage(tile, shouldBeAlive);
     }
   }
   
