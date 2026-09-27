@@ -1324,14 +1324,22 @@ function resizeGameCanvas() {
 function setHealthTileImage(tile, alive) {
   if (!tile) return;
 
-  var themeKey = selectedTheme || 'dungeon';
+  // The active game state is authoritative once a game has started.
+  // selectedTheme is only the menu selection and should not be relied on
+  // by the renderer after state has been created.
+  var themeKey = (state && state.theme) || selectedTheme || 'dungeon';
   var fileName = alive ? 'hp.png' : 'hp_gone.png';
   var fallback = 'assets/dungeon/hp/' + fileName;
   var themed = 'assets/' + themeKey + '/hp/' + fileName;
 
-  // Dungeon is the guaranteed fallback. For other themes, try the
-  // theme-specific HP folder first and fall back automatically if the
-  // corresponding asset does not exist.
+  // Dungeon is the guaranteed fallback. Other themes can override either
+  // HP image independently; a missing themed image falls back to Dungeon.
+  tile.onerror = function() {
+    this.onerror = null;
+    this.src = fallback;
+    this.dataset.hpTheme = 'dungeon';
+  };
+
   if (themeKey === 'dungeon') {
     tile.onerror = null;
     tile.src = fallback;
@@ -1339,11 +1347,6 @@ function setHealthTileImage(tile, alive) {
     return;
   }
 
-  tile.onerror = function() {
-    this.onerror = null;
-    this.src = fallback;
-    this.dataset.hpTheme = 'dungeon';
-  };
   tile.src = themed;
   tile.dataset.hpTheme = themeKey;
 }
@@ -1405,7 +1408,7 @@ var isSolo = state.mode !== 'coop';
           targetTile._hpTimer = null;
         };
       }(tile, nextSrc, nextState), changeDelay);
-    } else if (!tile.src) {
+    } else if (!tile.src || tile.dataset.hpTheme !== ((state && state.theme) || selectedTheme || 'dungeon')) {
       setHealthTileImage(tile, shouldBeAlive);
     }
   }
