@@ -1398,7 +1398,7 @@ var isSolo = state.mode !== 'coop';
         : (i - oldHp);
       var changeDelay = Math.max(0, changeIndex) * 55;
       
-      tile._hpTimer = setTimeout(function(targetTile, src, stateName) {
+      tile._hpTimer = setTimeout(function(targetTile, stateName) {
         return function() {
           setHealthTileImage(targetTile, stateName === 'alive');
           targetTile.dataset.hpState = stateName;
@@ -1407,7 +1407,7 @@ var isSolo = state.mode !== 'coop';
           targetTile.classList.add('health-changing');
           targetTile._hpTimer = null;
         };
-      }(tile, nextSrc, nextState), changeDelay);
+      }(tile, nextState), changeDelay);
     } else if (!tile.src || tile.dataset.hpTheme !== ((state && state.theme) || selectedTheme || 'dungeon')) {
       setHealthTileImage(tile, shouldBeAlive);
     }
