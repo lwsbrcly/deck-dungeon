@@ -1530,30 +1530,52 @@ var rooms = state.roomsCleared || 0;
 var totalRooms = 14;
 
 // Build the dungeon progress track from small pixel-art image assets.
-// Completed rooms use the filled tile, the current room uses the red tile,
-// and future rooms use the empty tile, with a connector between each room.
+// Room artwork is theme-specific when available, with Deck Dungeon as the
+// fallback. The connector artwork is intentionally no longer used.
+function getRoomAsset(fileName) {
+  var themeKey = (state && state.theme) || selectedTheme || 'dungeon';
+  var fallback = 'assets/dungeon/rooms/' + fileName;
+  var themed = 'assets/' + themeKey + '/rooms/' + fileName;
+
+  return themeKey === 'dungeon' ? fallback : themed;
+}
+
 var dungeonPath = '<div class="room-track">';
 
 for (var i = 0; i < totalRooms; i++) {
-  var roomImage = '';
+  var roomFile = '';
 
   if (i < rooms) {
-    roomImage = 'assets/rooms/room_filled.png';
+    roomFile = 'room_filled.png';
   } else if (i === rooms) {
-    roomImage = 'assets/rooms/room_current_yellow.png';
+    roomFile = 'room_current_yellow.png';
   } else {
-    roomImage = 'assets/rooms/room_empty.png';
+    roomFile = 'room_empty.png';
   }
 
-  dungeonPath += '<img class="room-tile" src="' + roomImage + '" alt="Room ' + (i + 1) + '">';
-
-  if (i < totalRooms - 1) {
-    dungeonPath += '<img class="room-connector" src="assets/rooms/connector_short.png" alt="">';
-  }
+  dungeonPath += '<img class="room-tile" src="' + getRoomAsset(roomFile) +
+    '" data-room-file="' + roomFile +
+    '" alt="Room ' + (i + 1) + '">';
 }
 
 dungeonPath += '</div>';
 progress.innerHTML = dungeonPath;
+
+// If a theme does not have its own room artwork, fall back to Deck Dungeon.
+// This deliberately uses only the room-*.png assets; the old connector is
+// no longer part of the room track.
+var roomTiles = progress.querySelectorAll('.room-tile');
+for (var rt = 0; rt < roomTiles.length; rt++) {
+  (function(tile) {
+    var themeKey = (state && state.theme) || selectedTheme || 'dungeon';
+    if (themeKey === 'dungeon') return;
+
+    tile.onerror = function() {
+      this.onerror = null;
+      this.src = 'assets/dungeon/rooms/' + this.dataset.roomFile;
+    };
+  })(roomTiles[rt]);
+}
 
 // Fit the complete 14-room track inside its own box without cropping
 // either end. The track is scaled as one unit, so rooms and connectors
