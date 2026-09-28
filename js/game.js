@@ -1758,7 +1758,7 @@ function renderRunChart() {
     
     var events = Array.isArray(state.eventHistory) ? state.eventHistory : [];
     if (!events.length) {
-      target.innerHTML = '<div style="padding:10px;color:var(--muted);font-size:0.75rem;">No run history recorded.</div>';
+      target.innerHTML = '<div style="padding:10px;color:var(--game-muted);font-size:0.75rem;">No run history recorded.</div>';
       if (legend) legend.innerHTML = '';
       return;
     }
