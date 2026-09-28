@@ -556,6 +556,7 @@ clone.style.left = a.left + 'px';
 clone.style.top = a.top + 'px';
 clone.style.width = a.width + 'px';
 clone.style.height = a.height + 'px';
+clone.style.setProperty('--card-third', (a.height / 3) + 'px');
 if (b) {
   var targetX = b.left + b.width / 2;
   var targetY = b.top + b.height / 2;
@@ -900,7 +901,7 @@ function drinkDirectPotion(target) {
     var targetEl = document.getElementById(target + 'Panel');
     saveState();
     var c = state.dungeon[state.selected];
-    animateCardAction(cardEl, targetEl, 'consume-clone', function() {
+    animateCardAction(cardEl, targetEl, 'eat-clone', function() {
       var isDowned = t.hp === 0; var amount = 0;
       if (!t.consumedThisRoom) {
         amount = isDowned ? Math.floor(c.value / 2) + 1 : c.value;
