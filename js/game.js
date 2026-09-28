@@ -565,7 +565,7 @@ if (b) {
     // Feed the card to the human/portrait area: the food card's top edge
     // reaches the vertical centre of the player card.
     targetX = b.left + b.width / 2;
-    targetY = b.top + b.height / 2 - a.height / 2;
+    targetY = b.top + b.height / 2 + a.height / 2;
   }
   clone.style.setProperty('--dx', (targetX - (a.left + a.width/2)) + 'px');
   clone.style.setProperty('--dy', (targetY - (a.top + a.height/2)) + 'px');
