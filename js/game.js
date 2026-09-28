@@ -1548,7 +1548,7 @@ for (var i = 0; i < totalRooms; i++) {
   if (i < rooms) {
     roomFile = 'room_filled.png';
   } else if (i === rooms) {
-    roomFile = 'room_current_yellow.png';
+    roomFile = 'room_current.png';
   } else {
     roomFile = 'room_empty.png';
   }
