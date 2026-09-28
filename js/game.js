@@ -541,7 +541,7 @@ function getCanvasAnimationRect(el) {
   };
 }
 
-function animateCardAction(cardEl, targetEl, className, done, icon) {
+function animateCardAction(cardEl, targetEl, className, done, icon, animationType) {
 if (!cardEl) { done(); return; }
 // Hide the selection halo for the duration of the action, without changing
 // the actual selected state. The normal game render clears selection later.
@@ -551,6 +551,7 @@ var targetCard = targetEl ? (targetEl.classList.contains('card') ? targetEl : ta
 var b = targetCard ? getCanvasAnimationRect(targetCard) : (targetEl ? getCanvasAnimationRect(targetEl) : null);
 var clone = cardEl.cloneNode(true);
 clone.classList.add('action-clone', className);
+if (animationType) clone.dataset.animationType = animationType;
 clone.style.left = a.left + 'px';
 clone.style.top = a.top + 'px';
 clone.style.width = a.width + 'px';
@@ -609,7 +610,34 @@ if (className.indexOf('discard') !== -1) {
 } else if (className.indexOf('consume') !== -1) {
   setTimeout(function() { eatFoodSound(); }, 0);
 }
-var duration = className.indexOf('discard') !== -1 ? 570 : (className.indexOf('equip') !== -1 ? 650 : 440);
+var isEat = animationType === 'eat' || className.indexOf('eat') !== -1;
+var isHeal = animationType === 'heal' || className.indexOf('heal') !== -1;
+var duration = className.indexOf('discard') !== -1 ? 570 : (className.indexOf('equip') !== -1 ? 650 : (isEat ? 560 : 440));
+
+if (isEat && b) {
+  // The heart confirms the final bite rather than appearing when the card
+  // first reaches the player.
+  setTimeout(function() {
+    var impact = document.createElement('div');
+    impact.className = 'action-impact heart-impact';
+    impact.textContent = icon || '♥';
+    impact.style.left = (b.left + b.width/2) + 'px';
+    impact.style.top = (b.top + b.height/2) + 'px';
+    document.querySelector('.game-canvas').appendChild(impact);
+    setTimeout(function(){ impact.remove(); }, 280);
+  }, 500);
+} else if (isHeal && b && icon) {
+  setTimeout(function() {
+    var impact = document.createElement('div');
+    impact.className = 'action-impact heart-impact';
+    impact.textContent = icon;
+    impact.style.left = (b.left + b.width/2) + 'px';
+    impact.style.top = (b.top + b.height/2) + 'px';
+    document.querySelector('.game-canvas').appendChild(impact);
+    setTimeout(function(){ impact.remove(); }, 280);
+  }, 230);
+}
+
 setTimeout(function() { clone.remove(); cardEl.classList.remove('action-hidden'); done(); }, duration);
 }
 
@@ -883,7 +911,7 @@ function drinkDirectPotion(target) {
       } else log(name(target) + ' consumed ' + c.name + ', but to no effect.', false, 'potion');
       removeSelected();
       checkGame(); renderAfterAction();
-    }, '♥');
+    }, '♥', 'eat');
 }
 
 function validWeapon(p, c) {
