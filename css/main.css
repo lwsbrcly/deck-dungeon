@@ -525,6 +525,24 @@ button.primary-btn {
   font-family: monospace;
   font-size: 0.75rem;
   color: var(--game-log-text);
+  scrollbar-width: thin;
+  scrollbar-color: var(--game-text) var(--game-border);
+}
+
+.log-box::-webkit-scrollbar {
+  width: 6px;
+}
+
+.log-box::-webkit-scrollbar-track {
+  background: var(--game-border);
+}
+
+.log-box::-webkit-scrollbar-thumb {
+  background: var(--game-text);
+}
+
+.log-box::-webkit-scrollbar-button {
+  display: none;
 }
 
 .logline { margin-bottom: 2px; }
