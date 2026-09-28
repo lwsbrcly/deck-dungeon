@@ -362,14 +362,23 @@ const THEMES = {
         //audio: {},
             
         colours: {
-            bg: "#19191a",
-            panelBg: "#0E253D",
-            border: "#B0843C",
-            text: "#CDA655",
-            muted: "#8f8e8d",
-            red: "#963221",
-            highlight: "#eb6b20",
-            rooms: "#a0723f",
+            rules: {
+                bg: "#19191a",
+                panelBg: "#0E253D",
+                border: "#B0843C",
+                text: "#CDA655",
+                muted: "#8f8e8d",
+                highlight: "#eb6b20",
+            },
+            game: {
+                bg: "#19191a",
+                border: "#B0843C",
+                text: "#CDA655",
+                muted: "#8f8e8d",
+                logText: "#8f8e8d",
+                red: "#963221",
+                highlight: "#eb6b20",
+            },
         },
 
         text: {
@@ -462,14 +471,23 @@ const THEMES = {
         //audio: {},
             
         colours: {
-            bg: "#19191a",
-            panelBg: "#ab0431",
-            border: "#3e3e3e",
-            text: "#ecd7de",
-            muted: "#E6A45D",
-            red: "#ab0431",
-            highlight: "#FCBC29",
-            rooms: "#f6ee55",
+            rules: {
+                bg: "#19191a",
+                panelBg: "#ab0431",
+                border: "#3e3e3e",
+                text: "#ecd7de",
+                muted: "#E6A45D",
+                highlight: "#FCBC29",
+            },
+            game: {
+                bg: "#19191a",
+                border: "#3e3e3e",
+                text: "#ecd7de",
+                muted: "#E6A45D",
+                logText: "#E6A45D",
+                red: "#ab0431",
+                highlight: "#FCBC29",
+            },
         },
 
         text: {
@@ -588,14 +606,23 @@ const THEMES = {
         //audio: {},
             
         colours: {
-            bg: "#19191a",
-            panelBg: "#3a3941",
-            border: "#853237",
-            text: "#ecd7de",
-            muted: "#7d7330",
-            red: "#f91403",
-            highlight: "#59d064",
-            rooms: "#f6ee55",
+            rules: {
+                bg: "#19191a",
+                panelBg: "#3a3941",
+                border: "#853237",
+                text: "#ecd7de",
+                muted: "#7d7330",
+                highlight: "#59d064",
+            },
+            game: {
+                bg: "#19191a",
+                border: "#853237",
+                text: "#ecd7de",
+                muted: "#7d7330",
+                logText: "#7d7330",
+                red: "#f91403",
+                highlight: "#59d064",
+            },
         },
 
         text: {
@@ -662,14 +689,23 @@ const THEMES = {
         //audio: {},
             
         colours: {
-            bg: "#19191a",
-            panelBg: "#a0723f",
-            border: "#6a5a56",
-            text: "#ecd7de",
-            muted: "#493231",
-            red: "#ab0431",
-            highlight: "#1a1a1a",
-            rooms: "#f6ee55",
+            rules: {
+                bg: "#19191a",
+                panelBg: "#a0723f",
+                border: "#6a5a56",
+                text: "#ecd7de",
+                muted: "#493231",
+                highlight: "#1a1a1a",
+            },
+            game: {
+                bg: "#19191a",
+                border: "#6a5a56",
+                text: "#ecd7de",
+                muted: "#493231",
+                logText: "#493231",
+                red: "#ab0431",
+                highlight: "#1a1a1a",
+            },
         },
 
         text: {
@@ -734,14 +770,23 @@ const THEMES = {
         //audio: {},
             
         colours: {
-            bg: "#19191a",
-            panelBg: "#a0723f",
-            border: "#6a5a56",
-            text: "#ecd7de",
-            muted: "#493231",
-            red: "#ab0431",
-            highlight: "#1a1a1a",
-            rooms: "#f6ee55",
+            rules: {
+                bg: "#19191a",
+                panelBg: "#a0723f",
+                border: "#6a5a56",
+                text: "#ecd7de",
+                muted: "#493231",
+                highlight: "#1a1a1a",
+            },
+            game: {
+                bg: "#19191a",
+                border: "#6a5a56",
+                text: "#ecd7de",
+                muted: "#493231",
+                logText: "#493231",
+                red: "#ab0431",
+                highlight: "#1a1a1a",
+            },
         },
 
         text: {
