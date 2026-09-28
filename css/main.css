@@ -701,7 +701,7 @@ button.primary-btn {
     opacity: 1;
   }
   81% {
-    transform: translate3d(var(--dx),calc(var(--dy) - var(--card-third) * 2),0) rotate(0deg) scale(1.08);
+    transform: translate3d(var(--dx),calc(var(--dy) - var(--card-two-thirds)),0) rotate(0deg) scale(1.08);
     clip-path: inset(66.666% 0 0 0);
     opacity: 1;
   }
