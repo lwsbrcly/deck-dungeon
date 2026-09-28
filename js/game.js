@@ -5,21 +5,30 @@ function applySelectedTheme() {
     if (!theme) return;
 
     var colours = theme.colours || {};
+    var rulesColours = colours.rules || {};
+    var gameColours = colours.game || {};
     var root = document.documentElement;
 
     document.title = theme.name || 'Deck Game Engine';
     var startBtn = document.getElementById('startBtn');
     if (startBtn) startBtn.textContent = 'Enter ' + (theme.name || 'Game');
 
-    root.style.setProperty('--bg', colours.bg || '');
-    root.style.setProperty('--card-bg', colours.cardBg || '');
-    root.style.setProperty('--panel-bg', colours.panelBg || '');
-    root.style.setProperty('--border', colours.border || '');
-    root.style.setProperty('--text', colours.text || '');
-    root.style.setProperty('--muted', colours.muted || '');
-    root.style.setProperty('--highlight', colours.highlight || '');
-    root.style.setProperty('--red', colours.red || '');
-    root.style.setProperty('--rooms', colours.rooms || '');
+    // Rules/setup screen colours
+    root.style.setProperty('--rules-bg', rulesColours.bg || '');
+    root.style.setProperty('--rules-panel-bg', rulesColours.panelBg || '');
+    root.style.setProperty('--rules-border', rulesColours.border || '');
+    root.style.setProperty('--rules-text', rulesColours.text || '');
+    root.style.setProperty('--rules-muted', rulesColours.muted || '');
+    root.style.setProperty('--rules-highlight', rulesColours.highlight || '');
+
+    // Gameplay colours
+    root.style.setProperty('--game-bg', gameColours.bg || '');
+    root.style.setProperty('--game-border', gameColours.border || '');
+    root.style.setProperty('--game-text', gameColours.text || '');
+    root.style.setProperty('--game-muted', gameColours.muted || '');
+    root.style.setProperty('--game-log-text', gameColours.logText || '');
+    root.style.setProperty('--game-red', gameColours.red || '');
+    root.style.setProperty('--game-highlight', gameColours.highlight || '');
 
     root.style.setProperty('--card-image', 'url("' + theme.artwork.card + '")');
     root.style.setProperty('--card-back-image', 'url("' + theme.artwork.back + '")');
