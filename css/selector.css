@@ -1,4 +1,4 @@
-.game-selector {
+:root {\n    --selector-bg: #19191a;\n    --selector-text: #ffffff;\n}\n\n.game-selector {
     max-width: 1100px;
     margin: 0 auto;
     padding: 40px 20px;
@@ -99,7 +99,7 @@
     width: 667px;
     height: 1000px;
     display: none;
-    background: var(--bg);
+    background: var(--selector-bg);
 }
 
 .screen.active {
