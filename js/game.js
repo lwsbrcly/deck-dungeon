@@ -561,12 +561,11 @@ clone.style.setProperty('--card-two-thirds', (a.height * 2 / 3) + 'px');
 if (b) {
   var targetX = b.left + b.width / 2;
   var targetY = b.top + b.height / 2;
-  if (className.indexOf('consume') !== -1) {
-    // Consume is a card-to-card animation. The player panel is itself the
-    // physical target card, so use its actual card rect rather than a
-    // legacy inner-slot element.
+  if (className.indexOf('consume') !== -1 || animationType === 'eat' || className.indexOf('eat') !== -1) {
+    // Feed the card to the human/portrait area: the food card's top edge
+    // reaches the vertical centre of the player card.
     targetX = b.left + b.width / 2;
-    targetY = b.top + b.height / 2;
+    targetY = b.top + b.height / 2 - a.height / 2;
   }
   clone.style.setProperty('--dx', (targetX - (a.left + a.width/2)) + 'px');
   clone.style.setProperty('--dy', (targetY - (a.top + a.height/2)) + 'px');
