@@ -1,4 +1,5 @@
 :root {
+  --app-bg: #19191a;
   --rules-bg: #19191a;
   --rules-panel-bg: #0E253D;
   --rules-border: #B0843C;
@@ -26,8 +27,12 @@
   -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
+html, body {
+  background: var(--app-bg);
+}
+
 body { 
-  background: var(--selector-bg);
+  background: var(--app-bg);
   color: var(--selector-text); 
   display: flex; 
   justify-content: center; 
@@ -526,7 +531,7 @@ button.primary-btn {
   font-size: 0.75rem;
   color: var(--game-log-text);
   scrollbar-width: thin;
-  scrollbar-color: var(--game-text) var(--game-border);
+  scrollbar-color: var(--game-log-text) var(--game-log-text);
 }
 
 .log-box::-webkit-scrollbar {
@@ -534,11 +539,11 @@ button.primary-btn {
 }
 
 .log-box::-webkit-scrollbar-track {
-  background: var(--game-border);
+  background: var(--game-log-text);
 }
 
 .log-box::-webkit-scrollbar-thumb {
-  background: var(--game-text);
+  background: var(--game-log-text);
 }
 
 .log-box::-webkit-scrollbar-button {
