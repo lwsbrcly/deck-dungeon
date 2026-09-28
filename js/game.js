@@ -1040,11 +1040,11 @@ setTimeout(function() {
       document.querySelector('.game-canvas').appendChild(secondImpact);
       setTimeout(function() { secondImpact.remove(); }, 280);
       setTimeout(function() { document.getElementById('game').classList.remove('combat-shake'); }, 160);
-    }, 105);
+    }, 220);
   } else {
     setTimeout(function() { document.getElementById('game').classList.remove('combat-shake'); }, 160);
   }
-}, isFistFight ? 210 : 476);
+}, isFistFight ? 320 : 476);
 
 setTimeout(function() {
   clone.remove();
@@ -1066,7 +1066,7 @@ setTimeout(function() {
 
   if (!isFistFight) targetEl.classList.remove('combat-hidden');
   done();
-}, isFistFight ? 430 : 700);
+}, isFistFight ? 1000 : 700);
 }
 
 function getDungeonCardElement(slotIndex) {
