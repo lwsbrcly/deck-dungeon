@@ -1024,7 +1024,26 @@ setTimeout(function() {
   }
 
   setTimeout(function() { impact.remove(); }, 280);
-  setTimeout(function() { document.getElementById('game').classList.remove('combat-shake'); }, 160);
+
+  if (isFistFight) {
+    // A fist fight is a two-way exchange: give the monster a second quick
+    // strike after the first hit, rather than making it look like a single hit.
+    setTimeout(function() {
+      document.getElementById('game').classList.remove('combat-shake');
+      document.getElementById('game').classList.add('combat-shake');
+
+      var secondImpact = document.createElement('div');
+      secondImpact.className = 'combat-impact';
+      secondImpact.textContent = '💥';
+      secondImpact.style.left = targetX + 'px';
+      secondImpact.style.top = targetY + 'px';
+      document.querySelector('.game-canvas').appendChild(secondImpact);
+      setTimeout(function() { secondImpact.remove(); }, 280);
+      setTimeout(function() { document.getElementById('game').classList.remove('combat-shake'); }, 160);
+    }, 105);
+  } else {
+    setTimeout(function() { document.getElementById('game').classList.remove('combat-shake'); }, 160);
+  }
 }, isFistFight ? 210 : 476);
 
 setTimeout(function() {
