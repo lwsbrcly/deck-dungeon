@@ -685,27 +685,33 @@ button.primary-btn {
     clip-path: inset(0 0 0 0);
     opacity: 1;
   }
-  49% {
+
+  /* Bite 1, then hold it before feeding the remaining card upward. */
+  57% {
     transform: translate3d(var(--dx),var(--dy),0) rotate(0deg) scale(1.08);
     clip-path: inset(33.333% 0 0 0);
     opacity: 1;
   }
-  61% {
+  81% {
     transform: translate3d(var(--dx),calc(var(--dy) - var(--card-third)),0) rotate(0deg) scale(1.08);
     clip-path: inset(33.333% 0 0 0);
     opacity: 1;
   }
-  69% {
+
+  /* Bite 2, then feed the final third upward. */
+  89% {
     transform: translate3d(var(--dx),calc(var(--dy) - var(--card-third)),0) rotate(0deg) scale(1.08);
     clip-path: inset(66.666% 0 0 0);
     opacity: 1;
   }
-  81% {
+  97% {
     transform: translate3d(var(--dx),calc(var(--dy) - var(--card-two-thirds)),0) rotate(0deg) scale(1.08);
     clip-path: inset(66.666% 0 0 0);
     opacity: 1;
   }
-  89% {
+
+  /* Bite 3: final third disappears. */
+  99% {
     transform: translate3d(var(--dx),calc(var(--dy) - var(--card-two-thirds)),0) rotate(0deg) scale(1.08);
     clip-path: inset(100% 0 0 0);
     opacity: 0;
