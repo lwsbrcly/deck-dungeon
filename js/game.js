@@ -575,7 +575,7 @@ if (b) {
 }
 cardEl.classList.add('action-hidden');
 document.querySelector('.game-canvas').appendChild(clone);
-if (icon && b) {
+if (icon && b && animationType !== 'eat') {
   setTimeout(function() {
     var impact = document.createElement('div');
     impact.className = 'action-impact' + (icon === '♥' ? ' heart-impact' : '');
