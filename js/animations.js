@@ -21,7 +21,12 @@
  *   DeckDungeonAnimations.flee(...)
  *   DeckDungeonAnimations.monsterToPrevious(...)
  *   DeckDungeonAnimations.fistFight(...)
- *   DeckDungeonAnimations.weaponFight(...)
+ *   DeckDungeonAnimations.use(...)
+ *   DeckDungeonAnimations.deal(...)
+ *   DeckDungeonAnimations.slideDungeonCards(...)
+ *   DeckDungeonAnimations.weaponFightMelee(...)
+ *   DeckDungeonAnimations.weaponFightThrown(...)
+ *   DeckDungeonAnimations.weaponFightRanged(...)
  *
  * The implementation below is deliberately self-contained so each animation
  * can be migrated and tested independently.
@@ -322,6 +327,174 @@
   /*
    * DISCARD
    */
+
+  /*
+   * USE
+   *
+   * Consumables which are used rather than eaten (armour, equipment, etc.).
+   * Mechanically similar to equip(), but the destination is the player card.
+   */
+  function use(card, player, options) {
+    options = options || {};
+
+    var finish = once(options.done);
+    var sourceRect = rect(card);
+    var playerRect = rect(player);
+
+    if (!sourceRect || !playerRect) {
+      finish();
+      return;
+    }
+
+    var clone = appendClone(card, 'dd-use-clone', sourceRect);
+    if (!clone) {
+      finish();
+      return;
+    }
+
+    var target = {
+      x: playerRect.centerX,
+      y: playerRect.centerY
+    };
+
+    var source = center(sourceRect);
+    setVector(clone, 'move', target.x - source.x, target.y - source.y);
+    clone.style.setProperty('--animation-duration', (options.duration || 650) + 'ms');
+
+    hide(card);
+    clone.classList.add('dd-use-active');
+
+    removeLater(clone, options.duration || 650, function () {
+      show(card);
+      finish();
+    });
+  }
+
+  /*
+   * DEAL
+   *
+   * The visual inverse of flee: cards originate at the deck and travel out
+   * into the dungeon slots. The game decides which cards are dealt.
+   */
+  function deal(cards, deck, slots, options) {
+    options = options || {};
+
+    var list = Array.isArray(cards) ? cards : [cards];
+    var targets = Array.isArray(slots) ? slots : [slots];
+    var valid = list.filter(Boolean);
+
+    if (!valid.length || !deck || !targets.length) {
+      if (options.done) options.done();
+      return;
+    }
+
+    var deckRect = rect(deck);
+    if (!deckRect) {
+      if (options.done) options.done();
+      return;
+    }
+
+    var complete = once(options.done);
+    var pending = 0;
+    var delay = options.delay == null ? 110 : options.delay;
+    var duration = options.duration || 650;
+
+    valid.forEach(function (card, index) {
+      var target = targets[index];
+      var targetRect = rect(target);
+      if (!targetRect) return;
+
+      pending += 1;
+
+      var clone = appendClone(deck, 'dd-deal-clone', deckRect);
+      if (!clone) {
+        pending -= 1;
+        return;
+      }
+
+      var move = {
+        x: targetRect.centerX - deckRect.centerX,
+        y: targetRect.centerY - deckRect.centerY
+      };
+
+      setVector(clone, 'move', move.x, move.y);
+      clone.style.setProperty('--animation-delay', (index * delay) + 'ms');
+      clone.style.setProperty('--animation-duration', duration + 'ms');
+      clone.dataset.dealCardIndex = index;
+      clone.classList.add('dd-deal-active');
+
+      window.setTimeout(function () {
+        hide(card);
+      }, index * delay);
+
+      removeLater(clone, duration + index * delay, function () {
+        show(card);
+        pending -= 1;
+        if (pending === 0) complete();
+      });
+    });
+
+    if (pending === 0) complete();
+  }
+
+  /*
+   * SLIDE DUNGEON CARDS
+   *
+   * [A][B][C][D], remove B -> [A][C][D][ ]
+   * Every card after the removed slot moves one position towards the front.
+   */
+  function slideDungeonCards(cards, slots, removedIndex, options) {
+    options = options || {};
+
+    var list = Array.isArray(cards) ? cards : [];
+    var targets = Array.isArray(slots) ? slots : [];
+
+    if (removedIndex == null || removedIndex < 0 || removedIndex >= list.length) {
+      if (options.done) options.done();
+      return;
+    }
+
+    var finish = once(options.done);
+    var duration = options.duration || 420;
+    var pending = 0;
+
+    for (var i = removedIndex + 1; i < list.length; i += 1) {
+      var card = list[i];
+      var target = targets[i - 1];
+
+      if (!card || !target) continue;
+
+      var sourceRect = rect(card);
+      var targetRect = rect(target);
+      if (!sourceRect || !targetRect) continue;
+
+      pending += 1;
+
+      var clone = appendClone(card, 'dd-dungeon-slide-clone', sourceRect);
+      if (!clone) {
+        pending -= 1;
+        continue;
+      }
+
+      setVector(clone, 'move',
+        targetRect.centerX - sourceRect.centerX,
+        targetRect.centerY - sourceRect.centerY
+      );
+      clone.style.setProperty('--animation-duration', duration + 'ms');
+
+      hide(card);
+      clone.classList.add('dd-dungeon-slide-active');
+
+      removeLater(clone, duration, function () {
+        show(card);
+        pending -= 1;
+        if (pending === 0) finish();
+      });
+    }
+
+    if (pending === 0) finish();
+  }
+
   function discard(card, target, options) {
     options = options || {};
     options.className = options.className || 'dd-discard-clone';
@@ -474,20 +647,14 @@
     });
   }
 
+
   /*
-   * WEAPON FIGHT
+   * WEAPON FIGHT — MELEE
    *
-   * Completely independent choreography.
-   *
-   * 1. Weapon joins player.
-   * 2. Player + weapon travel together.
-   * 3. Player stops.
-   * 4. Weapon strikes monster.
-   * 5. Weapon and player return independently.
-   *
-   * This function contains no fist-fight branching.
+   * Weapon joins the player, player + weapon approach the monster, player
+   * stops short, weapon strikes alone, then both return independently.
    */
-  function weaponFight(weapon, player, monster, options) {
+  function weaponFightMelee(weapon, player, monster, options) {
     options = options || {};
 
     var finish = once(options.done);
@@ -500,14 +667,8 @@
       return;
     }
 
-    var canvas = getCanvas();
-    if (!canvas) {
-      finish();
-      return;
-    }
-
-    var weaponClone = appendClone(weapon, 'dd-weapon-fight-clone', weaponRect);
-    var playerClone = appendClone(player, 'dd-weapon-player-clone', playerRect);
+    var weaponClone = appendClone(weapon, 'dd-melee-weapon-clone', weaponRect);
+    var playerClone = appendClone(player, 'dd-melee-player-clone', playerRect);
 
     if (!weaponClone || !playerClone) {
       if (weaponClone) weaponClone.remove();
@@ -516,78 +677,56 @@
       return;
     }
 
-    /*
-     * IMPORTANT:
-     * The weapon/player relationship is defined by their actual DOM
-     * rectangles. No hard-coded pixel offsets belong here.
-     *
-     * The initial handoff target is represented explicitly as a target
-     * rectangle. The exact desired overlap can be chosen when this animation
-     * is tested, without contaminating the geometry helpers.
-     */
     var weaponStart = center(weaponRect);
     var playerStart = center(playerRect);
+    var monsterCenter = center(monsterRect);
 
-    var join = {
-      x: playerStart.x - weaponStart.x,
-      y: playerStart.y - weaponStart.y
+    var hand = {
+      x: playerStart.x + (options.handOffsetX || 0),
+      y: playerStart.y + (options.handOffsetY || 0)
     };
 
-    setVector(weaponClone, 'join', join.x, join.y);
+    setVector(weaponClone, 'join',
+      hand.x - weaponStart.x,
+      hand.y - weaponStart.y
+    );
 
-    /*
-     * The player stops short of the monster. This is a choreography decision,
-     * not a generic combat calculation.
-     */
-    var monsterCenter = center(monsterRect);
-    var playerToMonsterX = monsterCenter.x - playerStart.x;
-    var playerToMonsterY = monsterCenter.y - playerStart.y;
-    var distance = Math.sqrt(
-      playerToMonsterX * playerToMonsterX +
-      playerToMonsterY * playerToMonsterY
-    ) || 1;
-
-    var stopDistance = Math.max(playerRect.width, monsterRect.width) + 10;
+    var vx = monsterCenter.x - playerStart.x;
+    var vy = monsterCenter.y - playerStart.y;
+    var distance = Math.sqrt(vx * vx + vy * vy) || 1;
+    var stopDistance = options.stopDistance ||
+      Math.max(playerRect.width, monsterRect.width) + 10;
 
     var stopCenter = {
-      x: monsterCenter.x - (playerToMonsterX / distance) * stopDistance,
-      y: monsterCenter.y - (playerToMonsterY / distance) * stopDistance
+      x: monsterCenter.x - (vx / distance) * stopDistance,
+      y: monsterCenter.y - (vy / distance) * stopDistance
     };
 
-    var playerMove = {
-      x: stopCenter.x - playerStart.x,
-      y: stopCenter.y - playerStart.y
-    };
-
-    setVector(playerClone, 'approach', playerMove.x, playerMove.y);
+    setVector(playerClone, 'approach',
+      stopCenter.x - playerStart.x,
+      stopCenter.y - playerStart.y
+    );
 
     var weaponAtStop = {
-      x: weaponStart.x + join.x + playerMove.x,
-      y: weaponStart.y + join.y + playerMove.y
+      x: hand.x + (stopCenter.x - playerStart.x),
+      y: hand.y + (stopCenter.y - playerStart.y)
     };
 
-    var strike = {
-      x: monsterCenter.x - weaponAtStop.x,
-      y: monsterCenter.y - weaponAtStop.y
-    };
-
-    setVector(weaponClone, 'strike', strike.x, strike.y);
+    setVector(weaponClone, 'strike',
+      monsterCenter.x - weaponAtStop.x,
+      monsterCenter.y - weaponAtStop.y
+    );
 
     hide(weapon);
     hide(player);
+    weaponClone.classList.add('dd-melee-active');
+    playerClone.classList.add('dd-melee-player-active');
 
-    weaponClone.classList.add('dd-weapon-fight-active');
-    playerClone.classList.add('dd-weapon-player-active');
-
-    /*
-     * The choreography timings live here, in one place.
-     */
     window.setTimeout(function () {
       impact('weapon', monsterCenter, 280);
       shake(160);
-
       if (options.onHit) options.onHit();
-    }, 520);
+    }, options.hitTime || 520);
 
     window.setTimeout(function () {
       weaponClone.remove();
@@ -595,7 +734,131 @@
       show(weapon);
       show(player);
       finish();
-    }, 900);
+    }, options.duration || 900);
+  }
+
+  /*
+   * WEAPON FIGHT — THROWN
+   *
+   * Weapon moves to player, launches to monster, then returns to its own slot.
+   */
+  function weaponFightThrown(weapon, player, monster, options) {
+    options = options || {};
+
+    var finish = once(options.done);
+    var weaponRect = rect(weapon);
+    var playerRect = rect(player);
+    var monsterRect = rect(monster);
+
+    if (!weaponRect || !playerRect || !monsterRect) {
+      finish();
+      return;
+    }
+
+    var clone = appendClone(weapon, 'dd-thrown-weapon-clone', weaponRect);
+    if (!clone) {
+      finish();
+      return;
+    }
+
+    var weaponStart = center(weaponRect);
+    var playerCenter = center(playerRect);
+    var monsterCenter = center(monsterRect);
+
+    var hand = {
+      x: playerCenter.x + (options.handOffsetX || 0),
+      y: playerCenter.y + (options.handOffsetY || 0)
+    };
+
+    setVector(clone, 'join',
+      hand.x - weaponStart.x,
+      hand.y - weaponStart.y
+    );
+    setVector(clone, 'throw',
+      monsterCenter.x - hand.x,
+      monsterCenter.y - hand.y
+    );
+    setVector(clone, 'return',
+      weaponStart.x - monsterCenter.x,
+      weaponStart.y - monsterCenter.y
+    );
+
+    clone.style.setProperty('--animation-duration', (options.duration || 1100) + 'ms');
+    hide(weapon);
+    clone.classList.add('dd-thrown-active');
+
+    window.setTimeout(function () {
+      impact('weapon', monsterCenter, 280);
+      shake(160);
+      if (options.onHit) options.onHit();
+    }, options.hitTime || 620);
+
+    removeLater(clone, options.duration || 1100, function () {
+      show(weapon);
+      finish();
+    });
+  }
+
+  /*
+   * WEAPON FIGHT — RANGED
+   *
+   * Weapon moves to player, fires in place with recoil, monster dies at a
+   * distance, then the weapon slides back to its weapon slot.
+   */
+  function weaponFightRanged(weapon, player, monster, options) {
+    options = options || {};
+
+    var finish = once(options.done);
+    var weaponRect = rect(weapon);
+    var playerRect = rect(player);
+    var monsterRect = rect(monster);
+
+    if (!weaponRect || !playerRect || !monsterRect) {
+      finish();
+      return;
+    }
+
+    var clone = appendClone(weapon, 'dd-ranged-weapon-clone', weaponRect);
+    if (!clone) {
+      finish();
+      return;
+    }
+
+    var weaponStart = center(weaponRect);
+    var playerCenter = center(playerRect);
+    var monsterCenter = center(monsterRect);
+
+    var hand = {
+      x: playerCenter.x + (options.handOffsetX || 0),
+      y: playerCenter.y + (options.handOffsetY || 0)
+    };
+
+    setVector(clone, 'join',
+      hand.x - weaponStart.x,
+      hand.y - weaponStart.y
+    );
+    setVector(clone, 'return',
+      weaponStart.x - hand.x,
+      weaponStart.y - hand.y
+    );
+
+    clone.dataset.targetX = monsterCenter.x;
+    clone.dataset.targetY = monsterCenter.y;
+    clone.style.setProperty('--animation-duration', (options.duration || 1000) + 'ms');
+
+    hide(weapon);
+    clone.classList.add('dd-ranged-active');
+
+    window.setTimeout(function () {
+      impact('weapon', monsterCenter, 280);
+      shake(120);
+      if (options.onHit) options.onHit();
+    }, options.hitTime || 620);
+
+    removeLater(clone, options.duration || 1000, function () {
+      show(weapon);
+      finish();
+    });
   }
 
   /*
@@ -625,7 +888,12 @@
     flee: flee,
     monsterToPrevious: monsterToPrevious,
     fistFight: fistFight,
-    weaponFight: weaponFight
+    use: use,
+    deal: deal,
+    slideDungeonCards: slideDungeonCards,
+    weaponFightMelee: weaponFightMelee,
+    weaponFightThrown: weaponFightThrown,
+    weaponFightRanged: weaponFightRanged
   };
 
 })(window);
