@@ -557,6 +557,7 @@ clone.style.top = a.top + 'px';
 clone.style.width = a.width + 'px';
 clone.style.height = a.height + 'px';
 clone.style.setProperty('--card-third', (a.height / 3) + 'px');
+clone.style.setProperty('--card-two-thirds', (a.height * 2 / 3) + 'px');
 if (b) {
   var targetX = b.left + b.width / 2;
   var targetY = b.top + b.height / 2;
