@@ -673,45 +673,45 @@ button.primary-btn {
 /* Eating animation: fly to the player, then feed the card upward in three
    bites. The clip is applied to the card itself, so the remaining artwork
    physically moves up by one third after each bite. */
-.eat-clone { animation: eat-card 560ms cubic-bezier(.22,.8,.25,1) forwards; }
+.eat-clone { animation: eat-card 770ms cubic-bezier(.22,.8,.25,1) forwards; }
 @keyframes eat-card {
   0% {
     transform: translate3d(0,0,0) rotate(0deg) scale(1);
     clip-path: inset(0 0 0 0);
     opacity: 1;
   }
-  41% {
+  30% {
     transform: translate3d(var(--dx),var(--dy),0) rotate(-7deg) scale(1.08);
     clip-path: inset(0 0 0 0);
     opacity: 1;
   }
 
-  /* Bite 1, then hold it before feeding the remaining card upward. */
-  57% {
+  /* Bite 1: same arrival point, with the first bite taking a full ~90ms. */
+  42% {
     transform: translate3d(var(--dx),var(--dy),0) rotate(0deg) scale(1.08);
     clip-path: inset(33.333% 0 0 0);
     opacity: 1;
   }
-  81% {
+  59.5% {
     transform: translate3d(var(--dx),calc(var(--dy) - var(--card-third)),0) rotate(0deg) scale(1.08);
     clip-path: inset(33.333% 0 0 0);
     opacity: 1;
   }
 
-  /* Bite 2, then feed the final third upward. */
-  89% {
+  /* Bite 2: then another doubled interval for feeding the final third upward. */
+  71.2% {
     transform: translate3d(var(--dx),calc(var(--dy) - var(--card-third)),0) rotate(0deg) scale(1.08);
     clip-path: inset(66.666% 0 0 0);
     opacity: 1;
   }
-  97% {
+  88.7% {
     transform: translate3d(var(--dx),calc(var(--dy) - var(--card-two-thirds)),0) rotate(0deg) scale(1.08);
     clip-path: inset(66.666% 0 0 0);
     opacity: 1;
   }
 
   /* Bite 3: final third disappears. */
-  99% {
+  99.9% {
     transform: translate3d(var(--dx),calc(var(--dy) - var(--card-two-thirds)),0) rotate(0deg) scale(1.08);
     clip-path: inset(100% 0 0 0);
     opacity: 0;
