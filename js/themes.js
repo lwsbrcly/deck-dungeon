@@ -608,11 +608,11 @@ const THEMES = {
         colours: {
             rules: {
                 bg: "#19191a",
-                panelBg: "#3a3941",
+                panelBg: "#2b292b",
                 border: "#853237",
                 text: "#ecd7de",
                 muted: "#853237",
-                highlight: "#853237",
+                highlight: "# F4C61F",
             },
             game: {
                 bg: "#19191a",
