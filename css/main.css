@@ -27,8 +27,8 @@
 }
 
 body { 
-  background: var(--game-bg);
-  color: var(--game-text); 
+  background: var(--selector-bg);
+  color: var(--selector-text); 
   display: flex; 
   justify-content: center; 
   align-items: flex-start;
@@ -45,8 +45,11 @@ main {
   width: 667px;
   height: 1000px;
   flex: 0 0 667px;
-  background: var(--game-bg);
+  background: var(--selector-bg);
 }
+
+#rules { background: var(--rules-bg); }
+#game-ui { background: var(--game-bg); }
 
 /* Setup Screen */
 .setup-screen { background: var(--rules-panel-bg); border: 1px solid var(--rules-border); border-radius: 8px; padding: 15px; text-align: center; }
@@ -520,7 +523,7 @@ button.primary-btn {
   padding: 8px 10px;
   font-family: monospace;
   font-size: 0.75rem;
-  color: var(--game-muted);
+  color: var(--game-log-text);
 }
 
 .logline { margin-bottom: 2px; }
