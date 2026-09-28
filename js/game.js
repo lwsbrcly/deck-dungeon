@@ -614,7 +614,7 @@ if (className.indexOf('discard') !== -1) {
 }
 var isEat = animationType === 'eat' || className.indexOf('eat') !== -1;
 var isHeal = animationType === 'heal' || className.indexOf('heal') !== -1;
-var duration = className.indexOf('discard') !== -1 ? 570 : (className.indexOf('equip') !== -1 ? 650 : (isEat ? 560 : 440));
+var duration = className.indexOf('discard') !== -1 ? 570 : (className.indexOf('equip') !== -1 ? 650 : (isEat ? 770 : 440));
 
 if (isEat && b) {
   // The heart confirms the final bite rather than appearing when the card
