@@ -346,9 +346,11 @@
       return;
     }
 
+    // Anchor the FOOD TOP EDGE to the middle of the player card,
+    // aligning the card with the player's portrait area.
     var target = {
       left: playerRect.left,
-      top: playerRect.top + playerRect.height / 2 - foodRect.height / 2,
+      top: playerRect.top + playerRect.height / 2,
       width: foodRect.width,
       height: foodRect.height
     };
