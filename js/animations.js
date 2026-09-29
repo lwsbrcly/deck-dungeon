@@ -218,13 +218,22 @@
     });
   }
 
+
   /*
-   * EQUIP
+   * LIFT → TRAVEL → SLAM
    *
-   * Simple card movement with a physical landing point.
-   * No combat knowledge.
+   * The only tabletop "height" choreography in the animation system.
+   * Equip and use both use this same physical card motion:
+   *
+   *   1. Lift off the table and grow slightly.
+   *   2. Travel while elevated.
+   *   3. Slam down onto the destination.
+   *   4. Settle at normal scale.
+   *
+   * The helper knows nothing about what the card means or why it is moving.
+   * The public equip()/use() functions provide the destination.
    */
-  function equip(card, target, options) {
+  function liftTravelSlam(card, target, options) {
     options = options || {};
 
     var finish = once(options.done);
@@ -236,29 +245,60 @@
       return;
     }
 
-    var clone = appendClone(card, 'dd-equip-clone', sourceRect);
+    var clone = appendClone(
+      card,
+      options.className || 'dd-lift-travel-slam-clone',
+      sourceRect
+    );
+
     if (!clone) {
       finish();
       return;
     }
 
     var move = translation(sourceRect, targetRect);
+
     setVector(clone, 'move', move.x, move.y);
-    clone.style.setProperty('--animation-duration', '650ms');
+
+    /*
+     * These are choreography values rather than geometry. CSS owns the
+     * actual visual treatment of height, scale and slam.
+     */
+    clone.style.setProperty('--lift-scale', options.liftScale || '1.08');
+    clone.style.setProperty(
+      '--animation-duration',
+      (options.duration || 650) + 'ms'
+    );
 
     hide(card);
-    clone.classList.add('dd-equip-active');
+    clone.classList.add(options.animationClass || 'dd-lift-travel-slam-active');
 
     window.setTimeout(function () {
-      var c = center(targetRect);
-      impact('weapon', c, 320);
+      impact(options.impactType || 'weapon', center(targetRect), 320);
       shake(170);
-    }, 403);
+    }, options.impactTime || 403);
 
-    removeLater(clone, 650, function () {
+    removeLater(clone, options.duration || 650, function () {
       show(card);
       finish();
     });
+  }
+
+  /*
+   * EQUIP
+   *
+   * Simple card movement with a physical landing point.
+   * No combat knowledge.
+   */
+  function equip(card, target, options) {
+    options = options || {};
+    options.className = options.className || 'dd-equip-clone';
+    options.animationClass = options.animationClass || 'dd-equip-active';
+    options.impactType = options.impactType || 'weapon';
+    options.duration = options.duration || 650;
+    options.impactTime = options.impactTime || 403;
+
+    liftTravelSlam(card, target, options);
   }
 
   /*
@@ -336,38 +376,13 @@
    */
   function use(card, player, options) {
     options = options || {};
+    options.className = options.className || 'dd-use-clone';
+    options.animationClass = options.animationClass || 'dd-use-active';
+    options.impactType = options.impactType || 'heart';
+    options.duration = options.duration || 650;
+    options.impactTime = options.impactTime || 403;
 
-    var finish = once(options.done);
-    var sourceRect = rect(card);
-    var playerRect = rect(player);
-
-    if (!sourceRect || !playerRect) {
-      finish();
-      return;
-    }
-
-    var clone = appendClone(card, 'dd-use-clone', sourceRect);
-    if (!clone) {
-      finish();
-      return;
-    }
-
-    var target = {
-      x: playerRect.centerX,
-      y: playerRect.centerY
-    };
-
-    var source = center(sourceRect);
-    setVector(clone, 'move', target.x - source.x, target.y - source.y);
-    clone.style.setProperty('--animation-duration', (options.duration || 650) + 'ms');
-
-    hide(card);
-    clone.classList.add('dd-use-active');
-
-    removeLater(clone, options.duration || 650, function () {
-      show(card);
-      finish();
-    });
+    liftTravelSlam(card, player, options);
   }
 
   /*
