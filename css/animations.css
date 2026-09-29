@@ -673,6 +673,24 @@
   }
 }
 
+/* Stage 4: both cards return independently to their home slots. */
+.dd-melee-return-active {
+  animation: dd-melee-return
+    var(--animation-duration, 100ms)
+    cubic-bezier(.22,.8,.25,1)
+    forwards;
+}
+
+@keyframes dd-melee-return {
+  0% {
+    transform: translate3d(0,0,0);
+  }
+
+  100% {
+    transform: translate3d(var(--return-x),var(--return-y),0);
+  }
+}
+
 /* -------------------------------------------------------------------------
  * Thrown weapon
  *
