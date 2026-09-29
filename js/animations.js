@@ -365,10 +365,6 @@
   }
 
   /*
-   * DISCARD
-   */
-
-  /*
    * USE
    *
    * Consumables which are used rather than eaten (armour, equipment, etc.).
@@ -510,6 +506,12 @@
     if (pending === 0) finish();
   }
 
+  /*
+   * DISCARD
+   * 
+   * Card topples sideways, then "falls" off the bottom of the screen,
+   * akin to falling off a cliff.
+   */
   function discard(card, target, options) {
     options = options || {};
     options.className = options.className || 'dd-discard-clone';
