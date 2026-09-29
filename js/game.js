@@ -39,11 +39,58 @@ function applySelectedTheme() {
     }
 }
 
+var themeAssetsReady = Promise.resolve();
+
+function preloadThemeAssets(themeKey) {
+    var theme = THEMES[themeKey || selectedTheme || 'dungeon'];
+    if (!theme || !theme.artwork) return Promise.resolve();
+
+    var urls = [];
+    var seen = {};
+
+    function collect(value) {
+        if (typeof value === 'string') {
+            // Only preload actual raster/image assets. Inline SVG artwork is
+            // already in memory and does not need a network request.
+            if (/\\.(png|jpe?g|webp|gif)(?:[?#].*)?$/i.test(value) && !seen[value]) {
+                seen[value] = true;
+                urls.push(value);
+            }
+            return;
+        }
+
+        if (Array.isArray(value)) {
+            value.forEach(collect);
+            return;
+        }
+
+        if (value && typeof value === 'object') {
+            Object.keys(value).forEach(function(key) {
+                collect(value[key]);
+            });
+        }
+    }
+
+    collect(theme.artwork);
+
+    themeAssetsReady = Promise.all(urls.map(function(url) {
+        return new Promise(function(resolve) {
+            var image = new Image();
+            image.onload = resolve;
+            image.onerror = resolve;
+            image.src = url;
+        });
+    }));
+
+    return themeAssetsReady;
+}
+
 function selectTheme(theme) {
     if (!THEMES[theme]) return;
 
     selectedTheme = theme;
     applySelectedTheme();
+    preloadThemeAssets(selectedTheme);
     showScreen('rules');
     showSetupScreen();
 }
@@ -318,9 +365,15 @@ if (isDaggerMode) {
 }
 
 // First render the stable layout with no dungeon cards.
-// Then, on the next frame, put the room cards in place and start the deal.
+// Give the player a moment to see the empty board, while the selected
+// theme's card artwork finishes preloading in the background.
 render();
-requestAnimationFrame(function() {
+
+var dealStartDelay = new Promise(function(resolve) {
+  setTimeout(resolve, 1000);
+});
+
+Promise.all([themeAssetsReady, dealStartDelay]).then(function() {
   state.dungeon = firstRoom;
   render();
   requestAnimationFrame(function() {
