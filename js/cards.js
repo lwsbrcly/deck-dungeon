@@ -16,6 +16,18 @@ function getThemeCardName(suit, rank) {
     : suit + ' ' + rank;
 }
 
+function getThemeCardAnimation(suit, rank) {
+  var theme = THEMES[selectedTheme || 'dungeon'];
+  if (!theme || !theme.cards || suit !== 'hearts') return 'eat';
+
+  var group = theme.cards.potions;
+  var definition = group && group.hearts ? group.hearts[rank] : null;
+
+  return definition && typeof definition === 'object' && definition.animation
+    ? definition.animation
+    : 'eat';
+}
+
 function makeDeck() {
   var d = [];
   var suitKeys = Object.keys(SUITS);
