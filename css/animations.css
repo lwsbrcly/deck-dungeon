@@ -563,15 +563,15 @@
     transform: translate3d(0,0,0) rotate(var(--aim-angle));
   }
 
-  /* Aggressive 250ms flight to the monster. */
-  66.36% {
+  /* Aggressive 150ms flight to the monster. */
+  57.27% {
     transform:
       translate3d(var(--move-x),var(--move-y),0)
       rotate(var(--aim-angle));
   }
 
   /* Abrupt stop at impact. */
-  70.91% {
+  61.82% {
     transform:
       translate3d(var(--move-x),var(--move-y),0)
       rotate(var(--aim-angle));
