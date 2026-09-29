@@ -840,30 +840,46 @@
   function weaponFightMelee(weapon, player, monster, options) {
     options = options || {};
 
-    if (!weapon || !monster) {
-      if (options.done) options.done();
+    var finish = once(options.done);
+    var weaponRect = rect(weapon);
+    var monsterRect = rect(monster);
+
+    if (!weaponRect || !monsterRect) {
+      finish();
       return;
     }
 
-    /*
-     * Reuse the established tabletop lift/slam motion rather than giving
-     * melee its own multi-stage choreography. The player stays completely
-     * still; only the weapon travels.
-     */
-    options.className = options.className || 'dd-equip-clone';
-    options.animationClass = options.animationClass || 'dd-equip-active';
-    options.impactType = 'hit';
-    options.duration = options.duration || 650;
-    options.impactTime = options.impactTime || 403;
-    options.sound = options.sound || (
-      typeof global.weaponEquipSound === 'function'
-        ? global.weaponEquipSound
-        : null
-    );
-    options.soundTime = options.soundTime || 100;
-    options.done = once(options.done);
+    var clone = appendClone(weapon, 'dd-melee-weapon-clone', weaponRect);
+    if (!clone) {
+      finish();
+      return;
+    }
 
-    liftTravelSlam(weapon, monster, options);
+    var move = translation(weaponRect, monsterRect);
+    setVector(clone, 'move', move.x, move.y);
+    setVector(clone, 'return', -move.x, -move.y);
+    clone.style.setProperty('--lift-scale', '1.08');
+    clone.style.setProperty('--animation-duration', (options.duration || 850) + 'ms');
+
+    hide(weapon);
+    clone.classList.add('dd-melee-active');
+
+    if (options.sound || typeof global.weaponEquipSound === 'function') {
+      window.setTimeout(function () {
+        var sound = options.sound || global.weaponEquipSound;
+        sound();
+      }, options.soundTime || 100);
+    }
+
+    window.setTimeout(function () {
+      impact('hit', center(monsterRect), 320);
+      shake(170);
+    }, options.impactTime || 450);
+
+    removeLater(clone, options.duration || 850, function () {
+      show(weapon);
+      finish();
+    });
   }
 
   /*
