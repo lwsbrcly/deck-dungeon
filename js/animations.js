@@ -894,35 +894,43 @@
     setVector(playerClone, 'approach', approachX, approachY);
 
     /*
-     * The weapon must remain physically locked to the player's hand.
-     * Its Stage 2 movement is therefore ONLY the player's movement vector.
-     * The weapon's initial join offset is already established by --join-x/y;
-     * CSS adds the exact same approach vector to that position.
-     *
-     * This prevents the weapon from independently targeting the monster
-     * and accidentally crossing to the other side of the player.
+     * Stage 2 must be a literal shared translation.
+     * The weapon is first moved to the hand, then its DOM position is
+     * rebased there. From that point onward BOTH clones receive exactly
+     * the same translate3d(approachX, approachY) movement.
      */
-    setVector(weaponClone, 'approach', approachX, approachY);
-
-    weaponClone.style.setProperty('--animation-duration', '1000ms');
-    playerClone.style.setProperty('--animation-duration', '1000ms');
+    weaponClone.style.setProperty('--animation-duration', '500ms');
+    playerClone.style.setProperty('--animation-duration', '500ms');
 
     hide(weapon);
     hide(player);
 
     weaponClone.classList.add('dd-melee-step2-weapon-active');
-    playerClone.classList.add('dd-melee-step2-player-active');
 
-    removeLater(weaponClone, 1000, function () {
-      if (weaponClone.parentNode) weaponClone.remove();
-      show(weapon);
-    });
+    window.setTimeout(function () {
+      /*
+       * Rebase the weapon at the exact hand position before Stage 2.
+       * This removes the join offset from its transform completely.
+       */
+      weaponClone.classList.remove('dd-melee-step2-weapon-active');
+      weaponClone.style.left = hand.left + 'px';
+      weaponClone.style.top = hand.top + 'px';
+      weaponClone.style.transform = 'none';
 
-    removeLater(playerClone, 1000, function () {
-      if (playerClone.parentNode) playerClone.remove();
-      show(player);
-      finish();
-    });
+      playerClone.classList.add('dd-melee-step2-player-active');
+      weaponClone.classList.add('dd-melee-step2-shared-move-active');
+
+      removeLater(weaponClone, 500, function () {
+        if (weaponClone.parentNode) weaponClone.remove();
+        show(weapon);
+      });
+
+      removeLater(playerClone, 500, function () {
+        if (playerClone.parentNode) playerClone.remove();
+        show(player);
+        finish();
+      });
+    }, 500);
   }
 
   /*
