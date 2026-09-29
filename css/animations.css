@@ -311,7 +311,7 @@
   animation:
     dd-flee-card
     var(--animation-duration, 650ms)
-    cubic-bezier(.3,.7,.3,1)
+    cubic-bezier(.2,.8,.25,1)
     var(--animation-delay, 0ms)
     forwards;
 }
@@ -323,7 +323,7 @@
   }
 
   100% {
-    transform: translate3d(var(--move-x),var(--move-y),0);
+    transform: translate3d(var(--move-x),var(--move-y),0) scale(.92);
     opacity: 1;
   }
 }
