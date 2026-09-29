@@ -797,7 +797,7 @@
 
 @keyframes dd-drink-card {
   0% {
-    transform: translate3d(var(--move-x),var(--move-y),0) rotate(0deg) scale(1);
+    transform: translate3d(0,0,0) rotate(0deg) scale(1);
     opacity: 1;
   }
 
