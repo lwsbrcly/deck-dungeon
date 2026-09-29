@@ -888,22 +888,37 @@
       return;
     }
 
-    var move = translation(weaponRect, monsterRect);
-    setVector(clone, 'move', move.x, move.y);
-    setVector(clone, 'return', -move.x, -move.y);
+    var weaponCenter = center(weaponRect);
+    var monsterCenter = center(monsterRect);
+    var dx = monsterCenter.x - weaponCenter.x;
+    var dy = monsterCenter.y - weaponCenter.y;
 
+    // Cards face upward by default, so add 90° to point the top edge
+    // towards the monster.
+    var aimAngle = Math.atan2(dy, dx) * 180 / Math.PI + 90;
+
+    setVector(clone, 'move',
+      monsterCenter.x - weaponCenter.x,
+      monsterCenter.y - weaponCenter.y
+    );
+    setVector(clone, 'return',
+      weaponCenter.x - monsterCenter.x,
+      weaponCenter.y - monsterCenter.y
+    );
+
+    clone.style.setProperty('--aim-angle', aimAngle + 'deg');
     clone.style.setProperty('--animation-duration', (options.duration || 1100) + 'ms');
 
     hide(weapon);
     clone.classList.add('dd-thrown-active');
 
     window.setTimeout(function () {
-      impact('hit', center(monsterRect), 280);
+      impact('hit', monsterCenter, 280);
       shake(160);
       if (options.onHit) options.onHit();
-    }, options.impactTime || 403);
+    }, options.impactTime || 650);
 
-    removeLater(clone, options.duration || 650, function () {
+    removeLater(clone, options.duration || 1100, function () {
       show(weapon);
       finish();
     });
