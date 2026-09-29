@@ -399,6 +399,12 @@ const THEMES = {
             win: 'You have defeated the dungeon!',
         },
 
+        actions: {
+            monster: { primary: 'Weapon', secondary: 'Fist Fight' },
+            weapon: { primary: 'Equip', secondary: 'Discard' },
+            consumable: { primary: 'Consume', secondary: 'Discard' },
+        },
+
         cards: {
             monsters: {
                 clubs: {
@@ -512,6 +518,12 @@ const THEMES = {
             draw: 'No one survived etc',
             lose: 'The dungeon has defeated you',
             win: 'You have defeated the dungeon!',
+        },
+
+        actions: {
+            monster: { primary: 'Bash', secondary: 'Heroics' },
+            weapon: { primary: 'Grab', secondary: 'Chuck' },
+            consumable: { primary: 'Snack', secondary: 'Chuck' },
         },
 
         cards: {
@@ -655,6 +667,12 @@ const THEMES = {
             win: 'You have escaped the ship with your life!',
         },
 
+        actions: {
+            monster: { primary: 'Target', secondary: 'Engage' },
+            weapon: { primary: 'Gear Up', secondary: 'Jettison' },
+            consumable: { primary: 'Use', secondary: 'Jettison' },
+        },
+
         cards: {
             monsters: {
                 clubs: {
@@ -742,6 +760,12 @@ const THEMES = {
             win: 'You have defeated the dungeon!',
         },
 
+        actions: {
+            monster: { primary: 'Duel', secondary: 'Fisticuffs' },
+            weapon: { primary: 'Arm', secondary: 'Cast Away' },
+            consumable: { primary: 'Drink', secondary: 'Cast Away' },
+        },
+
         cards: {
             monsters: {
                 clubs: {
@@ -827,6 +851,12 @@ const THEMES = {
             draw: 'No one survived etc',
             lose: 'The dungeon has defeated you',
             win: 'You have defeated the dungeon!',
+        },
+
+        actions: {
+            monster: { primary: 'Sneak', secondary: 'Subdue' },
+            weapon: { primary: 'Keep', secondary: 'Throw' },
+            consumable: { primary: 'Learn', secondary: 'Ignore' },
         },
 
         cards: {
