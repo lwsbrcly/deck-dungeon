@@ -498,43 +498,29 @@
 }
 
 @keyframes dd-thrown-lift-travel-slam {
+  /* Straight flight to the monster: two continuous rotations. */
   0% {
-    transform: translate3d(0,0,0) scale(1) rotate(0deg);
+    transform: translate3d(0,0,0) rotate(0deg);
   }
 
-  12% {
-    transform: translate3d(0,-8px,0) scale(var(--lift-scale,1.08)) rotate(0deg);
-  }
-
-  /* Travel out while completing one full rotation. */
-  58% {
+  59% {
     transform:
       translate3d(var(--move-x),var(--move-y),0)
-      scale(var(--lift-scale,1.08))
-      rotate(360deg);
+      rotate(720deg);
   }
 
-  /* Slam onto the monster while the rotation continues. */
-  66% {
+  /* Briefly hold the hit position. */
+  62% {
     transform:
       translate3d(var(--move-x),var(--move-y),0)
-      scale(.96)
-      rotate(420deg);
+      rotate(720deg);
   }
 
-  72% {
-    transform:
-      translate3d(var(--move-x),var(--move-y),0)
-      scale(1.01)
-      rotate(450deg);
-  }
-
-  /* Keep spinning while it glides home, then finish naturally. */
+  /* Glide straight home with no further rotation. */
   100% {
     transform:
       translate3d(var(--return-x),var(--return-y),0)
-      scale(1)
-      rotate(540deg);
+      rotate(720deg);
   }
 }
 
