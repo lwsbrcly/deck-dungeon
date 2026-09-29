@@ -894,6 +894,13 @@
     setVector(playerClone, 'approach', approachX, approachY);
 
     /*
+     * The weapon receives the exact same movement vector as the player.
+     * At Stage 2 it has already been rebased to the hand, so this is the
+     * only movement applied to it.
+     */
+    setVector(weaponClone, 'approach', approachX, approachY);
+
+    /*
      * Stage 2 must be a literal shared translation.
      * The weapon is first moved to the hand, then its DOM position is
      * rebased there. From that point onward BOTH clones receive exactly
