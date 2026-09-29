@@ -748,3 +748,26 @@
     opacity: 0;
   }
 }
+
+/* -------------------------------------------------------------------------
+ * Previous monster clear
+ *
+ * Fade the existing grayscale stack cards in place so the stack filter and
+ * positioning remain intact throughout the animation.
+ * ------------------------------------------------------------------------- */
+
+.previous-monster-fade {
+  animation: previous-monster-fade 700ms ease-out forwards;
+  pointer-events: none !important;
+}
+
+@keyframes previous-monster-fade {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
