@@ -18,14 +18,28 @@ function getThemeCardName(suit, rank) {
 
 function getThemeCardAnimation(suit, rank) {
   var theme = THEMES[selectedTheme || 'dungeon'];
-  if (!theme || !theme.cards || suit !== 'hearts') return 'eat';
+  if (!theme || !theme.cards) {
+    return suit === 'diamonds' ? 'melee' : 'eat';
+  }
 
-  var group = theme.cards.potions;
-  var definition = group && group.hearts ? group.hearts[rank] : null;
+  var group = null;
+  var fallback = 'eat';
+
+  if (suit === 'diamonds') {
+    group = theme.cards.weapons;
+    fallback = 'melee';
+  } else if (suit === 'hearts') {
+    group = theme.cards.potions;
+    fallback = 'eat';
+  } else {
+    return fallback;
+  }
+
+  var definition = group && group[suit] ? group[suit][rank] : null;
 
   return definition && typeof definition === 'object' && definition.animation
     ? definition.animation
-    : 'eat';
+    : fallback;
 }
 
 function makeDeck() {
