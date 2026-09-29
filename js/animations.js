@@ -911,9 +911,13 @@
     var dx = monsterCenter.x - weaponCenter.x;
     var dy = monsterCenter.y - weaponCenter.y;
 
-    // Cards face upward by default, so add 90° to point the top edge
-    // towards the monster.
-    var aimAngle = Math.atan2(dy, dx) * 180 / Math.PI + 90;
+    // Start from the angle that makes the top edge point at the monster,
+    // then turn 180° so the bottom edge points at it instead.
+    // Normalise to the shortest rotation from the starting orientation.
+    var topAimAngle = Math.atan2(dy, dx) * 180 / Math.PI + 90;
+    var aimAngle = topAimAngle + 180;
+    if (aimAngle > 180) aimAngle -= 360;
+    if (aimAngle < -180) aimAngle += 360;
 
     setVector(clone, 'move',
       monsterCenter.x - weaponCenter.x,
