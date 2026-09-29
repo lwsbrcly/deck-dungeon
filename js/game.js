@@ -880,8 +880,10 @@ function discardDungeonWeapon() {
     if (state.over || state.selected === null) return;
     var cardEl = getDungeonCardElement(state.selected);
     saveState();
-    animateCardAction(cardEl, null, 'discard-clone', function() {
-      var c = removeSelected(); log('Discarded the ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').'); checkGame(); renderAfterAction();
+    DeckDungeonAnimations.discard(cardEl, null, {
+      done: function() {
+        var c = removeSelected(); log('Discarded the ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').'); checkGame(); renderAfterAction();
+      }
     });
 }
 
@@ -889,8 +891,10 @@ function discardDungeonPotion() {
     if (state.over || state.selected === null) return;
     var cardEl = getDungeonCardElement(state.selected);
     saveState();
-    animateCardAction(cardEl, null, 'discard-clone', function() {
-      var c = removeSelected(); log('Discarded the ' + c.name + ' (' + c.value + ' HP).'); checkGame(); renderAfterAction();
+    DeckDungeonAnimations.discard(cardEl, null, {
+      done: function() {
+        var c = removeSelected(); log('Discarded the ' + c.name + ' (' + c.value + ' HP).'); checkGame(); renderAfterAction();
+      }
     });
 }
 
