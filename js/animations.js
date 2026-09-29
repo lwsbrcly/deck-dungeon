@@ -786,7 +786,13 @@
     clone.classList.add('dd-fist-fight-active');
 
     if (options.sound) {
-      options.sound();
+      window.setTimeout(function () {
+        options.sound();
+      }, 320);
+
+      window.setTimeout(function () {
+        options.sound();
+      }, 540);
     }
 
     window.setTimeout(function () {
