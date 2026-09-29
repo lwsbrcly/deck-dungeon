@@ -991,26 +991,6 @@ if (
 }
 
 
-  var meleeWeaponEl = document.querySelector('#' + player + 'Weapon .card');
-  var meleePlayerEl = document.getElementById(player + 'Panel');
-
-  if (!meleeWeaponEl || !meleePlayerEl) {
-    done();
-    return;
-  }
-
-  DeckDungeonAnimations.weaponFightMelee(
-    meleeWeaponEl,
-    meleePlayerEl,
-    targetEl,
-    {
-      joinDuration: 500,
-      done: done
-    }
-  );
-  return;
-}
-
 var sourceEl = null;
 var sourceRect;
 var targetRect;
