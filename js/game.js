@@ -903,10 +903,14 @@ function drinkDirectPotion(target) {
       checkGame(); renderAfterAction();
     };
 
-    // Use cards have their own physical "use" choreography. Eat/drink cards
-    // remain on the existing path until their dedicated migrations.
+    // Each Hearts card chooses its own physical consumption choreography.
+    // Unknown/missing animation types deliberately fall back to the existing eat path.
     if (c.animation === 'use') {
       DeckDungeonAnimations.use(cardEl, targetEl, {
+        done: finishConsume
+      });
+    } else if (c.animation === 'drink') {
+      DeckDungeonAnimations.drink(cardEl, targetEl, {
         done: finishConsume
       });
     } else {
