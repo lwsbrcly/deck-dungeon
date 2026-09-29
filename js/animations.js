@@ -779,10 +779,15 @@
 
     var move = translation(monsterRect, playerRect);
     setVector(clone, 'move', move.x, move.y);
+    setVector(clone, 'hit', -5, 3);
     clone.style.setProperty('--animation-duration', '1000ms');
 
     hide(monster);
     clone.classList.add('dd-fist-fight-active');
+
+    if (options.sound) {
+      options.sound();
+    }
 
     window.setTimeout(function () {
       impact('hit', center(playerRect), 280);
