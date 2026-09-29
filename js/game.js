@@ -914,7 +914,10 @@ function drinkDirectPotion(target) {
         done: finishConsume
       });
     } else {
-      animateCardAction(cardEl, targetEl, 'eat-clone', finishConsume, '♥', 'eat');
+      DeckDungeonAnimations.eat(cardEl, targetEl, {
+        sound: typeof eatFoodSound === 'function' ? eatFoodSound : null,
+        done: finishConsume
+      });
     }
 }
 
