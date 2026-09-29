@@ -512,12 +512,55 @@
    * Card topples sideways, then "falls" off the bottom of the screen,
    * akin to falling off a cliff.
    */
+  /*
+   * DISCARD
+   *
+   * Existing tabletop choreography:
+   *   1. Card starts upright.
+   *   2. It gives a small sideways topple.
+   *   3. It rapidly falls off the bottom of the table/screen.
+   *   4. It rotates further, shrinks slightly, and fades away.
+   *
+   * This is deliberately not a generic source → target movement. The discard
+   * destination is effectively "off the table", so the choreography owns the
+   * final direction and fall distance.
+   */
   function discard(card, target, options) {
     options = options || {};
-    options.className = options.className || 'dd-discard-clone';
-    options.animationClass = options.animationClass || 'dd-discard-active';
-    options.duration = options.duration || 570;
-    moveCard(card, target, options);
+
+    var finish = once(options.done);
+    var sourceRect = rect(card);
+
+    if (!sourceRect) {
+      finish();
+      return;
+    }
+
+    var clone = appendClone(card, 'dd-discard-clone', sourceRect);
+    if (!clone) {
+      finish();
+      return;
+    }
+
+    /*
+     * Preserve the established feel from the live animation:
+     * 22° topple, then a fast fall roughly one viewport-height downward.
+     *
+     * The target argument is intentionally unused: discard is an "off table"
+     * choreography rather than a move to another card.
+     */
+    setVector(clone, 'fall', 30, sourceRect.height * 6.2);
+    clone.style.setProperty('--animation-duration', '560ms');
+    clone.style.setProperty('--topple-x', '8px');
+    clone.style.setProperty('--topple-y', '18px');
+
+    hide(card);
+    clone.classList.add('dd-discard-active');
+
+    removeLater(clone, 560, function () {
+      show(card);
+      finish();
+    });
   }
 
   /*
