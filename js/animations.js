@@ -296,9 +296,9 @@
     window.setTimeout(function () {
       impact(options.impactType || 'weapon', center(targetRect), 320);
       shake(170);
-    }, options.impactTime || 403);
+    }, options.impactTime || 650);
 
-    removeLater(clone, options.duration || 650, function () {
+    removeLater(clone, options.duration || 1100, function () {
       show(card);
       finish();
     });
@@ -892,8 +892,7 @@
     setVector(clone, 'move', move.x, move.y);
     setVector(clone, 'return', -move.x, -move.y);
 
-    clone.style.setProperty('--lift-scale', options.liftScale || '1.08');
-    clone.style.setProperty('--animation-duration', (options.duration || 850) + 'ms');
+    clone.style.setProperty('--animation-duration', (options.duration || 1100) + 'ms');
 
     hide(weapon);
     clone.classList.add('dd-thrown-active');
