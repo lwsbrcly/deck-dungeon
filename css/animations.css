@@ -566,39 +566,24 @@
     transform: translate3d(0,0,0) rotate(0deg);
   }
 
-  22% {
+  25% {
     transform: translate3d(0,0,0) rotate(var(--aim-angle));
   }
 
-  /* Small load movement: 15px forward and back. */
-  30% {
-    transform:
-      translate3d(var(--load-x),var(--load-y),0)
-      rotate(var(--aim-angle));
-  }
-
-  36% {
-    transform:
-      translate3d(0,0,0)
-      rotate(var(--aim-angle));
-  }
-
-  /* Brief pause before firing. */
-  48% {
-    transform:
-      translate3d(0,0,0)
-      rotate(var(--aim-angle));
+  /* Pause before firing. */
+  40% {
+    transform: translate3d(0,0,0) rotate(var(--aim-angle));
   }
 
   /* Fire: snap quickly away from the monster. */
-  52% {
+  46% {
     transform:
       translate3d(var(--recoil-x),var(--recoil-y),0)
       rotate(var(--aim-angle));
   }
 
-  /* Then ease back more slowly to the starting point. */
-  68% {
+  /* Recover slowly and smoothly. */
+  66% {
     transform:
       translate3d(0,0,0)
       rotate(var(--aim-angle));
