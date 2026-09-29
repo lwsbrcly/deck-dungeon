@@ -827,81 +827,49 @@
     var finish = once(options.done);
     var weaponRect = rect(weapon);
     var playerRect = rect(player);
-    var monsterRect = rect(monster);
 
-    if (!weaponRect || !playerRect || !monsterRect) {
+    if (!weaponRect || !playerRect) {
       finish();
       return;
     }
 
-    var weaponClone = appendClone(weapon, 'dd-melee-weapon-clone', weaponRect);
-    var playerClone = appendClone(player, 'dd-melee-player-clone', playerRect);
+    /*
+     * FIRST MELEE TEST — WEAPON → PLAYER
+     *
+     * Deliberately isolated from the rest of the combat choreography.
+     * The weapon is copied at its exact rendered position, then translated
+     * directly to the centre of the player card. No rotation, lift, scaling,
+     * player clone, or monster movement is involved.
+     */
+    var weaponClone = appendClone(weapon, 'dd-melee-join-clone', weaponRect);
 
-    if (!weaponClone || !playerClone) {
-      if (weaponClone) weaponClone.remove();
-      if (playerClone) playerClone.remove();
+    if (!weaponClone) {
       finish();
       return;
     }
 
-    var weaponStart = center(weaponRect);
-    var playerStart = center(playerRect);
-    var monsterCenter = center(monsterRect);
+    var weaponCenter = center(weaponRect);
+    var playerCenter = center(playerRect);
 
-    var hand = {
-      x: playerStart.x + (options.handOffsetX || 0),
-      y: playerStart.y + (options.handOffsetY || 0)
-    };
-
-    setVector(weaponClone, 'join',
-      hand.x - weaponStart.x,
-      hand.y - weaponStart.y
+    setVector(
+      weaponClone,
+      'join',
+      playerCenter.x - weaponCenter.x,
+      playerCenter.y - weaponCenter.y
     );
 
-    var vx = monsterCenter.x - playerStart.x;
-    var vy = monsterCenter.y - playerStart.y;
-    var distance = Math.sqrt(vx * vx + vy * vy) || 1;
-    var stopDistance = options.stopDistance ||
-      Math.max(playerRect.width, monsterRect.width) + 10;
-
-    var stopCenter = {
-      x: monsterCenter.x - (vx / distance) * stopDistance,
-      y: monsterCenter.y - (vy / distance) * stopDistance
-    };
-
-    setVector(playerClone, 'approach',
-      stopCenter.x - playerStart.x,
-      stopCenter.y - playerStart.y
-    );
-
-    var weaponAtStop = {
-      x: hand.x + (stopCenter.x - playerStart.x),
-      y: hand.y + (stopCenter.y - playerStart.y)
-    };
-
-    setVector(weaponClone, 'strike',
-      monsterCenter.x - weaponAtStop.x,
-      monsterCenter.y - weaponAtStop.y
+    weaponClone.style.setProperty(
+      '--animation-duration',
+      (options.joinDuration || 500) + 'ms'
     );
 
     hide(weapon);
-    hide(player);
-    weaponClone.classList.add('dd-melee-active');
-    playerClone.classList.add('dd-melee-player-active');
+    weaponClone.classList.add('dd-melee-join-active');
 
-    window.setTimeout(function () {
-      impact('weapon', monsterCenter, 280);
-      shake(160);
-      if (options.onHit) options.onHit();
-    }, options.hitTime || 520);
-
-    window.setTimeout(function () {
-      weaponClone.remove();
-      playerClone.remove();
+    removeLater(weaponClone, options.joinDuration || 500, function () {
       show(weapon);
-      show(player);
       finish();
-    }, options.duration || 900);
+    });
   }
 
   /*
