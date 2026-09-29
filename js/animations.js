@@ -818,196 +818,32 @@
   /*
    * WEAPON FIGHT — MELEE
    *
-   * Weapon joins the player, player + weapon approach the monster, player
-   * stops short, weapon strikes alone, then both return independently.
+   * Melee uses the same physical lift → travel → slam choreography as
+   * equipping a weapon. The weapon leaves its slot, travels directly to the
+   * monster, hits with the same POW impact used by fist fights, then the
+   * real weapon is restored to its home slot.
    */
   function weaponFightMelee(weapon, player, monster, options) {
     options = options || {};
 
-    var finish = once(options.done);
-    var weaponRect = rect(weapon);
-    var playerRect = rect(player);
-    var monsterRect = rect(monster);
-
-    if (!weaponRect || !playerRect || !monsterRect) {
-      finish();
+    if (!weapon || !monster) {
+      if (options.done) options.done();
       return;
     }
 
     /*
-     * MELEE — STEP 1 + STEP 2
-     *
-     * Step 1:
-     *   Weapon moves to the player's right-hand position. The weapon's left
-     *   edge meets the player's centre line, so it covers the right half.
-     *
-     * Step 2:
-     *   Player and weapon travel together toward the monster and stop short.
-     *   The weapon remains locked to the same hand position throughout.
-     *
-     * No strike is performed yet.
+     * Reuse the established tabletop lift/slam motion rather than giving
+     * melee its own multi-stage choreography. The player stays completely
+     * still; only the weapon travels.
      */
-    var weaponClone = appendClone(weapon, 'dd-melee-join-clone', weaponRect);
-    var playerClone = appendClone(player, 'dd-melee-player-clone', playerRect);
+    options.className = options.className || 'dd-equip-clone';
+    options.animationClass = options.animationClass || 'dd-equip-active';
+    options.impactType = 'hit';
+    options.duration = options.duration || 650;
+    options.impactTime = options.impactTime || 403;
+    options.done = once(options.done);
 
-    if (!weaponClone || !playerClone) {
-      if (weaponClone) weaponClone.remove();
-      if (playerClone) playerClone.remove();
-      finish();
-      return;
-    }
-
-    var weaponStart = center(weaponRect);
-    var playerStart = center(playerRect);
-    var monsterCenter = center(monsterRect);
-
-    var hand = {
-      left: playerRect.left + playerRect.width / 2,
-      top: playerRect.top + playerRect.height / 2 - weaponRect.height / 2
-    };
-
-    var joinX = hand.left - weaponRect.left;
-    var joinY = hand.top - weaponRect.top;
-
-    setVector(weaponClone, 'join', joinX, joinY);
-
-    /*
-     * Work out a stopping point from the monster's centre, rather than using
-     * a hard-coded screen coordinate. This keeps the approach proportional
-     * if the board is resized.
-     */
-    var vx = monsterCenter.x - playerStart.x;
-    var vy = monsterCenter.y - playerStart.y;
-    var distance = Math.sqrt(vx * vx + vy * vy) || 1;
-
-    var stopDistance = options.stopDistance ||
-      Math.max(playerRect.width, monsterRect.width) * 0.65;
-
-    var stopCenter = {
-      x: monsterCenter.x - (vx / distance) * stopDistance,
-      y: monsterCenter.y - (vy / distance) * stopDistance
-    };
-
-    var approachX = stopCenter.x - playerStart.x;
-    var approachY = stopCenter.y - playerStart.y;
-
-    setVector(playerClone, 'approach', approachX, approachY);
-
-    /*
-     * The weapon receives the exact same movement vector as the player.
-     * At Stage 2 it has already been rebased to the hand, so this is the
-     * only movement applied to it.
-     */
-    setVector(weaponClone, 'approach', approachX, approachY);
-
-    /*
-     * Stage 2 must be a literal shared translation.
-     * The weapon is first moved to the hand, then its DOM position is
-     * rebased there. From that point onward BOTH clones receive exactly
-     * the same translate3d(approachX, approachY) movement.
-     */
-    weaponClone.style.setProperty('--animation-duration', '125ms');
-    playerClone.style.setProperty('--animation-duration', '125ms');
-
-    hide(weapon);
-    hide(player);
-
-    weaponClone.classList.add('dd-melee-step2-weapon-active');
-
-    window.setTimeout(function () {
-      /*
-       * Rebase the weapon at the exact hand position before Stage 2.
-       * This removes the join offset from its transform completely.
-       */
-      weaponClone.classList.remove('dd-melee-step2-weapon-active');
-      weaponClone.style.left = hand.left + 'px';
-      weaponClone.style.top = hand.top + 'px';
-      weaponClone.style.transform = 'none';
-
-      playerClone.classList.add('dd-melee-step2-player-active');
-      weaponClone.classList.add('dd-melee-step2-shared-move-active');
-
-      /*
-       * Stage 3 begins only after the shared approach is complete.
-       * Freeze the player at the approach position and rebase the weapon
-       * there. The weapon then moves alone directly to the monster centre.
-       */
-      window.setTimeout(function () {
-        /*
-         * Rebase the player at the approach position before removing its
-         * animation class. Otherwise clearing the transform would snap the
-         * clone back to its original card position.
-         */
-        playerClone.classList.remove('dd-melee-step2-player-active');
-        playerClone.style.left = (playerRect.left + approachX) + 'px';
-        playerClone.style.top = (playerRect.top + approachY) + 'px';
-        playerClone.style.transform = 'none';
-
-        weaponClone.classList.remove('dd-melee-step2-shared-move-active');
-        weaponClone.style.left = (hand.left + approachX) + 'px';
-        weaponClone.style.top = (hand.top + approachY) + 'px';
-        weaponClone.style.transform = 'none';
-
-        var weaponAtStop = {
-          left: hand.left + approachX,
-          top: hand.top + approachY,
-          width: weaponRect.width,
-          height: weaponRect.height
-        };
-
-        var weaponCenter = center(weaponAtStop);
-        var strikeX = monsterCenter.x - weaponCenter.x;
-        var strikeY = monsterCenter.y - weaponCenter.y;
-
-        setVector(weaponClone, 'strike', strikeX, strikeY);
-        weaponClone.style.setProperty('--animation-duration', '150ms');
-        weaponClone.classList.add('dd-melee-step3-strike-active');
-
-        window.setTimeout(function () {
-          /* Rebase the weapon at the target before its 100ms return. */
-          weaponClone.classList.remove('dd-melee-step3-strike-active');
-          weaponClone.style.left = monsterCenter.x - weaponRect.width / 2 + 'px';
-          weaponClone.style.top = monsterCenter.y - weaponRect.height / 2 + 'px';
-          weaponClone.style.transform = 'none';
-
-          /* Rebase the player at the approach position before returning. */
-          playerClone.style.left = playerRect.left + approachX + 'px';
-          playerClone.style.top = playerRect.top + approachY + 'px';
-          playerClone.style.transform = 'none';
-
-          setVector(
-            weaponClone,
-            'return',
-            weaponRect.left - (monsterCenter.x - weaponRect.width / 2),
-            weaponRect.top - (monsterCenter.y - weaponRect.height / 2)
-          );
-
-          setVector(
-            playerClone,
-            'return',
-            playerRect.left - (playerRect.left + approachX),
-            playerRect.top - (playerRect.top + approachY)
-          );
-
-          weaponClone.style.setProperty('--animation-duration', '100ms');
-          playerClone.style.setProperty('--animation-duration', '100ms');
-
-          weaponClone.classList.add('dd-melee-return-active');
-          playerClone.classList.add('dd-melee-return-active');
-
-          removeLater(weaponClone, 100, function () {
-            if (weaponClone.parentNode) weaponClone.remove();
-            show(weapon);
-          });
-
-          removeLater(playerClone, 100, function () {
-            if (playerClone.parentNode) playerClone.remove();
-            show(player);
-            finish();
-          });
-        }, 150);
-      }, 125);
-    }, 125);
+    liftTravelSlam(weapon, monster, options);
   }
 
   /*
