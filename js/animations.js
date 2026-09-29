@@ -827,54 +827,98 @@
     var finish = once(options.done);
     var weaponRect = rect(weapon);
     var playerRect = rect(player);
+    var monsterRect = rect(monster);
 
-    if (!weaponRect || !playerRect) {
+    if (!weaponRect || !playerRect || !monsterRect) {
       finish();
       return;
     }
 
     /*
-     * FIRST MELEE TEST — WEAPON → PLAYER
+     * MELEE — STEP 1 + STEP 2
      *
-     * Deliberately isolated from the rest of the combat choreography.
-     * The weapon is copied at its exact rendered position, then translated
-     * directly to the centre of the player card. No rotation, lift, scaling,
-     * player clone, or monster movement is involved.
+     * Step 1:
+     *   Weapon moves to the player's right-hand position. The weapon's left
+     *   edge meets the player's centre line, so it covers the right half.
+     *
+     * Step 2:
+     *   Player and weapon travel together toward the monster and stop short.
+     *   The weapon remains locked to the same hand position throughout.
+     *
+     * No strike is performed yet.
      */
     var weaponClone = appendClone(weapon, 'dd-melee-join-clone', weaponRect);
+    var playerClone = appendClone(player, 'dd-melee-player-clone', playerRect);
 
-    if (!weaponClone) {
+    if (!weaponClone || !playerClone) {
+      if (weaponClone) weaponClone.remove();
+      if (playerClone) playerClone.remove();
       finish();
       return;
     }
 
-    /*
-     * The weapon sits to the RIGHT of the player card.
-     * Stop when the weapon's LEFT edge reaches the player's centre line.
-     * That means exactly the right half of the player remains covered.
-     */
+    var weaponStart = center(weaponRect);
+    var playerStart = center(playerRect);
+    var monsterCenter = center(monsterRect);
+
     var hand = {
       left: playerRect.left + playerRect.width / 2,
       top: playerRect.top + playerRect.height / 2 - weaponRect.height / 2
     };
 
-    setVector(
-      weaponClone,
-      'join',
-      hand.left - weaponRect.left,
-      hand.top - weaponRect.top
+    var joinX = hand.left - weaponRect.left;
+    var joinY = hand.top - weaponRect.top;
+
+    setVector(weaponClone, 'join', joinX, joinY);
+
+    /*
+     * Work out a stopping point from the monster's centre, rather than using
+     * a hard-coded screen coordinate. This keeps the approach proportional
+     * if the board is resized.
+     */
+    var vx = monsterCenter.x - playerStart.x;
+    var vy = monsterCenter.y - playerStart.y;
+    var distance = Math.sqrt(vx * vx + vy * vy) || 1;
+
+    var stopDistance = options.stopDistance ||
+      Math.max(playerRect.width, monsterRect.width) * 0.65;
+
+    var stopCenter = {
+      x: monsterCenter.x - (vx / distance) * stopDistance,
+      y: monsterCenter.y - (vy / distance) * stopDistance
+    };
+
+    var approachX = stopCenter.x - playerStart.x;
+    var approachY = stopCenter.y - playerStart.y;
+
+    setVector(playerClone, 'approach', approachX, approachY);
+
+    /*
+     * The weapon's approach is exactly the player's approach added to its
+     * established hand-off position. This keeps the overlap unchanged.
+     */
+    setVector(weaponClone, 'approach',
+      joinX + approachX,
+      joinY + approachY
     );
 
-    weaponClone.style.setProperty(
-      '--animation-duration',
-      (options.joinDuration || 500) + 'ms'
-    );
+    weaponClone.style.setProperty('--animation-duration', '1000ms');
+    playerClone.style.setProperty('--animation-duration', '1000ms');
 
     hide(weapon);
-    weaponClone.classList.add('dd-melee-join-active');
+    hide(player);
 
-    removeLater(weaponClone, options.joinDuration || 500, function () {
+    weaponClone.classList.add('dd-melee-step2-weapon-active');
+    playerClone.classList.add('dd-melee-step2-player-active');
+
+    removeLater(weaponClone, 1000, function () {
+      if (weaponClone.parentNode) weaponClone.remove();
       show(weapon);
+    });
+
+    removeLater(playerClone, 1000, function () {
+      if (playerClone.parentNode) playerClone.remove();
+      show(player);
       finish();
     });
   }
