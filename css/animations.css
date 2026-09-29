@@ -514,27 +514,27 @@
       rotate(360deg);
   }
 
-  /* Slam onto the monster. */
+  /* Slam onto the monster while the rotation continues. */
   66% {
     transform:
       translate3d(var(--move-x),var(--move-y),0)
       scale(.96)
-      rotate(360deg);
+      rotate(420deg);
   }
 
   72% {
     transform:
       translate3d(var(--move-x),var(--move-y),0)
       scale(1.01)
-      rotate(360deg);
+      rotate(450deg);
   }
 
-  /* Now visibly glide all the way back to the weapon slot. */
+  /* Keep spinning while it glides home, then finish naturally. */
   100% {
     transform:
       translate3d(var(--return-x),var(--return-y),0)
       scale(1)
-      rotate(360deg);
+      rotate(540deg);
   }
 }
 
