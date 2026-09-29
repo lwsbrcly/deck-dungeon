@@ -506,7 +506,23 @@
     transform: translate3d(0,-8px,0) scale(var(--lift-scale,1.08)) rotate(0deg);
   }
 
-  55% {
+  /* Keep the spin visible across most of the travel rather than rushing
+     the whole 360° into the first half of the movement. */
+  20% {
+    transform:
+      translate3d(calc(var(--move-x) * .12),calc(var(--move-y) * .12),0)
+      scale(var(--lift-scale,1.08))
+      rotate(0deg);
+  }
+
+  78% {
+    transform:
+      translate3d(calc(var(--move-x) * .94),calc(var(--move-y) * .94),0)
+      scale(var(--lift-scale,1.08))
+      rotate(360deg);
+  }
+
+  82% {
     transform:
       translate3d(var(--move-x),var(--move-y),0)
       scale(var(--lift-scale,1.08))
