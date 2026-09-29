@@ -549,29 +549,29 @@
 }
 
 @keyframes dd-thrown-flight {
-  /* Aim: match ranged's 300ms rotation. */
+  /* Quick 150ms aim to the monster. */
   0% {
     transform: translate3d(0,0,0) rotate(0deg);
   }
 
-  27.27% {
+  18.75% {
     transform: translate3d(0,0,0) rotate(var(--aim-angle));
   }
 
   /* 180ms pause before the throw. */
-  43.64% {
+  41.25% {
     transform: translate3d(0,0,0) rotate(var(--aim-angle));
   }
 
   /* Aggressive 150ms flight to the monster. */
-  57.27% {
+  60% {
     transform:
       translate3d(var(--move-x),var(--move-y),0)
       rotate(var(--aim-angle));
   }
 
   /* Abrupt stop at impact. */
-  61.82% {
+  66.25% {
     transform:
       translate3d(var(--move-x),var(--move-y),0)
       rotate(var(--aim-angle));
