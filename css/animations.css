@@ -606,6 +606,76 @@
 }
 
 /* -------------------------------------------------------------------------
+ * Melee — step 2: player + weapon approach together
+ * ------------------------------------------------------------------------- */
+
+.dd-melee-step2-weapon-active {
+  animation: dd-melee-step2-weapon
+    var(--animation-duration, 1000ms)
+    cubic-bezier(.22,.8,.25,1)
+    forwards;
+}
+
+.dd-melee-step2-player-active {
+  animation: dd-melee-step2-player
+    var(--animation-duration, 1000ms)
+    cubic-bezier(.22,.8,.25,1)
+    forwards;
+}
+
+@keyframes dd-melee-step2-player {
+  0% {
+    transform: translate3d(0,0,0);
+  }
+
+  50% {
+    transform: translate3d(var(--approach-x),var(--approach-y),0);
+  }
+
+  70% {
+    transform: translate3d(var(--approach-x),var(--approach-y),0);
+  }
+
+  100% {
+    transform: translate3d(var(--approach-x),var(--approach-y),0);
+  }
+}
+
+@keyframes dd-melee-step2-weapon {
+  0% {
+    transform: translate3d(0,0,0);
+  }
+
+  22% {
+    transform: translate3d(var(--join-x),var(--join-y),0);
+  }
+
+  50% {
+    transform: translate3d(
+      calc(var(--join-x) + var(--approach-x)),
+      calc(var(--join-y) + var(--approach-y)),
+      0
+    );
+  }
+
+  70% {
+    transform: translate3d(
+      calc(var(--join-x) + var(--approach-x)),
+      calc(var(--join-y) + var(--approach-y)),
+      0
+    );
+  }
+
+  100% {
+    transform: translate3d(
+      calc(var(--join-x) + var(--approach-x)),
+      calc(var(--join-y) + var(--approach-y)),
+      0
+    );
+  }
+}
+
+/* -------------------------------------------------------------------------
  * Thrown weapon
  *
  * Flat tabletop: join player → fly to monster → return to weapon slot.
