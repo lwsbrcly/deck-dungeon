@@ -778,7 +778,7 @@ const THEMES = {
     ninja: {
         
         name: 'Deck of Shadows',
-        description: 'Use your skills to defend your village!',
+        description: 'Don\'t get caught!',
 
         artwork: {
             logo: 'assets/ninja/logo.png',
@@ -832,32 +832,32 @@ const THEMES = {
         cards: {
             monsters: {
                 clubs: {
-                    2: 'Samurai', 3: 'Samurai', 4: 'Samurai', 5: 'Samurai',
-                    6: 'Samurai', 7: 'Samurai', 8: 'Samurai', 9: 'Samurai',
-                    10: 'Samurai', J: 'Samurai', Q: 'Samurai', K: 'Samurai', A: 'Samurai'
+                    2: 'Servant', 3: 'Messenger', 4: 'Guard', 5: 'Archer',
+                    6: 'Sentry', 7: 'Captain', 8: 'Guard dog', 9: 'Steward',
+                    10: 'Royal Guard', J: 'Heir', Q: 'Courtier', K: 'Chamberlain', A: 'Lord'
                 },
                 spades: {
-                    2: 'Samurai', 3: 'Samurai', 4: 'Samurai', 5: 'Samurai',
-                    6: 'Samurai', 7: 'Samurai', 8: 'Samurai', 9: 'Samurai',
-                    10: 'Samurai', J: 'Samurai', Q: 'Samurai', K: 'Samurai', A: 'Samurai'
+                    2: 'Servant', 3: 'Messenger', 4: 'Guard', 5: 'Archer',
+                    6: 'Sentry', 7: 'Captain', 8: 'Guard dog', 9: 'Steward',
+                    10: 'Royal Guard', J: 'Heir', Q: 'Courtier', K: 'Chamberlain', A: 'Lord'
                 }
             },
             weapons: {
                 diamonds: {
-                    2: { name: 'Nunchucks', animation: 'melee' }, 3: { name: 'Nunchucks', animation: 'melee' },
-                    4: { name: 'Nunchucks', animation: 'melee' }, 5: { name: 'Nunchucks', animation: 'thrown' },
-                    6: { name: 'Nunchucks', animation: 'thrown' }, 7: { name: 'Nunchucks', animation: 'thrown' },
-                    8: { name: 'Nunchucks', animation: 'ranged' }, 9: { name: 'Nunchucks', animation: 'ranged' },
-                    10: { name: 'Nunchucks', animation: 'ranged' }
+                    2: { name: 'Sneaking shoes', animation: 'melee' }, 3: { name: 'Face covering', animation: 'melee' },
+                    4: { name: 'Hood', animation: 'melee' }, 5: { name: 'Cloth', animation: 'melee' },
+                    6: { name: 'Straw Hat', animation: 'melee' }, 7: { name: 'Fire Kit', animation: 'melee' },
+                    8: { name: 'Smoke bomb', animation: 'melee' }, 9: { name: 'Disguise', animation: 'melee' },
+                    10: { name: 'Grappling Hook', animation: 'melee' }
                 }
             },
             potions: {
                 hearts: {
-                    2: { name: 'Sushi', animation: 'eat' }, 3: { name: 'Sushi', animation: 'eat' }, 
-                    4: { name: 'Sushi', animation: 'eat' }, 5: { name: 'Sushi', animation: 'eat' },
-                    6: { name: 'Sushi', animation: 'eat' }, 7: { name: 'Sushi', animation: 'eat' }, 
-                    8: { name: 'Sushi', animation: 'eat' }, 9: { name: 'Sushi', animation: 'eat' }, 
-                    10: { name: 'Sushi', animation: 'eat' }
+                    2: { name: 'Silent walk', animation: 'use' }, 3: { name: 'Keen hearing', animation: 'use' }, 
+                    4: { name: 'Trap sense', animation: 'use' }, 5: { name: 'Lock picking', animation: 'use' },
+                    6: { name: 'Night vision', animation: 'use' }, 7: { name: 'Cat\'s landing', animation: 'use' }, 
+                    8: { name: 'Wall climbing', animation: 'use' }, 9: { name: 'Roof running', animation: 'use' }, 
+                    10: { name: 'Shadow agility', animation: 'use' }
                 }
             }
         }
