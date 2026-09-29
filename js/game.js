@@ -656,74 +656,29 @@ function waitForAnimation(el) {
 }
 
 async function animateRoomEntry(skipFirst) {
-var cards = document.querySelectorAll('#dungeon .dungeon-card-wrap .card:not(.empty)');
-var startIndex = skipFirst ? 1 : 0;
-var animated = [];
-var deckEl = document.getElementById('p1Deck');
-var deckCardEl = deckEl ? deckEl.querySelector('.deck-card') : null;
-var appStage = document.querySelector('main');
+  var cards = Array.prototype.slice.call(
+    document.querySelectorAll('#dungeon .dungeon-card-wrap .card:not(.empty)')
+  );
+  var startIndex = skipFirst ? 1 : 0;
+  var incomingCards = cards.slice(startIndex);
 
-if (!appStage) return;
+  if (!incomingCards.length) return;
 
-var appRect = appStage.getBoundingClientRect();
-var scale = appRect.width / 667;
-if (!scale) scale = 1;
-
-var deckRect = deckCardEl ? deckCardEl.getBoundingClientRect() : (deckEl ? deckEl.getBoundingClientRect() : null);
-
-for (var i = startIndex; i < cards.length; i++) {
-  var card = cards[i];
-  var rect = card.getBoundingClientRect();
-  var clone = card.cloneNode(true);
-  clone.classList.add('action-clone', 'enter-card');
-
-  // Work entirely in the application's 667 x 1000 coordinate system.
-  // The real card uses container-query sizing, so the animation clone
-  // needs the same intrinsic dimensions rather than the already-scaled
-  // browser dimensions returned by getBoundingClientRect().
-  var cardWidth = rect.width / scale;
-  var cardHeight = rect.height / scale;
-
-  var deckDepth = deckRect ? Math.ceil(state.deck.length / 3) : 0;
-  var deckTopOffset = -(deckDepth / 2);
-  var dealStartLeft = deckRect
-    ? (deckRect.left - appRect.left) / scale + deckTopOffset
-    : (rect.left - appRect.left) / scale;
-  var dealStartTop = deckRect
-    ? (deckRect.top - appRect.top) / scale + deckTopOffset
-    : (rect.top - appRect.top) / scale;
-
-  var targetLeft = (rect.left - appRect.left) / scale;
-  var targetTop = (rect.top - appRect.top) / scale;
-
-  clone.style.position = 'absolute';
-  clone.style.left = dealStartLeft + 'px';
-  clone.style.top = dealStartTop + 'px';
-  clone.style.width = cardWidth + 'px';
-  clone.style.height = cardHeight + 'px';
-  clone.style.setProperty('--deal-delay', ((i - startIndex) * 50) + 'ms');
-  clone.style.setProperty('--dx', (targetLeft - dealStartLeft) + 'px');
-  clone.style.setProperty('--dy', (targetTop - dealStartTop) + 'px');
-
-  card.classList.add('action-hidden');
-  appStage.appendChild(clone);
-  animated.push({ clone: clone, card: card });
-}
-
-if (!animated.length) return;
-
-dealCardsSound(animated.length);
-
-await new Promise(function(resolve) { requestAnimationFrame(resolve); });
-
-await Promise.all(animated.map(function(item) {
-  return waitForAnimation(item.clone).then(function() {
-    item.clone.remove();
-    item.card.classList.remove('action-hidden');
+  var slots = incomingCards.map(function(card) {
+    return card;
   });
-}));
-}
 
+  DeckDungeonAnimations.deal(
+    incomingCards,
+    document.getElementById('p1Deck'),
+    slots,
+    {
+      delay: 50,
+      duration: 650,
+      done: function() {}
+    }
+  );
+}
 async function animateFlee(cards) {
 if (!cards || !cards.length) return;
 
