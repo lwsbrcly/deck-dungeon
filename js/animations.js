@@ -933,7 +933,7 @@
       impact('hit', monsterCenter, 280);
       shake(160);
       if (options.onHit) options.onHit();
-    }, options.impactTime || 730);
+    }, options.impactTime || 630);
 
     removeLater(clone, options.duration || 1100, function () {
       show(weapon);
