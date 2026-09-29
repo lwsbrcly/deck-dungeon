@@ -664,17 +664,21 @@ async function animateRoomEntry(skipFirst) {
 
   if (!incomingCards.length) return;
 
-  var slots = incomingCards.map(function(card) {
-    return card;
-  });
+  var deckEl = document.getElementById('p1Deck');
+  var deckCardEl = deckEl ? deckEl.querySelector('.deck-card') : null;
+  var deckDepth = Math.ceil(state.deck.length / 3);
+  var deckOffset = -(deckDepth / 2);
 
   DeckDungeonAnimations.deal(
     incomingCards,
-    document.getElementById('p1Deck'),
-    slots,
+    deckCardEl || deckEl,
+    incomingCards,
     {
       delay: 50,
       duration: 650,
+      startOffsetX: deckOffset,
+      startOffsetY: deckOffset,
+      sound: typeof dealCardsSound === 'function' ? dealCardsSound : null,
       done: function() {}
     }
   );
