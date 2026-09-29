@@ -481,7 +481,15 @@
  * then both return independently.
  * ------------------------------------------------------------------------- */
 
-.dd-melee-weapon-clone,
+.dd-melee-weapon-clone {
+  position: absolute !important;
+  z-index: 1004;
+  pointer-events: none !important;
+  margin: 0 !important;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
 .dd-melee-player-clone {
   position: absolute !important;
   z-index: 1002;
