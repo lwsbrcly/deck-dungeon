@@ -894,13 +894,15 @@
     setVector(playerClone, 'approach', approachX, approachY);
 
     /*
-     * The weapon's approach is exactly the player's approach added to its
-     * established hand-off position. This keeps the overlap unchanged.
+     * The weapon must remain physically locked to the player's hand.
+     * Its Stage 2 movement is therefore ONLY the player's movement vector.
+     * The weapon's initial join offset is already established by --join-x/y;
+     * CSS adds the exact same approach vector to that position.
+     *
+     * This prevents the weapon from independently targeting the monster
+     * and accidentally crossing to the other side of the player.
      */
-    setVector(weaponClone, 'approach',
-      joinX + approachX,
-      joinY + approachY
-    );
+    setVector(weaponClone, 'approach', approachX, approachY);
 
     weaponClone.style.setProperty('--animation-duration', '1000ms');
     playerClone.style.setProperty('--animation-duration', '1000ms');
