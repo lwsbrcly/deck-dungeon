@@ -903,10 +903,9 @@
       monsterCenter.x - weaponCenter.x,
       monsterCenter.y - weaponCenter.y
     );
-    setVector(clone, 'return',
-      weaponCenter.x - monsterCenter.x,
-      weaponCenter.y - monsterCenter.y
-    );
+    // Return to the clone's original position. CSS transforms are
+    // relative to that starting point, so home is (0, 0), not -move.
+    setVector(clone, 'return', 0, 0);
 
     clone.style.setProperty('--aim-angle', aimAngle + 'deg');
     clone.style.setProperty('--animation-duration', (options.duration || 1100) + 'ms');
