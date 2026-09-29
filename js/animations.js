@@ -963,13 +963,49 @@
         weaponClone.style.setProperty('--animation-duration', '300ms');
         weaponClone.classList.add('dd-melee-step3-strike-active');
 
-        removeLater(weaponClone, 400, function () {
-          if (weaponClone.parentNode) weaponClone.remove();
-          show(weapon);
-          if (playerClone.parentNode) playerClone.remove();
-          show(player);
-          finish();
-        });
+        window.setTimeout(function () {
+          /* Rebase the weapon at the target before its 100ms return. */
+          weaponClone.classList.remove('dd-melee-step3-strike-active');
+          weaponClone.style.left = monsterCenter.x - weaponRect.width / 2 + 'px';
+          weaponClone.style.top = monsterCenter.y - weaponRect.height / 2 + 'px';
+          weaponClone.style.transform = 'none';
+
+          /* Rebase the player at the approach position before returning. */
+          playerClone.style.left = playerRect.left + approachX + 'px';
+          playerClone.style.top = playerRect.top + approachY + 'px';
+          playerClone.style.transform = 'none';
+
+          setVector(
+            weaponClone,
+            'return',
+            weaponRect.left - (monsterCenter.x - weaponRect.width / 2),
+            weaponRect.top - (monsterCenter.y - weaponRect.height / 2)
+          );
+
+          setVector(
+            playerClone,
+            'return',
+            playerRect.left - (playerRect.left + approachX),
+            playerRect.top - (playerRect.top + approachY)
+          );
+
+          weaponClone.style.setProperty('--animation-duration', '100ms');
+          playerClone.style.setProperty('--animation-duration', '100ms');
+
+          weaponClone.classList.add('dd-melee-return-active');
+          playerClone.classList.add('dd-melee-return-active');
+
+          removeLater(weaponClone, 100, function () {
+            if (weaponClone.parentNode) weaponClone.remove();
+            show(weapon);
+          });
+
+          removeLater(playerClone, 100, function () {
+            if (playerClone.parentNode) playerClone.remove();
+            show(player);
+            finish();
+          });
+        }, 300);
       }, 500);
     }, 300);
   }
