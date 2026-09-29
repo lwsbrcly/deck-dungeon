@@ -986,7 +986,7 @@
       impact('hit', monsterCenter, 280);
       jolt(monster, 180);
       if (options.onHit) options.onHit();
-    }, options.hitTime || 850);
+    }, options.hitTime || 760);
 
     removeLater(clone, options.duration || 1200, function () {
       show(weapon);
