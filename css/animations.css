@@ -270,8 +270,6 @@
   pointer-events: none !important;
   margin: 0 !important;
   transform-origin: center center;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
   will-change: transform;
 }
 
@@ -286,27 +284,11 @@
 
 @keyframes dd-deal-card {
   0% {
-    transform: translate3d(0,0,0) rotateY(0deg);
-  }
-
-  48% {
-    transform: translate3d(
-      calc(var(--move-x) * .5),
-      calc(var(--move-y) * .5),
-      0
-    ) rotateY(90deg);
-  }
-
-  52% {
-    transform: translate3d(
-      calc(var(--move-x) * .5),
-      calc(var(--move-y) * .5),
-      0
-    ) rotateY(90deg);
+    transform: translate3d(0,0,0);
   }
 
   100% {
-    transform: translate3d(var(--move-x),var(--move-y),0) rotateY(180deg);
+    transform: translate3d(var(--move-x),var(--move-y),0);
   }
 }
 
