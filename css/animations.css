@@ -617,13 +617,25 @@
  * Melee — step 2: player + weapon approach together
  * ------------------------------------------------------------------------- */
 
+/* Stage 1: weapon travels to the player's hand. */
 .dd-melee-step2-weapon-active {
-  animation: dd-melee-step2-weapon
-    var(--animation-duration, 1000ms)
+  animation: dd-melee-step2-join
+    var(--animation-duration, 500ms)
     cubic-bezier(.22,.8,.25,1)
     forwards;
 }
 
+@keyframes dd-melee-step2-join {
+  0% {
+    transform: translate3d(0,0,0);
+  }
+
+  100% {
+    transform: translate3d(var(--join-x),var(--join-y),0);
+  }
+}
+
+/* Stage 2: player and weapon use the exact same movement vector. */
 .dd-melee-step2-player-active,
 .dd-melee-step2-shared-move-active {
   animation: dd-melee-step2-shared-move
