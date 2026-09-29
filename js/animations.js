@@ -878,9 +878,10 @@
 
     var move = translation(weaponRect, monsterRect);
     setVector(clone, 'move', move.x, move.y);
+    setVector(clone, 'return', -move.x, -move.y);
 
     clone.style.setProperty('--lift-scale', options.liftScale || '1.08');
-    clone.style.setProperty('--animation-duration', (options.duration || 650) + 'ms');
+    clone.style.setProperty('--animation-duration', (options.duration || 850) + 'ms');
 
     hide(weapon);
     clone.classList.add('dd-thrown-active');
