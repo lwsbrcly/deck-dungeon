@@ -654,6 +654,25 @@
   }
 }
 
+/* Stage 3: player holds position while the weapon strikes directly to
+   the centre of the target card. */
+.dd-melee-step3-strike-active {
+  animation: dd-melee-step3-strike
+    var(--animation-duration, 450ms)
+    cubic-bezier(.22,.8,.25,1)
+    forwards;
+}
+
+@keyframes dd-melee-step3-strike {
+  0% {
+    transform: translate3d(0,0,0);
+  }
+
+  100% {
+    transform: translate3d(var(--strike-x),var(--strike-y),0);
+  }
+}
+
 /* -------------------------------------------------------------------------
  * Thrown weapon
  *
