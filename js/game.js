@@ -843,13 +843,20 @@ function clearPreviousMonsters() {
     document.body.appendChild(clone);
 
     var cleaned = false;
-    var cleanup = function(el) {
+    var cleanup = function(el, original) {
       return function() {
         if (cleaned) return;
         cleaned = true;
+
+        // Remove both the visual clone and the original stack card.
+        // The game state is cleared by finishEquip(), so this prevents the
+        // old full-colour ghost DOM from reappearing after the fade.
         el.remove();
+
+        var wrapper = original.closest('.previous-monster-card');
+        if (wrapper) wrapper.remove();
       };
-    }(clone);
+    }(clone, monsterCardEl);
 
     clone.addEventListener('animationend', cleanup, { once: true });
     setTimeout(cleanup, 650);
