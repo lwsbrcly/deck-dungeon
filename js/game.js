@@ -938,9 +938,59 @@ if (isFistFight) {
 
 if (
   (player === 'p1' || player === 'p2') &&
-  window.DeckDungeonAnimations &&
-  DeckDungeonAnimations.weaponFightMelee
+  window.DeckDungeonAnimations
 ) {
+  var weaponAnimation =
+    state[player] &&
+    state[player].weapon &&
+    state[player].weapon.animation;
+
+  var weaponEl = document.querySelector('#' + player + 'Weapon .card');
+  var playerEl = document.getElementById(player + 'Panel');
+
+  if (!weaponEl || !playerEl) {
+    done();
+    return;
+  }
+
+  if (
+    weaponAnimation === 'thrown' &&
+    DeckDungeonAnimations.weaponFightThrown
+  ) {
+    DeckDungeonAnimations.weaponFightThrown(
+      weaponEl,
+      playerEl,
+      targetEl,
+      { done: done }
+    );
+    return;
+  }
+
+  if (
+    weaponAnimation === 'ranged' &&
+    DeckDungeonAnimations.weaponFightRanged
+  ) {
+    DeckDungeonAnimations.weaponFightRanged(
+      weaponEl,
+      playerEl,
+      targetEl,
+      { done: done }
+    );
+    return;
+  }
+
+  if (DeckDungeonAnimations.weaponFightMelee) {
+    DeckDungeonAnimations.weaponFightMelee(
+      weaponEl,
+      playerEl,
+      targetEl,
+      { done: done }
+    );
+    return;
+  }
+}
+
+
   var meleeWeaponEl = document.querySelector('#' + player + 'Weapon .card');
   var meleePlayerEl = document.getElementById(player + 'Panel');
 
