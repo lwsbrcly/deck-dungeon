@@ -624,64 +624,21 @@
     forwards;
 }
 
-.dd-melee-step2-player-active {
-  animation: dd-melee-step2-player
-    var(--animation-duration, 1000ms)
+.dd-melee-step2-player-active,
+.dd-melee-step2-shared-move-active {
+  animation: dd-melee-step2-shared-move
+    var(--animation-duration, 500ms)
     cubic-bezier(.22,.8,.25,1)
     forwards;
 }
 
-@keyframes dd-melee-step2-player {
-  /* Stage 1: stay completely stationary while the weapon joins. */
+@keyframes dd-melee-step2-shared-move {
   0% {
     transform: translate3d(0,0,0);
   }
 
-  50% {
-    transform: translate3d(0,0,0);
-  }
-
-  /* Stage 2: start moving at exactly the same moment the weapon
-     finishes joining the hand. */
-  75% {
-    transform: translate3d(var(--approach-x),var(--approach-y),0);
-  }
-
   100% {
     transform: translate3d(var(--approach-x),var(--approach-y),0);
-  }
-}
-
-@keyframes dd-melee-step2-weapon {
-  /* Stage 1: weapon joins the hand. */
-  0% {
-    transform: translate3d(0,0,0);
-  }
-
-  22% {
-    transform: translate3d(var(--join-x),var(--join-y),0);
-  }
-
-  /* Hold exactly there while the player is still. */
-  50% {
-    transform: translate3d(var(--join-x),var(--join-y),0);
-  }
-
-  /* Stage 2: player and weapon now move together. */
-  75% {
-    transform: translate3d(
-      calc(var(--join-x) + var(--approach-x)),
-      calc(var(--join-y) + var(--approach-y)),
-      0
-    );
-  }
-
-  100% {
-    transform: translate3d(
-      calc(var(--join-x) + var(--approach-x)),
-      calc(var(--join-y) + var(--approach-y)),
-      0
-    );
   }
 }
 
