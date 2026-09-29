@@ -906,8 +906,8 @@
      * rebased there. From that point onward BOTH clones receive exactly
      * the same translate3d(approachX, approachY) movement.
      */
-    weaponClone.style.setProperty('--animation-duration', '100ms');
-    playerClone.style.setProperty('--animation-duration', '100ms');
+    weaponClone.style.setProperty('--animation-duration', '125ms');
+    playerClone.style.setProperty('--animation-duration', '125ms');
 
     hide(weapon);
     hide(player);
@@ -960,7 +960,7 @@
         var strikeY = monsterCenter.y - weaponCenter.y;
 
         setVector(weaponClone, 'strike', strikeX, strikeY);
-        weaponClone.style.setProperty('--animation-duration', '200ms');
+        weaponClone.style.setProperty('--animation-duration', '150ms');
         weaponClone.classList.add('dd-melee-step3-strike-active');
 
         window.setTimeout(function () {
@@ -1005,9 +1005,9 @@
             show(player);
             finish();
           });
-        }, 200);
+        }, 150);
       }, 500);
-    }, 100);
+    }, 125);
   }
 
   /*
