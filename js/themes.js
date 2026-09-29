@@ -414,8 +414,8 @@ const THEMES = {
             },
             weapons: {
                 diamonds: {
-                    2: 'Dagger', 3: 'Club', 4: 'Short Sword', 5: 'Mace',
-                    6: 'Longsword', 7: 'Battle Axe', 8: 'Warhammer', 9: 'Great Axe', 10: 'Greatsword'
+                    2: { name: 'Dagger', animation: 'melee' }, 3: 'Club', 4: 'Short Sword', 5: 'Mace',
+                    6: { name: 'Longsword', animation: 'thrown' }, 7: 'Battle Axe', 8: 'Warhammer', 9: 'Great Axe', 10: 'Greatsword'
                 }
             },
             potions: {
@@ -526,8 +526,8 @@ const THEMES = {
             },
             weapons: {
                 diamonds: {
-                    2: 'Vinyl Record', 3: 'Darts', 4: 'Swingball', 5: 'Golf Club',
-                    6: 'Hockey Stick', 7: 'Pool Cue', 8: 'Spade', 9: 'Cricket Bat', 10: 'Winchester'
+                    2: { name: 'Vinyl Record', animation: 'melee' }, 3: 'Darts', 4: 'Swingball', 5: 'Golf Club',
+                    6: { name: 'Hockey Stick', animation: 'thrown' }, 7: 'Pool Cue', 8: 'Spade', 9: 'Cricket Bat', 10: 'Winchester'
                 }
             },
             potions: {
@@ -664,9 +664,9 @@ const THEMES = {
             },
             weapons: {
                 diamonds: {
-                    2: 'Combat Knife', 3: 'Shock Baton', 4: 'Scattergun', 5: 'Pulse Rifle',
-                    6: 'Plasma Launcher', 7: 'Grav Hammer', 8: 'Arc Cannon', 9: 'Sonic Railgun',
-                    10: 'Disruptor™ MkII'
+                    2: { name: 'Combat Knife', animation: 'melee' }, 3: 'Shock Baton', 4: 'Scattergun', 5: 'Pulse Rifle',
+                    6: { name: 'Plasma Launcher', animation: 'thrown' }, 7: 'Grav Hammer', 8: 'Arc Cannon', 9: 'Sonic Railgun',
+                    10: { name: 'Disruptor™ MkII', animation: 'ranged' }
                 }
             },
             potions: {
@@ -749,8 +749,8 @@ const THEMES = {
             },
             weapons: {
                 diamonds: {
-                    2: 'Cutlass', 3: 'Cutlass', 4: 'Cutlass', 5: 'Cutlass',
-                    6: 'Cutlass', 7: 'Cutlass', 8: 'Cutlass', 9: 'Cutlass', 10: 'Cutlass'
+                    2: { name: 'Cutlass', animation: 'melee' }, 3: 'Cutlass', 4: 'Cutlass', 5: 'Cutlass',
+                    6: { name: 'Cutlass', animation: 'thrown' }, 7: 'Cutlass', 8: 'Cutlass', 9: 'Cutlass', 10: 'Cutlass'
                 }
             },
             potions: {
@@ -833,8 +833,8 @@ const THEMES = {
             },
             weapons: {
                 diamonds: {
-                    2: 'Nunchucks', 3: 'Nunchucks', 4: 'Nunchucks', 5: 'Nunchucks',
-                    6: 'Nunchucks', 7: 'Nunchucks', 8: 'Nunchucks', 9: 'Nunchucks', 10: 'Nunchucks'
+                    2: { name: 'Nunchucks', animation: 'melee' }, 3: 'Nunchucks', 4: 'Nunchucks', 5: 'Nunchucks',
+                    6: { name: 'Nunchucks', animation: 'thrown' }, 7: 'Nunchucks', 8: 'Nunchucks', 9: 'Nunchucks', 10: 'Nunchucks'
                 }
             },
             potions: {
