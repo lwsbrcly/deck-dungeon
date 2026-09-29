@@ -924,7 +924,7 @@
     setVector(clone, 'return', 0, 0);
 
     clone.style.setProperty('--aim-angle', aimAngle + 'deg');
-    clone.style.setProperty('--animation-duration', (options.duration || 800) + 'ms');
+    clone.style.setProperty('--animation-duration', (options.duration || 1100) + 'ms');
 
     hide(weapon);
     clone.classList.add('dd-thrown-active');
@@ -933,7 +933,7 @@
       impact('hit', monsterCenter, 280);
       shake(160);
       if (options.onHit) options.onHit();
-    }, options.impactTime || 650);
+    }, options.impactTime || 730);
 
     removeLater(clone, options.duration || 1100, function () {
       show(weapon);
