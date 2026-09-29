@@ -771,4 +771,54 @@
   }
 }
 
-\n/* -------------------------------------------------------------------------\n * Drink\n *\n * Travel to the player, gradually tip the card, then fade away as the drink\n * is finished.\n * ------------------------------------------------------------------------- */\n\n.dd-drink-clone {\n  position: absolute !important;\n  z-index: 1001;\n  pointer-events: none !important;\n  margin: 0 !important;\n  transform-origin: 50% 88%;\n  will-change: transform, opacity;\n}\n\n.dd-drink-active {\n  animation: dd-drink-card var(--animation-duration, 900ms) cubic-bezier(.2,.8,.25,1) forwards;\n}\n\n@keyframes dd-drink-card {\n  0% {\n    transform: translate3d(0,0,0) rotate(0deg) scale(1);\n    opacity: 1;\n  }\n\n  42% {\n    transform: translate3d(var(--move-x),var(--move-y),0) rotate(0deg) scale(1);\n    opacity: 1;\n  }\n\n  62% {\n    transform: translate3d(var(--move-x),var(--move-y),0) rotate(12deg) scale(1);\n    opacity: 1;\n  }\n\n  78% {\n    transform: translate3d(var(--move-x),var(--move-y),0) rotate(32deg) scale(.98);\n    opacity: 1;\n  }\n\n  92% {\n    transform: translate3d(var(--move-x),var(--move-y),0) rotate(48deg) scale(.94);\n    opacity: .45;\n  }\n\n  100% {\n    transform: translate3d(var(--move-x),var(--move-y),0) rotate(55deg) scale(.9);\n    opacity: 0;\n  }\n}\n
+/* -------------------------------------------------------------------------
+ * Drink
+ *
+ * Travel to the player, gradually tip the card, then fade away as the drink
+ * is finished.
+ * ------------------------------------------------------------------------- */
+
+.dd-drink-clone {
+  position: absolute !important;
+  z-index: 1001;
+  pointer-events: none !important;
+  margin: 0 !important;
+  transform-origin: 50% 88%;
+  will-change: transform, opacity;
+}
+
+.dd-drink-active {
+  animation: dd-drink-card var(--animation-duration, 900ms) cubic-bezier(.2,.8,.25,1) forwards;
+}
+
+@keyframes dd-drink-card {
+  0% {
+    transform: translate3d(0,0,0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+
+  42% {
+    transform: translate3d(var(--move-x),var(--move-y),0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+
+  62% {
+    transform: translate3d(var(--move-x),var(--move-y),0) rotate(12deg) scale(1);
+    opacity: 1;
+  }
+
+  78% {
+    transform: translate3d(var(--move-x),var(--move-y),0) rotate(32deg) scale(.98);
+    opacity: 1;
+  }
+
+  92% {
+    transform: translate3d(var(--move-x),var(--move-y),0) rotate(48deg) scale(.94);
+    opacity: .45;
+  }
+
+  100% {
+    transform: translate3d(var(--move-x),var(--move-y),0) rotate(55deg) scale(.9);
+    opacity: 0;
+  }
+}
