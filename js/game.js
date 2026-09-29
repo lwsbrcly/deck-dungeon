@@ -822,44 +822,19 @@ function clearPreviousMonsters() {
 
   discardSound();
 
-  // These are purely visual fade clones. Keep them in viewport coordinates,
-  // just like the flee animation, so canvas scaling/stack transforms cannot
-  // alter their position.
+  // Fade the real cards in place. Keeping them inside the previous-monster
+  // stack preserves its grayscale styling; cloning them into document.body
+  // would strip that inherited filter and create full-colour ghosts.
   for (var i = 0; i < stackCards.length; i++) {
     var monsterCardEl = stackCards[i];
-    var rect = monsterCardEl.getBoundingClientRect();
+    monsterCardEl.classList.add('previous-monster-fade-clone');
 
-    var clone = monsterCardEl.cloneNode(true);
-    clone.classList.remove('selected', 'selection-hidden', 'action-hidden');
-    clone.classList.add('action-clone', 'previous-monster-fade-clone');
-
-    clone.style.position = 'fixed';
-    clone.style.left = rect.left + 'px';
-    clone.style.top = rect.top + 'px';
-    clone.style.width = rect.width + 'px';
-    clone.style.height = rect.height + 'px';
-
-    monsterCardEl.classList.add('action-hidden');
-    document.body.appendChild(clone);
-
-    var cleaned = false;
-    var cleanup = function(el, original) {
-      return function() {
-        if (cleaned) return;
-        cleaned = true;
-
-        // Remove both the visual clone and the original stack card.
-        // The game state is cleared by finishEquip(), so this prevents the
-        // old full-colour ghost DOM from reappearing after the fade.
-        el.remove();
-
+    (function(original) {
+      setTimeout(function() {
         var wrapper = original.closest('.previous-monster-card');
         if (wrapper) wrapper.remove();
-      };
-    }(clone, monsterCardEl);
-
-    clone.addEventListener('animationend', cleanup, { once: true });
-    setTimeout(cleanup, 650);
+      }, 560);
+    })(monsterCardEl);
   }
 }
 
