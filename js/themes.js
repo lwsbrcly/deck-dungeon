@@ -414,8 +414,11 @@ const THEMES = {
             },
             weapons: {
                 diamonds: {
-                    2: { name: 'Dagger', animation: 'melee' }, 3: { name: 'Club', animation: 'melee' }, 4: { name: 'Short Sword', animation: 'melee' }, 5: { name: 'Mace', animation: 'thrown' },
-                    6: { name: 'Longsword', animation: 'thrown' }, 7: { name: 'Battle Axe', animation: 'thrown' }, 8: { name: 'Warhammer', animation: 'ranged' }, 9: { name: 'Great Axe', animation: 'ranged' }, 10: { name: 'Greatsword', animation: 'ranged' }
+                    2: { name: 'Dagger', animation: 'melee' }, 3: { name: 'Club', animation: 'melee' }, 
+                    4: { name: 'Short Sword', animation: 'melee' }, 5: { name: 'Mace', animation: 'melee' },
+                    6: { name: 'Longsword', animation: 'melee' }, 7: { name: 'Battle Axe', animation: 'melee' }, 
+                    8: { name: 'Warhammer', animation: 'melee' }, 9: { name: 'Great Axe', animation: 'melee' }, 
+                    10: { name: 'Greatsword', animation: 'melee' }
                 }
             },
             potions: {
@@ -526,8 +529,11 @@ const THEMES = {
             },
             weapons: {
                 diamonds: {
-                    2: { name: 'Vinyl Record', animation: 'melee' }, 3: { name: 'Darts', animation: 'melee' }, 4: { name: 'Swingball', animation: 'melee' }, 5: { name: 'Golf Club', animation: 'thrown' },
-                    6: { name: 'Hockey Stick', animation: 'thrown' }, 7: { name: 'Pool Cue', animation: 'thrown' }, 8: { name: 'Spade', animation: 'ranged' }, 9: { name: 'Cricket Bat', animation: 'ranged' }, 10: { name: 'Winchester', animation: 'ranged' }
+                    2: { name: 'Vinyl Record', animation: 'thrown' }, 3: { name: 'Darts', animation: 'thrown' }, 
+                    4: { name: 'Swingball', animation: 'melee' }, 5: { name: 'Golf Club', animation: 'melee' },
+                    6: { name: 'Hockey Stick', animation: 'melee' }, 7: { name: 'Pool Cue', animation: 'melee' }, 
+                    8: { name: 'Spade', animation: 'melee' }, 9: { name: 'Cricket Bat', animation: 'melee' }, 
+                    10: { name: 'Winchester', animation: 'ranged' }
                 }
             },
             potions: {
@@ -664,8 +670,10 @@ const THEMES = {
             },
             weapons: {
                 diamonds: {
-                    2: { name: 'Combat Knife', animation: 'melee' }, 3: { name: 'Shock Baton', animation: 'melee' }, 4: { name: 'Scattergun', animation: 'melee' }, 5: { name: 'Pulse Rifle', animation: 'thrown' },
-                    6: { name: 'Plasma Launcher', animation: 'thrown' }, 7: { name: 'Grav Hammer', animation: 'thrown' }, 8: { name: 'Arc Cannon', animation: 'ranged' }, 9: { name: 'Sonic Railgun', animation: 'ranged' },
+                    2: { name: 'Combat Knife', animation: 'melee' }, 3: { name: 'Shock Baton', animation: 'melee' },
+                    4: { name: 'Scattergun', animation: 'ranged' }, 5: { name: 'Pulse Rifle', animation: 'ranged' },
+                    6: { name: 'Plasma Launcher', animation: 'ranged' }, 7: { name: 'Grav Hammer', animation: 'melee' }, 
+                    8: { name: 'Arc Cannon', animation: 'ranged' }, 9: { name: 'Sonic Railgun', animation: 'ranged' },
                     10: { name: 'Disruptor™ MkII', animation: 'ranged' }
                 }
             },
@@ -749,8 +757,11 @@ const THEMES = {
             },
             weapons: {
                 diamonds: {
-                    2: { name: 'Cutlass', animation: 'melee' }, 3: { name: 'Cutlass', animation: 'melee' }, 4: { name: 'Cutlass', animation: 'melee' }, 5: { name: 'Cutlass', animation: 'thrown' },
-                    6: { name: 'Cutlass', animation: 'thrown' }, 7: { name: 'Cutlass', animation: 'thrown' }, 8: { name: 'Cutlass', animation: 'ranged' }, 9: { name: 'Cutlass', animation: 'ranged' }, 10: { name: 'Cutlass', animation: 'ranged' }
+                    2: { name: 'Cutlass', animation: 'melee' }, 3: { name: 'Cutlass', animation: 'melee' },
+                    4: { name: 'Cutlass', animation: 'melee' }, 5: { name: 'Cutlass', animation: 'thrown' },
+                    6: { name: 'Cutlass', animation: 'thrown' }, 7: { name: 'Cutlass', animation: 'thrown' },
+                    8: { name: 'Cutlass', animation: 'ranged' }, 9: { name: 'Cutlass', animation: 'ranged' },
+                    10: { name: 'Cutlass', animation: 'ranged' }
                 }
             },
             potions: {
@@ -833,8 +844,11 @@ const THEMES = {
             },
             weapons: {
                 diamonds: {
-                    2: { name: 'Nunchucks', animation: 'melee' }, 3: { name: 'Nunchucks', animation: 'melee' }, 4: { name: 'Nunchucks', animation: 'melee' }, 5: { name: 'Nunchucks', animation: 'thrown' },
-                    6: { name: 'Nunchucks', animation: 'thrown' }, 7: { name: 'Nunchucks', animation: 'thrown' }, 8: { name: 'Nunchucks', animation: 'ranged' }, 9: { name: 'Nunchucks', animation: 'ranged' }, 10: { name: 'Nunchucks', animation: 'ranged' }
+                    2: { name: 'Nunchucks', animation: 'melee' }, 3: { name: 'Nunchucks', animation: 'melee' },
+                    4: { name: 'Nunchucks', animation: 'melee' }, 5: { name: 'Nunchucks', animation: 'thrown' },
+                    6: { name: 'Nunchucks', animation: 'thrown' }, 7: { name: 'Nunchucks', animation: 'thrown' },
+                    8: { name: 'Nunchucks', animation: 'ranged' }, 9: { name: 'Nunchucks', animation: 'ranged' },
+                    10: { name: 'Nunchucks', animation: 'ranged' }
                 }
             },
             potions: {
