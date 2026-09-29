@@ -543,7 +543,7 @@
 .dd-thrown-active {
   animation:
     dd-thrown-flight
-    var(--animation-duration, 1100ms)
+    var(--animation-duration, 800ms)
     linear
     forwards;
 }
@@ -560,7 +560,7 @@
   }
 
   /* Hit position. */
-  59% {
+  50% {
     transform:
       translate3d(var(--move-x),var(--move-y),0)
       rotate(var(--aim-angle));
@@ -568,7 +568,7 @@
   }
 
   /* Briefly hold at the target. */
-  62% {
+  54% {
     transform:
       translate3d(var(--move-x),var(--move-y),0)
       rotate(var(--aim-angle));
