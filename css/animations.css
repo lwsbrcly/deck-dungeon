@@ -629,11 +629,12 @@
     transform: translate3d(0,0,0);
   }
 
-  49.9% {
+  50% {
     transform: translate3d(0,0,0);
   }
 
-  /* Stage 2: now move with the weapon toward the monster. */
+  /* Stage 2: start moving at exactly the same moment the weapon
+     finishes joining the hand. */
   75% {
     transform: translate3d(var(--approach-x),var(--approach-y),0);
   }
