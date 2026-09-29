@@ -935,7 +935,7 @@
     // towards the monster.
     var aimAngle = Math.atan2(dy, dx) * 180 / Math.PI + 90;
 
-    var loadDistance = options.loadDistance || 20;
+    var loadDistance = options.loadDistance || 15;
     var recoilDistance = options.recoilDistance || 40;
 
     setVector(clone, 'load',
