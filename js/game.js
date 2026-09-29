@@ -913,6 +913,28 @@ function trackWeaponKill(weaponName, monsterValue) {
 function animateAttack(player, targetEl, done, isFistFight, ghostInfo) {
 if (!targetEl) { done(); return; }
 
+// Bare-handed fights use the parallel fist-fight choreography. Weapon combat
+// remains on the legacy path until its own migration is validated.
+if (isFistFight) {
+  var fistPlayerId = player === 'both' ? 'p1' : player;
+  var fistPlayerEl = document.getElementById(fistPlayerId + 'Panel');
+  if (!fistPlayerEl || !window.DeckDungeonAnimations || !DeckDungeonAnimations.fistFight) {
+    done();
+    return;
+  }
+
+  targetEl.classList.add('selection-hidden');
+
+  DeckDungeonAnimations.fistFight(targetEl, fistPlayerEl, {
+    sound: typeof ughSound === 'function' ? ughSound : null,
+    done: function() {
+      targetEl.classList.remove('selection-hidden');
+      done();
+    }
+  });
+  return;
+}
+
 var sourceEl = null;
 var sourceRect;
 var targetRect;
