@@ -909,10 +909,9 @@
 
     var finish = once(options.done);
     var weaponRect = rect(weapon);
-    var playerRect = rect(player);
     var monsterRect = rect(monster);
 
-    if (!weaponRect || !playerRect || !monsterRect) {
+    if (!weaponRect || !monsterRect) {
       finish();
       return;
     }
@@ -924,26 +923,32 @@
     }
 
     var weaponStart = center(weaponRect);
-    var playerCenter = center(playerRect);
     var monsterCenter = center(monsterRect);
 
-    var hand = {
-      x: playerCenter.x + (options.handOffsetX || 0),
-      y: playerCenter.y + (options.handOffsetY || 0)
-    };
+    var dx = monsterCenter.x - weaponStart.x;
+    var dy = monsterCenter.y - weaponStart.y;
+    var distance = Math.sqrt(dx * dx + dy * dy) || 1;
+    var unitX = dx / distance;
+    var unitY = dy / distance;
 
-    setVector(clone, 'join',
-      hand.x - weaponStart.x,
-      hand.y - weaponStart.y
+    // Cards face upward by default, so add 90° to point their top edge
+    // towards the monster.
+    var aimAngle = Math.atan2(dy, dx) * 180 / Math.PI + 90;
+
+    var loadDistance = options.loadDistance || 20;
+    var recoilDistance = options.recoilDistance || 40;
+
+    setVector(clone, 'load',
+      unitX * loadDistance,
+      unitY * loadDistance
     );
-    setVector(clone, 'return',
-      weaponStart.x - hand.x,
-      weaponStart.y - hand.y
+    setVector(clone, 'recoil',
+      -unitX * recoilDistance,
+      -unitY * recoilDistance
     );
 
-    clone.dataset.targetX = monsterCenter.x;
-    clone.dataset.targetY = monsterCenter.y;
-    clone.style.setProperty('--animation-duration', (options.duration || 1000) + 'ms');
+    clone.style.setProperty('--aim-angle', aimAngle + 'deg');
+    clone.style.setProperty('--animation-duration', (options.duration || 1200) + 'ms');
 
     hide(weapon);
     clone.classList.add('dd-ranged-active');
@@ -952,9 +957,9 @@
       impact('weapon', monsterCenter, 280);
       shake(120);
       if (options.onHit) options.onHit();
-    }, options.hitTime || 620);
+    }, options.hitTime || 850);
 
-    removeLater(clone, options.duration || 1000, function () {
+    removeLater(clone, options.duration || 1200, function () {
       show(weapon);
       finish();
     });
