@@ -286,6 +286,7 @@ if (isDaggerMode || mode === 'coop') {
     rank: '2',
     value: 2,
     name: getThemeCardName('diamonds', '2'),
+    animation: getThemeCardAnimation('diamonds', '2'),
     id: 'diamonds2'
   };
   starterWeaponP2 = {
@@ -293,6 +294,7 @@ if (isDaggerMode || mode === 'coop') {
     rank: '2',
     value: 2,
     name: getThemeCardName('diamonds', '2'),
+    animation: getThemeCardAnimation('diamonds', '2'),
     id: 'diamonds2'
   };
   starterCeilingP1 = 99;
