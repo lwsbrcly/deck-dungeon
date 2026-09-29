@@ -520,9 +520,7 @@
       clone.dataset.dealCardIndex = index;
       clone.classList.add('dd-deal-active');
 
-      window.setTimeout(function () {
-        hide(card);
-      }, index * delay);
+      hide(card);
 
       removeLater(clone, duration + index * delay, function () {
         show(card);
