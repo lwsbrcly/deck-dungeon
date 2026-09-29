@@ -933,7 +933,15 @@
        * there. The weapon then moves alone directly to the monster centre.
        */
       window.setTimeout(function () {
+        /*
+         * Rebase the player at the approach position before removing its
+         * animation class. Otherwise clearing the transform would snap the
+         * clone back to its original card position.
+         */
         playerClone.classList.remove('dd-melee-step2-player-active');
+        playerClone.style.left = (playerRect.left + approachX) + 'px';
+        playerClone.style.top = (playerRect.top + approachY) + 'px';
+        playerClone.style.transform = 'none';
 
         weaponClone.classList.remove('dd-melee-step2-shared-move-active');
         weaponClone.style.left = (hand.left + approachX) + 'px';
