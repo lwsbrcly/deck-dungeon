@@ -841,6 +841,12 @@
     options.impactType = 'hit';
     options.duration = options.duration || 650;
     options.impactTime = options.impactTime || 403;
+    options.sound = options.sound || (
+      typeof global.weaponEquipSound === 'function'
+        ? global.weaponEquipSound
+        : null
+    );
+    options.soundTime = options.soundTime || 100;
     options.done = once(options.done);
 
     liftTravelSlam(weapon, monster, options);
