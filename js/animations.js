@@ -396,6 +396,52 @@
   }
 
   /*
+   * DRINK
+   *
+   * A consumable drink travels to the player, gradually tips as if being
+   * finished, then disappears once the glass/bottle has been emptied.
+   */
+  function drink(card, player, options) {
+    options = options || {};
+
+    var finish = once(options.done);
+    var cardRect = rect(card);
+    var playerRect = rect(player);
+
+    if (!cardRect || !playerRect) {
+      finish();
+      return;
+    }
+
+    var clone = appendClone(card, 'dd-drink-clone', cardRect);
+    if (!clone) {
+      finish();
+      return;
+    }
+
+    var target = {
+      x: playerRect.left + playerRect.width / 2,
+      y: playerRect.top + playerRect.height / 2
+    };
+    var start = center(cardRect);
+
+    setVector(clone, 'move', target.x - start.x, target.y - start.y);
+    clone.style.setProperty('--animation-duration', (options.duration || 900) + 'ms');
+
+    hide(card);
+    clone.classList.add('dd-drink-active');
+
+    window.setTimeout(function () {
+      impact('heart', target, 280);
+    }, options.impactTime || 700);
+
+    removeLater(clone, options.duration || 900, function () {
+      show(card);
+      finish();
+    });
+  }
+
+  /*
    * DEAL
    *
    * The visual inverse of flee: cards originate at the deck and travel out
@@ -968,6 +1014,7 @@
     monsterToPrevious: monsterToPrevious,
     fistFight: fistFight,
     use: use,
+    drink: drink,
     deal: deal,
     slideDungeonCards: slideDungeonCards,
     weaponFightMelee: weaponFightMelee,
