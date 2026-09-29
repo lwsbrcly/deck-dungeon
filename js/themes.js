@@ -420,8 +420,11 @@ const THEMES = {
             },
             potions: {
                 hearts: {
-                    2: { name: 'Stale Bread', animation: 'eat' }, 3: { name: 'Sus Mushrooms', animation: 'eat' }, 4: { name: 'Apple', animation: 'eat' }, 5: { name: 'Fresh Bread', animation: 'eat' },
-                    6: { name: 'Cooked Meats', animation: 'eat' }, 7: { name: 'Roast Chicken', animation: 'eat' }, 8: { name: 'Hearty Stew', animation: 'eat' }, 9: { name: 'Healing Elixir', animation: 'eat' }, 10: { name: 'Magic Potion', animation: 'eat' }
+                    2: { name: 'Stale Bread', animation: 'eat' }, 3: { name: 'Sus Mushrooms', animation: 'eat' }, 
+                    4: { name: 'Apple', animation: 'eat' }, 5: { name: 'Fresh Bread', animation: 'eat' },
+                    6: { name: 'Cooked Meats', animation: 'eat' }, 7: { name: 'Roast Chicken', animation: 'eat' }, 
+                    8: { name: 'Hearty Stew', animation: 'eat' }, 9: { name: 'Healing Elixir', animation: 'drink' }, 
+                    10: { name: 'Magic Potion', animation: 'drink' }
                 }
             }
         }
@@ -529,8 +532,11 @@ const THEMES = {
             },
             potions: {
                 hearts: {
-                    2: { name: 'Peanuts', animation: 'eat' }, 3: { name: 'Fulci's Fish', animation: 'eat' }, 4: { name: 'Guinness', animation: 'eat' }, 5: { name: 'Regular Coke', animation: 'eat' },
-                    6: { name: 'Toastie', animation: 'eat' }, 7: { name: 'Cold Pint', animation: 'eat' }, 8: { name: 'Meat Pie', animation: 'eat' }, 9: { name: 'Pork Scratchings', animation: 'eat' }, 10: { name: 'Cornetto', animation: 'eat' }
+                    2: { name: 'Peanuts', animation: 'eat' }, 3: { name: 'Fulci's Fish', animation: 'eat' },
+                    4: { name: 'Guinness', animation: 'drink' }, 5: { name: 'Regular Coke', animation: 'drink' },
+                    6: { name: 'Toastie', animation: 'eat' }, 7: { name: 'Cold Pint', animation: 'drink' }, 
+                    8: { name: 'Meat Pie', animation: 'eat' }, 9: { name: 'Pork Scratchings', animation: 'eat' }, 
+                    10: { name: 'Cornetto', animation: 'eat' }
                 }
             }
         }
@@ -665,9 +671,11 @@ const THEMES = {
             },
             potions: {
                 hearts: {
-                    2: { name: 'Nutrient Gel', animation: 'eat' }, 3: { name: 'Field Rations', animation: 'eat' }, 4: { name: 'Med-Kit', animation: 'eat' }, 5: { name: 'Adrenal Shot', animation: 'eat' },
-                    6: { name: 'Pulse Battery', animation: 'eat' }, 7: { name: 'Armour Plate', animation: 'eat' }, 8: { name: 'Nanobot Tube', animation: 'eat' }, 9: { name: 'Combat Stimulant', animation: 'eat' },
-                    10: { name: 'MechSuit™', animation: 'eat' }
+                    2: { name: 'Nutrient Gel', animation: 'drink' }, 3: { name: 'Field Rations', animation: 'eat' }, 
+                    4: { name: 'Med-Kit', animation: 'use' }, 5: { name: 'Adrenal Shot', animation: 'use' },
+                    6: { name: 'Pulse Battery', animation: 'use' }, 7: { name: 'Armour Plate', animation: 'use' }, 
+                    8: { name: 'Nanobot Tube', animation: 'use' }, 9: { name: 'Combat Stimulant', animation: 'use' },
+                    10: { name: 'MechSuit™', animation: 'use' }
                 }
             }
         }
@@ -747,8 +755,11 @@ const THEMES = {
             },
             potions: {
                 hearts: {
-                    2: { name: 'Rum', animation: 'eat' }, 3: { name: 'Rum', animation: 'eat' }, 4: { name: 'Rum', animation: 'eat' }, 5: { name: 'Rum', animation: 'eat' },
-                    6: { name: 'Rum', animation: 'eat' }, 7: { name: 'Rum', animation: 'eat' }, 8: { name: 'Rum', animation: 'eat' }, 9: { name: 'Rum', animation: 'eat' }, 10: { name: 'Rum', animation: 'eat' }
+                    2: { name: 'Rum', animation: 'drink' }, 3: { name: 'Rum', animation: 'drink' }, 
+                    4: { name: 'Rum', animation: 'drink' }, 5: { name: 'Rum', animation: 'drink' },
+                    6: { name: 'Rum', animation: 'drink' }, 7: { name: 'Rum', animation: 'drink' }, 
+                    8: { name: 'Rum', animation: 'drink' }, 9: { name: 'Rum', animation: 'drink' }, 
+                    10: { name: 'Rum', animation: 'drink' }
                 }
             }
         }
@@ -828,8 +839,11 @@ const THEMES = {
             },
             potions: {
                 hearts: {
-                    2: { name: 'Sushi', animation: 'eat' }, 3: { name: 'Sushi', animation: 'eat' }, 4: { name: 'Sushi', animation: 'eat' }, 5: { name: 'Sushi', animation: 'eat' },
-                    6: { name: 'Sushi', animation: 'eat' }, 7: { name: 'Sushi', animation: 'eat' }, 8: { name: 'Sushi', animation: 'eat' }, 9: { name: 'Sushi', animation: 'eat' }, 10: { name: 'Sushi', animation: 'eat' }
+                    2: { name: 'Sushi', animation: 'eat' }, 3: { name: 'Sushi', animation: 'eat' }, 
+                    4: { name: 'Sushi', animation: 'eat' }, 5: { name: 'Sushi', animation: 'eat' },
+                    6: { name: 'Sushi', animation: 'eat' }, 7: { name: 'Sushi', animation: 'eat' }, 
+                    8: { name: 'Sushi', animation: 'eat' }, 9: { name: 'Sushi', animation: 'eat' }, 
+                    10: { name: 'Sushi', animation: 'eat' }
                 }
             }
         }
