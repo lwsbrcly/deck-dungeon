@@ -419,13 +419,24 @@
       return;
     }
 
+    // Anchor the CARD TOP EDGE to the middle of the player card.
+    // The drink choreography pivots around that top edge, so the portrait
+    // and card top remain together while the bottom tips away.
     var target = {
       x: playerRect.left + playerRect.width / 2,
       y: playerRect.top + playerRect.height / 2
     };
-    var start = center(cardRect);
+    var startTopCenter = {
+      x: cardRect.left + cardRect.width / 2,
+      y: cardRect.top
+    };
 
-    setVector(clone, 'move', target.x - start.x, target.y - start.y);
+    setVector(
+      clone,
+      'move',
+      target.x - startTopCenter.x,
+      target.y - startTopCenter.y
+    );
     clone.style.setProperty('--animation-duration', (options.duration || 900) + 'ms');
 
     hide(card);
