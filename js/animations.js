@@ -368,6 +368,10 @@
     hide(food);
     clone.classList.add('dd-eat-active');
 
+    if (options.sound) {
+      options.sound();
+    }
+
     window.setTimeout(function () {
       impact('heart', center(playerRect), 280);
     }, 500);
