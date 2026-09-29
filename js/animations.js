@@ -672,6 +672,10 @@
     var complete = once(options.done);
     var finished = 0;
 
+    if (options.sound) {
+      options.sound();
+    }
+
     remaining.forEach(function (card, index) {
       var sourceRect = rect(card);
       var deckRect = rect(deck);
@@ -691,6 +695,9 @@
       setVector(clone, 'move', move.x, move.y);
       clone.style.setProperty('--animation-delay', (index * 80) + 'ms');
       clone.style.setProperty('--animation-duration', '650ms');
+
+      // Fleeing cards disappear into the deck rather than sitting above it.
+      clone.style.zIndex = '999';
 
       hide(card);
       clone.classList.add('dd-flee-active');
