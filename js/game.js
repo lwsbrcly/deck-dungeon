@@ -1366,6 +1366,14 @@ function name(p) {
     return p === 'p1' ? state.p1Name : state.p2Name; 
 }
 
+function getThemeAction(type, action) {
+    var theme = THEMES[selectedTheme || 'dungeon'];
+    var actions = theme && theme.actions;
+    return actions && actions[type] && actions[type][action]
+      ? actions[type][action]
+      : null;
+}
+
 function hideContextActions() {
     var btn1 = document.getElementById('action1');
     var btn2 = document.getElementById('action2');
@@ -1743,7 +1751,7 @@ if (monster && isSolo) {
 
   setContextAction(
     1,
-    'Weapon', function() {
+    getThemeAction('monster', 'primary') || 'Weapon', function() {
     fight('p1','weapon');
     },
     !validWeapon(state.p1, c)
@@ -1751,18 +1759,18 @@ if (monster && isSolo) {
 
   setContextAction(
     2,
-    'Fist Fight', function() {
+    getThemeAction('monster', 'secondary') || 'Fist Fight', function() {
       fight('p1','bare');
     }
   );
 
 } else if (weapon && isSolo) {
 
-  setContextAction(1, 'Equip', function() {
+  setContextAction(1, getThemeAction('weapon', 'primary') || 'Equip', function() {
     equipWeapon('p1');
   });
 
-  setContextAction(2, 'Discard', function() {
+  setContextAction(2, getThemeAction('weapon', 'secondary') || 'Discard', function() {
     discardDungeonWeapon();
   });
 
@@ -1770,7 +1778,7 @@ if (monster && isSolo) {
 
     setContextAction(
       1,
-      'Consume',
+      getThemeAction('consumable', 'primary') || 'Consume',
       function() {
         drinkDirectPotion('p1');
       },
@@ -1779,7 +1787,7 @@ if (monster && isSolo) {
 
     setContextAction(
       2,
-      'Discard',
+      getThemeAction('consumable', 'secondary') || 'Discard',
       function() {
         discardDungeonPotion();
       },
