@@ -12,7 +12,7 @@ function getThemeCardName(suit, rank) {
   else if (suit === 'hearts') group = theme.cards.potions;
 
   return group && group[suit] && group[suit][rank]
-    ? group[suit][rank]
+    ? (typeof group[suit][rank] === 'object' ? group[suit][rank].name : group[suit][rank])
     : suit + ' ' + rank;
 }
 
@@ -30,6 +30,7 @@ function makeDeck() {
         rank: rank,
         value: value(rank),
         name: getThemeCardName(suit, rank),
+        animation: getThemeCardAnimation(suit, rank),
         id: suit + rank
       });
     }
