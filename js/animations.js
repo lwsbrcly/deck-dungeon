@@ -849,13 +849,22 @@
     }
 
     var weaponCenter = center(weaponRect);
-    var playerCenter = center(playerRect);
+
+    /*
+     * The weapon is held over the RIGHT HALF of the player card:
+     * its right edge meets the player's vertical centre line.
+     * Keep the weapon's vertical centre aligned with the player's centre.
+     */
+    var hand = {
+      x: playerRect.left + playerRect.width / 2 - weaponRect.width / 2,
+      y: playerRect.top + playerRect.height / 2
+    };
 
     setVector(
       weaponClone,
       'join',
-      playerCenter.x - weaponCenter.x,
-      playerCenter.y - weaponCenter.y
+      hand.x - weaponRect.left,
+      hand.y - weaponRect.top - weaponRect.height / 2
     );
 
     weaponClone.style.setProperty(
