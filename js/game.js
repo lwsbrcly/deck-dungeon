@@ -913,8 +913,9 @@ function trackWeaponKill(weaponName, monsterValue) {
 function animateAttack(player, targetEl, done, isFistFight, ghostInfo) {
 if (!targetEl) { done(); return; }
 
-// Bare-handed fights use the parallel fist-fight choreography. Weapon combat
-// remains on the legacy path until its own migration is validated.
+// Bare-handed fights use the parallel fist-fight choreography.
+// Weapon combat is being migrated one physical beat at a time. For this
+// first live test, only the weapon → player hand-off is active.
 if (isFistFight) {
   var fistPlayerId = player === 'both' ? 'p1' : player;
   var fistPlayerEl = document.getElementById(fistPlayerId + 'Panel');
@@ -932,6 +933,31 @@ if (isFistFight) {
       done();
     }
   });
+  return;
+}
+
+if (
+  (player === 'p1' || player === 'p2') &&
+  window.DeckDungeonAnimations &&
+  DeckDungeonAnimations.weaponFightMelee
+) {
+  var meleeWeaponEl = document.querySelector('#' + player + 'Weapon .card');
+  var meleePlayerEl = document.getElementById(player + 'Panel');
+
+  if (!meleeWeaponEl || !meleePlayerEl) {
+    done();
+    return;
+  }
+
+  DeckDungeonAnimations.weaponFightMelee(
+    meleeWeaponEl,
+    meleePlayerEl,
+    targetEl,
+    {
+      joinDuration: 500,
+      done: done
+    }
+  );
   return;
 }
 
