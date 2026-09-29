@@ -273,6 +273,14 @@
     hide(card);
     clone.classList.add(options.animationClass || 'dd-lift-travel-slam-active');
 
+    // Preserve the established equip sound timing: it starts during the lift
+    // and its metallic tail carries through the slam/settle.
+    if (options.sound) {
+      window.setTimeout(function () {
+        options.sound();
+      }, options.soundTime || 100);
+    }
+
     window.setTimeout(function () {
       impact(options.impactType || 'weapon', center(targetRect), 320);
       shake(170);
@@ -297,6 +305,12 @@
     options.impactType = options.impactType || 'weapon';
     options.duration = options.duration || 650;
     options.impactTime = options.impactTime || 403;
+    options.sound = options.sound || (
+      typeof global.weaponEquipSound === 'function'
+        ? global.weaponEquipSound
+        : null
+    );
+    options.soundTime = options.soundTime || 100;
 
     liftTravelSlam(card, target, options);
   }
@@ -556,6 +570,11 @@
 
     hide(card);
     clone.classList.add('dd-discard-active');
+
+    // Preserve the existing discard sound in the migrated choreography.
+    if (typeof global.discardSound === 'function') {
+      global.discardSound();
+    }
 
     removeLater(clone, 560, function () {
       show(card);
