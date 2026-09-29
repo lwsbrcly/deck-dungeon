@@ -570,7 +570,7 @@
     transform: translate3d(0,0,0) rotate(var(--aim-angle));
   }
 
-  /* Small load movement: just a short chk forward and back. */
+  /* Small load movement: 15px forward and back. */
   30% {
     transform:
       translate3d(var(--load-x),var(--load-y),0)
@@ -590,15 +590,15 @@
       rotate(var(--aim-angle));
   }
 
-  /* Fire once: one larger movement away from the monster. */
-  54% {
+  /* Fire: snap quickly away from the monster. */
+  52% {
     transform:
       translate3d(var(--recoil-x),var(--recoil-y),0)
       rotate(var(--aim-angle));
   }
 
-  /* Recover once, with no additional bounce. */
-  66% {
+  /* Then ease back more slowly to the starting point. */
+  68% {
     transform:
       translate3d(0,0,0)
       rotate(var(--aim-angle));
