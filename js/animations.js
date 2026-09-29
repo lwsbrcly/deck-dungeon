@@ -163,6 +163,18 @@
     }, duration || 160);
   }
 
+  function jolt(element, duration) {
+    if (!element) return;
+
+    element.classList.remove('dd-monster-jolt');
+    void element.offsetWidth;
+    element.classList.add('dd-monster-jolt');
+
+    window.setTimeout(function () {
+      element.classList.remove('dd-monster-jolt');
+    }, duration || 180);
+  }
+
   function setVector(element, property, x, y) {
     element.style.setProperty('--' + property + '-x', x + 'px');
     element.style.setProperty('--' + property + '-y', y + 'px');
@@ -954,8 +966,10 @@
     clone.classList.add('dd-ranged-active');
 
     window.setTimeout(function () {
-      impact('weapon', monsterCenter, 280);
-      shake(120);
+      // The projectile has arrived: show the same POW used by fist/melee hits,
+      // then give the monster a small physical jolt before it disappears.
+      impact('hit', monsterCenter, 280);
+      jolt(monster, 180);
       if (options.onHit) options.onHit();
     }, options.hitTime || 850);
 
