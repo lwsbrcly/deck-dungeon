@@ -645,6 +645,7 @@
 }
 
 @keyframes dd-melee-step2-weapon {
+  /* Stage 1: weapon joins the hand. */
   0% {
     transform: translate3d(0,0,0);
   }
@@ -653,15 +654,13 @@
     transform: translate3d(var(--join-x),var(--join-y),0);
   }
 
+  /* Hold exactly there while the player is still. */
   50% {
-    transform: translate3d(
-      calc(var(--join-x) + var(--approach-x)),
-      calc(var(--join-y) + var(--approach-y)),
-      0
-    );
+    transform: translate3d(var(--join-x),var(--join-y),0);
   }
 
-  70% {
+  /* Stage 2: player and weapon now move together. */
+  75% {
     transform: translate3d(
       calc(var(--join-x) + var(--approach-x)),
       calc(var(--join-y) + var(--approach-y)),
