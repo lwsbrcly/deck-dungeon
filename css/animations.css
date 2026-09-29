@@ -554,60 +554,70 @@
 }
 
 .dd-ranged-active {
-  animation: dd-ranged-weapon 1000ms cubic-bezier(.22,.8,.25,1) forwards;
+  animation: dd-ranged-weapon
+    var(--animation-duration, 1200ms)
+    cubic-bezier(.22,.8,.25,1)
+    forwards;
 }
 
 @keyframes dd-ranged-weapon {
+  /* 1. Rotate on the spot to face the monster. */
   0% {
     transform: translate3d(0,0,0) rotate(0deg);
   }
 
-  25% {
-    transform: translate3d(var(--join-x),var(--join-y),0) rotate(0deg);
+  22% {
+    transform: translate3d(0,0,0) rotate(var(--aim-angle));
   }
 
-  36% {
-    transform: translate3d(
-      calc(var(--join-x) - 5px),
-      calc(var(--join-y) + 2px),
-      0
-    ) rotate(-3deg);
+  /* 2. Load: quick 20px chk-chk forward. */
+  28% {
+    transform:
+      translate3d(var(--load-x),var(--load-y),0)
+      rotate(var(--aim-angle));
   }
 
-  42% {
-    transform: translate3d(
-      calc(var(--join-x) + 7px),
-      calc(var(--join-y) - 2px),
-      0
-    ) rotate(3deg);
+  34% {
+    transform:
+      translate3d(0,0,0)
+      rotate(var(--aim-angle));
   }
 
-  48% {
-    transform: translate3d(var(--join-x),var(--join-y),0) rotate(0deg);
+  40% {
+    transform:
+      translate3d(var(--load-x),var(--load-y),0)
+      rotate(var(--aim-angle));
   }
 
-  55% {
-    transform: translate3d(
-      calc(var(--join-x) - 5px),
-      calc(var(--join-y) + 2px),
-      0
-    ) rotate(-3deg);
+  46% {
+    transform:
+      translate3d(0,0,0)
+      rotate(var(--aim-angle));
   }
 
-  61% {
-    transform: translate3d(
-      calc(var(--join-x) + 7px),
-      calc(var(--join-y) - 2px),
-      0
-    ) rotate(3deg);
+  /* 3. Fire: recoil 40px away from the monster, then recover. */
+  52% {
+    transform:
+      translate3d(var(--recoil-x),var(--recoil-y),0)
+      rotate(var(--aim-angle));
   }
 
-  67% {
-    transform: translate3d(var(--join-x),var(--join-y),0) rotate(0deg);
+  64% {
+    transform:
+      translate3d(0,0,0)
+      rotate(var(--aim-angle));
   }
 
+  /* 4. Hold briefly while the imagined projectile travels. */
+  82% {
+    transform:
+      translate3d(0,0,0)
+      rotate(var(--aim-angle));
+  }
+
+  /* 5. Rotate back home. */
   100% {
-    transform: translate3d(var(--return-x),var(--return-y),0) rotate(0deg);
+    transform: translate3d(0,0,0) rotate(0deg);
   }
 }
 
