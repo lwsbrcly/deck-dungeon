@@ -827,13 +827,13 @@ function clearPreviousMonsters() {
   // would strip that inherited filter and create full-colour ghosts.
   for (var i = 0; i < stackCards.length; i++) {
     var monsterCardEl = stackCards[i];
-    monsterCardEl.classList.add('previous-monster-fade-clone');
+    monsterCardEl.classList.add('previous-monster-fade');
 
     (function(original) {
       setTimeout(function() {
         var wrapper = original.closest('.previous-monster-card');
         if (wrapper) wrapper.remove();
-      }, 560);
+      }, 700);
     })(monsterCardEl);
   }
 }
