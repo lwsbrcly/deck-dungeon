@@ -688,34 +688,36 @@
       options.sound();
     }
 
-    remaining.forEach(function (card, index) {
+    remaining.forEach(function (card) {
       var sourceRect = rect(card);
       var deckRect = rect(deck);
 
       if (!sourceRect || !deckRect) {
         finished += 1;
+        if (finished === remaining.length) complete();
         return;
       }
 
       var clone = appendClone(card, 'dd-flee-clone', sourceRect);
       if (!clone) {
         finished += 1;
+        if (finished === remaining.length) complete();
         return;
       }
 
       var move = translation(sourceRect, deckRect);
       setVector(clone, 'move', move.x, move.y);
-      clone.style.setProperty('--animation-delay', (index * 80) + 'ms');
       clone.style.setProperty('--animation-duration', '650ms');
 
       // Fleeing cards disappear into the deck rather than sitting above it.
       clone.style.zIndex = '999';
 
+      // Keep the real card hidden until the game re-renders after the
+      // complete flee animation. Restoring it here causes a brief flash.
       hide(card);
       clone.classList.add('dd-flee-active');
 
-      removeLater(clone, 650 + index * 80, function () {
-        show(card);
+      removeLater(clone, 650, function () {
         finished += 1;
         if (finished === remaining.length) complete();
       });
