@@ -370,7 +370,7 @@ if (isDaggerMode) {
 render();
 
 var dealStartDelay = new Promise(function(resolve) {
-  setTimeout(resolve, 1000);
+  setTimeout(resolve, 700);
 });
 
 Promise.all([themeAssetsReady, dealStartDelay]).then(function() {
