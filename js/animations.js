@@ -486,6 +486,12 @@
     var pending = 0;
     var delay = options.delay == null ? 110 : options.delay;
     var duration = options.duration || 650;
+    var startOffsetX = options.startOffsetX || 0;
+    var startOffsetY = options.startOffsetY || 0;
+
+    if (options.sound) {
+      options.sound(valid.length);
+    }
 
     valid.forEach(function (card, index) {
       var target = targets[index];
@@ -500,9 +506,12 @@
         return;
       }
 
+      clone.style.left = (deckRect.left + startOffsetX) + 'px';
+      clone.style.top = (deckRect.top + startOffsetY) + 'px';
+
       var move = {
-        x: targetRect.centerX - deckRect.centerX,
-        y: targetRect.centerY - deckRect.centerY
+        x: targetRect.centerX - (deckRect.centerX + startOffsetX),
+        y: targetRect.centerY - (deckRect.centerY + startOffsetY)
       };
 
       setVector(clone, 'move', move.x, move.y);
