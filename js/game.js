@@ -873,7 +873,9 @@ var finishEquip = function() {
 // Start the previous-monster fade at the same time as the weapon equip.
 // It is purely visual and never holds up the board/state update.
 clearPreviousMonsters();
-animateCardAction(cardEl, targetEl, 'equip-clone', finishEquip);
+DeckDungeonAnimations.equip(cardEl, targetEl, {
+  done: finishEquip
+});
 }
 
 function discardDungeonWeapon() {
