@@ -1,0 +1,768 @@
+/*
+ * Deck Dungeon — Parallel Animation System
+ *
+ * This stylesheet belongs to js/animations.js.
+ * It is intentionally NOT loaded by index.html yet.
+ *
+ * Contract:
+ *   animations.js supplies geometry, timing variables and animation classes.
+ *   animations.css supplies the visual choreography.
+ *
+ * Only equip/use have tabletop "height" (lift + scale + slam).
+ * All other card movement remains flat on the table.
+ */
+
+/* -------------------------------------------------------------------------
+ * Shared animation primitives
+ * ------------------------------------------------------------------------- */
+
+.dd-animation-clone {
+  position: absolute !important;
+  z-index: 1000;
+  margin: 0 !important;
+  pointer-events: none !important;
+  box-sizing: border-box;
+  transform-origin: center center;
+  will-change: transform, opacity, clip-path;
+}
+
+.dd-animation-hidden {
+  visibility: hidden !important;
+}
+
+.dd-animation-move {
+  position: absolute !important;
+  z-index: 1000;
+  pointer-events: none !important;
+  margin: 0 !important;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.dd-animation-move-active {
+  animation: dd-animation-move var(--animation-duration, 500ms)
+    cubic-bezier(.22,.8,.25,1) forwards;
+}
+
+@keyframes dd-animation-move {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(var(--move-x), var(--move-y), 0);
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Equip / Use
+ *
+ * These are the ONLY animations which leave the tabletop:
+ * lift → travel → slam → settle.
+ * ------------------------------------------------------------------------- */
+
+.dd-lift-travel-slam-clone {
+  position: absolute !important;
+  z-index: 1001;
+  pointer-events: none !important;
+  margin: 0 !important;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.dd-equip-clone,
+.dd-use-clone {
+  position: absolute !important;
+  z-index: 1001;
+  pointer-events: none !important;
+  margin: 0 !important;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.dd-equip-active,
+.dd-use-active {
+  animation: dd-lift-travel-slam
+    var(--animation-duration, 650ms)
+    cubic-bezier(.22,.8,.25,1) forwards;
+}
+
+@keyframes dd-lift-travel-slam {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  /* Lift off the tabletop. */
+  14% {
+    transform: translate3d(0, -8px, 0) scale(var(--lift-scale, 1.08));
+  }
+
+  /* Travel while elevated. */
+  55% {
+    transform:
+      translate3d(var(--move-x), var(--move-y), 0)
+      scale(var(--lift-scale, 1.08));
+  }
+
+  /* Slam into the target. */
+  62% {
+    transform:
+      translate3d(var(--move-x), var(--move-y), 0)
+      scale(.96);
+  }
+
+  /* Settle at normal card size. */
+  72% {
+    transform:
+      translate3d(var(--move-x), var(--move-y), 0)
+      scale(1.01);
+  }
+
+  100% {
+    transform:
+      translate3d(var(--move-x), var(--move-y), 0)
+      scale(1);
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Eat
+ *
+ * Flat tabletop movement. The card itself is progressively consumed in
+ * thirds after reaching the player.
+ * ------------------------------------------------------------------------- */
+
+.dd-eat-clone {
+  position: absolute !important;
+  z-index: 1001;
+  pointer-events: none !important;
+  margin: 0 !important;
+  transform-origin: center center;
+  will-change: transform, clip-path, opacity;
+}
+
+.dd-eat-active {
+  animation: dd-eat-card 770ms cubic-bezier(.22,.8,.25,1) forwards;
+}
+
+@keyframes dd-eat-card {
+  0% {
+    transform: translate3d(0,0,0) rotate(0deg) scale(1);
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+
+  30% {
+    transform:
+      translate3d(var(--move-x),var(--move-y),0)
+      rotate(-7deg)
+      scale(1.08);
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+
+  42% {
+    transform:
+      translate3d(var(--move-x),var(--move-y),0)
+      rotate(0deg)
+      scale(1.08);
+    clip-path: inset(33.333% 0 0 0);
+    opacity: 1;
+  }
+
+  59.5% {
+    transform:
+      translate3d(var(--move-x),calc(var(--move-y) - var(--card-third)),0)
+      rotate(0deg)
+      scale(1.08);
+    clip-path: inset(33.333% 0 0 0);
+    opacity: 1;
+  }
+
+  71.2% {
+    transform:
+      translate3d(var(--move-x),calc(var(--move-y) - var(--card-third)),0)
+      rotate(0deg)
+      scale(1.08);
+    clip-path: inset(66.666% 0 0 0);
+    opacity: 1;
+  }
+
+  88.7% {
+    transform:
+      translate3d(var(--move-x),calc(var(--move-y) - var(--card-two-thirds)),0)
+      rotate(0deg)
+      scale(1.08);
+    clip-path: inset(66.666% 0 0 0);
+    opacity: 1;
+  }
+
+  99.9% {
+    transform:
+      translate3d(var(--move-x),calc(var(--move-y) - var(--card-two-thirds)),0)
+      rotate(0deg)
+      scale(1.08);
+    clip-path: inset(100% 0 0 0);
+    opacity: 0;
+  }
+
+  100% {
+    transform:
+      translate3d(var(--move-x),calc(var(--move-y) - var(--card-two-thirds)),0)
+      rotate(0deg)
+      scale(1.08);
+    clip-path: inset(100% 0 0 0);
+    opacity: 0;
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Discard
+ *
+ * Flat tabletop choreography:
+ * upright → slight topple → rapid fall off the bottom → disappear.
+ * ------------------------------------------------------------------------- */
+
+.dd-discard-clone {
+  position: absolute !important;
+  z-index: 1001;
+  pointer-events: none !important;
+  margin: 0 !important;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.dd-discard-active {
+  animation: dd-discard-card 560ms cubic-bezier(.35,.05,.75,.2) forwards;
+}
+
+@keyframes dd-discard-card {
+  0% {
+    transform: translate3d(0,0,0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+
+  28% {
+    transform:
+      translate3d(var(--topple-x),var(--topple-y),0)
+      rotate(22deg)
+      scale(1.02);
+    opacity: 1;
+  }
+
+  100% {
+    transform:
+      translate3d(var(--fall-x),var(--fall-y),0)
+      rotate(78deg)
+      scale(.92);
+    opacity: 0;
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Deal
+ *
+ * Flat tabletop movement with the established mid-flight flip.
+ * ------------------------------------------------------------------------- */
+
+.dd-deal-clone {
+  position: absolute !important;
+  z-index: 1001;
+  pointer-events: none !important;
+  margin: 0 !important;
+  transform-origin: center center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.dd-deal-active {
+  animation:
+    dd-deal-card
+    var(--animation-duration, 650ms)
+    cubic-bezier(.2,.8,.25,1)
+    var(--animation-delay, 0ms)
+    forwards;
+}
+
+@keyframes dd-deal-card {
+  0% {
+    transform: translate3d(0,0,0) rotateY(0deg);
+  }
+
+  48% {
+    transform: translate3d(
+      calc(var(--move-x) * .5),
+      calc(var(--move-y) * .5),
+      0
+    ) rotateY(90deg);
+  }
+
+  52% {
+    transform: translate3d(
+      calc(var(--move-x) * .5),
+      calc(var(--move-y) * .5),
+      0
+    ) rotateY(90deg);
+  }
+
+  100% {
+    transform: translate3d(var(--move-x),var(--move-y),0) rotateY(180deg);
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Flee
+ *
+ * Flat tabletop mirror of deal: move towards the deck and disappear into it.
+ * ------------------------------------------------------------------------- */
+
+.dd-flee-clone {
+  position: absolute !important;
+  z-index: 1001;
+  pointer-events: none !important;
+  margin: 0 !important;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.dd-flee-active {
+  animation:
+    dd-flee-card
+    var(--animation-duration, 650ms)
+    cubic-bezier(.3,.7,.3,1)
+    var(--animation-delay, 0ms)
+    forwards;
+}
+
+@keyframes dd-flee-card {
+  0% {
+    transform: translate3d(0,0,0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate3d(var(--move-x),var(--move-y),0) rotate(-8deg) scale(.92);
+    opacity: 0;
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Dungeon card sliding
+ *
+ * Flat, horizontal/vertical movement between actual dungeon slots.
+ * ------------------------------------------------------------------------- */
+
+.dd-dungeon-slide-clone {
+  position: absolute !important;
+  z-index: 1001;
+  pointer-events: none !important;
+  margin: 0 !important;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.dd-dungeon-slide-active {
+  animation: dd-dungeon-slide
+    var(--animation-duration, 420ms)
+    cubic-bezier(.22,.8,.25,1)
+    forwards;
+}
+
+@keyframes dd-dungeon-slide {
+  0% {
+    transform: translate3d(0,0,0);
+  }
+
+  100% {
+    transform: translate3d(var(--move-x),var(--move-y),0);
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Monster → previous monster stack
+ * ------------------------------------------------------------------------- */
+
+.dd-monster-stack-clone {
+  position: absolute !important;
+  z-index: 1001;
+  pointer-events: none !important;
+  margin: 0 !important;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.dd-monster-stack-active {
+  animation: dd-monster-to-stack
+    520ms
+    cubic-bezier(.22,.8,.25,1)
+    forwards;
+}
+
+@keyframes dd-monster-to-stack {
+  0% {
+    transform: translate3d(0,0,0) rotate(0deg);
+  }
+
+  100% {
+    transform:
+      translate3d(var(--move-x),var(--move-y),0)
+      rotate(var(--stack-rotation, 0deg));
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Fist fight
+ *
+ * Flat tabletop combat. One-two punch, no card height effect.
+ * ------------------------------------------------------------------------- */
+
+.dd-fist-monster-clone {
+  position: absolute !important;
+  z-index: 1002;
+  pointer-events: none !important;
+  margin: 0 !important;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.dd-fist-fight-active {
+  animation: dd-fist-fight 1000ms cubic-bezier(.22,.8,.25,1) forwards;
+}
+
+@keyframes dd-fist-fight {
+  0% {
+    transform: translate3d(0,0,0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+
+  23.1% {
+    transform:
+      translate3d(var(--move-x),var(--move-y),0)
+      rotate(-8deg)
+      scale(1.08);
+    opacity: 1;
+  }
+
+  32% {
+    transform:
+      translate3d(
+        calc(var(--move-x) + var(--hit-x, 0px)),
+        calc(var(--move-y) + var(--hit-y, 0px)),
+        0
+      )
+      rotate(7deg)
+      scale(1.14);
+    opacity: 1;
+  }
+
+  43% {
+    transform:
+      translate3d(var(--move-x),var(--move-y),0)
+      rotate(-6deg)
+      scale(1.08);
+    opacity: 1;
+  }
+
+  54% {
+    transform:
+      translate3d(
+        calc(var(--move-x) + var(--hit-x, 0px)),
+        calc(var(--move-y) + var(--hit-y, 0px)),
+        0
+      )
+      rotate(6deg)
+      scale(1.14);
+    opacity: 1;
+  }
+
+  68% {
+    transform:
+      translate3d(var(--move-x),var(--move-y),0)
+      rotate(0deg)
+      scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform:
+      translate3d(var(--move-x),var(--move-y),0)
+      rotate(0deg)
+      scale(1);
+    opacity: 0;
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Melee weapon fight
+ *
+ * Flat tabletop. Weapon joins player, both approach, weapon strikes,
+ * then both return independently.
+ * ------------------------------------------------------------------------- */
+
+.dd-melee-weapon-clone,
+.dd-melee-player-clone {
+  position: absolute !important;
+  z-index: 1002;
+  pointer-events: none !important;
+  margin: 0 !important;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.dd-melee-active {
+  animation: dd-melee-weapon 900ms cubic-bezier(.22,.8,.25,1) forwards;
+}
+
+.dd-melee-player-active {
+  animation: dd-melee-player 900ms cubic-bezier(.22,.8,.25,1) forwards;
+}
+
+@keyframes dd-melee-player {
+  0% {
+    transform: translate3d(0,0,0);
+  }
+
+  42% {
+    transform: translate3d(var(--approach-x),var(--approach-y),0);
+  }
+
+  62% {
+    transform: translate3d(var(--approach-x),var(--approach-y),0);
+  }
+
+  100% {
+    transform: translate3d(0,0,0);
+  }
+}
+
+@keyframes dd-melee-weapon {
+  0% {
+    transform: translate3d(0,0,0) rotate(0deg);
+  }
+
+  22% {
+    transform: translate3d(var(--join-x),var(--join-y),0) rotate(-5deg);
+  }
+
+  42% {
+    transform:
+      translate3d(
+        calc(var(--join-x) + var(--approach-x)),
+        calc(var(--join-y) + var(--approach-y)),
+        0
+      )
+      rotate(-5deg);
+  }
+
+  52% {
+    transform:
+      translate3d(
+        calc(var(--join-x) + var(--approach-x)),
+        calc(var(--join-y) + var(--approach-y)),
+        0
+      )
+      rotate(-12deg);
+  }
+
+  62% {
+    transform:
+      translate3d(
+        calc(var(--join-x) + var(--approach-x) + var(--strike-x)),
+        calc(var(--join-y) + var(--approach-y) + var(--strike-y)),
+        0
+      )
+      rotate(10deg);
+  }
+
+  70% {
+    transform:
+      translate3d(
+        calc(var(--join-x) + var(--approach-x)),
+        calc(var(--join-y) + var(--approach-y)),
+        0
+      )
+      rotate(0deg);
+  }
+
+  100% {
+    transform: translate3d(0,0,0) rotate(0deg);
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Thrown weapon
+ *
+ * Flat tabletop: join player → fly to monster → return to weapon slot.
+ * ------------------------------------------------------------------------- */
+
+.dd-thrown-weapon-clone {
+  position: absolute !important;
+  z-index: 1002;
+  pointer-events: none !important;
+  margin: 0 !important;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.dd-thrown-active {
+  animation: dd-thrown-weapon 1100ms cubic-bezier(.22,.8,.25,1) forwards;
+}
+
+@keyframes dd-thrown-weapon {
+  0% {
+    transform: translate3d(0,0,0) rotate(0deg);
+  }
+
+  20% {
+    transform: translate3d(var(--join-x),var(--join-y),0) rotate(-5deg);
+  }
+
+  32% {
+    transform: translate3d(var(--join-x),var(--join-y),0) rotate(-5deg);
+  }
+
+  68% {
+    transform:
+      translate3d(
+        calc(var(--join-x) + var(--throw-x)),
+        calc(var(--join-y) + var(--throw-y)),
+        0
+      )
+      rotate(720deg);
+  }
+
+  78% {
+    transform:
+      translate3d(
+        calc(var(--join-x) + var(--throw-x)),
+        calc(var(--join-y) + var(--throw-y)),
+        0
+      )
+      rotate(720deg);
+  }
+
+  100% {
+    transform:
+      translate3d(var(--return-x),var(--return-y),0)
+      rotate(0deg);
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Ranged weapon
+ *
+ * Flat tabletop: join player → fire/recoil in place → return to weapon slot.
+ * ------------------------------------------------------------------------- */
+
+.dd-ranged-weapon-clone {
+  position: absolute !important;
+  z-index: 1002;
+  pointer-events: none !important;
+  margin: 0 !important;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.dd-ranged-active {
+  animation: dd-ranged-weapon 1000ms cubic-bezier(.22,.8,.25,1) forwards;
+}
+
+@keyframes dd-ranged-weapon {
+  0% {
+    transform: translate3d(0,0,0) rotate(0deg);
+  }
+
+  25% {
+    transform: translate3d(var(--join-x),var(--join-y),0) rotate(0deg);
+  }
+
+  36% {
+    transform: translate3d(
+      calc(var(--join-x) - 5px),
+      calc(var(--join-y) + 2px),
+      0
+    ) rotate(-3deg);
+  }
+
+  42% {
+    transform: translate3d(
+      calc(var(--join-x) + 7px),
+      calc(var(--join-y) - 2px),
+      0
+    ) rotate(3deg);
+  }
+
+  48% {
+    transform: translate3d(var(--join-x),var(--join-y),0) rotate(0deg);
+  }
+
+  55% {
+    transform: translate3d(
+      calc(var(--join-x) - 5px),
+      calc(var(--join-y) + 2px),
+      0
+    ) rotate(-3deg);
+  }
+
+  61% {
+    transform: translate3d(
+      calc(var(--join-x) + 7px),
+      calc(var(--join-y) - 2px),
+      0
+    ) rotate(3deg);
+  }
+
+  67% {
+    transform: translate3d(var(--join-x),var(--join-y),0) rotate(0deg);
+  }
+
+  100% {
+    transform: translate3d(var(--return-x),var(--return-y),0) rotate(0deg);
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Impacts
+ * ------------------------------------------------------------------------- */
+
+.dd-animation-impact {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1003;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  transform-origin: center center;
+  animation: dd-animation-impact 280ms ease-out forwards;
+}
+
+.dd-animation-impact-heart {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.dd-animation-impact-hit,
+.dd-animation-impact-weapon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+@keyframes dd-animation-impact {
+  0% {
+    transform: translate(-50%,-50%) scale(.65);
+    opacity: 0;
+  }
+
+  25% {
+    transform: translate(-50%,-50%) scale(1.15);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%,-50%) scale(1);
+    opacity: 0;
+  }
+}
