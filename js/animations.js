@@ -296,7 +296,7 @@
     window.setTimeout(function () {
       impact(options.impactType || 'weapon', center(targetRect), 320);
       shake(170);
-    }, options.impactTime || 650);
+    }, options.impactTime || 400);
 
     removeLater(clone, options.duration || 1100, function () {
       show(card);
@@ -924,7 +924,7 @@
     setVector(clone, 'return', 0, 0);
 
     clone.style.setProperty('--aim-angle', aimAngle + 'deg');
-    clone.style.setProperty('--animation-duration', (options.duration || 1100) + 'ms');
+    clone.style.setProperty('--animation-duration', (options.duration || 800) + 'ms');
 
     hide(weapon);
     clone.classList.add('dd-thrown-active');
