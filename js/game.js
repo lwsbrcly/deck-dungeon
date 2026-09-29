@@ -684,55 +684,19 @@ async function animateRoomEntry(skipFirst) {
   );
 }
 async function animateFlee(cards) {
-if (!cards || !cards.length) return;
+  if (!cards || !cards.length) return;
 
-// Sound begins with the room fleeing.
-fleeSound();
+  var deckEl = document.getElementById('p1Deck');
+  var deckCardEl = deckEl ? deckEl.querySelector('.deck-card') : null;
+  var target = deckCardEl || deckEl;
+  if (!target) return;
 
-var deckEl = document.getElementById('p1Deck');
-var deckCardEl = deckEl ? deckEl.querySelector('.deck-card') : null;
-var deckRect = deckCardEl ? getCanvasAnimationRect(deckCardEl) : (deckEl ? getCanvasAnimationRect(deckEl) : null);
-var canvas = document.querySelector('.game-canvas');
-if (!canvas) return;
-
-// Flee clones live inside the game canvas so their z-order can be placed
-// beneath the deck while remaining above the artwork/background.
-var waits = [];
-for (var i = 0; i < cards.length; i++) {
-  var card = cards[i];
-  var rect = getCanvasAnimationRect(card);
-  if (!rect) continue;
-
-  card.classList.add('selection-hidden');
-  var clone = card.cloneNode(true);
-  clone.classList.add('action-clone','flee-clone');
-  clone.style.position = 'absolute';
-  clone.style.left = rect.left + 'px';
-  clone.style.top = rect.top + 'px';
-  clone.style.width = rect.width + 'px';
-  clone.style.height = rect.height + 'px';
-
-  if (deckRect) {
-    clone.style.setProperty('--target-left', (deckRect.left + deckRect.width / 2 - rect.width / 2) + 'px');
-    clone.style.setProperty('--target-top', (deckRect.top + deckRect.height / 2 - rect.height / 2) + 'px');
-  } else {
-    clone.style.setProperty('--target-left', -(rect.width + 80) + 'px');
-    clone.style.setProperty('--target-top', rect.top + ((i%2 ? -1 : 1) * (8 + i*3)) + 'px');
-  }
-
-  card.classList.add('action-hidden');
-  // Keep the fleeing card below the deck stack, but above the artwork.
-  clone.style.zIndex = '1050';
-  canvas.appendChild(clone);
-
-  waits.push(waitForAnimation(clone).then(function(c, el) {
-    return function() {
-      c.remove();
-      el.classList.remove('action-hidden');
-    };
-  }(clone, card)));
-}
-await Promise.all(waits);
+  return new Promise(function(resolve) {
+    DeckDungeonAnimations.flee(cards, target, {
+      sound: typeof fleeSound === 'function' ? fleeSound : null,
+      done: resolve
+    });
+  });
 }
 function animateMonsterToPrevious(cardEl, targetEl, monster, done) {
 if (!cardEl || !targetEl) { done(); return; }
