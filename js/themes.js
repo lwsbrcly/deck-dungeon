@@ -420,8 +420,8 @@ const THEMES = {
             },
             potions: {
                 hearts: {
-                    2: 'Stale Bread', 3: 'Sus Mushrooms', 4: 'Apple', 5: 'Fresh Bread',
-                    6: 'Cooked Meats', 7: 'Roast Chicken', 8: 'Hearty Stew', 9: 'Healing Elixir', 10: 'Magic Potion'
+                    2: { name: 'Stale Bread', animation: 'eat' }, 3: { name: 'Sus Mushrooms', animation: 'eat' }, 4: { name: 'Apple', animation: 'eat' }, 5: { name: 'Fresh Bread', animation: 'eat' },
+                    6: { name: 'Cooked Meats', animation: 'eat' }, 7: { name: 'Roast Chicken', animation: 'eat' }, 8: { name: 'Hearty Stew', animation: 'eat' }, 9: { name: 'Healing Elixir', animation: 'eat' }, 10: { name: 'Magic Potion', animation: 'eat' }
                 }
             }
         }
@@ -529,8 +529,8 @@ const THEMES = {
             },
             potions: {
                 hearts: {
-                    2: 'Peanuts', 3: 'Fulci\'s Fish', 4: 'Guinness', 5: 'Regular Coke',
-                    6: 'Toastie', 7: 'Cold Pint', 8: 'Meat Pie', 9: 'Pork Scratchings', 10: 'Cornetto'
+                    2: { name: 'Peanuts', animation: 'eat' }, 3: { name: 'Fulci's Fish', animation: 'eat' }, 4: { name: 'Guinness', animation: 'eat' }, 5: { name: 'Regular Coke', animation: 'eat' },
+                    6: { name: 'Toastie', animation: 'eat' }, 7: { name: 'Cold Pint', animation: 'eat' }, 8: { name: 'Meat Pie', animation: 'eat' }, 9: { name: 'Pork Scratchings', animation: 'eat' }, 10: { name: 'Cornetto', animation: 'eat' }
                 }
             }
         }
@@ -665,9 +665,9 @@ const THEMES = {
             },
             potions: {
                 hearts: {
-                    2: 'Nutrient Gel', 3: 'Field Rations', 4: 'Med-Kit', 5: 'Adrenal Shot',
-                    6: 'Pulse Battery', 7: 'Armour Plate', 8: 'Nanobot Tube', 9: 'Combat Stimulant',
-                    10: 'MechSuit™'
+                    2: { name: 'Nutrient Gel', animation: 'eat' }, 3: { name: 'Field Rations', animation: 'eat' }, 4: { name: 'Med-Kit', animation: 'eat' }, 5: { name: 'Adrenal Shot', animation: 'eat' },
+                    6: { name: 'Pulse Battery', animation: 'eat' }, 7: { name: 'Armour Plate', animation: 'eat' }, 8: { name: 'Nanobot Tube', animation: 'eat' }, 9: { name: 'Combat Stimulant', animation: 'eat' },
+                    10: { name: 'MechSuit™', animation: 'eat' }
                 }
             }
         }
@@ -747,8 +747,8 @@ const THEMES = {
             },
             potions: {
                 hearts: {
-                    2: 'Rum', 3: 'Rum', 4: 'Rum', 5: 'Rum',
-                    6: 'Rum', 7: 'Rum', 8: 'Rum', 9: 'Rum', 10: 'Rum'
+                    2: { name: 'Rum', animation: 'eat' }, 3: { name: 'Rum', animation: 'eat' }, 4: { name: 'Rum', animation: 'eat' }, 5: { name: 'Rum', animation: 'eat' },
+                    6: { name: 'Rum', animation: 'eat' }, 7: { name: 'Rum', animation: 'eat' }, 8: { name: 'Rum', animation: 'eat' }, 9: { name: 'Rum', animation: 'eat' }, 10: { name: 'Rum', animation: 'eat' }
                 }
             }
         }
@@ -828,8 +828,8 @@ const THEMES = {
             },
             potions: {
                 hearts: {
-                    2: 'Sushi', 3: 'Sushi', 4: 'Sushi', 5: 'Sushi',
-                    6: 'Sushi', 7: 'Sushi', 8: 'Sushi', 9: 'Sushi', 10: 'Sushi'
+                    2: { name: 'Sushi', animation: 'eat' }, 3: { name: 'Sushi', animation: 'eat' }, 4: { name: 'Sushi', animation: 'eat' }, 5: { name: 'Sushi', animation: 'eat' },
+                    6: { name: 'Sushi', animation: 'eat' }, 7: { name: 'Sushi', animation: 'eat' }, 8: { name: 'Sushi', animation: 'eat' }, 9: { name: 'Sushi', animation: 'eat' }, 10: { name: 'Sushi', animation: 'eat' }
                 }
             }
         }
