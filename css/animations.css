@@ -561,7 +561,7 @@
 }
 
 @keyframes dd-ranged-weapon {
-  /* 1. Rotate on the spot to face the monster. */
+  /* Aim. */
   0% {
     transform: translate3d(0,0,0) rotate(0deg);
   }
@@ -570,52 +570,48 @@
     transform: translate3d(0,0,0) rotate(var(--aim-angle));
   }
 
-  /* 2. Load: quick 20px chk-chk forward. */
-  28% {
+  /* Small load movement: just a short chk forward and back. */
+  30% {
     transform:
       translate3d(var(--load-x),var(--load-y),0)
       rotate(var(--aim-angle));
   }
 
-  34% {
+  36% {
     transform:
       translate3d(0,0,0)
       rotate(var(--aim-angle));
   }
 
-  40% {
-    transform:
-      translate3d(var(--load-x),var(--load-y),0)
-      rotate(var(--aim-angle));
-  }
-
-  46% {
+  /* Brief pause before firing. */
+  48% {
     transform:
       translate3d(0,0,0)
       rotate(var(--aim-angle));
   }
 
-  /* 3. Fire: recoil 40px away from the monster, then recover. */
-  52% {
+  /* Fire once: one larger movement away from the monster. */
+  54% {
     transform:
       translate3d(var(--recoil-x),var(--recoil-y),0)
       rotate(var(--aim-angle));
   }
 
-  64% {
+  /* Recover once, with no additional bounce. */
+  66% {
     transform:
       translate3d(0,0,0)
       rotate(var(--aim-angle));
   }
 
-  /* 4. Hold briefly while the imagined projectile travels. */
+  /* Projectile travel time. */
   82% {
     transform:
       translate3d(0,0,0)
       rotate(var(--aim-angle));
   }
 
-  /* 5. Rotate back home. */
+  /* Rotate back home. */
   100% {
     transform: translate3d(0,0,0) rotate(0deg);
   }
