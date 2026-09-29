@@ -500,7 +500,7 @@
 
       pending += 1;
 
-      var clone = appendClone(deck, 'dd-deal-clone', deckRect);
+      var clone = appendClone(card, 'dd-deal-clone', deckRect);
       if (!clone) {
         pending -= 1;
         return;
