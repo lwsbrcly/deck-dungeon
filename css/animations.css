@@ -79,6 +79,57 @@
   will-change: transform, opacity;
 }
 
+.dd-melee-weapon-clone {
+  position: absolute !important;
+  z-index: 1002;
+  pointer-events: none !important;
+  margin: 0 !important;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.dd-melee-active {
+  animation: dd-melee-lift-slam-return
+    var(--animation-duration, 850ms)
+    cubic-bezier(.22,.8,.25,1)
+    forwards;
+}
+
+@keyframes dd-melee-lift-slam-return {
+  0% {
+    transform: translate3d(0,0,0) scale(1);
+  }
+
+  12% {
+    transform: translate3d(0,-8px,0) scale(var(--lift-scale,1.08));
+  }
+
+  50% {
+    transform:
+      translate3d(var(--move-x),var(--move-y),0)
+      scale(var(--lift-scale,1.08));
+  }
+
+  56% {
+    transform:
+      translate3d(var(--move-x),var(--move-y),0)
+      scale(.96);
+  }
+
+  62% {
+    transform:
+      translate3d(var(--move-x),var(--move-y),0)
+      scale(1);
+  }
+
+  /* Simple glide back to the weapon slot. */
+  100% {
+    transform:
+      translate3d(0,0,0)
+      scale(1);
+  }
+}
+
 .dd-equip-active,
 .dd-use-active {
   animation: dd-lift-travel-slam
