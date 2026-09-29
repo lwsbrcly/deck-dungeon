@@ -848,23 +848,21 @@
       return;
     }
 
-    var weaponCenter = center(weaponRect);
-
     /*
-     * The weapon is held over the RIGHT HALF of the player card:
-     * its right edge meets the player's vertical centre line.
-     * Keep the weapon's vertical centre aligned with the player's centre.
+     * The weapon sits to the RIGHT of the player card.
+     * Stop when the weapon's LEFT edge reaches the player's centre line.
+     * That means exactly the right half of the player remains covered.
      */
     var hand = {
-      x: playerRect.left + playerRect.width / 2 - weaponRect.width / 2,
-      y: playerRect.top + playerRect.height / 2
+      left: playerRect.left + playerRect.width / 2,
+      top: playerRect.top + playerRect.height / 2 - weaponRect.height / 2
     };
 
     setVector(
       weaponClone,
       'join',
-      hand.x - weaponRect.left,
-      hand.y - weaponRect.top - weaponRect.height / 2
+      hand.left - weaponRect.left,
+      hand.top - weaponRect.top
     );
 
     weaponClone.style.setProperty(
