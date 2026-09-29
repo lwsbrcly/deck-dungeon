@@ -889,7 +889,8 @@ function drinkDirectPotion(target) {
     var targetEl = document.getElementById(target + 'Panel');
     saveState();
     var c = state.dungeon[state.selected];
-    animateCardAction(cardEl, targetEl, 'eat-clone', function() {
+
+    var finishConsume = function() {
       var isDowned = t.hp === 0; var amount = 0;
       if (!t.consumedThisRoom) {
         amount = isDowned ? Math.floor(c.value / 2) + 1 : c.value;
@@ -900,7 +901,17 @@ function drinkDirectPotion(target) {
       } else log(name(target) + ' consumed ' + c.name + ', but to no effect.', false, 'potion');
       removeSelected();
       checkGame(); renderAfterAction();
-    }, '♥', 'eat');
+    };
+
+    // Use cards have their own physical "use" choreography. Eat/drink cards
+    // remain on the existing path until their dedicated migrations.
+    if (c.animation === 'use') {
+      DeckDungeonAnimations.use(cardEl, targetEl, {
+        done: finishConsume
+      });
+    } else {
+      animateCardAction(cardEl, targetEl, 'eat-clone', finishConsume, '♥', 'eat');
+    }
 }
 
 function validWeapon(p, c) {
