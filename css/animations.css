@@ -602,6 +602,33 @@
   }
 }
 
+.dd-monster-jolt {
+  animation: dd-monster-jolt 180ms ease-out;
+  will-change: transform;
+}
+
+@keyframes dd-monster-jolt {
+  0% {
+    transform: translate3d(0,0,0);
+  }
+
+  25% {
+    transform: translate3d(-4px,1px,0);
+  }
+
+  50% {
+    transform: translate3d(3px,-1px,0);
+  }
+
+  75% {
+    transform: translate3d(-2px,1px,0);
+  }
+
+  100% {
+    transform: translate3d(0,0,0);
+  }
+}
+
 /* -------------------------------------------------------------------------
  * Impacts
  * ------------------------------------------------------------------------- */
