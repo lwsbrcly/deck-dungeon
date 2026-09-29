@@ -477,7 +477,7 @@
 /* -------------------------------------------------------------------------
  * Thrown weapon
  *
- * Flat tabletop: join player → fly to monster → return to weapon slot.
+ * Lift → one full 360° rotation while travelling → slam.
  * ------------------------------------------------------------------------- */
 
 .dd-thrown-weapon-clone {
@@ -486,50 +486,52 @@
   pointer-events: none !important;
   margin: 0 !important;
   transform-origin: center center;
-  will-change: transform;
+  will-change: transform, opacity;
 }
 
 .dd-thrown-active {
-  animation: dd-thrown-weapon 1100ms cubic-bezier(.22,.8,.25,1) forwards;
+  animation:
+    dd-thrown-lift-travel-slam
+    var(--animation-duration, 650ms)
+    cubic-bezier(.22,.8,.25,1)
+    forwards;
 }
 
-@keyframes dd-thrown-weapon {
+@keyframes dd-thrown-lift-travel-slam {
   0% {
-    transform: translate3d(0,0,0) rotate(0deg);
+    transform: translate3d(0,0,0) scale(1) rotate(0deg);
   }
 
-  20% {
-    transform: translate3d(var(--join-x),var(--join-y),0) rotate(-5deg);
+  14% {
+    transform: translate3d(0,-8px,0) scale(var(--lift-scale,1.08)) rotate(0deg);
   }
 
-  32% {
-    transform: translate3d(var(--join-x),var(--join-y),0) rotate(-5deg);
-  }
-
-  68% {
+  55% {
     transform:
-      translate3d(
-        calc(var(--join-x) + var(--throw-x)),
-        calc(var(--join-y) + var(--throw-y)),
-        0
-      )
-      rotate(720deg);
+      translate3d(var(--move-x),var(--move-y),0)
+      scale(var(--lift-scale,1.08))
+      rotate(360deg);
   }
 
-  78% {
+  62% {
     transform:
-      translate3d(
-        calc(var(--join-x) + var(--throw-x)),
-        calc(var(--join-y) + var(--throw-y)),
-        0
-      )
-      rotate(720deg);
+      translate3d(var(--move-x),var(--move-y),0)
+      scale(.96)
+      rotate(360deg);
+  }
+
+  72% {
+    transform:
+      translate3d(var(--move-x),var(--move-y),0)
+      scale(1.01)
+      rotate(360deg);
   }
 
   100% {
     transform:
-      translate3d(var(--return-x),var(--return-y),0)
-      rotate(0deg);
+      translate3d(var(--move-x),var(--move-y),0)
+      scale(1)
+      rotate(360deg);
   }
 }
 
