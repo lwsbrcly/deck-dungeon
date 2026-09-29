@@ -532,7 +532,7 @@ const THEMES = {
             },
             potions: {
                 hearts: {
-                    2: { name: 'Peanuts', animation: 'eat' }, 3: { name: 'Fulci's Fish', animation: 'eat' },
+                    2: { name: 'Peanuts', animation: 'eat' }, 3: { name: 'Fulci\'s Fish', animation: 'eat' },
                     4: { name: 'Guinness', animation: 'drink' }, 5: { name: 'Regular Coke', animation: 'drink' },
                     6: { name: 'Toastie', animation: 'eat' }, 7: { name: 'Cold Pint', animation: 'drink' }, 
                     8: { name: 'Meat Pie', animation: 'eat' }, 9: { name: 'Pork Scratchings', animation: 'eat' }, 
