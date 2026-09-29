@@ -927,16 +927,42 @@
       playerClone.classList.add('dd-melee-step2-player-active');
       weaponClone.classList.add('dd-melee-step2-shared-move-active');
 
-      removeLater(weaponClone, 500, function () {
-        if (weaponClone.parentNode) weaponClone.remove();
-        show(weapon);
-      });
+      /*
+       * Stage 3 begins only after the shared approach is complete.
+       * Freeze the player at the approach position and rebase the weapon
+       * there. The weapon then moves alone directly to the monster centre.
+       */
+      window.setTimeout(function () {
+        playerClone.classList.remove('dd-melee-step2-player-active');
 
-      removeLater(playerClone, 500, function () {
-        if (playerClone.parentNode) playerClone.remove();
-        show(player);
-        finish();
-      });
+        weaponClone.classList.remove('dd-melee-step2-shared-move-active');
+        weaponClone.style.left = (hand.left + approachX) + 'px';
+        weaponClone.style.top = (hand.top + approachY) + 'px';
+        weaponClone.style.transform = 'none';
+
+        var weaponAtStop = {
+          left: hand.left + approachX,
+          top: hand.top + approachY,
+          width: weaponRect.width,
+          height: weaponRect.height
+        };
+
+        var weaponCenter = center(weaponAtStop);
+        var strikeX = monsterCenter.x - weaponCenter.x;
+        var strikeY = monsterCenter.y - weaponCenter.y;
+
+        setVector(weaponClone, 'strike', strikeX, strikeY);
+        weaponClone.style.setProperty('--animation-duration', '450ms');
+        weaponClone.classList.add('dd-melee-step3-strike-active');
+
+        removeLater(weaponClone, 450, function () {
+          if (weaponClone.parentNode) weaponClone.remove();
+          show(weapon);
+          if (playerClone.parentNode) playerClone.remove();
+          show(player);
+          finish();
+        });
+      }, 500);
     }, 500);
   }
 
