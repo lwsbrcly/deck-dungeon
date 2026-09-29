@@ -855,17 +855,17 @@
   /*
    * WEAPON FIGHT — THROWN
    *
-   * Weapon moves to player, launches to monster, then returns to its own slot.
+   * The thrown weapon uses the same physical lift → travel → slam language
+   * as melee, but spins once (360°) during the elevated travel.
    */
   function weaponFightThrown(weapon, player, monster, options) {
     options = options || {};
 
     var finish = once(options.done);
     var weaponRect = rect(weapon);
-    var playerRect = rect(player);
     var monsterRect = rect(monster);
 
-    if (!weaponRect || !playerRect || !monsterRect) {
+    if (!weaponRect || !monsterRect) {
       finish();
       return;
     }
@@ -876,39 +876,22 @@
       return;
     }
 
-    var weaponStart = center(weaponRect);
-    var playerCenter = center(playerRect);
-    var monsterCenter = center(monsterRect);
+    var move = translation(weaponRect, monsterRect);
+    setVector(clone, 'move', move.x, move.y);
 
-    var hand = {
-      x: playerCenter.x + (options.handOffsetX || 0),
-      y: playerCenter.y + (options.handOffsetY || 0)
-    };
+    clone.style.setProperty('--lift-scale', options.liftScale || '1.08');
+    clone.style.setProperty('--animation-duration', (options.duration || 650) + 'ms');
 
-    setVector(clone, 'join',
-      hand.x - weaponStart.x,
-      hand.y - weaponStart.y
-    );
-    setVector(clone, 'throw',
-      monsterCenter.x - hand.x,
-      monsterCenter.y - hand.y
-    );
-    setVector(clone, 'return',
-      weaponStart.x - monsterCenter.x,
-      weaponStart.y - monsterCenter.y
-    );
-
-    clone.style.setProperty('--animation-duration', (options.duration || 1100) + 'ms');
     hide(weapon);
     clone.classList.add('dd-thrown-active');
 
     window.setTimeout(function () {
-      impact('weapon', monsterCenter, 280);
+      impact('hit', center(monsterRect), 280);
       shake(160);
       if (options.onHit) options.onHit();
-    }, options.hitTime || 620);
+    }, options.impactTime || 403);
 
-    removeLater(clone, options.duration || 1100, function () {
+    removeLater(clone, options.duration || 650, function () {
       show(weapon);
       finish();
     });
