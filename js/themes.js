@@ -463,7 +463,7 @@ const THEMES = {
                 'clubs_10': 'assets/shaun/monsters/trish.png',
                 'clubs_J': 'assets/shaun/monsters/john.png',
                 'clubs_Q': 'assets/shaun/monsters/barbara.png',
-                'clubs_K': 'assets/shaun/monsters/philip.ong', 
+                'clubs_K': 'assets/shaun/monsters/philip.png', 
                 'clubs_A': 'assets/shaun/monsters/pete.png',
                 'spades_2': 'assets/shaun/monsters/football_kid.png',
                 'spades_3': 'assets/shaun/monsters/groom.png',
