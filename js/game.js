@@ -1022,7 +1022,7 @@ if (
       weaponEl,
       playerEl,
       targetEl,
-      { done: done }
+      { done: done, slotIndex: selectedIndex }
     );
     return;
   }
