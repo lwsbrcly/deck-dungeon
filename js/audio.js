@@ -319,7 +319,7 @@ let themeLoopToken = 0;
     rise.start(now + 0.018);
     rise.stop(now + 0.14);
 
-    // Tiny crunchy 8-bit edge: a very short square-wave chirp gives the
+    // Tiny crunchy 8-bit edge: a short square-wave chirp gives the
     // projectile some arcade-machine character without becoming a beep.
     const arcade = context.createOscillator();
     const arcadeFilter = context.createBiquadFilter();
@@ -342,6 +342,31 @@ let themeLoopToken = 0;
     arcadeGain.connect(context.destination);
     arcade.start(now + 0.012);
     arcade.stop(now + 0.125);
+
+    // Electrical "BZZT": short, unstable filtered noise layered around the
+    // launch. This supplies the crunchy/static character rather than another
+    // clean musical pitch.
+    const bzzt = context.createBufferSource();
+    const bzztFilter = context.createBiquadFilter();
+    const bzztGain = context.createGain();
+
+    bzzt.buffer = makeNoiseBuffer(context, 0.115);
+    bzztFilter.type = "bandpass";
+    bzztFilter.frequency.setValueAtTime(1450, now + 0.008);
+    bzztFilter.frequency.exponentialRampToValueAtTime(2650, now + 0.055);
+    bzztFilter.frequency.exponentialRampToValueAtTime(1050, now + 0.115);
+    bzztFilter.Q.value = 0.7;
+
+    bzztGain.gain.setValueAtTime(0.001, now + 0.008);
+    bzztGain.gain.exponentialRampToValueAtTime(0.10, now + 0.018);
+    bzztGain.gain.setValueAtTime(0.075, now + 0.045);
+    bzztGain.gain.exponentialRampToValueAtTime(0.001, now + 0.115);
+
+    bzzt.connect(bzztFilter);
+    bzztFilter.connect(bzztGain);
+    bzztGain.connect(context.destination);
+    bzzt.start(now + 0.008);
+    bzzt.stop(now + 0.125);
 
     // Falling "OO" — a smooth pitch glide that gives the projectile its
     // trailing, passing-through-the-air character.
