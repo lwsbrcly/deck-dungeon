@@ -1345,23 +1345,27 @@ if (isDead || isCleared || allMonstersSlain) {
   // Check special case: dying on the very last card after clearing all monsters
   var isPyrrhicVictory = isDead && monstersRemainingCount === 0;
 
+  var endGame = (THEMES[selectedTheme || 'dungeon'] &&
+    THEMES[selectedTheme || 'dungeon'].endGame) ||
+    THEMES.dungeon.endGame;
+
   if (isPyrrhicVictory) {
-    title = "A Pyrrhic Victory!";
+    title = endGame.draw.title;
     score = 0;
-    text = "You struck down the final beast of the dungeon, but took a mortal blow in the process. The dungeon is cleared, though none survived to tell the tale!";
+    text = endGame.draw.body;
     scoreBanner.className = 'score-banner';
     scoreBanner.textContent = 'SCORE: 0 (DRAW)';
   } else if (isCleared || allMonstersSlain) {
-    title = 'Dungeon Complete!';
+    title = endGame.win.title;
     score = (isSolo ? state.p1.hp : (state.p1.hp + state.p2.hp))
     + finalConsumableScore;
-    text = 'You have defeated the dungeon!';
+    text = endGame.win.body;
     scoreBanner.className = 'score-banner';
     scoreBanner.textContent = 'SCORE: +' + score;
   } else {
-    title = 'You Have Fallen';
+    title = endGame.lose.title;
     score = -monsterSum;
-    text = 'The dungeon has beaten you this time, Adventurer.';
+    text = endGame.lose.body;
     scoreBanner.className = 'score-banner negative';
     scoreBanner.textContent = 'SCORE: ' + score;
   }
