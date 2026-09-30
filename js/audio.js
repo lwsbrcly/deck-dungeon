@@ -775,7 +775,7 @@ let themeLoopTimer = null;
     stopDeckDungeonTheme();
 
     function playLoop() {
-      deckDungeonTheme();
+      deckDungeonTheme(window.selectedTheme || 'dungeon');
       // The four-pass arrangement occupies 16 beats per pass.
       // Restart slightly before the final scheduled notes have finished so
       // the tune can continue without an audible gap.
