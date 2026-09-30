@@ -294,22 +294,23 @@ let themeLoopToken = 0;
     launchBody.start(now);
     launchBody.stop(now + 0.09);
 
-    // Rising "EE" — narrow, bright and slightly nasal.
+    // Rising "EE" — keep the pitch movement, but make it more arcade-like
+    // with a slightly square-edged voice rather than a clean whistle.
     const rise = context.createOscillator();
     const riseFilter = context.createBiquadFilter();
     const riseGain = context.createGain();
 
     rise.type = "triangle";
-    rise.frequency.setValueAtTime(612.5, now + 0.018);
-    rise.frequency.exponentialRampToValueAtTime(1025, now + 0.115);
+    rise.frequency.setValueAtTime(560, now + 0.018);
+    rise.frequency.exponentialRampToValueAtTime(980, now + 0.115);
 
     riseFilter.type = "bandpass";
-    riseFilter.frequency.setValueAtTime(750, now + 0.018);
-    riseFilter.frequency.exponentialRampToValueAtTime(1075, now + 0.115);
-    riseFilter.Q.value = 2.2;
+    riseFilter.frequency.setValueAtTime(700, now + 0.018);
+    riseFilter.frequency.exponentialRampToValueAtTime(1050, now + 0.115);
+    riseFilter.Q.value = 1.25;
 
     riseGain.gain.setValueAtTime(0.001, now + 0.018);
-    riseGain.gain.exponentialRampToValueAtTime(0.12, now + 0.035);
+    riseGain.gain.exponentialRampToValueAtTime(0.095, now + 0.035);
     riseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.125);
 
     rise.connect(riseFilter);
@@ -317,6 +318,30 @@ let themeLoopToken = 0;
     riseGain.connect(context.destination);
     rise.start(now + 0.018);
     rise.stop(now + 0.14);
+
+    // Tiny crunchy 8-bit edge: a very short square-wave chirp gives the
+    // projectile some arcade-machine character without becoming a beep.
+    const arcade = context.createOscillator();
+    const arcadeFilter = context.createBiquadFilter();
+    const arcadeGain = context.createGain();
+
+    arcade.type = "square";
+    arcade.frequency.setValueAtTime(420, now + 0.012);
+    arcade.frequency.exponentialRampToValueAtTime(760, now + 0.095);
+
+    arcadeFilter.type = "lowpass";
+    arcadeFilter.frequency.setValueAtTime(1800, now + 0.012);
+    arcadeFilter.frequency.exponentialRampToValueAtTime(900, now + 0.095);
+
+    arcadeGain.gain.setValueAtTime(0.001, now + 0.012);
+    arcadeGain.gain.exponentialRampToValueAtTime(0.045, now + 0.025);
+    arcadeGain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
+
+    arcade.connect(arcadeFilter);
+    arcadeFilter.connect(arcadeGain);
+    arcadeGain.connect(context.destination);
+    arcade.start(now + 0.012);
+    arcade.stop(now + 0.125);
 
     // Falling "OO" — a smooth pitch glide that gives the projectile its
     // trailing, passing-through-the-air character.
