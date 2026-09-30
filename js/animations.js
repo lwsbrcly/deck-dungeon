@@ -720,7 +720,7 @@
     };
 
     var slotIndex = Number(options.slotIndex);
-    var slotAngles = [60, 30, -5, -30];
+    var slotAngles = [-60, -30, 5, 30];
     var angle = slotAngles[slotIndex];
     if (typeof angle !== 'number') angle = 0;
     var radians = angle * Math.PI / 180;
