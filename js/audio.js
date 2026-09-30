@@ -1,5 +1,6 @@
 let audioContext;
 let themeNodes = [];
+let themeLoopTimer = null;
 
   function getAudioContext() {
     if (!audioContext) {
@@ -598,6 +599,19 @@ let themeNodes = [];
     return curve;
   }
 
+  function stopDeckDungeonTheme() {
+    if (themeLoopTimer) {
+      clearTimeout(themeLoopTimer);
+      themeLoopTimer = null;
+    }
+    if (!themeNodes.length || !audioContext) return;
+    const now = audioContext.currentTime;
+    themeNodes.forEach(function(node) {
+      try { node.stop(now); } catch (e) {}
+    });
+    themeNodes = [];
+  }
+
   function deckDungeonTheme() {
     const context = getAudioContext();
     const now = context.currentTime;
@@ -732,6 +746,7 @@ let themeNodes = [];
 
       oscillator.start(start);
       oscillator.stop(end + 0.03);
+      themeNodes.push(oscillator);
     }
 
     function playDrum(start) {
@@ -752,6 +767,7 @@ let themeNodes = [];
 
       drum.start(start);
       drum.stop(start + 0.27);
+      themeNodes.push(drum);
     }
 
     const passLength = 16; // beats per complete theme pass
@@ -797,3 +813,22 @@ let themeNodes = [];
       });
     }
   }
+
+
+  function playDeckDungeonThemeLoop() {
+    stopDeckDungeonTheme();
+
+    function playLoop() {
+      deckDungeonTheme();
+      // The four-pass arrangement occupies 16 beats per pass.
+      // Restart slightly before the final scheduled notes have finished so
+      // the tune can continue without an audible gap.
+      const loopDuration = 16 * 4 * 0.42 * 1000;
+      themeLoopTimer = setTimeout(playLoop, loopDuration);
+    }
+
+    playLoop();
+  }
+
+  window.playDeckDungeonThemeLoop = playDeckDungeonThemeLoop;
+  window.stopDeckDungeonTheme = stopDeckDungeonTheme;
