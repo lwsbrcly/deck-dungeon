@@ -670,11 +670,13 @@ let themeLoopToken = 0;
     shaun: {
       melody: {
         type: "sawtooth",
-        filter: 2400,
-        volume: 0.065,
-        distortion: 5,
-        attack: 0.008,
-        release: 0.055
+        filter: 2600,
+        volume: 0.052,
+        distortion: 3,
+        detune: 8,
+        secondVolume: 0.38,
+        attack: 0.012,
+        release: 0.065
       },
       bass: { type: "triangle", filter: 700, volume: 0.075 },
       drum: { type: "triangle", start: 125, end: 55, volume: 0.20 }
@@ -710,19 +712,29 @@ let themeLoopToken = 0;
       const start = now + startBeat * beat;
       const end = start + length * beat;
       const oscillator = context.createOscillator();
+      const secondOscillator = instrument.detune
+        ? context.createOscillator()
+        : null;
       const filter = context.createBiquadFilter();
       const gain = context.createGain();
       let output = filter;
 
       oscillator.type = instrument.type;
       oscillator.frequency.value = frequency;
+
+      if (secondOscillator) {
+        secondOscillator.type = instrument.type;
+        secondOscillator.frequency.value = frequency;
+        secondOscillator.detune.value = instrument.detune;
+      }
+
       filter.type = "lowpass";
       filter.frequency.value = instrument.filter;
 
       if (instrument.distortion) {
         const distortion = context.createWaveShaper();
         distortion.curve = makeDistortionCurve(instrument.distortion);
-        distortion.oversample = "4x";
+        distortion.oversample = "2x";
         filter.connect(distortion);
         output = distortion;
       }
@@ -739,11 +751,26 @@ let themeLoopToken = 0;
       gain.gain.exponentialRampToValueAtTime(0.001, end);
 
       oscillator.connect(filter);
+
+      if (secondOscillator) {
+        const secondGain = context.createGain();
+        secondGain.gain.value = instrument.secondVolume || 0.35;
+        secondOscillator.connect(secondGain);
+        secondGain.connect(filter);
+      }
+
       output.connect(gain);
       gain.connect(context.destination);
+
       oscillator.start(start);
       oscillator.stop(end + 0.03);
       themeNodes.push(oscillator);
+
+      if (secondOscillator) {
+        secondOscillator.start(start);
+        secondOscillator.stop(end + 0.03);
+        themeNodes.push(secondOscillator);
+      }
     }
 
     function playDrum(start) {
