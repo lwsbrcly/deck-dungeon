@@ -747,8 +747,8 @@
     clone.classList.add('dd-melee-active');
 
     window.setTimeout(function () {
-      if (options.sound || typeof global.punchSound === 'function') {
-        var sound = options.sound || global.punchSound;
+      if (options.sound || typeof global.rangedAttackSound === 'function') {
+        var sound = options.sound || global.rangedAttackSound;
         sound();
       }
       impact('hit', monsterContact, 320);
