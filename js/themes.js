@@ -382,6 +382,34 @@ const THEMES = {
         },
 
         text: {
+
+            endGame: {
+
+                win: {
+
+                    title: 'Dungeon Complete!',
+
+                    body: 'You have defeated the dungeon!'
+
+                },
+
+                lose: {
+
+                    title: 'You Have Fallen',
+
+                    body: 'The dungeon has beaten you this time, Adventurer.'
+
+                },
+
+                draw: {
+
+                    title: 'A Pyrrhic Victory!',
+
+                    body: 'You struck down the final beast of the dungeon, but took a mortal blow in the process. The dungeon is cleared, though none survived to tell the tale!'
+
+                }
+
+            },
             gameTitle: 'DECK DUNGEON',
             location: 'Dungeon',
             monster: 'Monster',
@@ -528,6 +556,34 @@ const THEMES = {
         },
 
         text: {
+
+            endGame: {
+
+                win: {
+
+                    title: 'Dungeon Complete!',
+
+                    body: 'You have defeated the dungeon!'
+
+                },
+
+                lose: {
+
+                    title: 'You Have Fallen',
+
+                    body: 'The dungeon has beaten you this time, Adventurer.'
+
+                },
+
+                draw: {
+
+                    title: 'A Pyrrhic Victory!',
+
+                    body: 'You struck down the final beast of the dungeon, but took a mortal blow in the process. The dungeon is cleared, though none survived to tell the tale!'
+
+                }
+
+            },
             gameTitle: 'Shaun of the Deck',
             location: 'The Pub',
             monster: 'Zombie',
@@ -675,6 +731,34 @@ const THEMES = {
         },
 
         text: {
+
+            endGame: {
+
+                win: {
+
+                    title: 'Dungeon Complete!',
+
+                    body: 'You have defeated the dungeon!'
+
+                },
+
+                lose: {
+
+                    title: 'You Have Fallen',
+
+                    body: 'The dungeon has beaten you this time, Adventurer.'
+
+                },
+
+                draw: {
+
+                    title: 'A Pyrrhic Victory!',
+
+                    body: 'You struck down the final beast of the dungeon, but took a mortal blow in the process. The dungeon is cleared, though none survived to tell the tale!'
+
+                }
+
+            },
             gameTitle: 'Space Deck',
             location: 'Derelict Freighter',
             monster: 'Xenomorph',
@@ -768,6 +852,34 @@ const THEMES = {
         },
 
         text: {
+
+            endGame: {
+
+                win: {
+
+                    title: 'Dungeon Complete!',
+
+                    body: 'You have defeated the dungeon!'
+
+                },
+
+                lose: {
+
+                    title: 'You Have Fallen',
+
+                    body: 'The dungeon has beaten you this time, Adventurer.'
+
+                },
+
+                draw: {
+
+                    title: 'A Pyrrhic Victory!',
+
+                    body: 'You struck down the final beast of the dungeon, but took a mortal blow in the process. The dungeon is cleared, though none survived to tell the tale!'
+
+                }
+
+            },
             gameTitle: 'Shaun of the Deck',
             location: 'The Pub',
             monster: 'Zombie',
@@ -861,6 +973,34 @@ const THEMES = {
         },
 
         text: {
+
+            endGame: {
+
+                win: {
+
+                    title: 'Dungeon Complete!',
+
+                    body: 'You have defeated the dungeon!'
+
+                },
+
+                lose: {
+
+                    title: 'You Have Fallen',
+
+                    body: 'The dungeon has beaten you this time, Adventurer.'
+
+                },
+
+                draw: {
+
+                    title: 'A Pyrrhic Victory!',
+
+                    body: 'You struck down the final beast of the dungeon, but took a mortal blow in the process. The dungeon is cleared, though none survived to tell the tale!'
+
+                }
+
+            },
             gameTitle: 'Shaun of the Deck',
             location: 'The Pub',
             monster: 'Zombie',
