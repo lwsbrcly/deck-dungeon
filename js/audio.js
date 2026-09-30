@@ -1119,6 +1119,7 @@ let themeLoopToken = 0;
     playLoop();
   }
 
+  window.useItemSound = useItemSound;
   window.drinkSound = drinkSound;
   window.thrownAttackSound = thrownAttackSound;
   window.rangedAttackSound = rangedAttackSound;
