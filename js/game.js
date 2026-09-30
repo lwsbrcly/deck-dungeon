@@ -813,8 +813,6 @@ function clearPreviousMonsters() {
   );
   if (!stackCards.length) return;
 
-  discardSound();
-
   // Fade the real cards in place. Keeping them inside the previous-monster
   // stack preserves its grayscale styling; cloning them into document.body
   // would strip that inherited filter and create full-colour ghosts.
