@@ -670,9 +670,9 @@ let themeLoopToken = 0;
     shaun: {
       melody: {
         type: "sawtooth",
-        filter: 2100,
-        volume: 0.075,
-        distortion: 18,
+        filter: 2400,
+        volume: 0.065,
+        distortion: 5,
         attack: 0.008,
         release: 0.055
       },
