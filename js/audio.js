@@ -1,4 +1,6 @@
 let audioContext;
+let masterGain;
+let audioEnabled = localStorage.getItem("deckDungeonAudio") !== "off";
 let themeNodes = [];
 let themeLoopTimer = null;
 let themeLoopToken = 0;
@@ -6,6 +8,9 @@ let themeLoopToken = 0;
   function getAudioContext() {
     if (!audioContext) {
       audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = audioContext.createGain();
+      masterGain.gain.value = audioEnabled ? 1 : 0;
+      masterGain.connect(audioContext.destination);
     }
 
     if (audioContext.state === "suspended") {
@@ -15,7 +20,41 @@ let themeLoopToken = 0;
     return audioContext;
   }
 
-  function getAudioOutput(context) {\n    if (!masterGain) {\n      masterGain = context.createGain();\n      masterGain.gain.value = audioEnabled ? 1 : 0;\n      masterGain.connect(context.destination);\n    }\n    return masterGain;\n  }\n\n  function setAudioEnabled(enabled) {\n    audioEnabled = !!enabled;\n    localStorage.setItem("deckDungeonAudio", audioEnabled ? "on" : "off");\n\n    if (audioContext && masterGain) {\n      masterGain.gain.setTargetAtTime(audioEnabled ? 1 : 0, audioContext.currentTime, 0.015);\n    }\n\n    var toggle = document.getElementById("soundToggle");\n    var label = document.getElementById("soundToggleLabel");\n    if (toggle) toggle.setAttribute("aria-pressed", audioEnabled ? "true" : "false");\n    if (label) label.textContent = audioEnabled ? "Sound On" : "Sound Off";\n  }\n\n  function toggleAudio() {\n    setAudioEnabled(!audioEnabled);\n  }\n\n  function updateSoundToggle() {\n    var toggle = document.getElementById("soundToggle");\n    var label = document.getElementById("soundToggleLabel");\n    if (toggle) toggle.setAttribute("aria-pressed", audioEnabled ? "true" : "false");\n    if (label) label.textContent = audioEnabled ? "Sound On" : "Sound Off";\n  }\n\n  function makeNoiseBuffer(context, duration) {
+  function getAudioOutput(context) {
+    if (!masterGain) {
+      masterGain = context.createGain();
+      masterGain.gain.value = audioEnabled ? 1 : 0;
+      masterGain.connect(context.destination);
+    }
+    return masterGain;
+  }
+
+  function setAudioEnabled(enabled) {
+    audioEnabled = !!enabled;
+    localStorage.setItem("deckDungeonAudio", audioEnabled ? "on" : "off");
+
+    if (audioContext && masterGain) {
+      masterGain.gain.setTargetAtTime(audioEnabled ? 1 : 0, audioContext.currentTime, 0.015);
+    }
+
+    var toggle = document.getElementById("soundToggle");
+    var label = document.getElementById("soundToggleLabel");
+    if (toggle) toggle.setAttribute("aria-pressed", audioEnabled ? "true" : "false");
+    if (label) label.textContent = audioEnabled ? "Sound On" : "Sound Off";
+  }
+
+  function toggleAudio() {
+    setAudioEnabled(!audioEnabled);
+  }
+
+  function updateSoundToggle() {
+    var toggle = document.getElementById("soundToggle");
+    var label = document.getElementById("soundToggleLabel");
+    if (toggle) toggle.setAttribute("aria-pressed", audioEnabled ? "true" : "false");
+    if (label) label.textContent = audioEnabled ? "Sound On" : "Sound Off";
+  }
+
+  function makeNoiseBuffer(context, duration) {
     const buffer = context.createBuffer(
       1,
       context.sampleRate * duration,
@@ -1200,4 +1239,8 @@ let themeLoopToken = 0;
   window.rangedAttackSound = rangedAttackSound;
   window.playDeckDungeonThemeLoop = playDeckDungeonThemeLoop;
   window.stopDeckDungeonTheme = stopDeckDungeonTheme;
-\n  window.toggleAudio = toggleAudio;\n  window.setAudioEnabled = setAudioEnabled;\n
+
+  window.toggleAudio = toggleAudio;
+  window.setAudioEnabled = setAudioEnabled;
+
+  window.addEventListener("DOMContentLoaded", updateSoundToggle);
