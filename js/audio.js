@@ -149,48 +149,50 @@ let themeLoopToken = 0;
     const context = getAudioContext();
     const now = context.currentTime;
 
-    // Stylised arcade impact: a chunky "DOOJ" rather than a realistic hit.
+    // The hit is deliberately stylised rather than realistic:
+    // a sharp "D" followed by an extended, descending, fuzzy UGH tail.
     const main = context.createOscillator();
-    const sub = context.createOscillator();
+    const second = context.createOscillator();
+    const distortion = context.createWaveShaper();
+    const filter = context.createBiquadFilter();
     const gain = context.createGain();
 
-    main.type = "triangle";
-    main.frequency.setValueAtTime(155, now);
-    main.frequency.exponentialRampToValueAtTime(58, now + 0.16);
+    main.type = "sawtooth";
+    second.type = "triangle";
 
-    sub.type = "sine";
-    sub.frequency.setValueAtTime(78, now);
-    sub.frequency.exponentialRampToValueAtTime(38, now + 0.18);
+    main.frequency.setValueAtTime(220, now);
+    main.frequency.exponentialRampToValueAtTime(58, now + 0.72);
 
-    gain.gain.setValueAtTime(1.0, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+    second.frequency.setValueAtTime(115, now);
+    second.frequency.exponentialRampToValueAtTime(38, now + 0.72);
 
-    main.connect(gain);
-    sub.connect(gain);
+    // Slightly stronger than UGH so the initial D has some definition.
+    distortion.curve = makeDistortionCurve(240);
+    distortion.oversample = "2x";
+
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(1200, now);
+    filter.frequency.exponentialRampToValueAtTime(180, now + 0.72);
+
+    // Very quick synthetic attack = the "D".
+    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.exponentialRampToValueAtTime(0.48, now + 0.025);
+
+    // Hold the body, then let the whole thing sink away into the low end.
+    gain.gain.setValueAtTime(0.42, now + 0.16);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.82);
+
+    main.connect(distortion);
+    second.connect(distortion);
+    distortion.connect(filter);
+    filter.connect(gain);
     gain.connect(context.destination);
 
     main.start(now);
-    sub.start(now);
-    main.stop(now + 0.22);
-    sub.stop(now + 0.22);
+    second.start(now);
 
-    // A tiny bit of attack gives the sound a defined "D" at the front
-    // without turning it into a realistic smack.
-    const attack = context.createOscillator();
-    const attackGain = context.createGain();
-
-    attack.type = "square";
-    attack.frequency.setValueAtTime(300, now);
-    attack.frequency.exponentialRampToValueAtTime(110, now + 0.035);
-
-    attackGain.gain.setValueAtTime(0.16, now);
-    attackGain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
-
-    attack.connect(attackGain);
-    attackGain.connect(context.destination);
-
-    attack.start(now);
-    attack.stop(now + 0.05);
+    main.stop(now + 0.84);
+    second.stop(now + 0.84);
   }
 
   function ughSound() {
