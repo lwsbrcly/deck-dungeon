@@ -446,7 +446,7 @@ function refreshDungeon() {
 }
 
 function selectCard(i) {
-    if (state.over) return;
+    if (state.over || state.actionInProgress) return;
     state.selected = i;
     render();
 }
@@ -499,8 +499,13 @@ function cardHTML(c, customCornerText) {
     '</div>';
     }
     
-function removeSelected() {
-    var c = state.dungeon.splice(state.selected, 1)[0];
+function removeSelected(selectedIndex) {
+    if (selectedIndex === undefined) selectedIndex = state.selected;
+    if (selectedIndex === null || selectedIndex < 0 || selectedIndex >= state.dungeon.length) {
+      return null;
+    }
+
+    var c = state.dungeon.splice(selectedIndex, 1)[0];
     state.selected = null;
     state.justFled = false;
     var before = state.dungeon.length;
@@ -839,23 +844,45 @@ DeckDungeonAnimations.equip(cardEl, targetEl, {
 }
 
 function discardDungeonWeapon() {
-    if (state.over || state.selected === null) return;
-    var cardEl = getDungeonCardElement(state.selected);
+    if (state.over || state.selected === null || state.actionInProgress) return;
+
+    // Capture the selected card before the animation starts. The user cannot
+    // change selection while an action is resolving.
+    var selectedIndex = state.selected;
+    var cardEl = getDungeonCardElement(selectedIndex);
+    var discardedCard = state.dungeon[selectedIndex];
+
+    state.actionInProgress = true;
     saveState();
+
     DeckDungeonAnimations.discard(cardEl, null, {
       done: function() {
-        var c = removeSelected(); log('Discarded the ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').'); checkGame(); renderAfterAction();
+        var c = removeSelected(selectedIndex);
+        state.actionInProgress = false;
+        log('Discarded the ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').');
+        checkGame();
+        renderAfterAction();
       }
     });
 }
 
 function discardDungeonPotion() {
-    if (state.over || state.selected === null) return;
-    var cardEl = getDungeonCardElement(state.selected);
+    if (state.over || state.selected === null || state.actionInProgress) return;
+
+    var selectedIndex = state.selected;
+    var cardEl = getDungeonCardElement(selectedIndex);
+    var discardedCard = state.dungeon[selectedIndex];
+
+    state.actionInProgress = true;
     saveState();
+
     DeckDungeonAnimations.discard(cardEl, null, {
       done: function() {
-        var c = removeSelected(); log('Discarded the ' + c.name + ' (' + c.value + ' HP).'); checkGame(); renderAfterAction();
+        var c = removeSelected(selectedIndex);
+        state.actionInProgress = false;
+        log('Discarded the ' + c.name + ' (' + c.value + ' HP).');
+        checkGame();
+        renderAfterAction();
       }
     });
 }
