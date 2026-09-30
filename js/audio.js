@@ -184,103 +184,53 @@ let themeLoopToken = 0;
   }
 
 
+  let punchSampleBuffer = null;
+  let punchSampleLoading = null;
+
+  function loadPunchSample(context) {
+    if (punchSampleBuffer) return Promise.resolve(punchSampleBuffer);
+    if (punchSampleLoading) return punchSampleLoading;
+
+    punchSampleLoading = fetch("assets/audio/punch-6.mp3")
+      .then(response => {
+        if (!response.ok) throw new Error("Failed to load punch sample");
+        return response.arrayBuffer();
+      })
+      .then(data => context.decodeAudioData(data))
+      .then(buffer => {
+        punchSampleBuffer = buffer;
+        return buffer;
+      })
+      .catch(error => {
+        console.warn("Punch sample could not be loaded:", error);
+        punchSampleLoading = null;
+        return null;
+      });
+
+    return punchSampleLoading;
+  }
+
   function punchSound() {
     const context = getAudioContext();
     const now = context.currentTime;
     const output = getAudioOutput(context);
 
-    // Short, physical punch: low thump + dry crunchy impact + tiny tail.
-    // Kept deliberately compact so it reads as a hit rather than a sustained sound.
+    // Use the supplied punch sample directly. It already has the physical
+    // whoosh + impact character we want, so there is no synthetic punch layer.
+    loadPunchSample(context).then(buffer => {
+      if (!buffer) return;
 
-    // Fast air whoosh underneath the hit. This is what gives the punch its sense of
-    // movement: a short band of noise sweeps upward into the impact, then disappears.
-    const whoosh = context.createBufferSource();
-    const whooshFilter = context.createBiquadFilter();
-    const whooshGain = context.createGain();
+      const source = context.createBufferSource();
+      const gain = context.createGain();
 
-    whoosh.buffer = makeNoiseBuffer(context, 0.13);
-    whooshFilter.type = "bandpass";
-    whooshFilter.frequency.setValueAtTime(260, now - 0.045);
-    whooshFilter.frequency.exponentialRampToValueAtTime(1450, now + 0.045);
-    whooshFilter.frequency.exponentialRampToValueAtTime(700, now + 0.12);
-    whooshFilter.Q.value = 0.75;
+      source.buffer = buffer;
+      gain.gain.value = 1;
 
-    whooshGain.gain.setValueAtTime(0.001, now - 0.045);
-    whooshGain.gain.exponentialRampToValueAtTime(0.14, now - 0.012);
-    whooshGain.gain.exponentialRampToValueAtTime(0.22, now + 0.015);
-    whooshGain.gain.exponentialRampToValueAtTime(0.001, now + 0.115);
+      source.connect(gain);
+      gain.connect(output);
 
-    whoosh.connect(whooshFilter);
-    whooshFilter.connect(whooshGain);
-    whooshGain.connect(output);
-    whoosh.start(now - 0.05);
-    whoosh.stop(now + 0.13);
-
-    // Low body of the impact.
-    const thump = context.createOscillator();
-    const thumpFilter = context.createBiquadFilter();
-    const thumpGain = context.createGain();
-
-    thump.type = "sine";
-    thump.frequency.setValueAtTime(115, now);
-    thump.frequency.exponentialRampToValueAtTime(52, now + 0.12);
-
-    thumpFilter.type = "lowpass";
-    thumpFilter.frequency.value = 500;
-
-    thumpGain.gain.setValueAtTime(0.001, now);
-    thumpGain.gain.exponentialRampToValueAtTime(0.42, now + 0.006);
-    thumpGain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
-
-    thump.connect(thumpFilter);
-    thumpFilter.connect(thumpGain);
-    thumpGain.connect(output);
-    thump.start(now);
-    thump.stop(now + 0.16);
-
-    // Dry, crunchy middle gives the hit its physical "WHACK" character.
-    const crack = context.createBufferSource();
-    const crackFilter = context.createBiquadFilter();
-    const crackGain = context.createGain();
-
-    crack.buffer = makeNoiseBuffer(context, 0.075);
-    crackFilter.type = "bandpass";
-    crackFilter.frequency.setValueAtTime(1250, now);
-    crackFilter.frequency.exponentialRampToValueAtTime(650, now + 0.07);
-    crackFilter.Q.value = 0.7;
-
-    crackGain.gain.setValueAtTime(0.001, now);
-    crackGain.gain.exponentialRampToValueAtTime(0.34, now + 0.004);
-    crackGain.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
-
-    crack.connect(crackFilter);
-    crackFilter.connect(crackGain);
-    crackGain.connect(output);
-    crack.start(now);
-    crack.stop(now + 0.08);
-
-    // Very short mid-frequency knock adds a little definition without making it tonal.
-    const knock = context.createOscillator();
-    const knockFilter = context.createBiquadFilter();
-    const knockGain = context.createGain();
-
-    knock.type = "triangle";
-    knock.frequency.setValueAtTime(210, now);
-    knock.frequency.exponentialRampToValueAtTime(95, now + 0.095);
-
-    knockFilter.type = "bandpass";
-    knockFilter.frequency.value = 520;
-    knockFilter.Q.value = 0.8;
-
-    knockGain.gain.setValueAtTime(0.001, now);
-    knockGain.gain.exponentialRampToValueAtTime(0.16, now + 0.004);
-    knockGain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
-
-    knock.connect(knockFilter);
-    knockFilter.connect(knockGain);
-    knockGain.connect(output);
-    knock.start(now);
-    knock.stop(now + 0.12);
+      source.start(context.currentTime);
+    });
   }
 
   function ughSound() {
