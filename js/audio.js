@@ -676,7 +676,7 @@ let themeLoopToken = 0;
         attack: 0.008,
         release: 0.055
       },
-      bass: { type: "sawtooth", filter: 850, volume: 0.13 },
+      bass: { type: "triangle", filter: 700, volume: 0.075 },
       drum: { type: "triangle", start: 125, end: 55, volume: 0.20 }
     },
 
