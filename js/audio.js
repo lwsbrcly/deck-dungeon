@@ -647,53 +647,54 @@ let themeLoopToken = 0;
     const now = context.currentTime;
 
     function makeGulp(start, pitch, volume) {
-      // Soft low-mid "gulp" made from a rounded tone plus a tiny wet/noisy edge.
+      // Brighter, more audible gulp: a rounded tone with a small wet/noisy edge.
       const tone = context.createOscillator();
       const toneFilter = context.createBiquadFilter();
       const toneGain = context.createGain();
 
       tone.type = "triangle";
       tone.frequency.setValueAtTime(pitch, start);
-      tone.frequency.exponentialRampToValueAtTime(pitch * 0.62, start + 0.16);
+      tone.frequency.exponentialRampToValueAtTime(pitch * 0.64, start + 0.13);
 
       toneFilter.type = "lowpass";
-      toneFilter.frequency.setValueAtTime(850, start);
-      toneFilter.frequency.exponentialRampToValueAtTime(420, start + 0.16);
+      toneFilter.frequency.setValueAtTime(1150, start);
+      toneFilter.frequency.exponentialRampToValueAtTime(520, start + 0.13);
 
       toneGain.gain.setValueAtTime(0.001, start);
-      toneGain.gain.exponentialRampToValueAtTime(volume, start + 0.012);
-      toneGain.gain.exponentialRampToValueAtTime(0.001, start + 0.18);
+      toneGain.gain.exponentialRampToValueAtTime(volume, start + 0.010);
+      toneGain.gain.exponentialRampToValueAtTime(0.001, start + 0.145);
 
       tone.connect(toneFilter);
       toneFilter.connect(toneGain);
       toneGain.connect(context.destination);
       tone.start(start);
-      tone.stop(start + 0.2);
+      tone.stop(start + 0.16);
 
       const noise = context.createBufferSource();
       const noiseFilter = context.createBiquadFilter();
       const noiseGain = context.createGain();
 
-      noise.buffer = makeNoiseBuffer(context, 0.055);
+      noise.buffer = makeNoiseBuffer(context, 0.045);
       noiseFilter.type = "bandpass";
-      noiseFilter.frequency.setValueAtTime(500, start);
-      noiseFilter.frequency.exponentialRampToValueAtTime(900, start + 0.05);
+      noiseFilter.frequency.setValueAtTime(700, start);
+      noiseFilter.frequency.exponentialRampToValueAtTime(1250, start + 0.045);
       noiseFilter.Q.value = 0.7;
 
       noiseGain.gain.setValueAtTime(0.001, start);
-      noiseGain.gain.exponentialRampToValueAtTime(volume * 0.32, start + 0.008);
-      noiseGain.gain.exponentialRampToValueAtTime(0.001, start + 0.06);
+      noiseGain.gain.exponentialRampToValueAtTime(volume * 0.36, start + 0.007);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, start + 0.05);
 
       noise.connect(noiseFilter);
       noiseFilter.connect(noiseGain);
       noiseGain.connect(context.destination);
       noise.start(start);
-      noise.stop(start + 0.065);
+      noise.stop(start + 0.055);
     }
 
-    // Two distinct swallows to match the two-part drinking animation.
-    makeGulp(now, 210, 0.22);
-    makeGulp(now + 0.28, 185, 0.20);
+    // Three quick swallows across the same ~0.28s window as the two crunches.
+    makeGulp(now,        275, 0.29);
+    makeGulp(now + 0.13, 250, 0.28);
+    makeGulp(now + 0.26, 225, 0.27);
 
     // Same healing ping as eating, deliberately unchanged.
     const sparkleNotes = [
