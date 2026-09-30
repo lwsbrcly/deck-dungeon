@@ -384,8 +384,8 @@ let themeLoopToken = 0;
 
     suck.buffer = makeNoiseBuffer(context, 0.20);
     suckFilter.type = "bandpass";
-    suckFilter.frequency.setValueAtTime(1500, now);
-    suckFilter.frequency.exponentialRampToValueAtTime(500, now + 0.16);
+    suckFilter.frequency.setValueAtTime(900, now);
+    suckFilter.frequency.exponentialRampToValueAtTime(1750, now + 0.16);
     suckFilter.Q.value = 0.65;
 
     // Quiet start, rapid draw-in, then an abrupt cut = "WHHP".
@@ -405,12 +405,12 @@ let themeLoopToken = 0;
     const bodyGain = context.createGain();
 
     body.type = "triangle";
-    body.frequency.setValueAtTime(420, now);
-    body.frequency.exponentialRampToValueAtTime(120, now + 0.17);
+    body.frequency.setValueAtTime(180, now);
+    body.frequency.exponentialRampToValueAtTime(430, now + 0.17)
 
     bodyFilter.type = "lowpass";
-    bodyFilter.frequency.setValueAtTime(900, now);
-    bodyFilter.frequency.exponentialRampToValueAtTime(320, now + 0.17);
+    bodyFilter.frequency.setValueAtTime(400, now);
+    bodyFilter.frequency.exponentialRampToValueAtTime(950, now + 0.17);
 
     bodyGain.gain.setValueAtTime(0.001, now);
     bodyGain.gain.exponentialRampToValueAtTime(0.16, now + 0.08);
