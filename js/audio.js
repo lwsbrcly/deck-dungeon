@@ -642,6 +642,85 @@ let themeLoopToken = 0;
       }
   }
 
+  function drinkSound() {
+    const context = getAudioContext();
+    const now = context.currentTime;
+
+    function makeGulp(start, pitch, volume) {
+      // Soft low-mid "gulp" made from a rounded tone plus a tiny wet/noisy edge.
+      const tone = context.createOscillator();
+      const toneFilter = context.createBiquadFilter();
+      const toneGain = context.createGain();
+
+      tone.type = "triangle";
+      tone.frequency.setValueAtTime(pitch, start);
+      tone.frequency.exponentialRampToValueAtTime(pitch * 0.62, start + 0.16);
+
+      toneFilter.type = "lowpass";
+      toneFilter.frequency.setValueAtTime(850, start);
+      toneFilter.frequency.exponentialRampToValueAtTime(420, start + 0.16);
+
+      toneGain.gain.setValueAtTime(0.001, start);
+      toneGain.gain.exponentialRampToValueAtTime(volume, start + 0.012);
+      toneGain.gain.exponentialRampToValueAtTime(0.001, start + 0.18);
+
+      tone.connect(toneFilter);
+      toneFilter.connect(toneGain);
+      toneGain.connect(context.destination);
+      tone.start(start);
+      tone.stop(start + 0.2);
+
+      const noise = context.createBufferSource();
+      const noiseFilter = context.createBiquadFilter();
+      const noiseGain = context.createGain();
+
+      noise.buffer = makeNoiseBuffer(context, 0.055);
+      noiseFilter.type = "bandpass";
+      noiseFilter.frequency.setValueAtTime(500, start);
+      noiseFilter.frequency.exponentialRampToValueAtTime(900, start + 0.05);
+      noiseFilter.Q.value = 0.7;
+
+      noiseGain.gain.setValueAtTime(0.001, start);
+      noiseGain.gain.exponentialRampToValueAtTime(volume * 0.32, start + 0.008);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, start + 0.06);
+
+      noise.connect(noiseFilter);
+      noiseFilter.connect(noiseGain);
+      noiseGain.connect(context.destination);
+      noise.start(start);
+      noise.stop(start + 0.065);
+    }
+
+    // Two distinct swallows to match the two-part drinking animation.
+    makeGulp(now, 210, 0.22);
+    makeGulp(now + 0.28, 185, 0.20);
+
+    // Same healing ping as eating, deliberately unchanged.
+    const sparkleNotes = [
+      { frequency: 1047, delay: 0.48 },
+      { frequency: 1319, delay: 0.55 },
+      { frequency: 1568, delay: 0.62 }
+    ];
+
+    for (const note of sparkleNotes) {
+      const sparkle = context.createOscillator();
+      const gain = context.createGain();
+      const start = now + note.delay;
+
+      sparkle.type = "sine";
+      sparkle.frequency.value = note.frequency;
+
+      gain.gain.setValueAtTime(0.001, start);
+      gain.gain.exponentialRampToValueAtTime(0.14, start + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.25);
+
+      sparkle.connect(gain);
+      gain.connect(context.destination);
+      sparkle.start(start);
+      sparkle.stop(start + 0.28);
+    }
+  }
+
   function fleeSound() {
       const context = getAudioContext();
       const now = context.currentTime;
@@ -988,6 +1067,7 @@ let themeLoopToken = 0;
     playLoop();
   }
 
+  window.drinkSound = drinkSound;
   window.thrownAttackSound = thrownAttackSound;
   window.rangedAttackSound = rangedAttackSound;
   window.playDeckDungeonThemeLoop = playDeckDungeonThemeLoop;
