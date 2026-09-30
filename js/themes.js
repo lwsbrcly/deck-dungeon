@@ -749,7 +749,7 @@ const THEMES = {
 
                     title: 'You put up a good fight!',
 
-                    body: 'The threats are subdued. For now. Too bad you couldn\'t send out that HAZARDOUS SHIP alert to warn the others...!'
+                    body: 'The threats are subdued. Too bad you couldn\'t send out that HAZARDOUS SHIP alert to warn the others...!'
 
                 }
 
