@@ -444,9 +444,10 @@ function refreshDungeon() {
       // reported that its animation is finished. Then wait one paint frame
       // before starting the first incoming card.
       render();
-      animateRoomEntry();
-      state.actionInProgress = false;
-      render();
+      animateRoomEntry().then(function() {
+        state.actionInProgress = false;
+        render();
+      });
     });
 }
 
@@ -720,33 +721,35 @@ function waitForAnimation(el) {
     });
 }
 
-async function animateRoomEntry(skipFirst) {
+function animateRoomEntry(skipFirst) {
   var cards = Array.prototype.slice.call(
     document.querySelectorAll('#dungeon .dungeon-card-wrap .card:not(.empty)')
   );
   var startIndex = skipFirst ? 1 : 0;
   var incomingCards = cards.slice(startIndex);
 
-  if (!incomingCards.length) return;
+  if (!incomingCards.length) return Promise.resolve();
 
   var deckEl = document.getElementById('p1Deck');
   var deckCardEl = deckEl ? deckEl.querySelector('.deck-card') : null;
   var deckDepth = Math.ceil(state.deck.length / 3);
   var deckOffset = -(deckDepth / 2);
 
-  DeckDungeonAnimations.deal(
-    incomingCards,
-    deckCardEl || deckEl,
-    incomingCards,
-    {
-      delay: 50,
-      duration: 650,
-      startOffsetX: deckOffset,
-      startOffsetY: deckOffset,
-      sound: typeof dealCardsSound === 'function' ? dealCardsSound : null,
-      done: function() {}
-    }
-  );
+  return new Promise(function(resolve) {
+    DeckDungeonAnimations.deal(
+      incomingCards,
+      deckCardEl || deckEl,
+      incomingCards,
+      {
+        delay: 50,
+        duration: 650,
+        startOffsetX: deckOffset,
+        startOffsetY: deckOffset,
+        sound: typeof dealCardsSound === 'function' ? dealCardsSound : null,
+        done: resolve
+      }
+    );
+  });
 }
 async function animateFlee(cards) {
   if (!cards || !cards.length) return;
