@@ -925,6 +925,7 @@ function drinkDirectPotion(target) {
       });
     } else if (c.animation === 'drink') {
       DeckDungeonAnimations.drink(cardEl, targetEl, {
+        sound: typeof drinkSound === 'function' ? drinkSound : null,
         done: finishConsume
       });
     } else {
