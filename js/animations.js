@@ -815,13 +815,15 @@
     hide(weapon);
     clone.classList.add('dd-thrown-active');
 
+    // The weapon sound belongs to the throw itself, not the impact.
+    if (options.sound || typeof global.thrownAttackSound === 'function') {
+      var sound = options.sound || global.thrownAttackSound;
+      sound();
+    }
+
     // The hit happens at the end of the fast launch, then the thrown card
     // fades out rather than returning to the slot.
     window.setTimeout(function () {
-      if (options.sound || typeof global.punchSound === 'function') {
-        var sound = options.sound || global.punchSound;
-        sound();
-      }
       impact('hit', monsterCenter, 280);
       shake(160);
       if (options.onHit) options.onHit();
