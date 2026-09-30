@@ -823,7 +823,7 @@ let themeLoopTimer = null;
       // The four-pass arrangement occupies 16 beats per pass.
       // Restart slightly before the final scheduled notes have finished so
       // the tune can continue without an audible gap.
-      const loopDuration = 16 * 4 * 0.42 * 1000;
+      const loopDuration = 71 * 0.42 * 1000;
       themeLoopTimer = setTimeout(playLoop, loopDuration);
     }
 
