@@ -1022,7 +1022,11 @@ if (
       weaponEl,
       playerEl,
       targetEl,
-      { done: done, slotIndex: slotIndex }
+      {
+        done: done,
+        slotIndex: slotIndex,
+        sound: typeof punchSound === 'function' ? punchSound : null
+      }
     );
     return;
   }
