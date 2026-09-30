@@ -91,6 +91,11 @@ function selectTheme(theme) {
     selectedTheme = theme;
     applySelectedTheme();
     preloadThemeAssets(selectedTheme);
+
+    if (typeof window.playDeckDungeonThemeLoop === 'function') {
+      window.playDeckDungeonThemeLoop();
+    }
+
     showScreen('rules');
     showSetupScreen();
 }
@@ -104,6 +109,9 @@ function showScreen(screenId) {
 }
 
 function enterGame() {
+    if (typeof window.stopDeckDungeonTheme === 'function') {
+      window.stopDeckDungeonTheme();
+    }
     showScreen('game-ui');
     startGame();
 }
