@@ -669,9 +669,10 @@
     hide(monster);
     clone.classList.add('dd-fist-fight-active');
 
+    // Start the first hurt sound immediately with the animation.
     if (options.sound) {
-      window.setTimeout(function () { options.sound(); }, 140);
-      window.setTimeout(function () { options.sound(); }, 360);
+      options.sound();
+      window.setTimeout(function () { options.sound(); }, 220);
     }
 
     window.setTimeout(function () {
