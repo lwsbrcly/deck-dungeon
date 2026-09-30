@@ -612,208 +612,164 @@ let themeLoopTimer = null;
     themeNodes = [];
   }
 
-  function deckDungeonTheme() {
+  const THEME_TUNE = {
+    beat: 0.42,
+
+    notes: {
+      A1: 55.00, Bb1: 58.27, C2: 65.41, D2: 73.42, A2: 110.00,
+      A3: 220.00, D4: 293.66, E4: 329.63, F4: 349.23,
+      G4: 392.00, A4: 440.00, C5: 523.25, D5: 587.33, F5: 698.46
+    },
+
+    melody: [
+      ["D4", 0, 1], ["F4", 1, 0.5], ["A4", 1.5, 0.5],
+      ["G4", 2, 1], ["F4", 3, 0.5], ["E4", 3.5, 0.5],
+      ["D4", 4, 1], ["A3", 5, 0.5], ["D4", 5.5, 0.5],
+      ["F4", 6, 1], ["G4", 7, 0.5], ["A4", 7.5, 0.5],
+      ["C5", 8, 1], ["A4", 9, 0.5], ["G4", 9.5, 0.5],
+      ["F4", 10, 1], ["E4", 11, 0.5], ["D4", 11.5, 0.5],
+      ["A4", 12, 1], ["C5", 13, 0.5], ["D5", 13.5, 0.5],
+      ["F5", 14, 1.5], ["D5", 15.5, 0.5],
+      ["A4", 16, 0.5], ["C5", 16.5, 0.5], ["D5", 17, 6]
+    ],
+
+    variation: [
+      ["D4", 0, 0.5], ["F4", 0.5, 0.5], ["A4", 1, 1],
+      ["G4", 2.5, 0.5], ["F4", 3, 0.5], ["E4", 3.5, 0.5],
+      ["D4", 4, 1], ["A3", 5, 0.5], ["D4", 5.5, 0.5],
+      ["F4", 6, 0.5], ["G4", 6.5, 0.5], ["A4", 7, 1],
+      ["C5", 8, 0.5], ["D4", 8.5, 0.5], ["C5", 9, 0.5],
+      ["A4", 9.5, 0.5], ["G4", 10, 1], ["F4", 11, 0.5],
+      ["E4", 11.5, 0.5], ["A4", 12, 0.5], ["C5", 12.5, 0.5],
+      ["D5", 13, 1], ["F4", 14, 1], ["E4", 15, 0.5],
+      ["D4", 15.5, 0.5], ["A4", 16, 0.5], ["C5", 16.5, 0.5],
+      ["D5", 17, 3]
+    ],
+
+    bass: [
+      ["D2", 0, 2], ["A2", 2, 2], ["Bb1", 4, 2], ["A1", 6, 2],
+      ["D2", 8, 2], ["C2", 10, 2], ["Bb1", 12, 2], ["A1", 14, 2],
+      ["D2", 16, 2]
+    ]
+  };
+
+  const THEME_INSTRUMENTS = {
+    dungeon: {
+      melody: { type: "triangle", filter: 2400, volume: 0.14 },
+      bass: { type: "sawtooth", filter: 1500, volume: 0.10 },
+      drum: { type: "sine", start: 105, end: 42, volume: 0.24 }
+    },
+
+    shaun: {
+      melody: { type: "square", filter: 1800, volume: 0.10 },
+      bass: { type: "sawtooth", filter: 900, volume: 0.13 },
+      drum: { type: "triangle", start: 125, end: 55, volume: 0.20 }
+    },
+
+    space: {
+      melody: { type: "sine", filter: 3200, volume: 0.12 },
+      bass: { type: "sawtooth", filter: 700, volume: 0.09 },
+      drum: { type: "sine", start: 80, end: 28, volume: 0.20 }
+    },
+
+    pirate: {
+      melody: { type: "sawtooth", filter: 1200, volume: 0.08 },
+      bass: { type: "triangle", filter: 900, volume: 0.14 },
+      drum: { type: "square", start: 115, end: 48, volume: 0.16 }
+    },
+
+    ninja: {
+      melody: { type: "triangle", filter: 3600, volume: 0.11 },
+      bass: { type: "sine", filter: 850, volume: 0.11 },
+      drum: { type: "sine", start: 150, end: 35, volume: 0.17 }
+    }
+  };
+
+  function deckDungeonTheme(themeKey) {
     const context = getAudioContext();
     const now = context.currentTime;
+    const beat = THEME_TUNE.beat;
+    const preset = THEME_INSTRUMENTS[themeKey] || THEME_INSTRUMENTS.dungeon;
 
-    const beat = 0.42;
-
-    const noteFrequencies = {
-      "A1": 55.00,
-      "Bb1": 58.27,
-      "C2": 65.41,
-      "D2": 73.42,
-      "A2": 110.00,
-
-      "A3": 220.00,
-      "D4": 293.66,
-      "E4": 329.63,
-      "F4": 349.23,
-      "G4": 392.00,
-      "A4": 440.00,
-      "C5": 523.25,
-      "D5": 587.33,
-      "F5": 698.46
-    };
-
-    // D minor-ish melody
-    const mainTheme = [
-      ["D4", 0, 1],
-      ["F4", 1, 0.5],
-      ["A4", 1.5, 0.5],
-      ["G4", 2, 1],
-      ["F4", 3, 0.5],
-      ["E4", 3.5, 0.5],
-
-      ["D4", 4, 1],
-      ["A3", 5, 0.5],
-      ["D4", 5.5, 0.5],
-      ["F4", 6, 1],
-      ["G4", 7, 0.5],
-      ["A4", 7.5, 0.5],
-
-      ["C5", 8, 1],
-      ["A4", 9, 0.5],
-      ["G4", 9.5, 0.5],
-      ["F4", 10, 1],
-      ["E4", 11, 0.5],
-      ["D4", 11.5, 0.5],
-
-      ["A4", 12, 1],
-      ["C5", 13, 0.5],
-      ["D5", 13.5, 0.5],
-      ["F5", 14, 1.5],
-      ["D5", 15.5, 0.5],
-
-      ["A4", 16, 0.5],
-      ["C5", 16.5, 0.5],
-      ["D5", 17, 6]
-    ];
-
-    const variation = [
-      ["D4", 0, 0.5],
-      ["F4", 0.5, 0.5],
-      ["A4", 1, 1],
-      ["G4", 2.5, 0.5],
-      ["F4", 3, 0.5],
-      ["E4", 3.5, 0.5],
-
-      ["D4", 4, 1],
-      ["A3", 5, 0.5],
-      ["D4", 5.5, 0.5],
-      ["F4", 6, 0.5],
-      ["G4", 6.5, 0.5],
-      ["A4", 7, 1],
-
-      ["C5", 8, 0.5],
-      ["D4", 8.5, 0.5],
-      ["C5", 9, 0.5],
-      ["A4", 9.5, 0.5],
-      ["G4", 10, 1],
-      ["F4", 11, 0.5],
-      ["E4", 11.5, 0.5],
-
-      ["A4", 12, 0.5],
-      ["C5", 12.5, 0.5],
-      ["D5", 13, 1],
-      ["F4", 14, 1],
-      ["E4", 15, 0.5],
-      ["D4", 15.5, 0.5],
-
-      ["A4", 16, 0.5],
-      ["C5", 16.5, 0.5],
-      ["D5", 17, 3]
-    ];
-
-    // Low medieval-sounding bass notes
-    const bass = [
-      ["D2", 0, 2],
-      ["A2", 2, 2],
-      ["Bb1", 4, 2],
-      ["A1", 6, 2],
-
-      ["D2", 8, 2],
-      ["C2", 10, 2],
-      ["Bb1", 12, 2],
-      ["A1", 14, 2],
-
-      ["D2", 16, 2]
-    ];
-
-    function playNote(noteName, startBeat, length, type, volume) {
-      const frequency = noteFrequencies[noteName];
+    function playNote(noteName, startBeat, length, instrument) {
+      const frequency = THEME_TUNE.notes[noteName];
       const start = now + startBeat * beat;
       const end = start + length * beat;
-
       const oscillator = context.createOscillator();
       const filter = context.createBiquadFilter();
       const gain = context.createGain();
 
-      oscillator.type = type;
+      oscillator.type = instrument.type;
       oscillator.frequency.value = frequency;
-
       filter.type = "lowpass";
-      filter.frequency.value = type === "sawtooth" ? 1500 : 2400;
+      filter.frequency.value = instrument.filter;
 
       gain.gain.setValueAtTime(0.001, start);
-      gain.gain.exponentialRampToValueAtTime(volume, start + 0.025);
-      gain.gain.setValueAtTime(volume * 0.75, end - 0.08);
+      gain.gain.exponentialRampToValueAtTime(instrument.volume, start + 0.025);
+      gain.gain.setValueAtTime(instrument.volume * 0.75, end - 0.08);
       gain.gain.exponentialRampToValueAtTime(0.001, end);
 
       oscillator.connect(filter);
       filter.connect(gain);
       gain.connect(context.destination);
-
       oscillator.start(start);
       oscillator.stop(end + 0.03);
       themeNodes.push(oscillator);
     }
 
     function playDrum(start) {
+      const instrument = preset.drum;
       const drum = context.createOscillator();
       const gain = context.createGain();
 
-      drum.type = "sine";
-
-      drum.frequency.setValueAtTime(105, start);
-      drum.frequency.exponentialRampToValueAtTime(42, start + 0.2);
+      drum.type = instrument.type;
+      drum.frequency.setValueAtTime(instrument.start, start);
+      drum.frequency.exponentialRampToValueAtTime(instrument.end, start + 0.2);
 
       gain.gain.setValueAtTime(0.001, start);
-      gain.gain.exponentialRampToValueAtTime(0.24, start + 0.012);
+      gain.gain.exponentialRampToValueAtTime(instrument.volume, start + 0.012);
       gain.gain.exponentialRampToValueAtTime(0.001, start + 0.32);
 
       drum.connect(gain);
       gain.connect(context.destination);
-
       drum.start(start);
       drum.stop(start + 0.27);
       themeNodes.push(drum);
     }
 
-    const passLength = 16; // beats per complete theme pass
+    const passLength = 16;
     const totalPasses = 4;
 
-    // Pass 1: original
-    mainTheme.forEach(([note, start, length]) => {
-      playNote(note, start, length, "triangle", 0.14);
-    });
+    THEME_TUNE.melody.forEach(([note, start, length]) =>
+      playNote(note, start, length, preset.melody)
+    );
 
-    // Pass 2: original
-    mainTheme.forEach(([note, start, length]) => {
-      playNote(note, start + passLength, length, "triangle", 0.14);
-    });
+    THEME_TUNE.melody.forEach(([note, start, length]) =>
+      playNote(note, start + passLength, length, preset.melody)
+    );
 
-    // Pass 3: variation
-    variation.forEach(([note, start, length]) => {
-      playNote(note, start + passLength * 2, length, "triangle", 0.16);
-    });
+    THEME_TUNE.variation.forEach(([note, start, length]) =>
+      playNote(note, start + passLength * 2, length, preset.melody)
+    );
 
-    // Pass 4: original, slightly stronger
-    mainTheme.forEach(([note, start, length]) => {
-      playNote(note, start + passLength * 3, length, "triangle", 0.18);
-    });
+    THEME_TUNE.melody.forEach(([note, start, length]) =>
+      playNote(note, start + passLength * 3, length, {
+        type: preset.melody.type,
+        filter: preset.melody.filter,
+        volume: preset.melody.volume * 1.28
+      })
+    );
 
-    // Bass under all four passes
     for (let pass = 0; pass < totalPasses; pass++) {
-      bass.forEach(([note, start, length]) => {
-        playNote(
-          note,
-          start + pass * passLength,
-          length,
-          "sawtooth",
-          0.10
-        );
-      });
-    }
+      THEME_TUNE.bass.forEach(([note, start, length]) =>
+        playNote(note, start + pass * passLength, length, preset.bass)
+      );
 
-    // Drum pulse under all four passes
-    for (let pass = 0; pass < totalPasses; pass++) {
-      [0, 4, 8, 12, 16].forEach((beatNumber) => {
-        playDrum(now + (pass * passLength + beatNumber) * beat);
-      });
+      [0, 4, 8, 12, 16].forEach(beatNumber =>
+        playDrum(now + (pass * passLength + beatNumber) * beat)
+      );
     }
   }
-
 
   function playDeckDungeonThemeLoop() {
     stopDeckDungeonTheme();
