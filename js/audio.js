@@ -149,61 +149,48 @@ let themeLoopToken = 0;
     const context = getAudioContext();
     const now = context.currentTime;
 
-    // Low body: the weight of the impact.
-    const body = context.createOscillator();
-    const bodyGain = context.createGain();
+    // Stylised arcade impact: a chunky "DOOJ" rather than a realistic hit.
+    const main = context.createOscillator();
+    const sub = context.createOscillator();
+    const gain = context.createGain();
 
-    body.type = "sine";
-    body.frequency.setValueAtTime(145, now);
-    body.frequency.exponentialRampToValueAtTime(55, now + 0.13);
+    main.type = "triangle";
+    main.frequency.setValueAtTime(155, now);
+    main.frequency.exponentialRampToValueAtTime(58, now + 0.16);
 
-    bodyGain.gain.setValueAtTime(1.15, now);
-    bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.19);
+    sub.type = "sine";
+    sub.frequency.setValueAtTime(78, now);
+    sub.frequency.exponentialRampToValueAtTime(38, now + 0.18);
 
-    body.connect(bodyGain);
-    bodyGain.connect(context.destination);
+    gain.gain.setValueAtTime(1.0, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
 
-    body.start(now);
-    body.stop(now + 0.19);
+    main.connect(gain);
+    sub.connect(gain);
+    gain.connect(context.destination);
 
-    // Midrange "meat" — stops it sounding like a clean wooden knock.
-    const knock = context.createOscillator();
-    const knockGain = context.createGain();
+    main.start(now);
+    sub.start(now);
+    main.stop(now + 0.22);
+    sub.stop(now + 0.22);
 
-    knock.type = "triangle";
-    knock.frequency.setValueAtTime(240, now);
-    knock.frequency.exponentialRampToValueAtTime(90, now + 0.09);
+    // A tiny bit of attack gives the sound a defined "D" at the front
+    // without turning it into a realistic smack.
+    const attack = context.createOscillator();
+    const attackGain = context.createGain();
 
-    knockGain.gain.setValueAtTime(0.55, now);
-    knockGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+    attack.type = "square";
+    attack.frequency.setValueAtTime(300, now);
+    attack.frequency.exponentialRampToValueAtTime(110, now + 0.035);
 
-    knock.connect(knockGain);
-    knockGain.connect(context.destination);
+    attackGain.gain.setValueAtTime(0.16, now);
+    attackGain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
 
-    knock.start(now);
-    knock.stop(now + 0.12);
+    attack.connect(attackGain);
+    attackGain.connect(context.destination);
 
-    // Very short impact burst: enough attack to make it feel like a punch,
-    // without the bright "slap" from the previous version.
-    const noise = context.createBufferSource();
-    const filter = context.createBiquadFilter();
-    const noiseGain = context.createGain();
-
-    noise.buffer = makeNoiseBuffer(context, 0.075);
-
-    filter.type = "bandpass";
-    filter.frequency.setValueAtTime(700, now);
-    filter.Q.value = 0.7;
-
-    noiseGain.gain.setValueAtTime(0.42, now);
-    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.085);
-
-    noise.connect(filter);
-    filter.connect(noiseGain);
-    noiseGain.connect(context.destination);
-
-    noise.start(now);
-    noise.stop(now + 0.075);
+    attack.start(now);
+    attack.stop(now + 0.05);
   }
 
   function ughSound() {
