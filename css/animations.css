@@ -45,19 +45,12 @@
 }
 
 @keyframes dd-animation-move {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(var(--move-x), var(--move-y), 0);
-  }
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(var(--move-x), var(--move-y), 0); }
 }
 
 /* -------------------------------------------------------------------------
  * Equip / Use
- *
- * These are the ONLY animations which leave the tabletop:
- * lift → travel → slam → settle.
  * ------------------------------------------------------------------------- */
 
 .dd-lift-travel-slam-clone {
@@ -96,37 +89,19 @@
 }
 
 @keyframes dd-melee-lift-slam-return {
-  0% {
-    transform: translate3d(0,0,0) scale(1);
-  }
-
-  12% {
-    transform: translate3d(0,-8px,0) scale(var(--lift-scale,1.08));
-  }
-
+  0% { transform: translate3d(0,0,0) scale(1); }
+  12% { transform: translate3d(0,-8px,0) scale(var(--lift-scale,1.08)); }
   50% {
-    transform:
-      translate3d(var(--move-x),var(--move-y),0)
-      scale(var(--lift-scale,1.08));
+    transform: translate3d(var(--move-x),var(--move-y),0) scale(var(--lift-scale,1.08));
   }
-
   56% {
-    transform:
-      translate3d(var(--move-x),var(--move-y),0)
-      scale(.96);
+    transform: translate3d(var(--move-x),var(--move-y),0) scale(.96);
   }
-
   62% {
-    transform:
-      translate3d(var(--move-x),var(--move-y),0)
-      scale(1);
+    transform: translate3d(var(--move-x),var(--move-y),0) scale(1);
   }
-
-  /* Simple glide back to the weapon slot. */
   100% {
-    transform:
-      translate3d(0,0,0)
-      scale(1);
+    transform: translate3d(0,0,0) scale(1);
   }
 }
 
@@ -138,48 +113,24 @@
 }
 
 @keyframes dd-lift-travel-slam {
-  0% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-
-  /* Lift off the tabletop. */
-  14% {
-    transform: translate3d(0, -8px, 0) scale(var(--lift-scale, 1.08));
-  }
-
-  /* Travel while elevated. */
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  14% { transform: translate3d(0, -8px, 0) scale(var(--lift-scale, 1.08)); }
   55% {
-    transform:
-      translate3d(var(--move-x), var(--move-y), 0)
-      scale(var(--lift-scale, 1.08));
+    transform: translate3d(var(--move-x), var(--move-y), 0) scale(var(--lift-scale, 1.08));
   }
-
-  /* Slam into the target. */
   62% {
-    transform:
-      translate3d(var(--move-x), var(--move-y), 0)
-      scale(.96);
+    transform: translate3d(var(--move-x), var(--move-y), 0) scale(.96);
   }
-
-  /* Settle at normal card size. */
   72% {
-    transform:
-      translate3d(var(--move-x), var(--move-y), 0)
-      scale(1.01);
+    transform: translate3d(var(--move-x), var(--move-y), 0) scale(1.01);
   }
-
   100% {
-    transform:
-      translate3d(var(--move-x), var(--move-y), 0)
-      scale(1);
+    transform: translate3d(var(--move-x), var(--move-y), 0) scale(1);
   }
 }
 
 /* -------------------------------------------------------------------------
  * Eat
- *
- * Flat tabletop movement. The card itself is progressively consumed in
- * thirds after reaching the player.
  * ------------------------------------------------------------------------- */
 
 .dd-eat-clone {
@@ -198,79 +149,36 @@
 @keyframes dd-eat-card {
   0% {
     transform: translate3d(0,0,0) rotate(0deg) scale(1);
-    clip-path: inset(0 0 0 0);
-    opacity: 1;
+    clip-path: inset(0 0 0 0); opacity: 1;
   }
-
   30% {
-    transform:
-      translate3d(var(--move-x),var(--move-y),0)
-      rotate(-7deg)
-      scale(1.08);
-    clip-path: inset(0 0 0 0);
-    opacity: 1;
+    transform: translate3d(var(--move-x),var(--move-y),0) rotate(-7deg) scale(1.08);
+    clip-path: inset(0 0 0 0); opacity: 1;
   }
-
   42% {
-    transform:
-      translate3d(var(--move-x),var(--move-y),0)
-      rotate(0deg)
-      scale(1.08);
-    clip-path: inset(33.333% 0 0 0);
-    opacity: 1;
+    transform: translate3d(var(--move-x),var(--move-y),0) rotate(0deg) scale(1.08);
+    clip-path: inset(33.333% 0 0 0); opacity: 1;
   }
-
   59.5% {
-    transform:
-      translate3d(var(--move-x),calc(var(--move-y) - var(--card-third)),0)
-      rotate(0deg)
-      scale(1.08);
-    clip-path: inset(33.333% 0 0 0);
-    opacity: 1;
+    transform: translate3d(var(--move-x),calc(var(--move-y) - var(--card-third)),0) rotate(0deg) scale(1.08);
+    clip-path: inset(33.333% 0 0 0); opacity: 1;
   }
-
   71.2% {
-    transform:
-      translate3d(var(--move-x),calc(var(--move-y) - var(--card-third)),0)
-      rotate(0deg)
-      scale(1.08);
-    clip-path: inset(66.666% 0 0 0);
-    opacity: 1;
+    transform: translate3d(var(--move-x),calc(var(--move-y) - var(--card-third)),0) rotate(0deg) scale(1.08);
+    clip-path: inset(66.666% 0 0 0); opacity: 1;
   }
-
   88.7% {
-    transform:
-      translate3d(var(--move-x),calc(var(--move-y) - var(--card-two-thirds)),0)
-      rotate(0deg)
-      scale(1.08);
-    clip-path: inset(66.666% 0 0 0);
-    opacity: 1;
+    transform: translate3d(var(--move-x),calc(var(--move-y) - var(--card-two-thirds)),0) rotate(0deg) scale(1.08);
+    clip-path: inset(66.666% 0 0 0); opacity: 1;
   }
-
-  99.9% {
-    transform:
-      translate3d(var(--move-x),calc(var(--move-y) - var(--card-two-thirds)),0)
-      rotate(0deg)
-      scale(1.08);
-    clip-path: inset(100% 0 0 0);
-    opacity: 0;
-  }
-
-  100% {
-    transform:
-      translate3d(var(--move-x),calc(var(--move-y) - var(--card-two-thirds)),0)
-      rotate(0deg)
-      scale(1.08);
-    clip-path: inset(100% 0 0 0);
-    opacity: 0;
+  99.9%, 100% {
+    transform: translate3d(var(--move-x),calc(var(--move-y) - var(--card-two-thirds)),0) rotate(0deg) scale(1.08);
+    clip-path: inset(100% 0 0 0); opacity: 0;
   }
 }
 
 /* -------------------------------------------------------------------------
  * Discard
- *
- * Flat tabletop choreography:
- * upright → slight topple → rapid fall off the bottom → disappear.
  * ------------------------------------------------------------------------- */
 
 .dd-discard-clone {
@@ -287,32 +195,19 @@
 }
 
 @keyframes dd-discard-card {
-  0% {
-    transform: translate3d(0,0,0) rotate(0deg) scale(1);
-    opacity: 1;
-  }
-
+  0% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 1; }
   28% {
-    transform:
-      translate3d(var(--topple-x),var(--topple-y),0)
-      rotate(22deg)
-      scale(1.02);
+    transform: translate3d(var(--topple-x),var(--topple-y),0) rotate(22deg) scale(1.02);
     opacity: 1;
   }
-
   100% {
-    transform:
-      translate3d(var(--fall-x),var(--fall-y),0)
-      rotate(78deg)
-      scale(.92);
+    transform: translate3d(var(--fall-x),var(--fall-y),0) rotate(78deg) scale(.92);
     opacity: 0;
   }
 }
 
 /* -------------------------------------------------------------------------
  * Deal
- *
- * Flat tabletop movement with the established mid-flight flip.
  * ------------------------------------------------------------------------- */
 
 .dd-deal-clone {
@@ -325,28 +220,17 @@
 }
 
 .dd-deal-active {
-  animation:
-    dd-deal-card
-    var(--animation-duration, 650ms)
-    cubic-bezier(.2,.8,.25,1)
-    var(--animation-delay, 0ms)
-    forwards;
+  animation: dd-deal-card var(--animation-duration, 650ms)
+    cubic-bezier(.2,.8,.25,1) var(--animation-delay, 0ms) forwards;
 }
 
 @keyframes dd-deal-card {
-  0% {
-    transform: translate3d(0,0,0);
-  }
-
-  100% {
-    transform: translate3d(var(--move-x),var(--move-y),0);
-  }
+  0% { transform: translate3d(0,0,0); }
+  100% { transform: translate3d(var(--move-x),var(--move-y),0); }
 }
 
 /* -------------------------------------------------------------------------
  * Flee
- *
- * Flat tabletop mirror of deal: move towards the deck and disappear into it.
  * ------------------------------------------------------------------------- */
 
 .dd-flee-clone {
@@ -359,30 +243,17 @@
 }
 
 .dd-flee-active {
-  animation:
-    dd-flee-card
-    var(--animation-duration, 650ms)
-    cubic-bezier(.2,.8,.25,1)
-    var(--animation-delay, 0ms)
-    forwards;
+  animation: dd-flee-card var(--animation-duration, 650ms)
+    cubic-bezier(.2,.8,.25,1) var(--animation-delay, 0ms) forwards;
 }
 
 @keyframes dd-flee-card {
-  0% {
-    transform: translate3d(0,0,0);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translate3d(var(--move-x),var(--move-y),0) scale(.92);
-    opacity: 1;
-  }
+  0% { transform: translate3d(0,0,0); opacity: 1; }
+  100% { transform: translate3d(var(--move-x),var(--move-y),0) scale(.92); opacity: 1; }
 }
 
 /* -------------------------------------------------------------------------
  * Dungeon card sliding
- *
- * Flat, horizontal/vertical movement between actual dungeon slots.
  * ------------------------------------------------------------------------- */
 
 .dd-dungeon-slide-clone {
@@ -395,20 +266,13 @@
 }
 
 .dd-dungeon-slide-active {
-  animation: dd-dungeon-slide
-    var(--animation-duration, 420ms)
-    cubic-bezier(.22,.8,.25,1)
-    forwards;
+  animation: dd-dungeon-slide var(--animation-duration, 420ms)
+    cubic-bezier(.22,.8,.25,1) forwards;
 }
 
 @keyframes dd-dungeon-slide {
-  0% {
-    transform: translate3d(0,0,0);
-  }
-
-  100% {
-    transform: translate3d(var(--move-x),var(--move-y),0);
-  }
+  0% { transform: translate3d(0,0,0); }
+  100% { transform: translate3d(var(--move-x),var(--move-y),0); }
 }
 
 /* -------------------------------------------------------------------------
@@ -425,28 +289,18 @@
 }
 
 .dd-monster-stack-active {
-  animation: dd-monster-to-stack
-    520ms
-    cubic-bezier(.22,.8,.25,1)
-    forwards;
+  animation: dd-monster-to-stack 520ms cubic-bezier(.22,.8,.25,1) forwards;
 }
 
 @keyframes dd-monster-to-stack {
-  0% {
-    transform: translate3d(0,0,0) rotate(0deg);
-  }
-
+  0% { transform: translate3d(0,0,0) rotate(0deg); }
   100% {
-    transform:
-      translate3d(var(--move-x),var(--move-y),0)
-      rotate(var(--stack-rotation, 0deg));
+    transform: translate3d(var(--move-x),var(--move-y),0) rotate(var(--stack-rotation, 0deg));
   }
 }
 
 /* -------------------------------------------------------------------------
  * Fist fight
- *
- * Flat tabletop combat. One-two punch, no card height effect.
  * ------------------------------------------------------------------------- */
 
 .dd-fist-monster-clone {
@@ -464,71 +318,28 @@
 
 @keyframes dd-fist-fight {
   0% {
-    transform: translate3d(0,0,0) rotate(0deg) scale(1);
-    opacity: 1;
+    transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 1;
   }
-
   23.1% {
-    transform:
-      translate3d(var(--move-x),var(--move-y),0)
-      rotate(-8deg)
-      scale(1.08);
-    opacity: 1;
+    transform: translate3d(var(--move-x),var(--move-y),0) rotate(-8deg) scale(1.08); opacity: 1;
   }
-
   32% {
-    transform:
-      translate3d(
-        calc(var(--move-x) + var(--hit-x, 0px)),
-        calc(var(--move-y) + var(--hit-y, 0px)),
-        0
-      )
-      rotate(7deg)
-      scale(1.14);
-    opacity: 1;
+    transform: translate3d(calc(var(--move-x) + var(--hit-x, 0px)),calc(var(--move-y) + var(--hit-y, 0px)),0) rotate(7deg) scale(1.14); opacity: 1;
   }
-
   43% {
-    transform:
-      translate3d(var(--move-x),var(--move-y),0)
-      rotate(-6deg)
-      scale(1.08);
-    opacity: 1;
+    transform: translate3d(var(--move-x),var(--move-y),0) rotate(-6deg) scale(1.08); opacity: 1;
   }
-
   54% {
-    transform:
-      translate3d(
-        calc(var(--move-x) + var(--hit-x, 0px)),
-        calc(var(--move-y) + var(--hit-y, 0px)),
-        0
-      )
-      rotate(6deg)
-      scale(1.14);
-    opacity: 1;
+    transform: translate3d(calc(var(--move-x) + var(--hit-x, 0px)),calc(var(--move-y) + var(--hit-y, 0px)),0) rotate(6deg) scale(1.14); opacity: 1;
   }
-
-  68% {
-    transform:
-      translate3d(var(--move-x),var(--move-y),0)
-      rotate(0deg)
-      scale(1);
-    opacity: 1;
+  68%, 100% {
+    transform: translate3d(var(--move-x),var(--move-y),0) rotate(0deg) scale(1); opacity: 1;
   }
-
-  100% {
-    transform:
-      translate3d(var(--move-x),var(--move-y),0)
-      rotate(0deg)
-      scale(1);
-    opacity: 0;
-  }
+  100% { opacity: 0; }
 }
 
 /* -------------------------------------------------------------------------
- * Thrown weapon
- *
- * Lift → one full 360° rotation while travelling → slam.
+ * Thrown weapon — aim → pull back → fast launch → vanish
  * ------------------------------------------------------------------------- */
 
 .dd-thrown-weapon-clone {
@@ -541,54 +352,74 @@
 }
 
 .dd-thrown-active {
-  animation:
-    dd-thrown-flight
-    var(--animation-duration, 800ms)
-    linear
-    forwards;
+  animation: dd-thrown-flight var(--animation-duration, 760ms)
+    cubic-bezier(.2,.8,.25,1) forwards;
 }
 
 @keyframes dd-thrown-flight {
-  /* Quick 150ms aim to the monster. */
+  /* 1. Rotate into the target. */
   0% {
     transform: translate3d(0,0,0) rotate(0deg);
+    opacity: 1;
   }
 
-  18.75% {
+  29% {
     transform: translate3d(0,0,0) rotate(var(--aim-angle));
+    opacity: 1;
   }
 
-  /* 180ms pause before the throw. */
-  41.25% {
-    transform: translate3d(0,0,0) rotate(var(--aim-angle));
+  /* 2. Draw back deliberately, away from the monster. */
+  54% {
+    transform:
+      translate3d(var(--pull-x),var(--pull-y),0)
+      rotate(var(--aim-angle));
+    opacity: 1;
   }
 
-  /* Aggressive 150ms flight to the monster. */
-  60% {
+  /* Briefly hold the pulled-back position. */
+  58% {
+    transform:
+      translate3d(var(--pull-x),var(--pull-y),0)
+      rotate(var(--aim-angle));
+    opacity: 1;
+  }
+
+  /* 3. Explosive straight launch from the pulled-back position. */
+  74% {
     transform:
       translate3d(var(--move-x),var(--move-y),0)
       rotate(var(--aim-angle));
+    opacity: 1;
   }
 
-  /* Abrupt stop at impact. */
-  66.25% {
+  /* 4. Hit / POW, then disappear. */
+  82% {
     transform:
       translate3d(var(--move-x),var(--move-y),0)
       rotate(var(--aim-angle));
+    opacity: 0;
   }
 
-  /* Glide straight back with the same angle. */
   100% {
     transform:
-      translate3d(var(--return-x),var(--return-y),0)
+      translate3d(var(--move-x),var(--move-y),0)
       rotate(var(--aim-angle));
+    opacity: 0;
   }
+}
+
+/* The next thrown weapon fades into the slot rather than flying back. */
+.dd-thrown-returning {
+  animation: dd-thrown-return-fade 160ms ease-out forwards;
+}
+
+@keyframes dd-thrown-return-fade {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 /* -------------------------------------------------------------------------
  * Ranged weapon
- *
- * Flat tabletop: join player → fire/recoil in place → return to weapon slot.
  * ------------------------------------------------------------------------- */
 
 .dd-ranged-weapon-clone {
@@ -601,52 +432,18 @@
 }
 
 .dd-ranged-active {
-  animation: dd-ranged-weapon
-    var(--animation-duration, 1200ms)
-    cubic-bezier(.22,.8,.25,1)
-    forwards;
+  animation: dd-ranged-weapon var(--animation-duration, 1200ms)
+    cubic-bezier(.22,.8,.25,1) forwards;
 }
 
 @keyframes dd-ranged-weapon {
-  /* Aim. */
-  0% {
-    transform: translate3d(0,0,0) rotate(0deg);
-  }
-
-  25% {
-    transform: translate3d(0,0,0) rotate(var(--aim-angle));
-  }
-
-  /* Pause before firing. */
-  40% {
-    transform: translate3d(0,0,0) rotate(var(--aim-angle));
-  }
-
-  /* Fire: snap quickly away from the monster. */
-  46% {
-    transform:
-      translate3d(var(--recoil-x),var(--recoil-y),0)
-      rotate(var(--aim-angle));
-  }
-
-  /* Recover slowly and smoothly. */
-  66% {
-    transform:
-      translate3d(0,0,0)
-      rotate(var(--aim-angle));
-  }
-
-  /* Projectile travel time. */
-  82% {
-    transform:
-      translate3d(0,0,0)
-      rotate(var(--aim-angle));
-  }
-
-  /* Rotate back home. */
-  100% {
-    transform: translate3d(0,0,0) rotate(0deg);
-  }
+  0% { transform: translate3d(0,0,0) rotate(0deg); }
+  25% { transform: translate3d(0,0,0) rotate(var(--aim-angle)); }
+  40% { transform: translate3d(0,0,0) rotate(var(--aim-angle)); }
+  46% { transform: translate3d(var(--recoil-x),var(--recoil-y),0) rotate(var(--aim-angle)); }
+  66% { transform: translate3d(0,0,0) rotate(var(--aim-angle)); }
+  82% { transform: translate3d(0,0,0) rotate(var(--aim-angle)); }
+  100% { transform: translate3d(0,0,0) rotate(0deg); }
 }
 
 .dd-monster-jolt {
@@ -655,25 +452,11 @@
 }
 
 @keyframes dd-monster-jolt {
-  0% {
-    transform: translate3d(0,0,0);
-  }
-
-  25% {
-    transform: translate3d(-4px,1px,0);
-  }
-
-  50% {
-    transform: translate3d(3px,-1px,0);
-  }
-
-  75% {
-    transform: translate3d(-2px,1px,0);
-  }
-
-  100% {
-    transform: translate3d(0,0,0);
-  }
+  0% { transform: translate3d(0,0,0); }
+  25% { transform: translate3d(-4px,1px,0); }
+  50% { transform: translate3d(3px,-1px,0); }
+  75% { transform: translate3d(-2px,1px,0); }
+  100% { transform: translate3d(0,0,0); }
 }
 
 /* -------------------------------------------------------------------------
@@ -694,39 +477,18 @@
   animation: dd-animation-impact 280ms ease-out forwards;
 }
 
-.dd-animation-impact-heart {
-  font-size: 28px;
-  line-height: 1;
-}
-
+.dd-animation-impact-heart { font-size: 28px; line-height: 1; }
 .dd-animation-impact-hit,
-.dd-animation-impact-weapon {
-  font-size: 24px;
-  line-height: 1;
-}
+.dd-animation-impact-weapon { font-size: 24px; line-height: 1; }
 
 @keyframes dd-animation-impact {
-  0% {
-    transform: translate(-50%,-50%) scale(.65);
-    opacity: 0;
-  }
-
-  25% {
-    transform: translate(-50%,-50%) scale(1.15);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translate(-50%,-50%) scale(1);
-    opacity: 0;
-  }
+  0% { transform: translate(-50%,-50%) scale(.65); opacity: 0; }
+  25% { transform: translate(-50%,-50%) scale(1.15); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(1); opacity: 0; }
 }
 
 /* -------------------------------------------------------------------------
  * Previous monster clear
- *
- * Fade the existing grayscale stack cards in place so the stack filter and
- * positioning remain intact throughout the animation.
  * ------------------------------------------------------------------------- */
 
 .previous-monster-fade {
@@ -735,21 +497,12 @@
 }
 
 @keyframes previous-monster-fade {
-  0% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 /* -------------------------------------------------------------------------
  * Drink
- *
- * The card travels so its TOP EDGE meets the middle of the player card.
- * From that anchored point the bottom of the card tips counterclockwise in
- * four clear stages: 30°, 60°, 90°, 120°. The top edge stays anchored.
  * ------------------------------------------------------------------------- */
 
 .dd-drink-clone {
@@ -762,49 +515,19 @@
 }
 
 .dd-drink-active {
-  animation: dd-drink-card
-    var(--animation-duration, 1200ms)
-    cubic-bezier(.2,.8,.25,1)
-    forwards;
+  animation: dd-drink-card var(--animation-duration, 1200ms)
+    cubic-bezier(.2,.8,.25,1) forwards;
 }
 
 @keyframes dd-drink-card {
-  0% {
-    transform: translate3d(0,0,0) rotate(0deg) scale(1);
-    opacity: 1;
-  }
-
-  35% {
-    transform: translate3d(var(--move-x),var(--move-y),0) rotate(0deg) scale(1);
-    opacity: 1;
-  }
-
-  48% {
-    transform: translate3d(var(--move-x),var(--move-y),0) rotate(-30deg) scale(1);
-    opacity: 1;
-  }
-
-  61% {
-    transform: translate3d(var(--move-x),var(--move-y),0) rotate(-60deg) scale(1);
-    opacity: 1;
-  }
-
-  74% {
-    transform: translate3d(var(--move-x),var(--move-y),0) rotate(-90deg) scale(1);
-    opacity: 1;
-  }
-
-  87% {
-    transform: translate3d(var(--move-x),var(--move-y),0) rotate(-120deg) scale(1);
-    opacity: 1;
-  }
-
+  0% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 1; }
+  35% { transform: translate3d(var(--move-x),var(--move-y),0) rotate(0deg) scale(1); opacity: 1; }
+  48% { transform: translate3d(var(--move-x),var(--move-y),0) rotate(-30deg) scale(1); opacity: 1; }
+  61% { transform: translate3d(var(--move-x),var(--move-y),0) rotate(-60deg) scale(1); opacity: 1; }
+  74% { transform: translate3d(var(--move-x),var(--move-y),0) rotate(-90deg) scale(1); opacity: 1; }
+  87% { transform: translate3d(var(--move-x),var(--move-y),0) rotate(-120deg) scale(1); opacity: 1; }
   100% {
-    transform: translate3d(
-      calc(var(--move-x) + 40px),
-      calc(var(--move-y) - 30px),
-      0
-    ) rotate(-120deg) scale(.9);
+    transform: translate3d(calc(var(--move-x) + 40px),calc(var(--move-y) - 30px),0) rotate(-120deg) scale(.9);
     opacity: 0;
   }
 }
