@@ -192,6 +192,30 @@ let themeLoopToken = 0;
     // Short, physical punch: low thump + dry crunchy impact + tiny tail.
     // Kept deliberately compact so it reads as a hit rather than a sustained sound.
 
+    // Fast air whoosh underneath the hit. This is what gives the punch its sense of
+    // movement: a short band of noise sweeps upward into the impact, then disappears.
+    const whoosh = context.createBufferSource();
+    const whooshFilter = context.createBiquadFilter();
+    const whooshGain = context.createGain();
+
+    whoosh.buffer = makeNoiseBuffer(context, 0.13);
+    whooshFilter.type = "bandpass";
+    whooshFilter.frequency.setValueAtTime(260, now - 0.045);
+    whooshFilter.frequency.exponentialRampToValueAtTime(1450, now + 0.045);
+    whooshFilter.frequency.exponentialRampToValueAtTime(700, now + 0.12);
+    whooshFilter.Q.value = 0.75;
+
+    whooshGain.gain.setValueAtTime(0.001, now - 0.045);
+    whooshGain.gain.exponentialRampToValueAtTime(0.14, now - 0.012);
+    whooshGain.gain.exponentialRampToValueAtTime(0.22, now + 0.015);
+    whooshGain.gain.exponentialRampToValueAtTime(0.001, now + 0.115);
+
+    whoosh.connect(whooshFilter);
+    whooshFilter.connect(whooshGain);
+    whooshGain.connect(output);
+    whoosh.start(now - 0.05);
+    whoosh.stop(now + 0.13);
+
     // Low body of the impact.
     const thump = context.createOscillator();
     const thumpFilter = context.createBiquadFilter();
