@@ -285,153 +285,119 @@ let themeLoopToken = 0;
   function rangedAttackSound() {
     const context = getAudioContext();
     const now = context.currentTime;
+    const output = getAudioOutput(context);
 
-    // Fast projectile pass: a heavier "PPH" launch, rising "EE", then a
-    // descending "OO" tail. The opening burst has more low-mid body so it
-    // feels like the projectile is being pushed out, not just a dry hiss.
-    const noise = context.createBufferSource();
-    const noiseFilter = context.createBiquadFilter();
-    const noiseGain = context.createGain();
+    // Rebuilt from scratch around a more traditional blaster shape:
+    // a compact gun-like "PFF" launch, followed by a bright laser "PEW"
+    // that falls away. The two layers are deliberately distinct.
 
-    noise.buffer = makeNoiseBuffer(context, 0.065);
-    noiseFilter.type = "bandpass";
-    noiseFilter.frequency.setValueAtTime(430, now);
-    noiseFilter.frequency.exponentialRampToValueAtTime(1050, now + 0.055);
-    noiseFilter.Q.value = 0.75;
+    // 1. The physical launch: a short, punchy air burst.
+    const blast = context.createBufferSource();
+    const blastFilter = context.createBiquadFilter();
+    const blastGain = context.createGain();
 
-    noiseGain.gain.setValueAtTime(0.001, now);
-    noiseGain.gain.exponentialRampToValueAtTime(0.26, now + 0.008);
-    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.065);
+    blast.buffer = makeNoiseBuffer(context, 0.055);
+    blastFilter.type = "bandpass";
+    blastFilter.frequency.setValueAtTime(520, now);
+    blastFilter.frequency.exponentialRampToValueAtTime(1450, now + 0.035);
+    blastFilter.Q.value = 0.55;
 
-    noise.connect(noiseFilter);
-    noiseFilter.connect(noiseGain);
-    noiseGain.connect(getAudioOutput(context));
-    noise.start(now);
-    noise.stop(now + 0.07);
+    blastGain.gain.setValueAtTime(0.001, now);
+    blastGain.gain.exponentialRampToValueAtTime(0.34, now + 0.004);
+    blastGain.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
 
-    // Very short low-mid "puff" underneath the burst adds weight without
-    // turning it into a gunshot or a separate impact sound.
-    const launchBody = context.createOscillator();
-    const launchBodyFilter = context.createBiquadFilter();
-    const launchBodyGain = context.createGain();
+    blast.connect(blastFilter);
+    blastFilter.connect(blastGain);
+    blastGain.connect(output);
+    blast.start(now);
+    blast.stop(now + 0.06);
 
-    launchBody.type = "triangle";
-    launchBody.frequency.setValueAtTime(145, now);
-    launchBody.frequency.exponentialRampToValueAtTime(82, now + 0.065);
+    // Low "thud" underneath the launch gives it the gun-like physical weight.
+    const thud = context.createOscillator();
+    const thudFilter = context.createBiquadFilter();
+    const thudGain = context.createGain();
 
-    launchBodyFilter.type = "lowpass";
-    launchBodyFilter.frequency.setValueAtTime(700, now);
-    launchBodyFilter.frequency.exponentialRampToValueAtTime(300, now + 0.065);
+    thud.type = "sine";
+    thud.frequency.setValueAtTime(125, now);
+    thud.frequency.exponentialRampToValueAtTime(62, now + 0.075);
 
-    launchBodyGain.gain.setValueAtTime(0.001, now);
-    launchBodyGain.gain.exponentialRampToValueAtTime(0.15, now + 0.006);
-    launchBodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.085);
+    thudFilter.type = "lowpass";
+    thudFilter.frequency.value = 420;
 
-    launchBody.connect(launchBodyFilter);
-    launchBodyFilter.connect(launchBodyGain);
-    launchBodyGain.connect(getAudioOutput(context));
-    launchBody.start(now);
-    launchBody.stop(now + 0.09);
+    thudGain.gain.setValueAtTime(0.001, now);
+    thudGain.gain.exponentialRampToValueAtTime(0.22, now + 0.006);
+    thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.095);
 
-    // Rising "EE" — keep the pitch movement, but make it more arcade-like
-    // with a slightly square-edged voice rather than a clean whistle.
-    const rise = context.createOscillator();
-    const riseFilter = context.createBiquadFilter();
-    const riseGain = context.createGain();
+    thud.connect(thudFilter);
+    thudFilter.connect(thudGain);
+    thudGain.connect(output);
+    thud.start(now);
+    thud.stop(now + 0.11);
 
-    rise.type = "triangle";
-    rise.frequency.setValueAtTime(560, now + 0.018);
-    rise.frequency.exponentialRampToValueAtTime(980, now + 0.115);
+    // 2. Laser flavour: a bright, slightly dirty electronic PEW.
+    const pew = context.createOscillator();
+    const pewFilter = context.createBiquadFilter();
+    const pewGain = context.createGain();
 
-    riseFilter.type = "bandpass";
-    riseFilter.frequency.setValueAtTime(700, now + 0.018);
-    riseFilter.frequency.exponentialRampToValueAtTime(1050, now + 0.115);
-    riseFilter.Q.value = 1.25;
+    pew.type = "sawtooth";
+    pew.frequency.setValueAtTime(1450, now + 0.018);
+    pew.frequency.exponentialRampToValueAtTime(620, now + 0.245);
 
-    riseGain.gain.setValueAtTime(0.001, now + 0.018);
-    riseGain.gain.exponentialRampToValueAtTime(0.095, now + 0.035);
-    riseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.125);
+    pewFilter.type = "lowpass";
+    pewFilter.frequency.setValueAtTime(2800, now + 0.018);
+    pewFilter.frequency.exponentialRampToValueAtTime(1050, now + 0.245);
+    pewFilter.Q.value = 0.75;
 
-    rise.connect(riseFilter);
-    riseFilter.connect(riseGain);
-    riseGain.connect(getAudioOutput(context));
-    rise.start(now + 0.018);
-    rise.stop(now + 0.14);
+    pewGain.gain.setValueAtTime(0.001, now + 0.018);
+    pewGain.gain.exponentialRampToValueAtTime(0.15, now + 0.035);
+    pewGain.gain.setValueAtTime(0.12, now + 0.12);
+    pewGain.gain.exponentialRampToValueAtTime(0.001, now + 0.27);
 
-    // Tiny crunchy 8-bit edge: a short square-wave chirp gives the
-    // projectile some arcade-machine character without becoming a beep.
-    const arcade = context.createOscillator();
-    const arcadeFilter = context.createBiquadFilter();
-    const arcadeGain = context.createGain();
+    pew.connect(pewFilter);
+    pewFilter.connect(pewGain);
+    pewGain.connect(output);
+    pew.start(now + 0.018);
+    pew.stop(now + 0.29);
 
-    arcade.type = "square";
-    arcade.frequency.setValueAtTime(420, now + 0.012);
-    arcade.frequency.exponentialRampToValueAtTime(760, now + 0.095);
+    // Small noisy electrical edge keeps the laser from sounding like a clean
+    // synthesizer note.
+    const zap = context.createBufferSource();
+    const zapFilter = context.createBiquadFilter();
+    const zapGain = context.createGain();
 
-    arcadeFilter.type = "lowpass";
-    arcadeFilter.frequency.setValueAtTime(1800, now + 0.012);
-    arcadeFilter.frequency.exponentialRampToValueAtTime(900, now + 0.095);
+    zap.buffer = makeNoiseBuffer(context, 0.20);
+    zapFilter.type = "bandpass";
+    zapFilter.frequency.setValueAtTime(2100, now + 0.025);
+    zapFilter.frequency.exponentialRampToValueAtTime(1250, now + 0.19);
+    zapFilter.Q.value = 0.8;
 
-    arcadeGain.gain.setValueAtTime(0.001, now + 0.012);
-    arcadeGain.gain.exponentialRampToValueAtTime(0.045, now + 0.025);
-    arcadeGain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
+    zapGain.gain.setValueAtTime(0.001, now + 0.025);
+    zapGain.gain.exponentialRampToValueAtTime(0.075, now + 0.045);
+    zapGain.gain.setValueAtTime(0.045, now + 0.12);
+    zapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.21);
 
-    arcade.connect(arcadeFilter);
-    arcadeFilter.connect(arcadeGain);
-    arcadeGain.connect(getAudioOutput(context));
-    arcade.start(now + 0.012);
-    arcade.stop(now + 0.125);
+    zap.connect(zapFilter);
+    zapFilter.connect(zapGain);
+    zapGain.connect(output);
+    zap.start(now + 0.025);
+    zap.stop(now + 0.225);
 
-    // Electrical "BZZT": short, unstable filtered noise layered around the
-    // launch. This supplies the crunchy/static character rather than another
-    // clean musical pitch.
-    const bzzt = context.createBufferSource();
-    const bzztFilter = context.createBiquadFilter();
-    const bzztGain = context.createGain();
+    // Tiny final electronic "snap" gives the shot a defined end.
+    const snap = context.createOscillator();
+    const snapGain = context.createGain();
 
-    bzzt.buffer = makeNoiseBuffer(context, 0.115);
-    bzztFilter.type = "bandpass";
-    bzztFilter.frequency.setValueAtTime(1450, now + 0.008);
-    bzztFilter.frequency.exponentialRampToValueAtTime(2650, now + 0.055);
-    bzztFilter.frequency.exponentialRampToValueAtTime(1050, now + 0.115);
-    bzztFilter.Q.value = 0.7;
+    snap.type = "square";
+    snap.frequency.setValueAtTime(820, now + 0.20);
+    snap.frequency.exponentialRampToValueAtTime(420, now + 0.28);
 
-    bzztGain.gain.setValueAtTime(0.001, now + 0.008);
-    bzztGain.gain.exponentialRampToValueAtTime(0.10, now + 0.018);
-    bzztGain.gain.setValueAtTime(0.075, now + 0.045);
-    bzztGain.gain.exponentialRampToValueAtTime(0.001, now + 0.115);
+    snapGain.gain.setValueAtTime(0.001, now + 0.20);
+    snapGain.gain.exponentialRampToValueAtTime(0.045, now + 0.215);
+    snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.29);
 
-    bzzt.connect(bzztFilter);
-    bzztFilter.connect(bzztGain);
-    bzztGain.connect(getAudioOutput(context));
-    bzzt.start(now + 0.008);
-    bzzt.stop(now + 0.125);
-
-    // Falling "OO" — a smooth pitch glide that gives the projectile its
-    // trailing, passing-through-the-air character.
-    const tail = context.createOscillator();
-    const tailFilter = context.createBiquadFilter();
-    const tailGain = context.createGain();
-
-    tail.type = "sine";
-    // Whole sound shifted down one octave, keeping the same contour.
-    tail.frequency.setValueAtTime(875, now + 0.075);
-    tail.frequency.exponentialRampToValueAtTime(437.5, now + 0.31);
-
-    tailFilter.type = "lowpass";
-    tailFilter.frequency.setValueAtTime(900, now + 0.075);
-    tailFilter.frequency.exponentialRampToValueAtTime(450, now + 0.31);
-
-    tailGain.gain.setValueAtTime(0.001, now + 0.075);
-    tailGain.gain.exponentialRampToValueAtTime(0.095, now + 0.095);
-    tailGain.gain.setValueAtTime(0.075, now + 0.17);
-    tailGain.gain.exponentialRampToValueAtTime(0.001, now + 0.33);
-
-    tail.connect(tailFilter);
-    tailFilter.connect(tailGain);
-    tailGain.connect(getAudioOutput(context));
-    tail.start(now + 0.075);
-    tail.stop(now + 0.35);
+    snap.connect(snapGain);
+    snapGain.connect(output);
+    snap.start(now + 0.20);
+    snap.stop(now + 0.31);
   }
 
   function thrownAttackSound() {
