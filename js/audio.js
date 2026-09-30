@@ -247,27 +247,52 @@ let themeLoopToken = 0;
     const context = getAudioContext();
     const now = context.currentTime;
 
-    // Fast projectile pass: a dry "TSH" launch, rising "EE", then a
-    // descending "OO" tail. This is intentionally not an impact sound.
+    // Fast projectile pass: a heavier "PPH" launch, rising "EE", then a
+    // descending "OO" tail. The opening burst has more low-mid body so it
+    // feels like the projectile is being pushed out, not just a dry hiss.
     const noise = context.createBufferSource();
     const noiseFilter = context.createBiquadFilter();
     const noiseGain = context.createGain();
 
-    noise.buffer = makeNoiseBuffer(context, 0.075);
+    noise.buffer = makeNoiseBuffer(context, 0.065);
     noiseFilter.type = "bandpass";
-    noiseFilter.frequency.setValueAtTime(800, now);
-    noiseFilter.frequency.exponentialRampToValueAtTime(1300, now + 0.055);
-    noiseFilter.Q.value = 1.25;
+    noiseFilter.frequency.setValueAtTime(430, now);
+    noiseFilter.frequency.exponentialRampToValueAtTime(1050, now + 0.055);
+    noiseFilter.Q.value = 0.75;
 
     noiseGain.gain.setValueAtTime(0.001, now);
-    noiseGain.gain.exponentialRampToValueAtTime(0.20, now + 0.006);
-    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
+    noiseGain.gain.exponentialRampToValueAtTime(0.26, now + 0.008);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.065);
 
     noise.connect(noiseFilter);
     noiseFilter.connect(noiseGain);
     noiseGain.connect(context.destination);
     noise.start(now);
-    noise.stop(now + 0.08);
+    noise.stop(now + 0.07);
+
+    // Very short low-mid "puff" underneath the burst adds weight without
+    // turning it into a gunshot or a separate impact sound.
+    const launchBody = context.createOscillator();
+    const launchBodyFilter = context.createBiquadFilter();
+    const launchBodyGain = context.createGain();
+
+    launchBody.type = "triangle";
+    launchBody.frequency.setValueAtTime(145, now);
+    launchBody.frequency.exponentialRampToValueAtTime(82, now + 0.065);
+
+    launchBodyFilter.type = "lowpass";
+    launchBodyFilter.frequency.setValueAtTime(700, now);
+    launchBodyFilter.frequency.exponentialRampToValueAtTime(300, now + 0.065);
+
+    launchBodyGain.gain.setValueAtTime(0.001, now);
+    launchBodyGain.gain.exponentialRampToValueAtTime(0.15, now + 0.006);
+    launchBodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.085);
+
+    launchBody.connect(launchBodyFilter);
+    launchBodyFilter.connect(launchBodyGain);
+    launchBodyGain.connect(context.destination);
+    launchBody.start(now);
+    launchBody.stop(now + 0.09);
 
     // Rising "EE" — narrow, bright and slightly nasal.
     const rise = context.createOscillator();
