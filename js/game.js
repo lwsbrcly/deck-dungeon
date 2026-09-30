@@ -921,6 +921,7 @@ function drinkDirectPotion(target) {
     // Unknown/missing animation types deliberately fall back to the existing eat path.
     if (c.animation === 'use') {
       DeckDungeonAnimations.use(cardEl, targetEl, {
+        sound: typeof useItemSound === 'function' ? useItemSound : null,
         done: finishConsume
       });
     } else if (c.animation === 'drink') {
