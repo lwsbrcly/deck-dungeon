@@ -410,9 +410,6 @@ const THEMES = {
 
             },
 
-        },
-
-
         text: {
             gameTitle: 'DECK DUNGEON',
             location: 'Dungeon',
@@ -584,9 +581,6 @@ const THEMES = {
                 }
 
             },
-
-        },
-
 
         text: {
             gameTitle: 'Shaun of the Deck',
@@ -761,9 +755,6 @@ const THEMES = {
 
             },
 
-        },
-
-
         text: {
             gameTitle: 'Space Deck',
             location: 'Derelict Freighter',
@@ -883,9 +874,6 @@ const THEMES = {
 
             },
 
-        },
-
-
         text: {
             gameTitle: 'Shaun of the Deck',
             location: 'The Pub',
@@ -1004,9 +992,6 @@ const THEMES = {
                 }
 
             },
-
-        },
-
 
         text: {
             gameTitle: 'Deck of Shadows',
