@@ -145,6 +145,7 @@ function undoLastAction() {
     if (historyStack.length === 0) return;
     resetDungeonDom();
     state = historyStack.pop();
+    state.actionInProgress = false;
     log('Undid last action.', false);
     render();
 }
@@ -153,6 +154,7 @@ function undoFromGameOver() {
     if (historyStack.length === 0) return;
     resetDungeonDom();
     state = historyStack.pop();
+    state.actionInProgress = false;
     state.over = false;
     document.getElementById('overlay').classList.remove('show');
     log('Undid fatal last action.', false);
