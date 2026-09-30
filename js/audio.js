@@ -149,43 +149,61 @@ let themeLoopToken = 0;
     const context = getAudioContext();
     const now = context.currentTime;
 
-    // Short, low-frequency body — more of a solid thud than a slap.
-    const thud = context.createOscillator();
-    const thudGain = context.createGain();
+    // Low body: the weight of the impact.
+    const body = context.createOscillator();
+    const bodyGain = context.createGain();
 
-    thud.type = "sine";
-    thud.frequency.setValueAtTime(105, now);
-    thud.frequency.exponentialRampToValueAtTime(42, now + 0.11);
+    body.type = "sine";
+    body.frequency.setValueAtTime(145, now);
+    body.frequency.exponentialRampToValueAtTime(55, now + 0.13);
 
-    thudGain.gain.setValueAtTime(0.95, now);
-    thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+    bodyGain.gain.setValueAtTime(1.15, now);
+    bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.19);
 
-    thud.connect(thudGain);
-    thudGain.connect(context.destination);
+    body.connect(bodyGain);
+    bodyGain.connect(context.destination);
 
-    thud.start(now);
-    thud.stop(now + 0.14);
+    body.start(now);
+    body.stop(now + 0.19);
 
-    // Very short, muted impact texture for the initial contact.
+    // Midrange "meat" — stops it sounding like a clean wooden knock.
+    const knock = context.createOscillator();
+    const knockGain = context.createGain();
+
+    knock.type = "triangle";
+    knock.frequency.setValueAtTime(240, now);
+    knock.frequency.exponentialRampToValueAtTime(90, now + 0.09);
+
+    knockGain.gain.setValueAtTime(0.55, now);
+    knockGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+    knock.connect(knockGain);
+    knockGain.connect(context.destination);
+
+    knock.start(now);
+    knock.stop(now + 0.12);
+
+    // Very short impact burst: enough attack to make it feel like a punch,
+    // without the bright "slap" from the previous version.
     const noise = context.createBufferSource();
     const filter = context.createBiquadFilter();
     const noiseGain = context.createGain();
 
-    noise.buffer = makeNoiseBuffer(context, 0.06);
+    noise.buffer = makeNoiseBuffer(context, 0.075);
 
-    filter.type = "lowpass";
-    filter.frequency.setValueAtTime(900, now);
-    filter.frequency.exponentialRampToValueAtTime(220, now + 0.055);
+    filter.type = "bandpass";
+    filter.frequency.setValueAtTime(700, now);
+    filter.Q.value = 0.7;
 
-    noiseGain.gain.setValueAtTime(0.22, now);
-    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+    noiseGain.gain.setValueAtTime(0.42, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.085);
 
     noise.connect(filter);
     filter.connect(noiseGain);
     noiseGain.connect(context.destination);
 
     noise.start(now);
-    noise.stop(now + 0.07);
+    noise.stop(now + 0.075);
   }
 
   function ughSound() {
