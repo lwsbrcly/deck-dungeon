@@ -405,8 +405,9 @@ function fillDungeon() {
 }
 
 function refreshDungeon() {
-    if (state.justFled || state.over || state.dungeon.length < 4 || state.deck.length === 0) return;
+    if (state.justFled || state.over || state.actionInProgress || state.dungeon.length < 4 || state.deck.length === 0) return;
     saveState();
+    state.actionInProgress = true;
     
     var oldCardEls = Array.prototype.slice.call(document.querySelectorAll('#dungeon .dungeon-card-wrap .card'));
     var fledCards = state.dungeon.slice();
@@ -444,6 +445,8 @@ function refreshDungeon() {
       // before starting the first incoming card.
       render();
       animateRoomEntry();
+      state.actionInProgress = false;
+      render();
     });
 }
 
@@ -789,12 +792,14 @@ setTimeout(function() {
 }
 
 function equipWeapon(player) {
-if (state.over || state.selected === null) return;
-var c = state.dungeon[state.selected], p = state[player];
+if (state.over || state.selected === null || state.actionInProgress) return;
+var selectedIndex = state.selected;
+var c = state.dungeon[selectedIndex], p = state[player];
 if (p.hp <= 0) { log(name(player) + ' is Downed and cannot take weapons.'); return; }
-var cardEl = getDungeonCardElement(state.selected);
+var cardEl = getDungeonCardElement(selectedIndex);
 var targetEl = document.getElementById(player + 'Weapon');
 saveState();
+state.actionInProgress = true;
 var old = p.weapon;
 
 function clearPreviousMonsters() {
@@ -832,7 +837,8 @@ var finishEquip = function() {
     // monster in the new stack is still 0°, then subsequent cards alternate.
     p.previousMonsterRotationDirection = Math.random() < 0.5 ? -1 : 1;
   }
-  removeSelected();
+  removeSelected(selectedIndex);
+  state.actionInProgress = false;
   log(name(player) + ' equips ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').' + (old ? ' (' + old.name + ' discarded)' : ''), true, 'weapon', player === 'p1' ? {p1:c.value,p2:null} : {p1:null,p2:c.value});
   checkGame(); renderAfterAction();
 };
@@ -852,10 +858,8 @@ function discardDungeonWeapon() {
     // change selection while an action is resolving.
     var selectedIndex = state.selected;
     var cardEl = getDungeonCardElement(selectedIndex);
-    var discardedCard = state.dungeon[selectedIndex];
-
-    state.actionInProgress = true;
     saveState();
+    state.actionInProgress = true;
 
     DeckDungeonAnimations.discard(cardEl, null, {
       done: function() {
@@ -873,7 +877,6 @@ function discardDungeonPotion() {
 
     var selectedIndex = state.selected;
     var cardEl = getDungeonCardElement(selectedIndex);
-    var discardedCard = state.dungeon[selectedIndex];
 
     state.actionInProgress = true;
     saveState();
@@ -890,12 +893,14 @@ function discardDungeonPotion() {
 }
 
 function drinkDirectPotion(target) {
-    if (state.over || state.selected === null) return;
+    if (state.over || state.selected === null || state.actionInProgress) return;
+    var selectedIndex = state.selected;
     var t = state[target];
-    var cardEl = getDungeonCardElement(state.selected);
+    var cardEl = getDungeonCardElement(selectedIndex);
     var targetEl = document.getElementById(target + 'Panel');
     saveState();
-    var c = state.dungeon[state.selected];
+    state.actionInProgress = true;
+    var c = state.dungeon[selectedIndex];
 
     var finishConsume = function() {
       var isDowned = t.hp === 0; var amount = 0;
@@ -906,7 +911,8 @@ function drinkDirectPotion(target) {
         if (isDowned) log(name(target) + ' was revived by ' + c.name + ' with ' + amount + ' HP!', true, 'potion');
         else log(name(target) + ' consumes ' + c.name + ', restoring ' + amount + ' HP.', true, 'potion');
       } else log(name(target) + ' consumed ' + c.name + ', but to no effect.', false, 'potion');
-      removeSelected();
+      removeSelected(selectedIndex);
+      state.actionInProgress = false;
       checkGame(); renderAfterAction();
     };
 
@@ -1171,11 +1177,12 @@ function getDungeonCardElement(slotIndex) {
 }
 
 function fight(player, mode) {
-    if (state.over || state.selected === null) return;
-    var c = state.dungeon[state.selected];
+    if (state.over || state.selected === null || state.actionInProgress) return;
+    var selectedIndex = state.selected;
+    var c = state.dungeon[selectedIndex];
     if (['spades','clubs'].indexOf(c.suit) === -1) return;
     
-    var targetEl = getDungeonCardElement(state.selected);
+    var targetEl = getDungeonCardElement(selectedIndex);
     
     if (player === 'both') {
       var a = state.p1, b = state.p2;
@@ -1184,13 +1191,15 @@ function fight(player, mode) {
     
       if (mode === 'combined_bare') {
         saveState();
+        state.actionInProgress = true;
         animateAttack('both', targetEl, function() {
           var totalDamage = c.value;
           applySharedDamage(totalDamage, 'p1');
           state.combinedUsedThisRoom = true;
           state.monstersSlain++;
           trackWeaponKill('Bare Fists', c.value);
-          removeSelected();
+          removeSelected(selectedIndex);
+          state.actionInProgress = false;
           log('Both heroes team up vs ' + c.name + '. Took ' + totalDamage + ' damage split between them.', true, 'fist');
           checkGame();
           renderAfterAction();
@@ -1198,6 +1207,7 @@ function fight(player, mode) {
       } else {
         if (!a.weapon || !b.weapon || a.ceiling === null || b.ceiling === null || c.value > (a.ceiling + b.ceiling)) { log('Cannot combine weapons.'); return; }
         saveState();
+        state.actionInProgress = true;
         animateAttack('p1', targetEl, function() {
           var power = a.weapon.value + b.weapon.value;
           var damage = Math.max(0, c.value - power);
@@ -1209,7 +1219,8 @@ function fight(player, mode) {
           state.monstersSlain++;
           trackWeaponKill(a.weapon.name, Math.floor(c.value / 2));
           trackWeaponKill(b.weapon.name, Math.ceil(c.value / 2));
-          removeSelected();
+          removeSelected(selectedIndex);
+          state.actionInProgress = false;
           log('Combined weapons (' + power + ' pwr) vs ' + c.name + '. Taken ' + damage + ' damage.', true, 'monster');
           checkGame();
           renderAfterAction();
@@ -1225,6 +1236,7 @@ function fight(player, mode) {
       }
     
       saveState();
+      state.actionInProgress = true;
     
       // Weapon kills create the monster's "memory" before the animation starts.
       // It stays out of the live dungeon until the weapon returns home, when the
@@ -1276,7 +1288,8 @@ function fight(player, mode) {
         // Fist fights clear the monster normally. Weapon kills have already
         // prepared the previous-monster memory and now just reveal it through
         // the ghost materialisation inside animateAttack().
-        removeSelected();
+        removeSelected(selectedIndex);
+        state.actionInProgress = false;
         checkGame();
         renderAfterAction();
       }, mode !== 'weapon', ghostInfo);
