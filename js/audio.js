@@ -1,6 +1,7 @@
 let audioContext;
 let themeNodes = [];
 let themeLoopTimer = null;
+let themeLoopToken = 0;
 
   function getAudioContext() {
     if (!audioContext) {
@@ -600,11 +601,17 @@ let themeLoopTimer = null;
   }
 
   function stopDeckDungeonTheme() {
+    // Invalidate any already-queued loop callback before stopping the
+    // currently playing nodes, so an old loop cannot restart later.
+    themeLoopToken += 1;
+
     if (themeLoopTimer) {
       clearTimeout(themeLoopTimer);
       themeLoopTimer = null;
     }
+
     if (!themeNodes.length || !audioContext) return;
+
     const now = audioContext.currentTime;
     themeNodes.forEach(function(node) {
       try { node.stop(now); } catch (e) {}
@@ -796,13 +803,21 @@ let themeLoopTimer = null;
   function playDeckDungeonThemeLoop() {
     stopDeckDungeonTheme();
 
+    const loopToken = themeLoopToken;
+
     function playLoop() {
+      if (loopToken !== themeLoopToken) return;
+
       deckDungeonTheme(window.selectedTheme || 'dungeon');
+
       // The four-pass arrangement occupies 16 beats per pass.
       // Restart slightly before the final scheduled notes have finished so
       // the tune can continue without an audible gap.
       const loopDuration = 71 * 0.42 * 1000;
-      themeLoopTimer = setTimeout(playLoop, loopDuration);
+      themeLoopTimer = setTimeout(function() {
+        if (loopToken !== themeLoopToken) return;
+        playLoop();
+      }, loopDuration);
     }
 
     playLoop();
