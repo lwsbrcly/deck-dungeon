@@ -746,8 +746,12 @@
     hide(weapon);
     clone.classList.add('dd-melee-active');
 
+    // Start the attack sound immediately with the melee animation. The sample
+    // already contains its own whoosh/lead-in, so delaying it until impact makes
+    // the whole attack feel late.
+    if (options.sound) options.sound();
+
     window.setTimeout(function () {
-      if (options.sound) options.sound();
       impact('hit', monsterContact, 320);
       shake(170);
     }, options.impactTime || 450);
