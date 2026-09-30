@@ -242,6 +242,83 @@ let themeLoopToken = 0;
     second.stop(now + 0.66);
   }
 
+
+  function rangedAttackSound() {
+    const context = getAudioContext();
+    const now = context.currentTime;
+
+    // Fast projectile pass: a dry "TSH" launch, rising "EE", then a
+    // descending "OO" tail. This is intentionally not an impact sound.
+    const noise = context.createBufferSource();
+    const noiseFilter = context.createBiquadFilter();
+    const noiseGain = context.createGain();
+
+    noise.buffer = makeNoiseBuffer(context, 0.075);
+    noiseFilter.type = "bandpass";
+    noiseFilter.frequency.setValueAtTime(3200, now);
+    noiseFilter.frequency.exponentialRampToValueAtTime(5200, now + 0.055);
+    noiseFilter.Q.value = 1.25;
+
+    noiseGain.gain.setValueAtTime(0.001, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.20, now + 0.006);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
+
+    noise.connect(noiseFilter);
+    noiseFilter.connect(noiseGain);
+    noiseGain.connect(context.destination);
+    noise.start(now);
+    noise.stop(now + 0.08);
+
+    // Rising "EE" — narrow, bright and slightly nasal.
+    const rise = context.createOscillator();
+    const riseFilter = context.createBiquadFilter();
+    const riseGain = context.createGain();
+
+    rise.type = "triangle";
+    rise.frequency.setValueAtTime(2450, now + 0.018);
+    rise.frequency.exponentialRampToValueAtTime(4100, now + 0.115);
+
+    riseFilter.type = "bandpass";
+    riseFilter.frequency.setValueAtTime(3000, now + 0.018);
+    riseFilter.frequency.exponentialRampToValueAtTime(4300, now + 0.115);
+    riseFilter.Q.value = 2.2;
+
+    riseGain.gain.setValueAtTime(0.001, now + 0.018);
+    riseGain.gain.exponentialRampToValueAtTime(0.12, now + 0.035);
+    riseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.125);
+
+    rise.connect(riseFilter);
+    riseFilter.connect(riseGain);
+    riseGain.connect(context.destination);
+    rise.start(now + 0.018);
+    rise.stop(now + 0.14);
+
+    // Falling "OO" — a smooth pitch glide that gives the projectile its
+    // trailing, passing-through-the-air character.
+    const tail = context.createOscillator();
+    const tailFilter = context.createBiquadFilter();
+    const tailGain = context.createGain();
+
+    tail.type = "sine";
+    tail.frequency.setValueAtTime(3500, now + 0.075);
+    tail.frequency.exponentialRampToValueAtTime(780, now + 0.31);
+
+    tailFilter.type = "lowpass";
+    tailFilter.frequency.setValueAtTime(3600, now + 0.075);
+    tailFilter.frequency.exponentialRampToValueAtTime(850, now + 0.31);
+
+    tailGain.gain.setValueAtTime(0.001, now + 0.075);
+    tailGain.gain.exponentialRampToValueAtTime(0.095, now + 0.095);
+    tailGain.gain.setValueAtTime(0.075, now + 0.17);
+    tailGain.gain.exponentialRampToValueAtTime(0.001, now + 0.33);
+
+    tail.connect(tailFilter);
+    tailFilter.connect(tailGain);
+    tailGain.connect(context.destination);
+    tail.start(now + 0.075);
+    tail.stop(now + 0.35);
+  }
+
   function weaponEquipSound() {
     const context = getAudioContext();
     const now = context.currentTime;
