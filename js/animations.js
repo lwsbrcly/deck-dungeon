@@ -755,9 +755,12 @@
     var unitY = dy / distance;
 
     // Use the ranged aiming angle, then turn the card 180° so the BOTTOM
-    // edge points at the monster. Thrown weapons keep the established
-    // opposite-facing convention; there is no spin during the throw.
-    var aimAngle = Math.atan2(dy, dx) * 180 / Math.PI + 90 + 180;
+    // edge points at the monster. Normalise the result so CSS takes the
+    // shortest rotation path instead of wrapping through a full turn.
+    var rangedAngle = Math.atan2(dy, dx) * 180 / Math.PI + 90;
+    var aimAngle = rangedAngle - 180;
+    while (aimAngle > 180) aimAngle -= 360;
+    while (aimAngle < -180) aimAngle += 360;
 
     setVector(clone, 'pull', -unitX * (options.pullDistance || 32), -unitY * (options.pullDistance || 32));
     setVector(clone, 'move',
