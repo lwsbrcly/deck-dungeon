@@ -325,7 +325,10 @@
     hide(food);
     clone.classList.add('dd-eat-active');
 
-    if (options.sound) options.sound();
+    if (options.sound || typeof global.eatFoodSound === 'function') {
+      var sound = options.sound || global.eatFoodSound;
+      sound();
+    }
 
     window.setTimeout(function () {
       impact('heart', center(playerRect), 280);
@@ -385,6 +388,11 @@
 
     hide(card);
     clone.classList.add('dd-drink-active');
+
+    if (options.sound || typeof global.eatFoodSound === 'function') {
+      var sound = options.sound || global.eatFoodSound;
+      sound();
+    }
 
     window.setTimeout(function () {
       impact('heart', target, 280);
@@ -702,14 +710,11 @@
     hide(weapon);
     clone.classList.add('dd-melee-active');
 
-    if (options.sound || typeof global.weaponEquipSound === 'function') {
-      window.setTimeout(function () {
-        var sound = options.sound || global.weaponEquipSound;
-        sound();
-      }, options.soundTime || 100);
-    }
-
     window.setTimeout(function () {
+      if (options.sound || typeof global.punchSound === 'function') {
+        var sound = options.sound || global.punchSound;
+        sound();
+      }
       impact('hit', center(monsterRect), 320);
       shake(170);
     }, options.impactTime || 450);
@@ -777,6 +782,10 @@
     // The hit happens at the end of the fast launch, then the thrown card
     // fades out rather than returning to the slot.
     window.setTimeout(function () {
+      if (options.sound || typeof global.punchSound === 'function') {
+        var sound = options.sound || global.punchSound;
+        sound();
+      }
       impact('hit', monsterCenter, 280);
       shake(160);
       if (options.onHit) options.onHit();
@@ -837,6 +846,10 @@
     clone.classList.add('dd-ranged-active');
 
     window.setTimeout(function () {
+      if (options.sound || typeof global.punchSound === 'function') {
+        var sound = options.sound || global.punchSound;
+        sound();
+      }
       impact('hit', monsterCenter, 280);
       jolt(monster, 180);
       if (options.onHit) options.onHit();
