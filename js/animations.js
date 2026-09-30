@@ -747,10 +747,7 @@
     clone.classList.add('dd-melee-active');
 
     window.setTimeout(function () {
-      if (options.sound || typeof global.rangedAttackSound === 'function') {
-        var sound = options.sound || global.rangedAttackSound;
-        sound();
-      }
+      if (options.sound) options.sound();
       impact('hit', monsterContact, 320);
       shake(170);
     }, options.impactTime || 450);
