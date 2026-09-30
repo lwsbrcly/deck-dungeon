@@ -948,7 +948,7 @@ function trackWeaponKill(weaponName, monsterValue) {
     state.weaponUsage[weaponName].ptsSlain += monsterValue;
 }
 
-function animateAttack(player, targetEl, done, isFistFight, ghostInfo) {
+function animateAttack(player, targetEl, done, isFistFight, ghostInfo, slotIndex) {
 if (!targetEl) { done(); return; }
 
 // Bare-handed fights use the parallel fist-fight choreography.
@@ -1022,7 +1022,7 @@ if (
       weaponEl,
       playerEl,
       targetEl,
-      { done: done, slotIndex: selectedIndex }
+      { done: done, slotIndex: slotIndex }
     );
     return;
   }
@@ -1204,7 +1204,7 @@ function fight(player, mode) {
           log('Both heroes team up vs ' + c.name + '. Took ' + totalDamage + ' damage split between them.', true, 'fist');
           checkGame();
           renderAfterAction();
-        }, true);
+        }, true, null, selectedIndex);
       } else {
         if (!a.weapon || !b.weapon || a.ceiling === null || b.ceiling === null || c.value > (a.ceiling + b.ceiling)) { log('Cannot combine weapons.'); return; }
         saveState();
@@ -1225,7 +1225,7 @@ function fight(player, mode) {
           log('Combined weapons (' + power + ' pwr) vs ' + c.name + '. Taken ' + damage + ' damage.', true, 'monster');
           checkGame();
           renderAfterAction();
-        });
+        }, false, null, selectedIndex);
       }
     } else {
       var p = state[player];
@@ -1293,7 +1293,7 @@ function fight(player, mode) {
         state.actionInProgress = false;
         checkGame();
         renderAfterAction();
-      }, mode !== 'weapon', ghostInfo);
+      }, mode !== 'weapon', ghostInfo, selectedIndex);
     }
 }
 
