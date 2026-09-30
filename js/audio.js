@@ -187,51 +187,76 @@ let themeLoopToken = 0;
   function punchSound() {
     const context = getAudioContext();
     const now = context.currentTime;
+    const output = getAudioOutput(context);
 
-    // The hit is deliberately stylised rather than realistic:
-    // a sharp "D" followed by an extended, descending, fuzzy UGH tail.
-    const main = context.createOscillator();
-    const second = context.createOscillator();
-    const distortion = context.createWaveShaper();
-    const filter = context.createBiquadFilter();
-    const gain = context.createGain();
+    // Short, physical punch: low thump + dry crunchy impact + tiny tail.
+    // Kept deliberately compact so it reads as a hit rather than a sustained sound.
 
-    main.type = "sawtooth";
-    second.type = "triangle";
+    // Low body of the impact.
+    const thump = context.createOscillator();
+    const thumpFilter = context.createBiquadFilter();
+    const thumpGain = context.createGain();
 
-    main.frequency.setValueAtTime(220, now);
-    main.frequency.exponentialRampToValueAtTime(58, now + 0.72);
+    thump.type = "sine";
+    thump.frequency.setValueAtTime(115, now);
+    thump.frequency.exponentialRampToValueAtTime(52, now + 0.12);
 
-    second.frequency.setValueAtTime(115, now);
-    second.frequency.exponentialRampToValueAtTime(38, now + 0.72);
+    thumpFilter.type = "lowpass";
+    thumpFilter.frequency.value = 500;
 
-    // Slightly stronger than UGH so the initial D has some definition.
-    distortion.curve = makeDistortionCurve(240);
-    distortion.oversample = "2x";
+    thumpGain.gain.setValueAtTime(0.001, now);
+    thumpGain.gain.exponentialRampToValueAtTime(0.42, now + 0.006);
+    thumpGain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
 
-    filter.type = "lowpass";
-    filter.frequency.setValueAtTime(1200, now);
-    filter.frequency.exponentialRampToValueAtTime(180, now + 0.72);
+    thump.connect(thumpFilter);
+    thumpFilter.connect(thumpGain);
+    thumpGain.connect(output);
+    thump.start(now);
+    thump.stop(now + 0.16);
 
-    // Very quick synthetic attack = the "D".
-    gain.gain.setValueAtTime(0.001, now);
-    gain.gain.exponentialRampToValueAtTime(0.48, now + 0.025);
+    // Dry, crunchy middle gives the hit its physical "WHACK" character.
+    const crack = context.createBufferSource();
+    const crackFilter = context.createBiquadFilter();
+    const crackGain = context.createGain();
 
-    // Hold the body, then let the whole thing sink away into the low end.
-    gain.gain.setValueAtTime(0.42, now + 0.16);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.82);
+    crack.buffer = makeNoiseBuffer(context, 0.075);
+    crackFilter.type = "bandpass";
+    crackFilter.frequency.setValueAtTime(1250, now);
+    crackFilter.frequency.exponentialRampToValueAtTime(650, now + 0.07);
+    crackFilter.Q.value = 0.7;
 
-    main.connect(distortion);
-    second.connect(distortion);
-    distortion.connect(filter);
-    filter.connect(gain);
-    gain.connect(getAudioOutput(context));
+    crackGain.gain.setValueAtTime(0.001, now);
+    crackGain.gain.exponentialRampToValueAtTime(0.34, now + 0.004);
+    crackGain.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
 
-    main.start(now);
-    second.start(now);
+    crack.connect(crackFilter);
+    crackFilter.connect(crackGain);
+    crackGain.connect(output);
+    crack.start(now);
+    crack.stop(now + 0.08);
 
-    main.stop(now + 0.84);
-    second.stop(now + 0.84);
+    // Very short mid-frequency knock adds a little definition without making it tonal.
+    const knock = context.createOscillator();
+    const knockFilter = context.createBiquadFilter();
+    const knockGain = context.createGain();
+
+    knock.type = "triangle";
+    knock.frequency.setValueAtTime(210, now);
+    knock.frequency.exponentialRampToValueAtTime(95, now + 0.095);
+
+    knockFilter.type = "bandpass";
+    knockFilter.frequency.value = 520;
+    knockFilter.Q.value = 0.8;
+
+    knockGain.gain.setValueAtTime(0.001, now);
+    knockGain.gain.exponentialRampToValueAtTime(0.16, now + 0.004);
+    knockGain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
+
+    knock.connect(knockFilter);
+    knockFilter.connect(knockGain);
+    knockGain.connect(output);
+    knock.start(now);
+    knock.stop(now + 0.12);
   }
 
   function ughSound() {
