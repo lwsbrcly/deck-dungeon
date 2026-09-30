@@ -707,9 +707,37 @@
       return;
     }
 
-    var move = translation(weaponRect, monsterRect);
+    // The attack connects at 50% across / 25% down on both cards.
+    // Because the weapon is rotated at impact, calculate the translation
+    // required for that rotated point to land exactly on the monster point.
+    var weaponContact = {
+      x: weaponRect.centerX,
+      y: weaponRect.top + weaponRect.height * 0.25
+    };
+    var monsterContact = {
+      x: monsterRect.centerX,
+      y: monsterRect.top + monsterRect.height * 0.25
+    };
+
+    var slotIndex = Number(options.slotIndex);
+    var angle = (slotIndex === 0 || slotIndex === 1) ? -30 : 30;
+    var radians = angle * Math.PI / 180;
+
+    var localContactY = -weaponRect.height * 0.25;
+    var rotatedContactX = -localContactY * Math.sin(radians);
+    var rotatedContactY = localContactY * Math.cos(radians);
+
+    var targetCenterX = monsterContact.x - rotatedContactX;
+    var targetCenterY = monsterContact.y - rotatedContactY;
+
+    var move = {
+      x: targetCenterX - weaponRect.centerX,
+      y: targetCenterY - weaponRect.centerY
+    };
+
     setVector(clone, 'move', move.x, move.y);
     setVector(clone, 'return', -move.x, -move.y);
+    clone.style.setProperty('--melee-angle', angle + 'deg');
     clone.style.setProperty('--lift-scale', '1.08');
     clone.style.setProperty('--animation-duration', (options.duration || 850) + 'ms');
 
@@ -721,7 +749,7 @@
         var sound = options.sound || global.punchSound;
         sound();
       }
-      impact('hit', center(monsterRect), 320);
+      impact('hit', monsterContact, 320);
       shake(170);
     }, options.impactTime || 450);
 
