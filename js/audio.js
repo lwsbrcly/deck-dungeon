@@ -300,12 +300,13 @@ let themeLoopToken = 0;
     const tailGain = context.createGain();
 
     tail.type = "sine";
+    // Fall by exactly one octave for the final "OO".
     tail.frequency.setValueAtTime(3500, now + 0.075);
-    tail.frequency.exponentialRampToValueAtTime(780, now + 0.31);
+    tail.frequency.exponentialRampToValueAtTime(1750, now + 0.31);
 
     tailFilter.type = "lowpass";
     tailFilter.frequency.setValueAtTime(3600, now + 0.075);
-    tailFilter.frequency.exponentialRampToValueAtTime(850, now + 0.31);
+    tailFilter.frequency.exponentialRampToValueAtTime(1800, now + 0.31);
 
     tailGain.gain.setValueAtTime(0.001, now + 0.075);
     tailGain.gain.exponentialRampToValueAtTime(0.095, now + 0.095);
