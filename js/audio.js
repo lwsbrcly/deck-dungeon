@@ -319,6 +319,58 @@ let themeLoopToken = 0;
     tail.stop(now + 0.35);
   }
 
+  function thrownAttackSound() {
+    const context = getAudioContext();
+    const now = context.currentTime;
+
+    // Short physical "SH" — the weapon leaving the hand.
+    const sh = context.createBufferSource();
+    const shFilter = context.createBiquadFilter();
+    const shGain = context.createGain();
+
+    sh.buffer = makeNoiseBuffer(context, 0.065);
+    shFilter.type = "bandpass";
+    shFilter.frequency.setValueAtTime(900, now);
+    shFilter.frequency.exponentialRampToValueAtTime(2200, now + 0.055);
+    shFilter.Q.value = 0.9;
+
+    shGain.gain.setValueAtTime(0.001, now);
+    shGain.gain.exponentialRampToValueAtTime(0.16, now + 0.008);
+    shGain.gain.exponentialRampToValueAtTime(0.001, now + 0.065);
+
+    sh.connect(shFilter);
+    shFilter.connect(shGain);
+    shGain.connect(context.destination);
+    sh.start(now);
+    sh.stop(now + 0.07);
+
+    // Rising "WEE" — brighter and more solid than the ranged projectile sound.
+    const wee = context.createOscillator();
+    const weeFilter = context.createBiquadFilter();
+    const weeGain = context.createGain();
+
+    wee.type = "triangle";
+    wee.frequency.setValueAtTime(620, now + 0.018);
+    wee.frequency.exponentialRampToValueAtTime(2650, now + 0.25);
+
+    weeFilter.type = "bandpass";
+    weeFilter.frequency.setValueAtTime(1000, now + 0.018);
+    weeFilter.frequency.exponentialRampToValueAtTime(3000, now + 0.25);
+    weeFilter.Q.value = 1.4;
+
+    weeGain.gain.setValueAtTime(0.001, now + 0.018);
+    weeGain.gain.exponentialRampToValueAtTime(0.13, now + 0.045);
+    weeGain.gain.setValueAtTime(0.10, now + 0.16);
+    weeGain.gain.exponentialRampToValueAtTime(0.001, now + 0.29);
+
+    wee.connect(weeFilter);
+    weeFilter.connect(weeGain);
+    weeGain.connect(context.destination);
+    wee.start(now + 0.018);
+    wee.stop(now + 0.31);
+  }
+
+
   function weaponEquipSound() {
     const context = getAudioContext();
     const now = context.currentTime;
@@ -935,5 +987,7 @@ let themeLoopToken = 0;
     playLoop();
   }
 
+  window.thrownAttackSound = thrownAttackSound;
+  window.rangedAttackSound = rangedAttackSound;
   window.playDeckDungeonThemeLoop = playDeckDungeonThemeLoop;
   window.stopDeckDungeonTheme = stopDeckDungeonTheme;
