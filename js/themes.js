@@ -381,9 +381,8 @@ const THEMES = {
             },
         },
 
-        text: {
 
-            endGame: {
+        endGame: {
 
                 win: {
 
@@ -410,6 +409,11 @@ const THEMES = {
                 }
 
             },
+
+        },
+
+
+        text: {
             gameTitle: 'DECK DUNGEON',
             location: 'Dungeon',
             monster: 'Monster',
@@ -552,9 +556,8 @@ const THEMES = {
             },
         },
 
-        text: {
 
-            endGame: {
+        endGame: {
 
                 win: {
 
@@ -581,6 +584,11 @@ const THEMES = {
                 }
 
             },
+
+        },
+
+
+        text: {
             gameTitle: 'Shaun of the Deck',
             location: 'The Pub',
             monster: 'Zombie',
@@ -724,9 +732,8 @@ const THEMES = {
             },
         },
 
-        text: {
 
-            endGame: {
+        endGame: {
 
                 win: {
 
@@ -753,6 +760,11 @@ const THEMES = {
                 }
 
             },
+
+        },
+
+
+        text: {
             gameTitle: 'Space Deck',
             location: 'Derelict Freighter',
             monster: 'Xenomorph',
@@ -842,9 +854,8 @@ const THEMES = {
             },
         },
 
-        text: {
 
-            endGame: {
+        endGame: {
 
                 win: {
 
@@ -871,6 +882,11 @@ const THEMES = {
                 }
 
             },
+
+        },
+
+
+        text: {
             gameTitle: 'Shaun of the Deck',
             location: 'The Pub',
             monster: 'Zombie',
@@ -960,9 +976,8 @@ const THEMES = {
             },
         },
 
-        text: {
 
-            endGame: {
+        endGame: {
 
                 win: {
 
@@ -989,6 +1004,11 @@ const THEMES = {
                 }
 
             },
+
+        },
+
+
+        text: {
             gameTitle: 'Deck of Shadows',
             location: 'The Pub',
             monster: 'Zombie',
