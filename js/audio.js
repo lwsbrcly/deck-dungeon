@@ -742,10 +742,10 @@ let themeLoopToken = 0;
       noise.stop(start + 0.055);
     }
 
-    // Three quick swallows across the same ~0.28s window as the two crunches.
-    makeGulp(now,        275, 0.29);
-    makeGulp(now + 0.13, 250, 0.28);
-    makeGulp(now + 0.26, 225, 0.27);
+    // Three quick swallows, rising slightly in pitch: 1 -> 2 -> 3.
+    makeGulp(now,        255, 0.29);
+    makeGulp(now + 0.13, 285, 0.28);
+    makeGulp(now + 0.26, 320, 0.27);
 
     // Same healing ping as eating, deliberately unchanged.
     const sparkleNotes = [
