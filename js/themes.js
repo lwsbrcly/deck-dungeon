@@ -422,9 +422,6 @@ const THEMES = {
             heal: 'consumes',
             flee: 'Fled the room',
             enter: 'Enters Dungeon weilding',
-            draw: 'No one survived etc',
-            lose: 'The dungeon has defeated you',
-            win: 'You have defeated the dungeon!',
         },
 
         actions: {
@@ -561,25 +558,25 @@ const THEMES = {
 
                 win: {
 
-                    title: 'Dungeon Complete!',
+                    title: 'You survived!',
 
-                    body: 'You have defeated the dungeon!'
+                    body: 'The army arrived and averted the apocolypse!'
 
                 },
 
                 lose: {
 
-                    title: 'You Have Fallen',
+                    title: 'You got bitten!',
 
-                    body: 'The dungeon has beaten you this time, Adventurer.'
+                    body: 'You\'ve been turned into a zombie. Hope you get a nice job somewhere.'
 
                 },
 
                 draw: {
 
-                    title: 'A Pyrrhic Victory!',
+                    title: 'You\'ve got red on you!',
 
-                    body: 'You struck down the final beast of the dungeon, but took a mortal blow in the process. The dungeon is cleared, though none survived to tell the tale!'
+                    body: 'You killed all the zombies, but became one yourself. Hope it was all worth it!'
 
                 }
 
@@ -596,9 +593,6 @@ const THEMES = {
             heal: 'consumes',
             flee: 'Ran for it',
             enter: 'Heads out armed with',
-            draw: 'No one survived etc',
-            lose: 'The dungeon has defeated you',
-            win: 'You have defeated the dungeon!',
         },
 
         actions: {
@@ -736,25 +730,25 @@ const THEMES = {
 
                 win: {
 
-                    title: 'Dungeon Complete!',
+                    title: 'You have survived!',
 
-                    body: 'You have defeated the dungeon!'
+                    body: 'Time to loot the ship of any worthy cargo, and get the hell out of here!'
 
                 },
 
                 lose: {
 
-                    title: 'You Have Fallen',
+                    title: 'You have been enslaved by the hive.',
 
-                    body: 'The dungeon has beaten you this time, Adventurer.'
+                    body: 'At least you can rest assured your body will live on to feed hundreds more hideous aliens.'
 
                 },
 
                 draw: {
 
-                    title: 'A Pyrrhic Victory!',
+                    title: 'You put up a good fight!',
 
-                    body: 'You struck down the final beast of the dungeon, but took a mortal blow in the process. The dungeon is cleared, though none survived to tell the tale!'
+                    body: 'The threats are subdued. For now. Too bad you couldn\'t send out that HAZARDOUS SHIP alert to warn the others...!'
 
                 }
 
@@ -771,9 +765,6 @@ const THEMES = {
             heal: 'applies',
             flee: 'Escapes',
             enter: 'Heads out armed with',
-            draw: 'The threats are subdued. For now. Too bad you couldn\'t send out the HAZARDOUS SHIP alert to warn the others...',
-            lose: 'You have fallen. Your body won\'t be found.',
-            win: 'You have escaped the ship with your life!',
         },
 
         actions: {
@@ -857,25 +848,25 @@ const THEMES = {
 
                 win: {
 
-                    title: 'Dungeon Complete!',
+                    title: 'Plundering, complete!',
 
-                    body: 'You have defeated the dungeon!'
+                    body: 'You have defeated every ship in the sea, time to hoard some gold and bury it!'
 
                 },
 
                 lose: {
 
-                    title: 'You Have Fallen',
+                    title: 'Avast, ye have be slain',
 
-                    body: 'The dungeon has beaten you this time, Adventurer.'
+                    body: 'One too many boardings, Captain. Your legacy will be told throughout the ages.'
 
                 },
 
                 draw: {
 
-                    title: 'A Pyrrhic Victory!',
+                    title: 'Your ship is captainless!',
 
-                    body: 'You struck down the final beast of the dungeon, but took a mortal blow in the process. The dungeon is cleared, though none survived to tell the tale!'
+                    body: 'You died doing what you loved - pillaging. At least your crew will spend all the gold in your honour!'
 
                 }
 
@@ -892,9 +883,6 @@ const THEMES = {
             heal: 'consumes',
             flee: 'Ran for it',
             enter: 'Heads out armed with',
-            draw: 'No one survived etc',
-            lose: 'The dungeon has defeated you',
-            win: 'You have defeated the dungeon!',
         },
 
         actions: {
@@ -978,30 +966,30 @@ const THEMES = {
 
                 win: {
 
-                    title: 'Dungeon Complete!',
+                    title: 'Quest Successful!',
 
-                    body: 'You have defeated the dungeon!'
+                    body: 'You have found your way to the Lord\'s inner chamber and stolen back your family heirloom!'
 
                 },
 
                 lose: {
 
-                    title: 'You Have Fallen',
+                    title: 'You have been discovered',
 
-                    body: 'The dungeon has beaten you this time, Adventurer.'
+                    body: 'Your quest was unsuccessful. Now run back home and train harder for your next attempt!'
 
                 },
 
                 draw: {
 
-                    title: 'A Pyrrhic Victory!',
+                    title: 'You were only one person away!',
 
-                    body: 'You struck down the final beast of the dungeon, but took a mortal blow in the process. The dungeon is cleared, though none survived to tell the tale!'
+                    body: 'You were discovered by the very last guard of the inner chamber. Escape now and return even stealthier, shinobi!'
 
                 }
 
             },
-            gameTitle: 'Shaun of the Deck',
+            gameTitle: 'Deck of Shadows',
             location: 'The Pub',
             monster: 'Zombie',
             weapon: 'Weapon',
@@ -1013,9 +1001,6 @@ const THEMES = {
             heal: 'consumes',
             flee: 'Ran for it',
             enter: 'Heads out armed with',
-            draw: 'No one survived etc',
-            lose: 'The dungeon has defeated you',
-            win: 'You have defeated the dungeon!',
         },
 
         actions: {
