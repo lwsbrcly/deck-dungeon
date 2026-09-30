@@ -720,7 +720,9 @@
     };
 
     var slotIndex = Number(options.slotIndex);
-    var angle = (slotIndex === 0 || slotIndex === 1) ? -30 : 30;
+    var slotAngles = [60, 30, -5, -30];
+    var angle = slotAngles[slotIndex];
+    if (typeof angle !== 'number') angle = 0;
     var radians = angle * Math.PI / 180;
 
     var localContactY = -weaponRect.height * 0.25;
