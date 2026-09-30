@@ -255,8 +255,8 @@ let themeLoopToken = 0;
 
     noise.buffer = makeNoiseBuffer(context, 0.075);
     noiseFilter.type = "bandpass";
-    noiseFilter.frequency.setValueAtTime(1600, now);
-    noiseFilter.frequency.exponentialRampToValueAtTime(2600, now + 0.055);
+    noiseFilter.frequency.setValueAtTime(800, now);
+    noiseFilter.frequency.exponentialRampToValueAtTime(1300, now + 0.055);
     noiseFilter.Q.value = 1.25;
 
     noiseGain.gain.setValueAtTime(0.001, now);
@@ -275,12 +275,12 @@ let themeLoopToken = 0;
     const riseGain = context.createGain();
 
     rise.type = "triangle";
-    rise.frequency.setValueAtTime(1225, now + 0.018);
-    rise.frequency.exponentialRampToValueAtTime(2050, now + 0.115);
+    rise.frequency.setValueAtTime(612.5, now + 0.018);
+    rise.frequency.exponentialRampToValueAtTime(1025, now + 0.115);
 
     riseFilter.type = "bandpass";
-    riseFilter.frequency.setValueAtTime(1500, now + 0.018);
-    riseFilter.frequency.exponentialRampToValueAtTime(2150, now + 0.115);
+    riseFilter.frequency.setValueAtTime(750, now + 0.018);
+    riseFilter.frequency.exponentialRampToValueAtTime(1075, now + 0.115);
     riseFilter.Q.value = 2.2;
 
     riseGain.gain.setValueAtTime(0.001, now + 0.018);
@@ -301,12 +301,12 @@ let themeLoopToken = 0;
 
     tail.type = "sine";
     // Whole sound shifted down one octave, keeping the same contour.
-    tail.frequency.setValueAtTime(1750, now + 0.075);
-    tail.frequency.exponentialRampToValueAtTime(875, now + 0.31);
+    tail.frequency.setValueAtTime(875, now + 0.075);
+    tail.frequency.exponentialRampToValueAtTime(437.5, now + 0.31);
 
     tailFilter.type = "lowpass";
-    tailFilter.frequency.setValueAtTime(1800, now + 0.075);
-    tailFilter.frequency.exponentialRampToValueAtTime(900, now + 0.31);
+    tailFilter.frequency.setValueAtTime(900, now + 0.075);
+    tailFilter.frequency.exponentialRampToValueAtTime(450, now + 0.31);
 
     tailGain.gain.setValueAtTime(0.001, now + 0.075);
     tailGain.gain.exponentialRampToValueAtTime(0.095, now + 0.095);
