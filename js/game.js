@@ -124,15 +124,6 @@ var activeGhostMemoryId = null;
 
 var state = {};
 var historyStack = [];
-function stopDeckDungeonTheme() {
-    if (!themeNodes.length || !audioContext) return;
-    const now = audioContext.currentTime;
-    themeNodes.forEach(function(node) {
-      try { node.stop(now); } catch (e) {}
-    });
-    themeNodes = [];
-}
-
 function saveState() {
     historyStack.push(JSON.parse(JSON.stringify(state)));
     if (historyStack.length > 30) historyStack.shift();
