@@ -15,7 +15,7 @@ let themeLoopToken = 0;
     return audioContext;
   }
 
-  function makeNoiseBuffer(context, duration) {
+  function getAudioOutput(context) {\n    if (!masterGain) {\n      masterGain = context.createGain();\n      masterGain.gain.value = audioEnabled ? 1 : 0;\n      masterGain.connect(context.destination);\n    }\n    return masterGain;\n  }\n\n  function setAudioEnabled(enabled) {\n    audioEnabled = !!enabled;\n    localStorage.setItem("deckDungeonAudio", audioEnabled ? "on" : "off");\n\n    if (audioContext && masterGain) {\n      masterGain.gain.setTargetAtTime(audioEnabled ? 1 : 0, audioContext.currentTime, 0.015);\n    }\n\n    var toggle = document.getElementById("soundToggle");\n    var label = document.getElementById("soundToggleLabel");\n    if (toggle) toggle.setAttribute("aria-pressed", audioEnabled ? "true" : "false");\n    if (label) label.textContent = audioEnabled ? "Sound On" : "Sound Off";\n  }\n\n  function toggleAudio() {\n    setAudioEnabled(!audioEnabled);\n  }\n\n  function updateSoundToggle() {\n    var toggle = document.getElementById("soundToggle");\n    var label = document.getElementById("soundToggleLabel");\n    if (toggle) toggle.setAttribute("aria-pressed", audioEnabled ? "true" : "false");\n    if (label) label.textContent = audioEnabled ? "Sound On" : "Sound Off";\n  }\n\n  function makeNoiseBuffer(context, duration) {
     const buffer = context.createBuffer(
       1,
       context.sampleRate * duration,
@@ -79,7 +79,7 @@ let themeLoopToken = 0;
       oscillator.connect(filter);
       detuned.connect(filter);
       filter.connect(gain);
-      gain.connect(context.destination);
+      gain.connect(getAudioOutput(context));
 
       oscillator.start(start);
       detuned.start(start);
@@ -117,7 +117,7 @@ let themeLoopToken = 0;
       gain.gain.exponentialRampToValueAtTime(0.001, end);
 
       oscillator.connect(gain);
-      gain.connect(context.destination);
+      gain.connect(getAudioOutput(context));
 
       oscillator.start(start);
       oscillator.stop(end + 0.02);
@@ -137,7 +137,7 @@ let themeLoopToken = 0;
       gain.gain.exponentialRampToValueAtTime(0.001, start + 0.3);
 
       sparkle.connect(gain);
-      gain.connect(context.destination);
+      gain.connect(getAudioOutput(context));
 
       sparkle.start(start);
       sparkle.stop(start + 0.22);
@@ -186,7 +186,7 @@ let themeLoopToken = 0;
     second.connect(distortion);
     distortion.connect(filter);
     filter.connect(gain);
-    gain.connect(context.destination);
+    gain.connect(getAudioOutput(context));
 
     main.start(now);
     second.start(now);
@@ -233,7 +233,7 @@ let themeLoopToken = 0;
     second.connect(distortion);
     distortion.connect(filter);
     filter.connect(gain);
-    gain.connect(context.destination);
+    gain.connect(getAudioOutput(context));
 
     main.start(now);
     second.start(now);
@@ -266,7 +266,7 @@ let themeLoopToken = 0;
 
     noise.connect(noiseFilter);
     noiseFilter.connect(noiseGain);
-    noiseGain.connect(context.destination);
+    noiseGain.connect(getAudioOutput(context));
     noise.start(now);
     noise.stop(now + 0.07);
 
@@ -290,7 +290,7 @@ let themeLoopToken = 0;
 
     launchBody.connect(launchBodyFilter);
     launchBodyFilter.connect(launchBodyGain);
-    launchBodyGain.connect(context.destination);
+    launchBodyGain.connect(getAudioOutput(context));
     launchBody.start(now);
     launchBody.stop(now + 0.09);
 
@@ -315,7 +315,7 @@ let themeLoopToken = 0;
 
     rise.connect(riseFilter);
     riseFilter.connect(riseGain);
-    riseGain.connect(context.destination);
+    riseGain.connect(getAudioOutput(context));
     rise.start(now + 0.018);
     rise.stop(now + 0.14);
 
@@ -339,7 +339,7 @@ let themeLoopToken = 0;
 
     arcade.connect(arcadeFilter);
     arcadeFilter.connect(arcadeGain);
-    arcadeGain.connect(context.destination);
+    arcadeGain.connect(getAudioOutput(context));
     arcade.start(now + 0.012);
     arcade.stop(now + 0.125);
 
@@ -364,7 +364,7 @@ let themeLoopToken = 0;
 
     bzzt.connect(bzztFilter);
     bzztFilter.connect(bzztGain);
-    bzztGain.connect(context.destination);
+    bzztGain.connect(getAudioOutput(context));
     bzzt.start(now + 0.008);
     bzzt.stop(now + 0.125);
 
@@ -390,7 +390,7 @@ let themeLoopToken = 0;
 
     tail.connect(tailFilter);
     tailFilter.connect(tailGain);
-    tailGain.connect(context.destination);
+    tailGain.connect(getAudioOutput(context));
     tail.start(now + 0.075);
     tail.stop(now + 0.35);
   }
@@ -416,7 +416,7 @@ let themeLoopToken = 0;
 
     sh.connect(shFilter);
     shFilter.connect(shGain);
-    shGain.connect(context.destination);
+    shGain.connect(getAudioOutput(context));
     sh.start(now);
     sh.stop(now + 0.07);
 
@@ -441,7 +441,7 @@ let themeLoopToken = 0;
 
     wee.connect(weeFilter);
     weeFilter.connect(weeGain);
-    weeGain.connect(context.destination);
+    weeGain.connect(getAudioOutput(context));
     wee.start(now + 0.018);
     wee.stop(now + 0.31);
   }
@@ -470,7 +470,7 @@ let themeLoopToken = 0;
 
     suck.connect(suckFilter);
     suckFilter.connect(suckGain);
-    suckGain.connect(context.destination);
+    suckGain.connect(getAudioOutput(context));
     suck.start(now);
     suck.stop(now + 0.21);
 
@@ -493,7 +493,7 @@ let themeLoopToken = 0;
 
     body.connect(bodyFilter);
     bodyFilter.connect(bodyGain);
-    bodyGain.connect(context.destination);
+    bodyGain.connect(getAudioOutput(context));
     body.start(now);
     body.stop(now + 0.21);
   }
@@ -520,7 +520,7 @@ let themeLoopToken = 0;
 
     shing.connect(shingFilter);
     shingFilter.connect(shingGain);
-    shingGain.connect(context.destination);
+    shingGain.connect(getAudioOutput(context));
 
     shing.start(now);
     shing.stop(now + 0.3);
@@ -538,7 +538,7 @@ let themeLoopToken = 0;
     clingGain.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
 
     cling.connect(clingGain);
-    clingGain.connect(context.destination);
+    clingGain.connect(getAudioOutput(context));
 
     cling.start(now + 0.18);
     cling.stop(now + 0.6);
@@ -555,7 +555,7 @@ let themeLoopToken = 0;
     overtoneGain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
 
     overtone.connect(overtoneGain);
-    overtoneGain.connect(context.destination);
+    overtoneGain.connect(getAudioOutput(context));
 
     overtone.start(now + 0.18);
     overtone.stop(now + 0.6);
@@ -584,7 +584,7 @@ let themeLoopToken = 0;
 
       fall.connect(fallFilter);
       fallFilter.connect(fallGain);
-      fallGain.connect(context.destination);
+      fallGain.connect(getAudioOutput(context));
 
       fall.start(now);
       fall.stop(now + 0.9);
@@ -607,7 +607,7 @@ let themeLoopToken = 0;
 
       wind.connect(windFilter);
       windFilter.connect(windGain);
-      windGain.connect(context.destination);
+      windGain.connect(getAudioOutput(context));
 
       wind.start(now);
       wind.stop(now + 0.7);
@@ -625,7 +625,7 @@ let themeLoopToken = 0;
       //impactGain.gain.exponentialRampToValueAtTime(0.001, now + 1.1);
 
       //impact.connect(impactGain);
-      //impactGain.connect(context.destination);
+      //impactGain.connect(getAudioOutput(context));
 
       //impact.start(now + 0.82);
       //impact.stop(now + 1.15);
@@ -661,7 +661,7 @@ let themeLoopToken = 0;
 
         noise.connect(filter);
         filter.connect(gain);
-        gain.connect(context.destination);
+        gain.connect(getAudioOutput(context));
 
         noise.start(start);
         noise.stop(start + duration + 0.01);
@@ -679,7 +679,7 @@ let themeLoopToken = 0;
         thumpGain.gain.exponentialRampToValueAtTime(0.001, start + 0.25);
 
         thump.connect(thumpGain);
-        thumpGain.connect(context.destination);
+        thumpGain.connect(getAudioOutput(context));
 
         thump.start(start);
         thump.stop(start + 0.28);
@@ -697,7 +697,7 @@ let themeLoopToken = 0;
         knockGain.gain.exponentialRampToValueAtTime(0.001, start + 0.14);
 
         knock.connect(knockGain);
-        knockGain.connect(context.destination);
+        knockGain.connect(getAudioOutput(context));
 
         knock.start(start);
         knock.stop(start + 0.17);
@@ -729,7 +729,7 @@ let themeLoopToken = 0;
 
           crack.connect(crackFilter);
           crackFilter.connect(crackGain);
-          crackGain.connect(context.destination);
+          crackGain.connect(getAudioOutput(context));
 
           crack.start(crackStart);
           crack.stop(crackStart + crackDuration + 0.005);
@@ -761,7 +761,7 @@ let themeLoopToken = 0;
           gain.gain.exponentialRampToValueAtTime(0.001, start + 0.25);
 
           sparkle.connect(gain);
-          gain.connect(context.destination);
+          gain.connect(getAudioOutput(context));
 
           sparkle.start(start);
           sparkle.stop(start + 0.28);
@@ -792,7 +792,7 @@ let themeLoopToken = 0;
 
       tone.connect(toneFilter);
       toneFilter.connect(toneGain);
-      toneGain.connect(context.destination);
+      toneGain.connect(getAudioOutput(context));
       tone.start(start);
       tone.stop(start + 0.16);
 
@@ -812,7 +812,7 @@ let themeLoopToken = 0;
 
       noise.connect(noiseFilter);
       noiseFilter.connect(noiseGain);
-      noiseGain.connect(context.destination);
+      noiseGain.connect(getAudioOutput(context));
       noise.start(start);
       noise.stop(start + 0.055);
     }
@@ -842,7 +842,7 @@ let themeLoopToken = 0;
       gain.gain.exponentialRampToValueAtTime(0.001, start + 0.25);
 
       sparkle.connect(gain);
-      gain.connect(context.destination);
+      gain.connect(getAudioOutput(context));
       sparkle.start(start);
       sparkle.stop(start + 0.28);
     }
@@ -884,7 +884,7 @@ let themeLoopToken = 0;
 
           oscillator.connect(filter);
           filter.connect(gain);
-          gain.connect(context.destination);
+          gain.connect(getAudioOutput(context));
 
           oscillator.start(start);
           oscillator.stop(end + 0.02);
@@ -922,7 +922,7 @@ let themeLoopToken = 0;
 
           whoosh.connect(filter);
           filter.connect(gain);
-          gain.connect(context.destination);
+          gain.connect(getAudioOutput(context));
 
           whoosh.start(start);
           whoosh.stop(start + duration + 0.01);
@@ -1104,7 +1104,7 @@ let themeLoopToken = 0;
       }
 
       output.connect(gain);
-      gain.connect(context.destination);
+      gain.connect(getAudioOutput(context));
 
       oscillator.start(start);
       oscillator.stop(end + 0.03);
@@ -1131,7 +1131,7 @@ let themeLoopToken = 0;
       gain.gain.exponentialRampToValueAtTime(0.001, start + 0.32);
 
       drum.connect(gain);
-      gain.connect(context.destination);
+      gain.connect(getAudioOutput(context));
       drum.start(start);
       drum.stop(start + 0.27);
       themeNodes.push(drum);
@@ -1200,3 +1200,4 @@ let themeLoopToken = 0;
   window.rangedAttackSound = rangedAttackSound;
   window.playDeckDungeonThemeLoop = playDeckDungeonThemeLoop;
   window.stopDeckDungeonTheme = stopDeckDungeonTheme;
+\n  window.toggleAudio = toggleAudio;\n  window.setAudioEnabled = setAudioEnabled;\n
