@@ -236,50 +236,59 @@ let themeLoopToken = 0;
   function ughSound() {
     const context = getAudioContext();
     const now = context.currentTime;
+    const output = getAudioOutput(context);
 
-    // Two oscillators make it sound less like a pure beep
-    const main = context.createOscillator();
-    const second = context.createOscillator();
+    // Retro character-hurt sound, based on a short descending voiced "OW".
+    // Each hurt is deliberately elongated, then played twice with a slight
+    // pitch variation so the fist fight gets a clear "OW ... OW" response.
 
-    const distortion = context.createWaveShaper();
-    const filter = context.createBiquadFilter();
-    const gain = context.createGain();
+    function makeHurt(start, pitchScale, volume) {
+      const main = context.createOscillator();
+      const second = context.createOscillator();
+      const voiceFilter = context.createBiquadFilter();
+      const bodyFilter = context.createBiquadFilter();
+      const gain = context.createGain();
 
-    main.type = "sawtooth";
-    second.type = "triangle";
+      main.type = "sawtooth";
+      second.type = "triangle";
 
-    main.frequency.setValueAtTime(180, now);
-    main.frequency.exponentialRampToValueAtTime(75, now + 0.55);
+      // Falling pitch is the important part of the reference sound.
+      main.frequency.setValueAtTime(205 * pitchScale, start);
+      main.frequency.exponentialRampToValueAtTime(78 * pitchScale, start + 0.34);
 
-    second.frequency.setValueAtTime(92, now);
-    second.frequency.exponentialRampToValueAtTime(48, now + 0.55);
+      second.frequency.setValueAtTime(102 * pitchScale, start);
+      second.frequency.exponentialRampToValueAtTime(43 * pitchScale, start + 0.34);
 
-    // Mild distortion
-    distortion.curve = makeDistortionCurve(180);
-    distortion.oversample = "2x";
+      // Shape the sawtooth into a compact, nasal retro "hurt" rather than a buzz.
+      voiceFilter.type = "bandpass";
+      voiceFilter.frequency.setValueAtTime(760, start);
+      voiceFilter.frequency.exponentialRampToValueAtTime(310, start + 0.34);
+      voiceFilter.Q.value = 1.15;
 
-    filter.type = "lowpass";
-    filter.frequency.setValueAtTime(1000, now);
-    filter.frequency.exponentialRampToValueAtTime(260, now + 0.55);
+      bodyFilter.type = "lowpass";
+      bodyFilter.frequency.setValueAtTime(900, start);
+      bodyFilter.frequency.exponentialRampToValueAtTime(240, start + 0.36);
 
-    gain.gain.setValueAtTime(0.001, now);
-    gain.gain.exponentialRampToValueAtTime(0.35, now + 0.04);
-    gain.gain.setValueAtTime(0.35, now + 0.18);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
+      gain.gain.setValueAtTime(0.001, start);
+      gain.gain.exponentialRampToValueAtTime(volume, start + 0.025);
+      gain.gain.setValueAtTime(volume * 0.92, start + 0.16);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.39);
 
-    main.connect(distortion);
-    second.connect(distortion);
-    distortion.connect(filter);
-    filter.connect(gain);
-    gain.connect(getAudioOutput(context));
+      main.connect(voiceFilter);
+      second.connect(voiceFilter);
+      voiceFilter.connect(bodyFilter);
+      bodyFilter.connect(gain);
+      gain.connect(output);
 
-    main.start(now);
-    second.start(now);
+      main.start(start);
+      second.start(start);
+      main.stop(start + 0.41);
+      second.stop(start + 0.41);
+    }
 
-    main.stop(now + 0.66);
-    second.stop(now + 0.66);
+    makeHurt(now, 1.00, 0.28);
+    makeHurt(now + 0.43, 0.90, 0.25);
   }
-
 
   function rangedAttackSound() {
     const context = getAudioContext();
