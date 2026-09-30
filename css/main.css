@@ -148,7 +148,39 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
   background: #D4C095;
 }
 
-button.primary-btn { 
+
+.sound-control {
+  width: 160px;
+  margin: -4px 0 14px;
+}
+
+.sound-toggle {
+  width: 160px;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 7px 10px;
+  background: var(--rules-bg);
+  border: 1px solid var(--rules-border);
+  border-radius: 6px;
+  color: var(--rules-text);
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.sound-toggle[aria-pressed="false"] {
+  opacity: 0.65;
+}
+
+.sound-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+\nbutton.primary-btn { 
   width: 100%; 
   padding: 12px; 
   background: var(--rules-highlight); 
