@@ -149,42 +149,43 @@ let themeLoopToken = 0;
     const context = getAudioContext();
     const now = context.currentTime;
 
-    // Low thump
-    const thump = context.createOscillator();
-    const thumpGain = context.createGain();
+    // Short, low-frequency body — more of a solid thud than a slap.
+    const thud = context.createOscillator();
+    const thudGain = context.createGain();
 
-    thump.type = "sine";
-    thump.frequency.setValueAtTime(130, now);
-    thump.frequency.exponentialRampToValueAtTime(45, now + 0.12);
+    thud.type = "sine";
+    thud.frequency.setValueAtTime(105, now);
+    thud.frequency.exponentialRampToValueAtTime(42, now + 0.11);
 
-    thumpGain.gain.setValueAtTime(0.8, now);
-    thumpGain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+    thudGain.gain.setValueAtTime(0.95, now);
+    thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
 
-    thump.connect(thumpGain);
-    thumpGain.connect(context.destination);
+    thud.connect(thudGain);
+    thudGain.connect(context.destination);
 
-    thump.start(now);
-    thump.stop(now + 0.16);
+    thud.start(now);
+    thud.stop(now + 0.14);
 
-    // Sharp impact noise
+    // Very short, muted impact texture for the initial contact.
     const noise = context.createBufferSource();
     const filter = context.createBiquadFilter();
     const noiseGain = context.createGain();
 
-    noise.buffer = makeNoiseBuffer(context, 0.12);
+    noise.buffer = makeNoiseBuffer(context, 0.06);
 
-    filter.type = "highpass";
-    filter.frequency.value = 400;
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(900, now);
+    filter.frequency.exponentialRampToValueAtTime(220, now + 0.055);
 
-    noiseGain.gain.setValueAtTime(0.35, now);
-    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.19);
+    noiseGain.gain.setValueAtTime(0.22, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
 
     noise.connect(filter);
     filter.connect(noiseGain);
     noiseGain.connect(context.destination);
 
     noise.start(now);
-    noise.stop(now + 0.15);
+    noise.stop(now + 0.07);
   }
 
   function ughSound() {
