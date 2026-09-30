@@ -89,6 +89,7 @@ function selectTheme(theme) {
     if (!THEMES[theme]) return;
 
     selectedTheme = theme;
+    window.selectedTheme = theme;
     applySelectedTheme();
     preloadThemeAssets(selectedTheme);
 
