@@ -42,10 +42,6 @@
     return document.querySelector('.game-canvas');
   }
 
-  /*
-   * Convert any element's browser rectangle into game-canvas coordinates.
-   * This is the ONLY coordinate conversion used by this module.
-   */
   function rect(element) {
     var canvas = getCanvas();
     if (!canvas || !element) return null;
@@ -93,7 +89,7 @@
     clone.classList.add('dd-animation-clone');
 
     if (className) {
-      className.split(/\s+/).forEach(function (name) {
+      className.split(/\\s+/).forEach(function (name) {
         if (name) clone.classList.add(name);
       });
     }
@@ -180,12 +176,6 @@
     element.style.setProperty('--' + property + '-y', y + 'px');
   }
 
-  /*
-   * Generic one-source-to-one-target movement.
-   *
-   * This is intentionally small. It does not decide whether something is
-   * being equipped, eaten, discarded, or fought.
-   */
   function moveCard(source, target, options) {
     options = options || {};
 
@@ -218,10 +208,6 @@
     clone.style.setProperty('--animation-duration',
       (options.duration || 500) + 'ms');
 
-    /*
-     * The concrete CSS animation is deliberately named by the caller.
-     * This helper only establishes geometry and lifecycle.
-     */
     clone.classList.add(options.animationClass || 'dd-animation-move-active');
 
     removeLater(clone, options.duration || 500, function () {
@@ -230,21 +216,6 @@
     });
   }
 
-
-  /*
-   * LIFT → TRAVEL → SLAM
-   *
-   * The only tabletop "height" choreography in the animation system.
-   * Equip and use both use this same physical card motion:
-   *
-   *   1. Lift off the table and grow slightly.
-   *   2. Travel while elevated.
-   *   3. Slam down onto the destination.
-   *   4. Settle at normal scale.
-   *
-   * The helper knows nothing about what the card means or why it is moving.
-   * The public equip()/use() functions provide the destination.
-   */
   function liftTravelSlam(card, target, options) {
     options = options || {};
 
@@ -271,11 +242,6 @@
     var move = translation(sourceRect, targetRect);
 
     setVector(clone, 'move', move.x, move.y);
-
-    /*
-     * These are choreography values rather than geometry. CSS owns the
-     * actual visual treatment of height, scale and slam.
-     */
     clone.style.setProperty('--lift-scale', options.liftScale || '1.08');
     clone.style.setProperty(
       '--animation-duration',
@@ -285,8 +251,6 @@
     hide(card);
     clone.classList.add(options.animationClass || 'dd-lift-travel-slam-active');
 
-    // Preserve the established equip sound timing: it starts during the lift
-    // and its metallic tail carries through the slam/settle.
     if (options.sound) {
       window.setTimeout(function () {
         options.sound();
@@ -304,12 +268,6 @@
     });
   }
 
-  /*
-   * EQUIP
-   *
-   * Simple card movement with a physical landing point.
-   * No combat knowledge.
-   */
   function equip(card, target, options) {
     options = options || {};
     options.className = options.className || 'dd-equip-clone';
@@ -327,19 +285,6 @@
     liftTravelSlam(card, target, options);
   }
 
-  /*
-   * EAT
-   *
-   * Deliberately its own animation.
-   *
-   * Phase 1: food travels to the player.
-   * Phase 2: top third is eaten.
-   * Phase 3: remaining two thirds move upward by one third.
-   * Phase 4: middle third is eaten.
-   * Phase 5: remaining third moves upward by one third.
-   * Phase 6: final third is eaten.
-   * Phase 7: heart impact confirms the completed feeding action.
-   */
   function eat(food, player, options) {
     options = options || {};
 
@@ -358,8 +303,6 @@
       return;
     }
 
-    // Anchor the FOOD TOP EDGE to the middle of the player card,
-    // aligning the card with the player's portrait area.
     var target = {
       left: playerRect.left,
       top: playerRect.top + playerRect.height / 2,
@@ -382,9 +325,7 @@
     hide(food);
     clone.classList.add('dd-eat-active');
 
-    if (options.sound) {
-      options.sound();
-    }
+    if (options.sound) options.sound();
 
     window.setTimeout(function () {
       impact('heart', center(playerRect), 280);
@@ -396,12 +337,6 @@
     });
   }
 
-  /*
-   * USE
-   *
-   * Consumables which are used rather than eaten (armour, equipment, etc.).
-   * Mechanically similar to equip(), but the destination is the player card.
-   */
   function use(card, player, options) {
     options = options || {};
     options.className = options.className || 'dd-use-clone';
@@ -413,12 +348,6 @@
     liftTravelSlam(card, player, options);
   }
 
-  /*
-   * DRINK
-   *
-   * A consumable drink travels to the player, gradually tips as if being
-   * finished, then disappears once the glass/bottle has been emptied.
-   */
   function drink(card, player, options) {
     options = options || {};
 
@@ -437,9 +366,6 @@
       return;
     }
 
-    // Anchor the CARD TOP EDGE to the middle of the player card.
-    // The drink choreography pivots around that top edge, so the portrait
-    // and card top remain together while the bottom tips away.
     var target = {
       x: playerRect.left + playerRect.width / 2,
       y: playerRect.top + playerRect.height / 2
@@ -470,12 +396,6 @@
     });
   }
 
-  /*
-   * DEAL
-   *
-   * The visual inverse of flee: cards originate at the deck and travel out
-   * into the dungeon slots. The game decides which cards are dealt.
-   */
   function deal(cards, deck, slots, options) {
     options = options || {};
 
@@ -501,9 +421,7 @@
     var startOffsetX = options.startOffsetX || 0;
     var startOffsetY = options.startOffsetY || 0;
 
-    if (options.sound) {
-      options.sound(valid.length);
-    }
+    if (options.sound) options.sound(valid.length);
 
     valid.forEach(function (card, index) {
       var target = targets[index];
@@ -544,12 +462,6 @@
     if (pending === 0) complete();
   }
 
-  /*
-   * SLIDE DUNGEON CARDS
-   *
-   * [A][B][C][D], remove B -> [A][C][D][ ]
-   * Every card after the removed slot moves one position towards the front.
-   */
   function slideDungeonCards(cards, slots, removedIndex, options) {
     options = options || {};
 
@@ -602,25 +514,6 @@
     if (pending === 0) finish();
   }
 
-  /*
-   * DISCARD
-   * 
-   * Card topples sideways, then "falls" off the bottom of the screen,
-   * akin to falling off a cliff.
-   */
-  /*
-   * DISCARD
-   *
-   * Existing tabletop choreography:
-   *   1. Card starts upright.
-   *   2. It gives a small sideways topple.
-   *   3. It rapidly falls off the bottom of the table/screen.
-   *   4. It rotates further, shrinks slightly, and fades away.
-   *
-   * This is deliberately not a generic source → target movement. The discard
-   * destination is effectively "off the table", so the choreography owns the
-   * final direction and fall distance.
-   */
   function discard(card, target, options) {
     options = options || {};
 
@@ -638,13 +531,6 @@
       return;
     }
 
-    /*
-     * Preserve the established feel from the live animation:
-     * 22° topple, then a fast fall roughly one viewport-height downward.
-     *
-     * The target argument is intentionally unused: discard is an "off table"
-     * choreography rather than a move to another card.
-     */
     setVector(clone, 'fall', 30, sourceRect.height * 6.2);
     clone.style.setProperty('--animation-duration', '560ms');
     clone.style.setProperty('--topple-x', '8px');
@@ -653,10 +539,7 @@
     hide(card);
     clone.classList.add('dd-discard-active');
 
-    // Preserve the existing discard sound in the migrated choreography.
-    if (typeof global.discardSound === 'function') {
-      global.discardSound();
-    }
+    if (typeof global.discardSound === 'function') global.discardSound();
 
     removeLater(clone, 560, function () {
       show(card);
@@ -664,12 +547,6 @@
     });
   }
 
-  /*
-   * FLEE
-   *
-   * Flee is kept separate because its destination is the deck and its visual
-   * intent is "return to deck", rather than generic discard.
-   */
   function flee(cards, deck, options) {
     options = options || {};
 
@@ -684,9 +561,7 @@
     var complete = once(options.done);
     var finished = 0;
 
-    if (options.sound) {
-      options.sound();
-    }
+    if (options.sound) options.sound();
 
     remaining.forEach(function (card) {
       var sourceRect = rect(card);
@@ -708,12 +583,7 @@
       var move = translation(sourceRect, deckRect);
       setVector(clone, 'move', move.x, move.y);
       clone.style.setProperty('--animation-duration', '650ms');
-
-      // Fleeing cards disappear into the deck rather than sitting above it.
       clone.style.zIndex = '999';
-
-      // Keep the real card hidden until the game re-renders after the
-      // complete flee animation. Restoring it here causes a brief flash.
       hide(card);
       clone.classList.add('dd-flee-active');
 
@@ -724,9 +594,6 @@
     });
   }
 
-  /*
-   * MONSTER → PREVIOUS MONSTER STACK
-   */
   function monsterToPrevious(monsterCard, previousStack, stack, options) {
     options = options || {};
 
@@ -762,17 +629,6 @@
     });
   }
 
-  /*
-   * FIST FIGHT
-   *
-   * Completely independent choreography.
-   * The monster is the attacking object.
-   *
-   * 1. Monster moves to player.
-   * 2. First punch.
-   * 3. Second punch.
-   * 4. Monster dies in place.
-   */
   function fistFight(monster, player, options) {
     options = options || {};
 
@@ -800,13 +656,8 @@
     clone.classList.add('dd-fist-fight-active');
 
     if (options.sound) {
-      window.setTimeout(function () {
-        options.sound();
-      }, 320);
-
-      window.setTimeout(function () {
-        options.sound();
-      }, 540);
+      window.setTimeout(function () { options.sound(); }, 320);
+      window.setTimeout(function () { options.sound(); }, 540);
     }
 
     window.setTimeout(function () {
@@ -820,23 +671,10 @@
     }, 540);
 
     removeLater(clone, 1000, function () {
-      /*
-       * Deliberately leave the real monster hidden here. The caller owns
-       * the game-state transition and decides when the board is re-rendered.
-       */
       finish();
     });
   }
 
-
-  /*
-   * WEAPON FIGHT — MELEE
-   *
-   * Melee uses the same physical lift → travel → slam choreography as
-   * equipping a weapon. The weapon leaves its slot, travels directly to the
-   * monster, hits with the same POW impact used by fist fights, then the
-   * real weapon is restored to its home slot.
-   */
   function weaponFightMelee(weapon, player, monster, options) {
     options = options || {};
 
@@ -885,8 +723,10 @@
   /*
    * WEAPON FIGHT — THROWN
    *
-   * The thrown weapon uses the same physical lift → travel → slam language
-   * as melee, but spins once (360°) during the elevated travel.
+   * A thrown weapon is consumed by the attack. It aims, draws back away from
+   * the monster, launches rapidly from that pulled-back position, hits, then
+   * disappears. The weapon slot fades back in with the player's next weapon.
+   * There is deliberately no return flight: the thrown weapon has been spent.
    */
   function weaponFightThrown(weapon, player, monster, options) {
     options = options || {};
@@ -910,47 +750,47 @@
     var monsterCenter = center(monsterRect);
     var dx = monsterCenter.x - weaponCenter.x;
     var dy = monsterCenter.y - weaponCenter.y;
+    var distance = Math.sqrt(dx * dx + dy * dy) || 1;
+    var unitX = dx / distance;
+    var unitY = dy / distance;
 
-    // Start from the angle that makes the top edge point at the monster,
-    // then turn 180° so the bottom edge points at it instead.
-    // Normalise to the shortest rotation from the starting orientation.
-    var topAimAngle = Math.atan2(dy, dx) * 180 / Math.PI + 90;
-    var aimAngle = topAimAngle + 180;
-    if (aimAngle > 180) aimAngle -= 360;
-    if (aimAngle < -180) aimAngle += 360;
+    // Same aiming convention as ranged weapons: the card's top edge points
+    // at the monster. No spin during the throw.
+    var aimAngle = Math.atan2(dy, dx) * 180 / Math.PI + 90;
 
+    setVector(clone, 'pull', -unitX * (options.pullDistance || 32), -unitY * (options.pullDistance || 32));
     setVector(clone, 'move',
       monsterCenter.x - weaponCenter.x,
       monsterCenter.y - weaponCenter.y
     );
-    // Return to the clone's original position. CSS transforms are
-    // relative to that starting point, so home is (0, 0), not -move.
-    setVector(clone, 'return', 0, 0);
 
     clone.style.setProperty('--aim-angle', aimAngle + 'deg');
-    clone.style.setProperty('--animation-duration', (options.duration || 800) + 'ms');
+    clone.style.setProperty('--animation-duration', (options.duration || 760) + 'ms');
 
     hide(weapon);
     clone.classList.add('dd-thrown-active');
 
+    // The hit happens at the end of the fast launch, then the thrown card
+    // fades out rather than returning to the slot.
     window.setTimeout(function () {
       impact('hit', monsterCenter, 280);
       shake(160);
       if (options.onHit) options.onHit();
-    }, options.impactTime || 630);
+    }, options.impactTime || 560);
 
-    removeLater(clone, options.duration || 1100, function () {
+    removeLater(clone, options.duration || 760, function () {
       show(weapon);
-      finish();
+      weapon.classList.remove('dd-thrown-returning');
+      void weapon.offsetWidth;
+      weapon.classList.add('dd-thrown-returning');
+
+      window.setTimeout(function () {
+        weapon.classList.remove('dd-thrown-returning');
+        finish();
+      }, options.returnFadeDuration || 160);
     });
   }
 
-  /*
-   * WEAPON FIGHT — RANGED
-   *
-   * Weapon moves to player, fires in place with recoil, monster dies at a
-   * distance, then the weapon slides back to its weapon slot.
-   */
   function weaponFightRanged(weapon, player, monster, options) {
     options = options || {};
 
@@ -978,21 +818,13 @@
     var unitX = dx / distance;
     var unitY = dy / distance;
 
-    // Cards face upward by default, so add 90° to point their top edge
-    // towards the monster.
     var aimAngle = Math.atan2(dy, dx) * 180 / Math.PI + 90;
 
     var loadDistance = options.loadDistance || 15;
     var recoilDistance = options.recoilDistance || 40;
 
-    setVector(clone, 'load',
-      unitX * loadDistance,
-      unitY * loadDistance
-    );
-    setVector(clone, 'recoil',
-      -unitX * recoilDistance,
-      -unitY * recoilDistance
-    );
+    setVector(clone, 'load', unitX * loadDistance, unitY * loadDistance);
+    setVector(clone, 'recoil', -unitX * recoilDistance, -unitY * recoilDistance);
 
     clone.style.setProperty('--aim-angle', aimAngle + 'deg');
     clone.style.setProperty('--animation-duration', (options.duration || 1200) + 'ms');
@@ -1001,8 +833,6 @@
     clone.classList.add('dd-ranged-active');
 
     window.setTimeout(function () {
-      // The projectile has arrived: show the same POW used by fist/melee hits,
-      // then give the monster a small physical jolt before it disappears.
       impact('hit', monsterCenter, 280);
       jolt(monster, 180);
       if (options.onHit) options.onHit();
@@ -1014,11 +844,6 @@
     });
   }
 
-  /*
-   * Public surface.
-   *
-   * Nothing in this file calls these automatically.
-   */
   global.DeckDungeonAnimations = {
     version: '0.1.0',
     canvas: {
