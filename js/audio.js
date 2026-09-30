@@ -661,8 +661,15 @@ let themeLoopTimer = null;
     },
 
     shaun: {
-      melody: { type: "square", filter: 1800, volume: 0.10 },
-      bass: { type: "sawtooth", filter: 900, volume: 0.13 },
+      melody: {
+        type: "sawtooth",
+        filter: 2100,
+        volume: 0.075,
+        distortion: 18,
+        attack: 0.008,
+        release: 0.055
+      },
+      bass: { type: "sawtooth", filter: 850, volume: 0.13 },
       drum: { type: "triangle", start: 125, end: 55, volume: 0.20 }
     },
 
@@ -698,19 +705,34 @@ let themeLoopTimer = null;
       const oscillator = context.createOscillator();
       const filter = context.createBiquadFilter();
       const gain = context.createGain();
+      let output = filter;
 
       oscillator.type = instrument.type;
       oscillator.frequency.value = frequency;
       filter.type = "lowpass";
       filter.frequency.value = instrument.filter;
 
+      if (instrument.distortion) {
+        const distortion = context.createWaveShaper();
+        distortion.curve = makeDistortionCurve(instrument.distortion);
+        distortion.oversample = "4x";
+        filter.connect(distortion);
+        output = distortion;
+      }
+
       gain.gain.setValueAtTime(0.001, start);
-      gain.gain.exponentialRampToValueAtTime(instrument.volume, start + 0.025);
-      gain.gain.setValueAtTime(instrument.volume * 0.75, end - 0.08);
+      gain.gain.exponentialRampToValueAtTime(
+        instrument.volume,
+        start + (instrument.attack || 0.025)
+      );
+      gain.gain.setValueAtTime(
+        instrument.volume * 0.72,
+        Math.max(start + 0.01, end - (instrument.release || 0.08))
+      );
       gain.gain.exponentialRampToValueAtTime(0.001, end);
 
       oscillator.connect(filter);
-      filter.connect(gain);
+      output.connect(gain);
       gain.connect(context.destination);
       oscillator.start(start);
       oscillator.stop(end + 0.03);
