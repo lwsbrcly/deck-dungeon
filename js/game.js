@@ -138,6 +138,81 @@ function enterDungeonId() {
 // Custom SVG Dragon for Ace cards
 var activeGhostMemoryId = null;
 
+
+var decisionOverlayState = {
+  open: false,
+  onChoose: null,
+  onBack: null
+};
+
+function openDecisionOverlay(config) {
+  config = config || {};
+
+  var overlay = document.getElementById('decisionOverlay');
+  var title = document.getElementById('decisionTitle');
+  var prompt = document.getElementById('decisionPrompt');
+  var optionsEl = document.getElementById('decisionOptions');
+  var back = document.getElementById('decisionBack');
+
+  if (!overlay || !optionsEl) return;
+
+  title.textContent = config.title || 'Choose';
+  prompt.textContent = config.prompt || '';
+  optionsEl.innerHTML = '';
+
+  var options = Array.isArray(config.options) ? config.options : [];
+  optionsEl.classList.toggle('two-col', options.length > 3);
+
+  options.forEach(function(option, index) {
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'decision-option';
+    button.disabled = option.disabled === true;
+
+    if (option.label) {
+      var strong = document.createElement('strong');
+      strong.textContent = option.label;
+      button.appendChild(strong);
+    }
+
+    if (option.description) {
+      var description = document.createElement('span');
+      description.textContent = option.description;
+      button.appendChild(description);
+    }
+
+    button.addEventListener('click', function() {
+      if (decisionOverlayState.onChoose) {
+        decisionOverlayState.onChoose(option.value, option, index);
+      }
+      closeDecisionOverlay();
+    });
+
+    optionsEl.appendChild(button);
+  });
+
+  decisionOverlayState.open = true;
+  decisionOverlayState.onChoose = typeof config.onChoose === 'function' ? config.onChoose : null;
+  decisionOverlayState.onBack = typeof config.onBack === 'function' ? config.onBack : null;
+
+  back.onclick = function() {
+    var callback = decisionOverlayState.onBack;
+    closeDecisionOverlay();
+    if (callback) callback();
+  };
+
+  overlay.hidden = false;
+}
+
+function closeDecisionOverlay() {
+  var overlay = document.getElementById('decisionOverlay');
+  if (overlay) overlay.hidden = true;
+
+  decisionOverlayState.open = false;
+  decisionOverlayState.onChoose = null;
+  decisionOverlayState.onBack = null;
+}
+
 var state = {};
 var historyStack = [];
 
