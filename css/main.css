@@ -1100,6 +1100,9 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .score-banner.negative { color: var(--game-red); }
 
 /* Summary Card Grid */
+.deck-id-modal { color: #fff; }
+.deck-id-modal strong { color: #fff; }
+
 .summary-grid {
   background: var(--game-bg);
   border: 1px solid var(--game-border);
