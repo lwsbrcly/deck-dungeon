@@ -453,7 +453,13 @@ async function refreshDungeon() {
     // order remains exactly as it was. Only the four fled cards get new
     // positions.
     insertSeeded(state.deck, fledCards, fleeSeed);
-    
+
+    // TEMP DEBUG: expose the complete deck order after Flee so deterministic
+    // runs can be compared. Remove/disable this once testing is complete.
+    log('DEBUG DECK ORDER: ' + state.deck.map(function(card) {
+        return card.id;
+    }).join('|'), false);
+
     // If fewer than four untouched cards remained, the insertion above has
     // supplied the remaining card(s) needed to complete the replacement room.
     // the final card(s) needed to complete the replacement room.
