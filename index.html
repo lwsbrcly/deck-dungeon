@@ -134,7 +134,7 @@
                   <label for="modeSelect">Game Mode</label>
                   <select id="modeSelect" onchange="toggleModeInputs()">
                     <option value="solo_dagger">Solitaire (1 Player)</option>
-                    <option value="coop" disabled>Co-op (2 Players) — Coming later</option>
+                    <option value="coop">Co-op (2 Players)</option>
                   </select>
                 </div>
 
@@ -162,9 +162,18 @@
                 </div>
               </div>
 
-              <div class="setup-portrait">
-                <div class="portrait-picker" id="p1PortraitPicker" aria-label="Choose Player 1 portrait"></div>
-                <div class="portrait-hint"><em>Click to cycle portraits</em></div>
+              <div class="setup-portrait" id="portraitSetup">
+                <div class="portrait-pickers">
+                  <div class="portrait-choice" id="p1PortraitChoice">
+                    <div class="portrait-choice-label">Player 1</div>
+                    <div class="portrait-picker" id="p1PortraitPicker" aria-label="Choose Player 1 portrait"></div>
+                  </div>
+                  <div class="portrait-choice" id="p2PortraitChoice" style="display: none;">
+                    <div class="portrait-choice-label">Player 2</div>
+                    <div class="portrait-picker" id="p2PortraitPicker" aria-label="Choose Player 2 portrait"></div>
+                  </div>
+                </div>
+                <div class="portrait-hint"><em>Click a portrait to cycle</em></div>
               </div>
             </div>
         
