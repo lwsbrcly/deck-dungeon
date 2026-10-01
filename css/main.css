@@ -460,6 +460,18 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
   height: 38%;
 }
 
+.duel-p1-weapon > div,
+.duel-p2-weapon > div {
+  width: 100%;
+  height: 100%;
+}
+
+.duel-p1-weapon .card,
+.duel-p2-weapon .card {
+  width: 100%;
+  height: 100%;
+}
+
 .card-anchor {
   position: relative;
   flex: 0 0 16.5cqw;
