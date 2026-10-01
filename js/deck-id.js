@@ -1,201 +1,112 @@
 /*
- * Deck ID encoding
+ * Dungeon ID / deterministic randomness
  *
- * The Deck ID represents the exact initial card order. It is deliberately
- * independent of theme artwork/names.
+ * A Dungeon ID is simply a 64-bit random seed.
  *
- * Format:
- *   DD1-<43 base64url characters>-<6 checksum characters>
+ * The seed is used by the game's deterministic PRNG, which feeds the same
+ * Fisher-Yates shuffle used for the deck. Therefore:
  *
- * Each card is represented by its 0-42 catalogue index (6 bits per card).
- * 43 cards therefore require exactly 258 bits / 43 base64url characters.
+ *   Dungeon ID -> seed -> PRNG -> shuffle -> starting deck
  *
- * The checksum is only for typo/copy-paste detection. It is not used as
- * gameplay randomness.
+ * The ID is deliberately independent of themes and card artwork.
+ *
+ * This file does not yet change game startup. It provides the seed, encoder,
+ * decoder and deterministic shuffle that game.js can use when wired in.
  */
 
-var DECK_ID_VERSION = 'DD1';
 var DECK_ID_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
 
-function getDeckIdCardCatalog() {
-  var cards = [];
-  var suitKeys = Object.keys(SUITS);
+function generateDeckId() {
+  var bytes = new Uint8Array(8);
+  crypto.getRandomValues(bytes);
 
-  for (var i = 0; i < suitKeys.length; i++) {
-    var suit = suitKeys[i];
-
-    for (var j = 0; j < ranks.length; j++) {
-      var rank = ranks[j];
-
-      if ((suit === 'diamonds' || suit === 'hearts') &&
-          ['A', 'J', 'Q', 'K'].indexOf(rank) !== -1) {
-        continue;
-      }
-
-      if (suit === 'diamonds' && rank === '2') continue;
-
-      cards.push(suit + rank);
-    }
+  var seed = 0n;
+  for (var i = 0; i < bytes.length; i++) {
+    seed = (seed << 8n) | BigInt(bytes[i]);
   }
 
-  return cards;
+  return encodeDeckIdSeed(seed);
 }
 
-function deckIdEncodeBits(values) {
-  var output = '';
-  var buffer = 0;
-  var bits = 0;
+function encodeDeckIdSeed(seed) {
+  seed = BigInt(seed);
 
-  for (var i = 0; i < values.length; i++) {
-    buffer = (buffer * 64) + values[i];
-    bits += 6;
-
-    while (bits >= 6) {
-      bits -= 6;
-      var index = Math.floor(buffer / Math.pow(2, bits)) & 63;
-      output += DECK_ID_ALPHABET[index];
-      buffer = buffer % Math.pow(2, bits);
-    }
+  if (seed < 0n || seed > 0xffffffffffffffffn) {
+    throw new Error('Deck ID seed must be a 64-bit unsigned integer.');
   }
 
-  if (bits > 0) {
-    output += DECK_ID_ALPHABET[(buffer * Math.pow(2, 6 - bits)) & 63];
+  // 64 bits require 11 base64url characters (the final character has only
+  // two meaningful bits).
+  var output = '';
+  for (var i = 0; i < 11; i++) {
+    var shift = BigInt((10 - i) * 6);
+    output += DECK_ID_ALPHABET[Number((seed >> shift) & 63n)];
   }
 
   return output;
 }
 
-function deckIdDecodeBits(text) {
-  var values = [];
-  var buffer = 0;
-  var bits = 0;
-
-  for (var i = 0; i < text.length; i++) {
-    var value = DECK_ID_ALPHABET.indexOf(text[i]);
-    if (value < 0) throw new Error('Invalid Deck ID character.');
-
-    buffer = (buffer * 64) + value;
-    bits += 6;
-
-    while (bits >= 6) {
-      bits -= 6;
-      values.push(Math.floor(buffer / Math.pow(2, bits)) & 63);
-      buffer = buffer % Math.pow(2, bits);
-    }
-  }
-
-  return values;
-}
-
-// Small synchronous checksum. This is only error detection; SHA-256 will be
-// used separately for deterministic Flee randomness.
-function deckIdChecksum(text) {
-  var hash = 2166136261;
-
-  for (var i = 0; i < text.length; i++) {
-    hash ^= text.charCodeAt(i);
-    hash = Math.imul(hash, 16777619) >>> 0;
-  }
-
-  var checksum = '';
-  for (var j = 0; j < 6; j++) {
-    checksum += DECK_ID_ALPHABET[hash & 63];
-    hash = hash >>> 6;
-  }
-
-  return checksum;
-}
-
-function formatDeckId(data, checksum) {
-  return DECK_ID_VERSION + '-' + data + '-' + checksum;
-}
-
-function encodeDeckId(deck) {
-  if (!Array.isArray(deck)) throw new Error('Deck ID requires a deck array.');
-
-  var catalog = getDeckIdCardCatalog();
-  var indexById = {};
-
-  for (var i = 0; i < catalog.length; i++) {
-    indexById[catalog[i]] = i;
-  }
-
-  if (deck.length !== catalog.length) {
-    throw new Error('Deck ID expected ' + catalog.length + ' cards, got ' + deck.length + '.');
-  }
-
-  var seen = {};
-  var values = [];
-
-  for (var j = 0; j < deck.length; j++) {
-    var id = typeof deck[j] === 'string' ? deck[j] : deck[j] && deck[j].id;
-    var index = indexById[id];
-
-    if (index === undefined) {
-      throw new Error('Deck ID contains unknown card: ' + id);
-    }
-
-    if (seen[id]) {
-      throw new Error('Deck ID contains duplicate card: ' + id);
-    }
-
-    seen[id] = true;
-    values.push(index);
-  }
-
-  var data = deckIdEncodeBits(values);
-  var checksum = deckIdChecksum(DECK_ID_VERSION + '-' + data);
-
-  return formatDeckId(data, checksum);
-}
-
 function decodeDeckId(deckId) {
-  if (typeof deckId !== 'string') throw new Error('Deck ID must be text.');
-
-  var clean = deckId.replace(/\s+/g, '');
-  var parts = clean.split('-');
-
-  if (parts.length !== 3 || parts[0] !== DECK_ID_VERSION) {
-    throw new Error('Invalid Deck ID version or format.');
+  if (typeof deckId !== 'string' || deckId.length !== 11) {
+    throw new Error('Dungeon ID must be 11 characters.');
   }
 
-  var data = parts[1];
-  var checksum = parts[2];
+  var seed = 0n;
 
-  if (data.length !== 43 || checksum.length !== 6) {
-    throw new Error('Invalid Deck ID length.');
-  }
+  for (var i = 0; i < deckId.length; i++) {
+    var value = DECK_ID_ALPHABET.indexOf(deckId[i]);
 
-  if (deckIdChecksum(DECK_ID_VERSION + '-' + data) !== checksum) {
-    throw new Error('Deck ID checksum failed. Check for a typo.');
-  }
-
-  var values = deckIdDecodeBits(data);
-  var catalog = getDeckIdCardCatalog();
-
-  if (values.length !== catalog.length) {
-    throw new Error('Invalid Deck ID card data.');
-  }
-
-  var deck = [];
-  var seen = {};
-
-  for (var i = 0; i < values.length; i++) {
-    var index = values[i];
-
-    if (index >= catalog.length) {
-      throw new Error('Invalid Deck ID card index.');
+    if (value < 0) {
+      throw new Error('Invalid Dungeon ID character.');
     }
 
-    var id = catalog[index];
-
-    if (seen[id]) {
-      throw new Error('Invalid Deck ID: duplicate card.');
-    }
-
-    seen[id] = true;
-    deck.push(id);
+    seed = (seed << 6n) | BigInt(value);
   }
 
-  return deck;
+  // The first 2 bits of the 66-bit base64 representation are padding and
+  // must be zero. This also rejects IDs that cannot represent a 64-bit seed.
+  if (seed > 0xffffffffffffffffn) {
+    throw new Error('Invalid Dungeon ID.');
+  }
+
+  return seed;
+}
+
+/*
+ * xorshift64* PRNG.
+ *
+ * The exact algorithm is part of the game's deterministic rules. Given the
+ * same seed, it produces exactly the same sequence of values.
+ */
+function createSeededRandom(seed) {
+  var state = BigInt(seed) & 0xffffffffffffffffn;
+
+  // xorshift64* cannot operate from zero.
+  if (state === 0n) state = 0x9e3779b97f4a7c15n;
+
+  return function() {
+    state ^= state >> 12n;
+    state ^= (state << 25n) & 0xffffffffffffffffn;
+    state ^= state >> 27n;
+    state &= 0xffffffffffffffffn;
+
+    var result = (state * 0x2545f4914f6cdd1dn) & 0xffffffffffffffffn;
+
+    // Return a Number in [0, 1), using the upper 53 bits so Fisher-Yates can
+    // use it exactly as it currently uses Math.random().
+    return Number(result >> 11n) / 9007199254740992;
+  };
+}
+
+function shuffleSeeded(array, seed) {
+  var random = createSeededRandom(seed);
+
+  for (var i = array.length - 1; i > 0; i--) {
+    var j = Math.floor(random() * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+
+  return array;
 }
