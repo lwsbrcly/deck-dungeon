@@ -2176,33 +2176,43 @@ hideContextActions();
 
 if (!isSolo && c) {
   if (monster) {
+    var weaponAction = getThemeAction('monster', 'primary') || 'Weapon';
+    var fistAction = getThemeAction('monster', 'secondary') || 'Fist Fight';
+    var p1Name = name('p1');
+    var p2Name = name('p2');
+
     openDecisionOverlay({
       title: 'Choose how we fight',
       prompt: c.rank + ' ' + SUITS[c.suit] + ' — ' + c.name,
       options: [
-        { label: 'P1 Weapon', value: 'p1_weapon' },
-        { label: 'P2 Weapon', value: 'p2_weapon' },
-        { label: 'Both Weapons', value: 'both_weapon', fullWidth: true },
-        { label: 'P1 Fist', value: 'p1_fist' },
-        { label: 'P2 Fist', value: 'p2_fist' },
-        { label: 'Both Fists', value: 'both_fist', fullWidth: true }
+        { label: p1Name + ' — ' + weaponAction, value: 'p1_weapon' },
+        { label: p2Name + ' — ' + weaponAction, value: 'p2_weapon' },
+        { label: 'Both — ' + weaponAction, value: 'both_weapon', fullWidth: true },
+        { label: p1Name + ' — ' + fistAction, value: 'p1_fist' },
+        { label: p2Name + ' — ' + fistAction, value: 'p2_fist' },
+        { label: 'Both — ' + fistAction, value: 'both_fist', fullWidth: true }
       ],
       onChoose: function(value) {
-        // Decision wiring comes next; for now this only surfaces the choice.
         console.log('Co-op monster decision:', value);
       }
     });
   } else if (weapon || potion) {
+    var itemPrimaryAction = weapon
+      ? (getThemeAction('weapon', 'primary') || 'Equip')
+      : (getThemeAction('consumable', 'primary') || 'Consume');
+    var itemSecondaryAction = weapon
+      ? (getThemeAction('weapon', 'secondary') || 'Discard')
+      : (getThemeAction('consumable', 'secondary') || 'Discard');
+
     openDecisionOverlay({
-      title: weapon ? 'What do we do?' : 'What do we do?',
+      title: 'What do we do?',
       prompt: c.rank + ' ' + SUITS[c.suit] + ' — ' + c.name,
       options: [
-        { label: 'P1', value: 'p1' },
-        { label: 'P2', value: 'p2' },
-        { label: 'Discard', value: 'discard' }
+        { label: name('p1') + ' — ' + itemPrimaryAction, value: 'p1' },
+        { label: name('p2') + ' — ' + itemPrimaryAction, value: 'p2' },
+        { label: itemSecondaryAction, value: 'discard', fullWidth: true }
       ],
       onChoose: function(value) {
-        // Decision wiring comes next; for now this only surfaces the choice.
         console.log('Co-op item decision:', value);
       }
     });
