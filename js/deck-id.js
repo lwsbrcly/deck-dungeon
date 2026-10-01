@@ -122,6 +122,35 @@ async function seedFromDeck(deck) {
   return seed;
 }
 
+/*
+ * Insert a small set of cards into an existing deck without changing the
+ * relative order of any cards already in that deck.
+ *
+ * The supplied seed determines both the order of the inserted cards and
+ * their insertion positions. The existing deck itself is never shuffled.
+ */
+function insertSeeded(array, cards, seed) {
+  var random = createSeededRandom(seed);
+  var inserted = cards.slice();
+
+  // Randomise only the four fled cards themselves.
+  for (var i = inserted.length - 1; i > 0; i--) {
+    var j = Math.floor(random() * (i + 1));
+    var temp = inserted[i];
+    inserted[i] = inserted[j];
+    inserted[j] = temp;
+  }
+
+  // Insert each fled card at a deterministic position. Because we only splice
+  // into the existing array, all original cards retain their relative order.
+  for (var k = 0; k < inserted.length; k++) {
+    var position = Math.floor(random() * (array.length + 1));
+    array.splice(position, 0, inserted[k]);
+  }
+
+  return array;
+}
+
 function shuffleSeeded(array, seed) {
   var random = createSeededRandom(seed);
 
