@@ -1682,42 +1682,54 @@ function setHealthTileImage(tile, alive) {
   tile.dataset.hpTheme = themeKey;
 }
 
-function render() {
-var isSolo = state.mode !== 'coop';
-var layout = getBoardLayout();
-var playerIds = Object.keys(layout.players);
 
-playerIds.forEach(function(id) {
-  var p = state[id];
-  var elements = layout.players[id];
-  if (!p || !elements) return;
+function renderCoopHealthbar() {
+  var healthbar = document.getElementById('p1Bar');
+  if (!healthbar || !state.players) return;
 
-  var healthbar = document.getElementById(id + 'Bar');
-  if (healthbar) {
-    var track = healthbar.querySelector('.health-track');
+  var p1 = state.players[0];
+  var p2 = state.players[1];
+  if (!p1 || !p2) return;
 
-    if (!track) {
-      track = document.createElement('div');
-      track.className = 'health-track';
+  var track = healthbar.querySelector('.health-track');
+  if (!track || !track.classList.contains('coop-health-track')) {
+    track = document.createElement('div');
+    track.className = 'health-track coop-health-track';
+    track.innerHTML = '';
 
-      for (var i = 1; i <= 20; i++) {
-        var tile = document.createElement('img');
-        tile.className = 'health-tile';
-        tile.alt = '';
-        track.appendChild(tile);
+    for (var i = 0; i < 20; i++) {
+      if (i === 10) {
+        var divider = document.createElement('span');
+        divider.className = 'health-divider';
+        divider.textContent = '|';
+        divider.setAttribute('aria-hidden', 'true');
+        track.appendChild(divider);
       }
 
-      healthbar.innerHTML = '';
-      healthbar.appendChild(track);
+      var tile = document.createElement('img');
+      tile.className = 'health-tile';
+      tile.alt = '';
+      track.appendChild(tile);
     }
 
-    var tiles = track.querySelectorAll('.health-tile');
-    var oldHp = parseInt(tiles.length ? tiles[0].dataset.previousHp : p.hp, 10);
-    if (isNaN(oldHp)) oldHp = p.hp;
+    healthbar.innerHTML = '';
+    healthbar.appendChild(track);
+  }
 
-    for (var i = 0; i < tiles.length; i++) {
-      var tile = tiles[i];
-      var shouldBeAlive = i < p.hp;
+  var tiles = track.querySelectorAll('.health-tile');
+  var themeKey = (state && state.theme) || selectedTheme || 'dungeon';
+  var oldP1 = parseInt(healthbar.dataset.p1PreviousHp, 10);
+  var oldP2 = parseInt(healthbar.dataset.p2PreviousHp, 10);
+
+  if (isNaN(oldP1)) oldP1 = p1.hp;
+  if (isNaN(oldP2)) oldP2 = p2.hp;
+
+  function updateSegment(start, hp, oldHp) {
+    for (var i = 0; i < 10; i++) {
+      var tile = tiles[start + i];
+      if (!tile) continue;
+
+      var shouldBeAlive = i < hp;
       var nextState = shouldBeAlive ? 'alive' : 'gone';
 
       if (tile._hpTimer) {
@@ -1726,7 +1738,7 @@ playerIds.forEach(function(id) {
       }
 
       if (tile.dataset.hpState !== nextState) {
-        var changeIndex = p.hp < oldHp
+        var changeIndex = hp < oldHp
           ? (oldHp - 1 - i)
           : (i - oldHp);
         var changeDelay = Math.max(0, changeIndex) * 55;
@@ -1741,29 +1753,122 @@ playerIds.forEach(function(id) {
             targetTile._hpTimer = null;
           };
         }(tile, nextState), changeDelay);
-      } else if (!tile.src || tile.dataset.hpTheme !== ((state && state.theme) || selectedTheme || 'dungeon')) {
+      } else if (!tile.src || tile.dataset.hpTheme !== themeKey) {
         setHealthTileImage(tile, shouldBeAlive);
       }
     }
+  }
 
-    for (var j = 0; j < tiles.length; j++) {
-      tiles[j].dataset.previousHp = p.hp;
+  updateSegment(0, p1.hp, oldP1);
+  updateSegment(10, p2.hp, oldP2);
+
+  healthbar.dataset.p1PreviousHp = p1.hp;
+  healthbar.dataset.p2PreviousHp = p2.hp;
+
+  requestAnimationFrame(function() {
+    var currentTrack = healthbar.querySelector('.health-track');
+    if (!currentTrack) return;
+
+    currentTrack.style.transform = 'scale(1)';
+    var available = healthbar.clientWidth;
+    var trackWidth = currentTrack.scrollWidth;
+
+    currentTrack.style.transformOrigin = 'left center';
+
+    if (trackWidth > available && available > 0) {
+      currentTrack.style.transform = 'scale(' + (available / trackWidth) + ')';
     }
+  });
+}
 
-    requestAnimationFrame(function() {
-      var currentTrack = healthbar.querySelector('.health-track');
-      if (!currentTrack) return;
+function render() {
+var isSolo = state.mode !== 'coop';
+var layout = getBoardLayout();
+var playerIds = Object.keys(layout.players);
 
-      currentTrack.style.transform = 'scale(1)';
-      var available = healthbar.clientWidth;
-      var trackWidth = currentTrack.scrollWidth;
+playerIds.forEach(function(id) {
+  var p = state[id];
+  var elements = layout.players[id];
+  if (!p || !elements) return;
 
-      currentTrack.style.transformOrigin = 'left center';
-
-      if (trackWidth > available && available > 0) {
-        currentTrack.style.transform = 'scale(' + (available / trackWidth) + ')';
+  if (state.mode === 'coop') {
+    if (id === 'p1') renderCoopHealthbar();
+  } else {
+    var healthbar = document.getElementById(id + 'Bar');
+    if (healthbar) {
+      var track = healthbar.querySelector('.health-track');
+  
+      if (!track) {
+        track = document.createElement('div');
+        track.className = 'health-track';
+  
+        for (var i = 1; i <= 20; i++) {
+          var tile = document.createElement('img');
+          tile.className = 'health-tile';
+          tile.alt = '';
+          track.appendChild(tile);
+        }
+  
+        healthbar.innerHTML = '';
+        healthbar.appendChild(track);
       }
-    });
+  
+      var tiles = track.querySelectorAll('.health-tile');
+      var oldHp = parseInt(tiles.length ? tiles[0].dataset.previousHp : p.hp, 10);
+      if (isNaN(oldHp)) oldHp = p.hp;
+  
+      for (var i = 0; i < tiles.length; i++) {
+        var tile = tiles[i];
+        var shouldBeAlive = i < p.hp;
+        var nextState = shouldBeAlive ? 'alive' : 'gone';
+  
+        if (tile._hpTimer) {
+          clearTimeout(tile._hpTimer);
+          tile._hpTimer = null;
+        }
+  
+        if (tile.dataset.hpState !== nextState) {
+          var changeIndex = p.hp < oldHp
+            ? (oldHp - 1 - i)
+            : (i - oldHp);
+          var changeDelay = Math.max(0, changeIndex) * 55;
+  
+          tile._hpTimer = setTimeout(function(targetTile, stateName) {
+            return function() {
+              setHealthTileImage(targetTile, stateName === 'alive');
+              targetTile.dataset.hpState = stateName;
+              targetTile.classList.remove('health-changing');
+              void targetTile.offsetWidth;
+              targetTile.classList.add('health-changing');
+              targetTile._hpTimer = null;
+            };
+          }(tile, nextState), changeDelay);
+        } else if (!tile.src || tile.dataset.hpTheme !== ((state && state.theme) || selectedTheme || 'dungeon')) {
+          setHealthTileImage(tile, shouldBeAlive);
+        }
+      }
+  
+      for (var j = 0; j < tiles.length; j++) {
+        tiles[j].dataset.previousHp = p.hp;
+      }
+  
+      requestAnimationFrame(function() {
+        var currentTrack = healthbar.querySelector('.health-track');
+        if (!currentTrack) return;
+  
+        currentTrack.style.transform = 'scale(1)';
+        var available = healthbar.clientWidth;
+        var trackWidth = currentTrack.scrollWidth;
+  
+        currentTrack.style.transformOrigin = 'left center';
+  
+        if (trackWidth > available && available > 0) {
+          currentTrack.style.transform = 'scale(' + (available / trackWidth) + ')';
+        }
+      });
+    }
+  
+  
   }
 
   var panel = document.getElementById(elements.panel);
