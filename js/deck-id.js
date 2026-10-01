@@ -1,12 +1,12 @@
 /*
- * Dungeon ID / deterministic randomness
+ * Deck ID / deterministic randomness
  *
- * A Dungeon ID is simply a 64-bit random seed.
+ * A Deck ID is simply a 64-bit random seed.
  *
  * The seed is used by the game's deterministic PRNG, which feeds the same
  * Fisher-Yates shuffle used for the deck. Therefore:
  *
- *   Dungeon ID -> seed -> PRNG -> shuffle -> starting deck
+ *   Deck ID -> seed -> PRNG -> shuffle -> starting deck
  *
  * The ID is deliberately independent of themes and card artwork.
  *
@@ -48,7 +48,7 @@ function encodeDeckIdSeed(seed) {
 
 function decodeDeckId(deckId) {
   if (typeof deckId !== 'string' || deckId.length !== 11) {
-    throw new Error('Dungeon ID must be 11 characters.');
+    throw new Error('Deck ID must be 11 characters.');
   }
 
   var seed = 0n;
@@ -57,7 +57,7 @@ function decodeDeckId(deckId) {
     var value = DECK_ID_ALPHABET.indexOf(deckId[i]);
 
     if (value < 0) {
-      throw new Error('Invalid Dungeon ID character.');
+      throw new Error('Invalid Deck ID character.');
     }
 
     seed = (seed << 6n) | BigInt(value);
@@ -66,7 +66,7 @@ function decodeDeckId(deckId) {
   // The first 2 bits of the 66-bit base64 representation are padding and
   // must be zero. This also rejects IDs that cannot represent a 64-bit seed.
   if (seed > 0xffffffffffffffffn) {
-    throw new Error('Invalid Dungeon ID.');
+    throw new Error('Invalid Deck ID.');
   }
 
   return seed;
@@ -96,6 +96,30 @@ function createSeededRandom(seed) {
     // use it exactly as it currently uses Math.random().
     return Number(result >> 11n) / 9007199254740992;
   };
+}
+
+async function seedFromDeck(deck) {
+  if (!Array.isArray(deck)) {
+    throw new Error('Deck seed requires a deck array.');
+  }
+
+  // The actual card IDs and their current order are the complete state we
+  // need. Theme names/artwork are deliberately excluded.
+  var canonical = deck.map(function(card) {
+    return typeof card === 'string' ? card : card.id;
+  }).join('|');
+
+  var bytes = new TextEncoder().encode(canonical);
+  var digest = await crypto.subtle.digest('SHA-256', bytes);
+  var hash = new Uint8Array(digest);
+
+  // Use the first 64 bits of SHA-256 as the deterministic shuffle seed.
+  var seed = 0n;
+  for (var i = 0; i < 8; i++) {
+    seed = (seed << 8n) | BigInt(hash[i]);
+  }
+
+  return seed;
 }
 
 function shuffleSeeded(array, seed) {
