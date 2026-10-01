@@ -166,7 +166,7 @@ function openDecisionOverlay(config) {
   options.forEach(function(option, index) {
     var button = document.createElement('button');
     button.type = 'button';
-    button.className = 'decision-option';
+    button.className = 'decision-option' + (option.fullWidth ? ' full-width' : '');
     button.disabled = option.disabled === true;
 
     if (option.label) {
@@ -2177,10 +2177,10 @@ if (!isSolo && c) {
       options: [
         { label: 'P1 Weapon', value: 'p1_weapon' },
         { label: 'P2 Weapon', value: 'p2_weapon' },
-        { label: 'Both Weapons', value: 'both_weapon' },
+        { label: 'Both Weapons', value: 'both_weapon', fullWidth: true },
         { label: 'P1 Fist', value: 'p1_fist' },
         { label: 'P2 Fist', value: 'p2_fist' },
-        { label: 'Both Fists', value: 'both_fist' }
+        { label: 'Both Fists', value: 'both_fist', fullWidth: true }
       ],
       onChoose: function(value) {
         // Decision wiring comes next; for now this only surfaces the choice.
