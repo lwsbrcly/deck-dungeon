@@ -448,13 +448,14 @@ async function refreshDungeon() {
     // first 64 bits and uses those as the shuffle seed.
     var fleeSeed = await seedFromDeck(state.deck);
 
-    // Now return the fled room and deterministically shuffle it into the
-    // untouched deck. Two games with the same remaining deck will therefore
-    // make exactly the same Flee shuffle.
-    state.deck.push.apply(state.deck, fledCards);
-    shuffleSeeded(state.deck, fleeSeed);
+    // Return the fled cards by deterministically inserting them into the
+    // untouched deck. The existing cards are NOT shuffled: their relative
+    // order remains exactly as it was. Only the four fled cards get new
+    // positions.
+    insertSeeded(state.deck, fledCards, fleeSeed);
     
-    // If fewer than four untouched cards remained, the shuffled deck supplies
+    // If fewer than four untouched cards remained, the insertion above has
+    // supplied the remaining card(s) needed to complete the replacement room.
     // the final card(s) needed to complete the replacement room.
     while (state.dungeon.length < 4 && state.deck.length > 0) {
       state.dungeon.push(state.deck.pop());
