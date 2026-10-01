@@ -166,7 +166,12 @@ function openDecisionOverlay(config) {
   options.forEach(function(option, index) {
     var button = document.createElement('button');
     button.type = 'button';
-    button.className = 'decision-option' + (option.fullWidth ? ' full-width' : '');
+
+    // Three-choice decisions use two half-width choices followed by a
+    // full-width third choice. Six-choice decisions mark their third and
+    // sixth choices explicitly as full width.
+    var isThreeChoiceLast = options.length === 3 && index === 2;
+    button.className = 'decision-option' + ((option.fullWidth || isThreeChoiceLast) ? ' full-width' : '');
     button.disabled = option.disabled === true;
 
     if (option.label) {
