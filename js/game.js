@@ -246,7 +246,7 @@ function toggleModeInputs() {
       '<ul>' +
         '<li><strong>Rooms:</strong> Each room has 4 cards - action 3 of them to move on. The 4th card becomes the 1st card in the next room - 3 new cards are dealt.</li>' +
         '<li><strong>Damage:</strong> Monsters deal damage equal to their value minus your equipped weapon\'s value. Fight bare-handed to take their full amount of damage - without lowering your equipped weapon\'s "previous monster value".</li>' +
-        '<li><strong>Health Points:</strong> Start with 20 HP. Heals cannot take you above this. If your HP reaches 0 it\'s game over!</li>' +
+        '<li><strong>Health Points:</strong> Each player starts with 10 HP in co-op (20 HP in solitaire). Heals cannot take you above their maximum. If your HP reaches 0 it\'s game over!</li>' +
         '<li><strong>Discard:</strong> Don\'t want to replace your current weapon? Don\'t want to fight that last monster? <strong>Discard</strong> unwanted weapon/consumable cards to action them and move on.</li>' +
         '<li><strong>Fleeing:</strong> Press <em>Flee</em> to skip a room - 4 new cards are dealt. Fled cards are shuffled back into the deck for later. You cannot flee twice in a row, so use it wisely!</li>' +
       '</ul>';
