@@ -109,8 +109,20 @@
 /* The selector uses the same fixed application stage as the rules and game screens. */
 
 
+.setup-screen > .primary-btn,
+.setup-screen > .dungeon-id-entry {
+    width: 380px;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.setup-screen > .primary-btn {
+    padding: 14px 12px;
+}
+
 .dungeon-id-entry {
-    margin-top: 12px;
+    margin-top: 14px;
     text-align: center;
 }
 
@@ -124,14 +136,16 @@
 
 .dungeon-id-row {
     display: flex;
-    justify-content: center;
+    justify-content: stretch;
     align-items: stretch;
-    gap: 8px;
+    gap: 10px;
+    width: 100%;
 }
 
 #deckIdInput {
     min-width: 0;
-    width: 170px;
+    flex: 1 1 auto;
+    width: auto;
     padding: 10px 12px;
     border: 2px solid #222;
     border-radius: 6px;
@@ -143,6 +157,9 @@
 }
 
 .dungeon-id-row .secondary-btn {
+    flex: 0 0 150px;
     margin: 0;
     white-space: nowrap;
+    padding-left: 12px;
+    padding-right: 12px;
 }
