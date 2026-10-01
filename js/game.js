@@ -117,6 +117,22 @@ function enterGame() {
     startGame();
 }
 
+function enterDungeonId() {
+    var input = document.getElementById('deckIdInput');
+    var id = input ? input.value.trim() : '';
+
+    try {
+      var seed = decodeDeckId(id);
+      if (typeof window.stopDeckDungeonTheme === 'function') {
+        window.stopDeckDungeonTheme();
+      }
+      showScreen('game-ui');
+      startGame(seed, id);
+    } catch (error) {
+      alert(error.message || 'Invalid Dungeon ID.');
+    }
+}
+
 
 
 // Custom SVG Dragon for Ace cards
@@ -243,7 +259,8 @@ function showSetupScreen() {
 function replayGame() {
     document.getElementById('overlay').classList.remove('show');
     showScreen('game-ui');
-    startGame();
+    var seed = decodeDeckId(state.deckId);
+    startGame(seed, state.deckId);
 }
 
 function backToMenu() {
@@ -253,7 +270,7 @@ function backToMenu() {
     showScreen('game-selector');
 }
 
-function startGame() {
+function startGame(deckSeed, suppliedDeckId) {
 stopDeckDungeonTheme();
 var modeInput = document.getElementById('modeSelect');
 var mode = modeInput ? modeInput.value : 'solo_dagger';
@@ -273,7 +290,9 @@ var currentTheme = THEMES[selectedTheme || 'dungeon'];
 var currentThemeName = currentTheme ? currentTheme.name : 'Deck Dungeon';
 
 var isDaggerMode = true; //mode !== 'coop';
-var initialDeck = makeDeck(isDaggerMode);
+var dungeonSeed = deckSeed === undefined ? decodeDeckId(generateDeckId()) : deckSeed;
+var dungeonId = suppliedDeckId || encodeDeckIdSeed(dungeonSeed);
+var initialDeck = makeDeck(dungeonSeed);
 
 historyStack = [];
 
@@ -305,6 +324,7 @@ if (isDaggerMode || mode === 'coop') {
 
 state = {
     theme: selectedTheme || 'dungeon',
+  deckId: dungeonId,
   mode: mode,
   hardMode: hardMode,
   maxHP: maxHP,
@@ -361,6 +381,7 @@ fillDungeon();
 var firstRoom = state.dungeon.slice();
 state.dungeon = [];
 
+log('Dungeon ID: ' + dungeonId, false);
 log('A new ' + (mode === 'coop' ? 'co-op' : 'solo') + ' ' + currentThemeName + ' run begins.', false); 
 if (isDaggerMode) {
   log(p1Name + ' enters the dungeon wielding a Dagger (2♦).');
