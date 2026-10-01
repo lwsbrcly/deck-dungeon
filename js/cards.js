@@ -42,7 +42,7 @@ function getThemeCardAnimation(suit, rank) {
     : fallback;
 }
 
-function makeDeck() {
+function makeDeck(seed) {
   var d = [];
   var suitKeys = Object.keys(SUITS);
   for (var i = 0; i < suitKeys.length; i++) {
@@ -61,7 +61,7 @@ function makeDeck() {
       });
     }
   }
-  return shuffle(d);
+  return seed === undefined ? shuffle(d) : shuffleSeeded(d, seed);
 }
 
 function shuffle(a) {
