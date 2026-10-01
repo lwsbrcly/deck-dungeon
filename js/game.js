@@ -155,8 +155,8 @@ var BOARD_LAYOUTS = {
         gridId: 'coopPlayerCardGrid',
         deckId: 'coopDeck',
         players: {
-            p1: { panel: 'coopP1Panel', portrait: 'coopP1Portrait', name: 'coopP1DisplayName', down: 'coopP1Down', hp: 'coopP1HpDisplay', weapon: 'coopP1Weapon' },
-            p2: { panel: 'coopP2Panel', portrait: 'coopP2Portrait', name: 'coopP2DisplayName', down: 'coopP2Down', hp: 'coopP2HpDisplay', weapon: 'coopP2Weapon' }
+            p1: { panel: 'coopP1Panel', portrait: 'coopP1Portrait', name: 'coopP1DisplayName', down: 'coopP1Down', hp: 'coopP1HpDisplay', weapon: 'coopP1Weapon', previous: 'coopP1Previous' },
+            p2: { panel: 'coopP2Panel', portrait: 'coopP2Portrait', name: 'coopP2DisplayName', down: 'coopP2Down', hp: 'coopP2HpDisplay', weapon: 'coopP2Weapon', previous: 'coopP2Previous' }
         }
     }
 };
@@ -1795,7 +1795,28 @@ playerIds.forEach(function(id) {
 
   var weaponEl = document.getElementById(elements.weapon);
   if (weaponEl) {
-    weaponEl.innerHTML = p.weapon ? cardHTML(p.weapon) : '';
+    if (state.mode === 'coop') {
+      weaponEl.innerHTML = p.weapon
+        ? '<span class="duel-rank">' + p.weapon.rank + ' ' + SUITS[p.weapon.suit] + '</span>' +
+          '<span class="duel-label">' + p.weapon.name + '</span>'
+        : '<span class="duel-muted">No weapon</span>';
+    } else {
+      weaponEl.innerHTML = p.weapon ? cardHTML(p.weapon) : '';
+    }
+  }
+
+  if (state.mode === 'coop' && elements.previous) {
+    var previousEl = document.getElementById(elements.previous);
+    if (previousEl) {
+      var previous = p.previousMonsters && p.previousMonsters.length
+        ? p.previousMonsters[p.previousMonsters.length - 1]
+        : null;
+      previousEl.innerHTML = previous
+        ? '<span class="duel-rank">' + previous.rank + ' ' + SUITS[previous.suit] + '</span>' +
+          '<span class="duel-label">' + previous.name + '</span>' +
+          '<span class="duel-value">Value ' + previous.value + '</span>'
+        : '<span class="duel-muted">No previous monster</span>';
+    }
   }
 });
 
