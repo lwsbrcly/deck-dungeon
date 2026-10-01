@@ -1683,6 +1683,7 @@ function setHealthTileImage(tile, alive) {
 }
 
 function render() {
+var isSolo = state.mode !== 'coop';
 var layout = getBoardLayout();
 var playerIds = Object.keys(layout.players);
 
