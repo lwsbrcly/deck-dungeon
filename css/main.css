@@ -1349,3 +1349,111 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   padding: 6px;
   font-size: 0.75rem
 }
+
+
+/* Shared decision overlay */
+.decision-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8%;
+  background: rgba(0, 0, 0, 0.62);
+}
+
+.decision-overlay[hidden] {
+  display: none;
+}
+
+.decision-panel {
+  width: min(88%, 560px);
+  max-height: 82%;
+  padding: 4%;
+  background: var(--card-image);
+  background-size: 100% 100%;
+  border: 2px solid var(--game-border);
+  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+  color: #000;
+}
+
+.decision-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 4%;
+}
+
+.decision-title-wrap {
+  flex: 1;
+  text-align: center;
+}
+
+.decision-title {
+  margin: 0;
+}
+
+#decisionTitle {
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+#decisionPrompt {
+  margin-top: 4px;
+  font-size: .75rem;
+  font-weight: 700;
+}
+
+.decision-back {
+  flex: 0 0 auto;
+  border: 0;
+  background: none;
+  color: var(--red);
+  font: inherit;
+  font-size: .72rem;
+  font-weight: 900;
+  padding: 3px 0;
+  cursor: pointer;
+}
+
+.decision-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+
+.decision-options.two-col {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.decision-option {
+  min-height: 52px;
+  border: 1px solid var(--game-border);
+  background: rgba(255,255,255,.34);
+  color: #000;
+  padding: 7px 5px;
+  font: inherit;
+  font-size: .72rem;
+  font-weight: 800;
+  line-height: 1.1;
+  cursor: pointer;
+}
+
+.decision-option strong {
+  display: block;
+  color: var(--red);
+  font-size: .82rem;
+}
+
+.decision-option span {
+  display: block;
+  margin-top: 3px;
+  font-size: .62rem;
+  font-weight: 600;
+}
+
+.decision-option:disabled {
+  opacity: .4;
+  cursor: default;
+}
