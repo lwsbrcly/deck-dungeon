@@ -208,9 +208,10 @@
                     <!-- 1. HP TRACK -->
                     <div id="p1Bar" class="ascii-health-bar canvas-health-track"></div>
 
-                    <!-- 2. PLAYER CARDS — four cards in the artwork-defined player area -->
+                    <!-- 2. PLAYER AREA — solo and co-op use separate layouts so the
+                         existing solo board remains untouched while co-op gets its own footprint. -->
                     <div class="card-area canvas-player-area" id="playersContainer">
-                        <div class="card-grid" id="playerCardGrid">
+                        <div class="card-grid solo-player-grid" id="playerCardGrid">
                             <div id="p1Deck" class="card-anchor" aria-label="Deck"></div>
 
                             <div id="p1Panel" class="card player-character-card" aria-label="Player">
@@ -226,6 +227,39 @@
 
                             <div id="p1Weapon" class="card-anchor" aria-label="Weapon"></div>
                             <div id="p1PreviousMonster" class="card-anchor" aria-label="Previous Monster"></div>
+                        </div>
+
+                        <div class="card-grid coop-player-grid" id="coopPlayerCardGrid" hidden>
+                            <div id="coopDeck" class="card-anchor" aria-label="Deck"></div>
+
+                            <div id="coopP1Panel" class="card player-character-card" aria-label="Player 1">
+                                <div class="player-character-inner">
+                                    <div class="player-header">
+                                        <strong id="coopP1DisplayName">Hero 1</strong>
+                                        <span id="coopP1Down"></span>
+                                    </div>
+                                    <img id="coopP1Portrait" class="player-portrait" src="" alt="">
+                                    <div class="player-hp" id="coopP1HpDisplay">HP 10/10</div>
+                                </div>
+                            </div>
+
+                            <div id="coopP2Panel" class="card player-character-card" aria-label="Player 2">
+                                <div class="player-character-inner">
+                                    <div class="player-header">
+                                        <strong id="coopP2DisplayName">Hero 2</strong>
+                                        <span id="coopP2Down"></span>
+                                    </div>
+                                    <img id="coopP2Portrait" class="player-portrait" src="" alt="">
+                                    <div class="player-hp" id="coopP2HpDisplay">HP 10/10</div>
+                                </div>
+                            </div>
+
+                            <div id="duelCard" class="card duel-card" aria-label="Duel">
+                                <div class="duel-quadrant duel-p1-weapon" aria-label="Player 1 weapon"></div>
+                                <div class="duel-quadrant duel-p2-weapon" aria-label="Player 2 weapon"></div>
+                                <div class="duel-quadrant duel-shared-status" aria-label="Shared duel status"></div>
+                                <div class="duel-quadrant duel-current-monster" aria-label="Current duel monster"></div>
+                            </div>
                         </div>
                     </div>
 
@@ -253,15 +287,7 @@
                     <div class="log-box canvas-log-area" id="log"></div>
                 </div>
 
-                <!-- Co-op compatibility elements; solo layout is the canonical design for now. -->
-                <div id="p2Panel" class="coop-compat-panel">
-                    <div class="player-header">
-                        <strong id="p2DisplayName">Hero 2</strong>
-                        <span id="p2Down"></span>
-                    </div>
-                    <div id="p2Bar" class="ascii-health-bar"></div>
-                    <div id="p2Weapon"></div>
-                </div>
+                <!-- Co-op player state is rendered inside the canvas above. -->
             </div>        
             <!-- Modal Dialog -->
             <div class="modal-overlay" id="overlay">
