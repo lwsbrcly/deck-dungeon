@@ -263,6 +263,33 @@ function replayGame() {
     startGame(seed, state.deckId);
 }
 
+function newRandomGame() {
+    document.getElementById('overlay').classList.remove('show');
+    showScreen('game-ui');
+    startGame();
+}
+
+function copyDeckId() {
+    var deckId = state && state.deckId;
+    if (!deckId) return;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(deckId).then(function() {
+        var button = document.getElementById('copyDeckIdBtn');
+        if (!button) return;
+        var original = button.textContent;
+        button.textContent = 'Copied!';
+        setTimeout(function() {
+          button.textContent = original;
+        }, 1200);
+      }).catch(function() {
+        alert('Could not copy the Deck ID. Please copy it manually: ' + deckId);
+      });
+    } else {
+      alert('Could not copy the Deck ID. Please copy it manually: ' + deckId);
+    }
+}
+
 function backToMenu() {
     document.getElementById('overlay').classList.remove('show');
     document.getElementById('game').style.display = 'none';
@@ -453,12 +480,6 @@ async function refreshDungeon() {
     // order remains exactly as it was. Only the four fled cards get new
     // positions.
     insertSeeded(state.deck, fledCards, fleeSeed);
-
-    // TEMP DEBUG: expose the complete deck order after Flee so deterministic
-    // runs can be compared. Remove/disable this once testing is complete.
-    log('DEBUG DECK ORDER: ' + state.deck.map(function(card) {
-        return card.id;
-    }).join('|'), false);
 
     // If fewer than four untouched cards remained, the insertion above has
     // supplied the remaining card(s) needed to complete the replacement room.
@@ -1444,6 +1465,9 @@ if (isDead || isCleared || allMonstersSlain) {
 
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalText').innerHTML = text;
+
+  var modalDeckId = document.getElementById('modalDeckId');
+  if (modalDeckId) modalDeckId.textContent = state.deckId || '';
   renderRunChart();
   document.getElementById('overlay').classList.add('show');
 }
