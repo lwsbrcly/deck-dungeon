@@ -290,6 +290,28 @@ function copyDeckId() {
     }
 }
 
+function copyLogText() {
+    var logEl = document.getElementById('gameLog');
+    if (!logEl) return;
+
+    var logText = logEl.innerText || logEl.textContent || '';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(logText).then(function() {
+        var button = document.getElementById('copyLogBtn');
+        if (!button) return;
+        var original = button.textContent;
+        button.textContent = 'Copied!';
+        setTimeout(function() {
+          button.textContent = original;
+        }, 1200);
+      }).catch(function() {
+        alert('Could not copy the game log. Please select and copy it manually.');
+      });
+    } else {
+      alert('Could not copy the game log. Please select and copy it manually.');
+    }
+}
+
 function backToMenu() {
     document.getElementById('overlay').classList.remove('show');
     document.getElementById('game').style.display = 'none';
