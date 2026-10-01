@@ -398,6 +398,68 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
   pointer-events: none;
 }
 
+/* Solo is the existing four-slot player layout.
+   Co-op gets its own four-card row: deck, P1, P2, duel. */
+.coop-player-grid {
+  display: flex;
+}
+
+.coop-player-grid[hidden] {
+  display: none;
+}
+
+.coop-player-grid > .card,
+.coop-player-grid > .card-anchor {
+  flex: 0 0 16.5cqw;
+  width: 16.5cqw;
+  height: 16.5cqh;
+}
+
+.duel-card {
+  position: relative;
+  overflow: hidden;
+  pointer-events: auto;
+  background-image: var(--card-image);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+/* The four deliberately unequal regions are the future home of duel state.
+   For this first layout pass they are empty and purely structural. */
+.duel-quadrant {
+  position: absolute;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.duel-p1-weapon {
+  left: 8%;
+  top: 7%;
+  width: 55%;
+  height: 38%;
+}
+
+.duel-p2-weapon {
+  right: 8%;
+  top: 18%;
+  width: 37%;
+  height: 32%;
+}
+
+.duel-shared-status {
+  left: 10%;
+  bottom: 8%;
+  width: 34%;
+  height: 30%;
+}
+
+.duel-current-monster {
+  right: 7%;
+  bottom: 7%;
+  width: 56%;
+  height: 38%;
+}
+
 .card-anchor {
   position: relative;
   flex: 0 0 16.5cqw;
