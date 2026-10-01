@@ -140,6 +140,39 @@ var activeGhostMemoryId = null;
 
 var state = {};
 var historyStack = [];
+
+// The board layout is selected once per run. Rendering code can then address
+// the appropriate DOM without scattering coop/solo checks through the game.
+var BOARD_LAYOUTS = {
+    solo: {
+        gridId: 'playerCardGrid',
+        deckId: 'p1Deck',
+        players: {
+            p1: { panel: 'p1Panel', portrait: 'p1Portrait', name: 'p1DisplayName', down: 'p1Down', hp: 'p1HpDisplay', weapon: 'p1Weapon', previous: 'p1PreviousMonster' }
+        }
+    },
+    coop: {
+        gridId: 'coopPlayerCardGrid',
+        deckId: 'coopDeck',
+        players: {
+            p1: { panel: 'coopP1Panel', portrait: 'coopP1Portrait', name: 'coopP1DisplayName', down: 'coopP1Down', hp: 'coopP1HpDisplay', weapon: 'coopP1Weapon' },
+            p2: { panel: 'coopP2Panel', portrait: 'coopP2Portrait', name: 'coopP2DisplayName', down: 'coopP2Down', hp: 'coopP2HpDisplay', weapon: 'coopP2Weapon' }
+        }
+    }
+};
+
+function getBoardLayout() {
+    return BOARD_LAYOUTS[state && state.mode === 'coop' ? 'coop' : 'solo'];
+}
+
+function applyBoardLayout() {
+    var layout = getBoardLayout();
+    var soloGrid = document.getElementById('playerCardGrid');
+    var coopGrid = document.getElementById('coopPlayerCardGrid');
+
+    if (soloGrid) soloGrid.hidden = layout.gridId !== 'playerCardGrid';
+    if (coopGrid) coopGrid.hidden = layout.gridId !== 'coopPlayerCardGrid';
+}
 function saveState() {
     historyStack.push(JSON.parse(JSON.stringify(state)));
     if (historyStack.length > 30) historyStack.shift();
@@ -430,27 +463,26 @@ document.getElementById('log').innerHTML = '';
 document.getElementById('runChart').innerHTML = '';
 
 var playersContainer = document.getElementById('playersContainer');
-var p2Panel = document.getElementById('p2Panel');
 
-document.getElementById('p1DisplayName').textContent = p1Name;
-document.getElementById('p2DisplayName').textContent = p2Name;
+applyBoardLayout();
 
-var p1PortraitImage = document.getElementById('p1Portrait');
-if (p1PortraitImage) {
-  var portraitTheme = THEMES[state.theme || 'dungeon'];
-  var portraitBase = portraitTheme && portraitTheme.artwork && portraitTheme.artwork.portraits
-    ? portraitTheme.artwork.portraits
-    : 'assets/dungeon/portraits/';
-  p1PortraitImage.src = portraitBase + state.p1Portrait + '.png';
+var boardLayout = getBoardLayout();
+boardLayout.players.p1 && (document.getElementById(boardLayout.players.p1.name).textContent = p1Name);
+if (boardLayout.players.p2) {
+  document.getElementById(boardLayout.players.p2.name).textContent = p2Name;
 }
 
-if (mode !== 'coop') {
-  p2Panel.style.display = 'none';
-  playersContainer.classList.add('solo-mode');
-} else {
-  p2Panel.style.display = 'flex';
-  playersContainer.classList.remove('solo-mode');
-}
+var portraitThemeForBoard = THEMES[state.theme || 'dungeon'];
+var portraitBaseForBoard = portraitThemeForBoard && portraitThemeForBoard.artwork && portraitThemeForBoard.artwork.portraits
+  ? portraitThemeForBoard.artwork.portraits
+  : 'assets/dungeon/portraits/';
+
+['p1', 'p2'].forEach(function(id) {
+  var playerLayout = boardLayout.players[id];
+  if (!playerLayout) return;
+  var portraitImage = document.getElementById(playerLayout.portrait);
+  if (portraitImage) portraitImage.src = portraitBaseForBoard + state[id].portrait + '.png';
+});
 
 fillDungeon();
 var firstRoom = state.dungeon.slice();
