@@ -374,10 +374,10 @@ const THEMES = {
                 bg: "#19191a",
                 border: "#d89f3f",
                 text: "#CDA655",
-                muted: "#474b14",
+                muted: "#79731B",
                 logText: "#CDA655",
                 red: "#d30e0d",
-                highlight: "#eb6b20",
+                highlight: "#DC8618",
             },
         },
 
