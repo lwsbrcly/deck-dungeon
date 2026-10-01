@@ -291,10 +291,16 @@ function copyDeckId() {
 }
 
 function copyLogText() {
-    var logEl = document.getElementById('gameLog');
-    if (!logEl) return;
+    var logHistory = state && Array.isArray(state.logHistory)
+      ? state.logHistory
+      : [];
 
-    var logText = logEl.innerText || logEl.textContent || '';
+    if (!logHistory.length) return;
+
+    var logText = logHistory.map(function(line) {
+      return '• ' + line;
+    }).join('\n');
+
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(logText).then(function() {
         var button = document.getElementById('copyLogBtn');
@@ -392,6 +398,7 @@ state = {
   maxFoodHP: 54,
   weaponUsage: {},
   eventHistory: [],
+  logHistory: [],
   p1: { hp: maxHP, weapon: starterWeaponP1, ceiling: starterCeilingP1, consumedThisRoom: false, previousMonsters: [], previousMonsterRotationDirection: Math.random() < 0.5 ? -1 : 1 },
   p2: { hp: maxHP, weapon: starterWeaponP2, ceiling: starterCeilingP2, consumedThisRoom: false, previousMonsters: [], previousMonsterRotationDirection: Math.random() < 0.5 ? -1 : 1 },
   combinedUsedThisRoom: false
@@ -1976,6 +1983,13 @@ if (syncBoard && syncDungeon && syncSlots.length) {
 
 
 function log(text, recordEvent, eventType, weaponStrengths) {
+    // Keep the complete plain-text log independently of the DOM. The visible
+    // log is only a display of this history and may be hidden by the game-over
+    // modal.
+    if (state && Array.isArray(state.logHistory)) {
+      state.logHistory.push(String(text));
+    }
+
     var box = document.getElementById('log');
     if (box) box.innerHTML = '<div class="logline">• ' + text + '</div>' + box.innerHTML;
     
