@@ -2169,6 +2169,41 @@ var potion = c && c.suit === 'hearts';
 
 hideContextActions();
 
+if (!isSolo && c) {
+  if (monster) {
+    openDecisionOverlay({
+      title: 'Choose how we fight',
+      prompt: c.rank + ' ' + SUITS[c.suit] + ' — ' + c.name,
+      options: [
+        { label: 'P1 Weapon', value: 'p1_weapon' },
+        { label: 'P2 Weapon', value: 'p2_weapon' },
+        { label: 'Both Weapons', value: 'both_weapon' },
+        { label: 'P1 Fist', value: 'p1_fist' },
+        { label: 'P2 Fist', value: 'p2_fist' },
+        { label: 'Both Fists', value: 'both_fist' }
+      ],
+      onChoose: function(value) {
+        // Decision wiring comes next; for now this only surfaces the choice.
+        console.log('Co-op monster decision:', value);
+      }
+    });
+  } else if (weapon || potion) {
+    openDecisionOverlay({
+      title: weapon ? 'What do we do?' : 'What do we do?',
+      prompt: c.rank + ' ' + SUITS[c.suit] + ' — ' + c.name,
+      options: [
+        { label: 'P1', value: 'p1' },
+        { label: 'P2', value: 'p2' },
+        { label: 'Discard', value: 'discard' }
+      ],
+      onChoose: function(value) {
+        // Decision wiring comes next; for now this only surfaces the choice.
+        console.log('Co-op item decision:', value);
+      }
+    });
+  }
+}
+
 if (monster && isSolo) {
 
   setContextAction(
