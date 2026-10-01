@@ -163,3 +163,16 @@
     padding-left: 12px;
     padding-right: 12px;
 }
+
+/* The Deck ID action should read as the same primary action as Enter Game. */
+.dungeon-id-row .secondary-btn {
+    background: var(--rules-highlight);
+    color: #fff;
+    border: none;
+    font-weight: bold;
+    font-size: 1rem;
+}
+.dungeon-id-row .secondary-btn:hover {
+    color: #fff;
+    border-color: transparent;
+}
