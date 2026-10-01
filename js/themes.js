@@ -382,7 +382,7 @@ const THEMES = {
                 text: "#CDA655",
                 muted: "#79731B",
                 logText: "#CDA655",
-                red: "#d30e0d",
+                red: "#FD0201",
                 highlight: "#DC8618",
             },
         },
