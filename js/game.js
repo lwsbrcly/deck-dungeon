@@ -1683,134 +1683,150 @@ function setHealthTileImage(tile, alive) {
 }
 
 function render() {
-var isSolo = state.mode !== 'coop';
-['p1','p2'].forEach(function(id) {
-  if (isSolo && id === 'p2') return;
+var layout = getBoardLayout();
+var playerIds = Object.keys(layout.players);
+
+playerIds.forEach(function(id) {
   var p = state[id];
+  var elements = layout.players[id];
+  if (!p || !elements) return;
+
   var healthbar = document.getElementById(id + 'Bar');
-  var track = healthbar.querySelector('.health-track');
-  
-  // Build the 20 fixed heart elements once. After that, only the hearts
-  // whose state actually changed are updated, so the bar itself never jumps.
-  if (!track) {
-    track = document.createElement('div');
-    track.className = 'health-track';
-    
-    for (var i = 1; i <= 20; i++) {
-      var tile = document.createElement('img');
-      tile.className = 'health-tile';
-      tile.alt = '';
-      track.appendChild(tile);
+  if (healthbar) {
+    var track = healthbar.querySelector('.health-track');
+
+    if (!track) {
+      track = document.createElement('div');
+      track.className = 'health-track';
+
+      for (var i = 1; i <= 20; i++) {
+        var tile = document.createElement('img');
+        tile.className = 'health-tile';
+        tile.alt = '';
+        track.appendChild(tile);
+      }
+
+      healthbar.innerHTML = '';
+      healthbar.appendChild(track);
     }
-    
-    healthbar.innerHTML = '';
-    healthbar.appendChild(track);
-  }
-  
-  var tiles = track.querySelectorAll('.health-tile');
-  var oldHp = parseInt(tiles.length ? tiles[0].dataset.previousHp : p.hp, 10);
-  if (isNaN(oldHp)) oldHp = p.hp;
-  
-  for (var i = 0; i < tiles.length; i++) {
-    var tile = tiles[i];
-    var shouldBeAlive = i < p.hp;
-    var nextState = shouldBeAlive ? 'alive' : 'gone';
-    
-    if (tile._hpTimer) {
-      clearTimeout(tile._hpTimer);
-      tile._hpTimer = null;
+
+    var tiles = track.querySelectorAll('.health-tile');
+    var oldHp = parseInt(tiles.length ? tiles[0].dataset.previousHp : p.hp, 10);
+    if (isNaN(oldHp)) oldHp = p.hp;
+
+    for (var i = 0; i < tiles.length; i++) {
+      var tile = tiles[i];
+      var shouldBeAlive = i < p.hp;
+      var nextState = shouldBeAlive ? 'alive' : 'gone';
+
+      if (tile._hpTimer) {
+        clearTimeout(tile._hpTimer);
+        tile._hpTimer = null;
+      }
+
+      if (tile.dataset.hpState !== nextState) {
+        var changeIndex = p.hp < oldHp
+          ? (oldHp - 1 - i)
+          : (i - oldHp);
+        var changeDelay = Math.max(0, changeIndex) * 55;
+
+        tile._hpTimer = setTimeout(function(targetTile, stateName) {
+          return function() {
+            setHealthTileImage(targetTile, stateName === 'alive');
+            targetTile.dataset.hpState = stateName;
+            targetTile.classList.remove('health-changing');
+            void targetTile.offsetWidth;
+            targetTile.classList.add('health-changing');
+            targetTile._hpTimer = null;
+          };
+        }(tile, nextState), changeDelay);
+      } else if (!tile.src || tile.dataset.hpTheme !== ((state && state.theme) || selectedTheme || 'dungeon')) {
+        setHealthTileImage(tile, shouldBeAlive);
+      }
     }
-    
-    if (tile.dataset.hpState !== nextState) {
-      // Only the hearts whose state changed are animated. The image itself
-      // changes when that heart's turn arrives, rather than all at once.
-      var changeIndex = p.hp < oldHp
-        ? (oldHp - 1 - i)
-        : (i - oldHp);
-      var changeDelay = Math.max(0, changeIndex) * 55;
-      
-      tile._hpTimer = setTimeout(function(targetTile, stateName) {
-        return function() {
-          setHealthTileImage(targetTile, stateName === 'alive');
-          targetTile.dataset.hpState = stateName;
-          targetTile.classList.remove('health-changing');
-          void targetTile.offsetWidth;
-          targetTile.classList.add('health-changing');
-          targetTile._hpTimer = null;
-        };
-      }(tile, nextState), changeDelay);
-    } else if (!tile.src || tile.dataset.hpTheme !== ((state && state.theme) || selectedTheme || 'dungeon')) {
-      setHealthTileImage(tile, shouldBeAlive);
+
+    for (var j = 0; j < tiles.length; j++) {
+      tiles[j].dataset.previousHp = p.hp;
     }
-  }
-  
-  for (var j = 0; j < tiles.length; j++) {
-    tiles[j].dataset.previousHp = p.hp;
+
+    requestAnimationFrame(function() {
+      var currentTrack = healthbar.querySelector('.health-track');
+      if (!currentTrack) return;
+
+      currentTrack.style.transform = 'scale(1)';
+      var available = healthbar.clientWidth;
+      var trackWidth = currentTrack.scrollWidth;
+
+      currentTrack.style.transformOrigin = 'left center';
+
+      if (trackWidth > available && available > 0) {
+        currentTrack.style.transform = 'scale(' + (available / trackWidth) + ')';
+      }
+    });
   }
 
-  requestAnimationFrame(function() {
-    var currentTrack = healthbar.querySelector('.health-track');
-    if (!currentTrack) return;
-    
-    currentTrack.style.transform = 'scale(1)';
-    var available = healthbar.clientWidth;
-    var trackWidth = currentTrack.scrollWidth;
-    
-    currentTrack.style.transformOrigin = 'left center';
-    
-    if (trackWidth > available && available > 0) {
-      currentTrack.style.transform = 'scale(' + (available / trackWidth) + ')';
-    }
-  });
-  
-  document.getElementById(id + 'Panel').classList.toggle('downed', p.hp === 0);
-  document.getElementById(id + 'Down').innerHTML = p.hp === 0 ? '<span class="badge">DOWN</span>' : '';
-  var hpDisplay = document.getElementById(id + 'HpDisplay');
+  var panel = document.getElementById(elements.panel);
+  if (panel) panel.classList.toggle('downed', p.hp === 0);
+
+  var down = document.getElementById(elements.down);
+  if (down) down.innerHTML = p.hp === 0 ? '<span class="badge">DOWN</span>' : '';
+
+  var hpDisplay = document.getElementById(elements.hp);
   if (hpDisplay) hpDisplay.textContent = 'HP ' + p.hp + '/' + state.maxHP;
-  
-  if (isSolo && id === 'p1') {
-    var deckEl = document.getElementById('p1Deck');
-    if (state.deck.length > 0) {
-      var deckDepth = Math.ceil(state.deck.length / 3);
-      var deckLayers = '';
-      for (var layer = 0; layer <= deckDepth; layer++) {
-        deckLayers += '<img src="' + THEMES[selectedTheme || 'dungeon'].artwork.back + '" alt="" style="--deck-offset:' + layer + 'px; z-index:' + (layer + 1) + ';">';
-      }
-      deckEl.innerHTML = '<div class="card deck-card" style="--deck-depth:' + deckDepth + 'px;">' + deckLayers + '</div>';
-    } else {
-      deckEl.innerHTML = '';
-    }
 
-    var previousMonsterEl = document.getElementById('p1PreviousMonster');
-    if (p.previousMonsters && p.previousMonsters.length) {
-      var previousMonsterHtml = '<div class="previous-monster-stack">';
-      for (var m = 0; m < p.previousMonsters.length; m++) {
-        var monsterCard = p.previousMonsters[m];
-        var ghostClass = (activeGhostMemoryId && monsterCard._ghostId === activeGhostMemoryId) ? ' ghost-memory-hidden' : '';
-        previousMonsterHtml += '<div class="previous-monster-card' + ghostClass + '" style="--stack-x:' + monsterCard.stackX + 'px; --stack-y:' + monsterCard.stackY + 'px; --stack-rotation:' + monsterCard.stackRotation + 'deg; z-index:' + (m + 1) + ';">' + cardHTML(monsterCard) + '</div>';
+  if (id === 'p1' && elements.previous) {
+    var previousMonsterEl = document.getElementById(elements.previous);
+    if (previousMonsterEl) {
+      if (p.previousMonsters && p.previousMonsters.length) {
+        var previousMonsterHtml = '<div class="previous-monster-stack">';
+        for (var m = 0; m < p.previousMonsters.length; m++) {
+          var monsterCard = p.previousMonsters[m];
+          var ghostClass = (activeGhostMemoryId && monsterCard._ghostId === activeGhostMemoryId) ? ' ghost-memory-hidden' : '';
+          previousMonsterHtml += '<div class="previous-monster-card' + ghostClass + '" style="--stack-x:' + monsterCard.stackX + 'px; --stack-y:' + monsterCard.stackY + 'px; --stack-rotation:' + monsterCard.stackRotation + 'deg; z-index:' + (m + 1) + ';">' + cardHTML(monsterCard) + '</div>';
+        }
+        previousMonsterHtml += '</div>';
+        previousMonsterEl.innerHTML = previousMonsterHtml;
+      } else {
+        previousMonsterEl.innerHTML = '';
       }
-      previousMonsterHtml += '</div>';
-      previousMonsterEl.innerHTML = previousMonsterHtml;
-    } else {
-      previousMonsterEl.innerHTML = '';
     }
   }
 
-  if (p.weapon) {
-    var displayStats = 'ATK ' + p.weapon.value + (p.ceiling === 99 ? '' : '<br><span style="font-size:0.5rem; opacity:0.85;">MAX ' + p.ceiling + '</span>');
-    document.getElementById(id + 'Weapon').innerHTML = cardHTML(p.weapon); //, displayStats);
-   // document.getElementById(id + 'WeaponMeta').textContent = p.weapon.name;
-  } else {
-    document.getElementById(id + 'Weapon').innerHTML = '';
-   // document.getElementById(id + 'WeaponMeta').textContent = 'Empty';
+  var weaponEl = document.getElementById(elements.weapon);
+  if (weaponEl) {
+    weaponEl.innerHTML = p.weapon ? cardHTML(p.weapon) : '';
   }
 });
 
+var deckEl = document.getElementById(layout.deckId);
+if (deckEl) {
+  if (state.deck.length > 0) {
+    var deckDepth = Math.ceil(state.deck.length / 3);
+    var deckLayers = '';
+    for (var layer = 0; layer <= deckDepth; layer++) {
+      deckLayers += '<img src="' + THEMES[selectedTheme || 'dungeon'].artwork.back + '" alt="" style="--deck-offset:' + layer + 'px; z-index:' + (layer + 1) + ';">';
+    }
+    deckEl.innerHTML = '<div class="card deck-card" style="--deck-depth:' + deckDepth + 'px;">' + deckLayers + '</div>';
+  } else {
+    deckEl.innerHTML = '';
+  }
+}
+
+var playerTheme = THEMES[selectedTheme || 'dungeon'];
 var playerPanel = document.getElementById('p1Panel');
 if (playerPanel) {
-  var playerTheme = THEMES[selectedTheme || 'dungeon'];
   playerPanel.style.backgroundImage = 'url("' + (playerTheme && playerTheme.artwork ? playerTheme.artwork.card : 'assets/dungeon/card.png') + '")';
 }
+
+if (state.mode === 'coop') {
+  ['coopP1Panel', 'coopP2Panel'].forEach(function(id) {
+    var panel = document.getElementById(id);
+    if (panel) panel.style.backgroundImage = 'url("' + (playerTheme && playerTheme.artwork ? playerTheme.artwork.card : 'assets/dungeon/card.png') + '")';
+  });
+  var duelCard = document.getElementById('duelCard');
+  if (duelCard) duelCard.style.backgroundImage = 'url("' + (playerTheme && playerTheme.artwork ? playerTheme.artwork.card : 'assets/dungeon/card.png') + '")';
+}
+
 
 var d = document.getElementById('dungeon');
 
