@@ -1426,12 +1426,10 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 }
 
 .decision-options {
-  flex: 1;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-auto-rows: minmax(0, 1fr);
-  gap: 7px;
-  min-height: 0;
+  gap: 6px;
+  align-content: start;
 }
 
 .decision-option {
@@ -1440,7 +1438,7 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   border: 1px solid #fff;
   background: #19191a;
   color: #fff;
-  padding: 7px 5px;
+  padding: 8px 6px;
   font: inherit;
   font-size: .68rem;
   font-weight: 800;
