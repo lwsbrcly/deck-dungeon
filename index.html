@@ -204,6 +204,20 @@
   
             <div id="game" style="display: none;" class="game-layout">
                 <div class="game-canvas">
+                    <!-- Decision overlay: shared decision point for solo and co-op. -->
+                    <div id="decisionOverlay" class="decision-overlay" hidden>
+                        <div class="decision-panel" role="dialog" aria-modal="true" aria-labelledby="decisionTitle">
+                            <div class="decision-header">
+                                <button id="decisionBack" class="decision-back" type="button" aria-label="Back">← Back</button>
+                                <div class="decision-title-wrap">
+                                    <h2 id="decisionTitle">Choose</h2>
+                                    <p id="decisionPrompt"></p>
+                                </div>
+                            </div>
+                            <div id="decisionOptions" class="decision-options"></div>
+                        </div>
+                    </div>
+
 
                     <!-- 1. HP TRACK -->
                     <div id="p1Bar" class="ascii-health-bar canvas-health-track"></div>
