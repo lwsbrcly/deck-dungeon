@@ -1484,6 +1484,19 @@ if (isDead || isCleared || allMonstersSlain) {
 
   var favWeaponFormatted = favWeaponName + ' (' + favWeaponPts + ' damage dealt)';
 
+  // Add the final outcome to the independent game log as well as the modal.
+  // Keep this derived from the same values used by the modal so copied logs
+  // remain a complete, self-contained record of the run.
+  var resultLabel = isPyrrhicVictory ? 'Draw' : ((isCleared || allMonstersSlain) ? 'Victory' : 'Defeat');
+  log('GAME OVER — ' + resultLabel + '.', false);
+  log('Outcome: ' + title, false);
+  log('Score: ' + score + (isPyrrhicVictory ? ' (DRAW)' : ''), false);
+  log('Monsters Slain: ' + state.monstersSlain + ' / 26', false);
+  log('Rooms Cleared: ' + state.roomsCleared + ' / 14', false);
+  log('Best Weapon: ' + favWeaponFormatted, false);
+  log('HP Restored: ' + state.foodConsumed + ' / ' + state.maxFoodHP + ' HP', false);
+  log('Flee Count: ' + (state.roomsFled || 0), false);
+
   // Populate Run Summary Stats
   document.getElementById('summarySlain').textContent = state.monstersSlain + ' / 26';
   document.getElementById('summaryRooms').textContent = state.roomsCleared + ' / 14';
