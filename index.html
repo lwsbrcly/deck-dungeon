@@ -268,6 +268,12 @@
                   <div class="summary-row"><span>HP Restored:</span> <strong id="summaryFood">0 / 54</strong></div>
                   <div class="summary-row"><span>Flee Count:</span> <strong id="summaryFled">0</strong></div>
                 </div>
+
+                <div class="deck-id-modal">
+                  <span>Deck ID:</span>
+                  <strong id="modalDeckId"></strong>
+                  <button type="button" class="secondary-btn" id="copyDeckIdBtn" onclick="copyDeckId()">Copy Deck ID</button>
+                </div>
             
                 <div class="run-chart">
                   <div class="run-chart-title"><strong>Run History</strong><span>HP over time</span></div>
@@ -277,7 +283,11 @@
             
                 <button type="button" class="peek-btn" id="peekBtn">Hold [V] or Tap & Hold to Peek Board</button>
                 <button type="button" class="undo-modal-btn" id="modalUndoBtn" onclick="undoFromGameOver()">↩ Undo Fatal Error</button>
-                <div class="modal-actions"><button type="button" class="primary-btn" id="modalBtn" onclick="replayGame()">Play Again</button><button type="button" class="secondary-btn" id="modalMenuBtn" onclick="backToMenu()">Back to Menu</button></div>
+                <div class="modal-actions">
+                  <button type="button" class="primary-btn" id="modalBtn" onclick="replayGame()">Play This Deck Again</button>
+                  <button type="button" class="secondary-btn" id="modalRandomBtn" onclick="newRandomGame()">New Random Deck</button>
+                  <button type="button" class="secondary-btn" id="modalMenuBtn" onclick="backToMenu()">Return to Menu</button>
+                </div>
               </div>
             </div>
         </section>
