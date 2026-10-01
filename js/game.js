@@ -389,6 +389,13 @@ state = {
   mode: mode,
   hardMode: hardMode,
   maxHP: maxHP,
+  // Player objects are now the canonical container for player identity and state.
+  // Keep the existing p1/p2 aliases for now so solo gameplay remains untouched while
+  // co-op is built out incrementally.
+  players: [
+    { id: 'p1', name: p1Name, portrait: p1Portrait, hp: maxHP, weapon: starterWeaponP1, ceiling: starterCeilingP1, consumedThisRoom: false, previousMonsters: [], previousMonsterRotationDirection: Math.random() < 0.5 ? -1 : 1 },
+    { id: 'p2', name: p2Name, portrait: p2Portrait, hp: maxHP, weapon: starterWeaponP2, ceiling: starterCeilingP2, consumedThisRoom: false, previousMonsters: [], previousMonsterRotationDirection: Math.random() < 0.5 ? -1 : 1 }
+  ],
   p1Name: p1Name,
   p2Name: p2Name,
   p1Portrait: p1Portrait,
@@ -405,10 +412,16 @@ state = {
   weaponUsage: {},
   eventHistory: [],
   logHistory: [],
-  p1: { hp: maxHP, weapon: starterWeaponP1, ceiling: starterCeilingP1, consumedThisRoom: false, previousMonsters: [], previousMonsterRotationDirection: Math.random() < 0.5 ? -1 : 1 },
-  p2: { hp: maxHP, weapon: starterWeaponP2, ceiling: starterCeilingP2, consumedThisRoom: false, previousMonsters: [], previousMonsterRotationDirection: Math.random() < 0.5 ? -1 : 1 },
+  // Legacy aliases retained for the existing rules/rendering code.
+  // These point at the same objects as state.players, so both representations
+  // stay in sync during the incremental co-op migration.
+  p1: null,
+  p2: null,
   combinedUsedThisRoom: false
 };
+
+state.p1 = state.players[0];
+state.p2 = state.players[1];
 
 document.getElementById('setupScreen').style.display = 'none';
 document.getElementById('game').style.display = 'flex';
