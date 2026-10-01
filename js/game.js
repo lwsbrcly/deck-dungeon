@@ -223,9 +223,15 @@ function toggleModeInputs() {
     var p2Group = document.getElementById('p2Group');
     var p1Label = document.querySelector('#p1Group label');
     var setupRules = document.getElementById('setupRulesText');
+    var modeSelect = document.getElementById('modeSelect');
+    var portraitSetup = document.getElementById('portraitSetup');
+    var p2PortraitChoice = document.getElementById('p2PortraitChoice');
+    var isCoop = modeSelect && modeSelect.value === 'coop';
 
-    if (p2Group) p2Group.style.display = 'none';
-    if (p1Label) p1Label.textContent = 'Player Name';
+    if (p2Group) p2Group.style.display = isCoop ? 'block' : 'none';
+    if (p1Label) p1Label.textContent = isCoop ? 'Player 1 Name' : 'Player Name';
+    if (portraitSetup) portraitSetup.classList.toggle('coop-mode', isCoop);
+    if (p2PortraitChoice) p2PortraitChoice.style.display = isCoop ? 'block' : 'none';
 
     var baseRules = '<h3>Goal of the Game</h3>' +
       '<p style="margin-bottom: 8px;">Defeat all monster cards to complete the game!</p>' +
