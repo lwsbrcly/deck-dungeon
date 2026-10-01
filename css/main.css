@@ -13,6 +13,7 @@
   --game-muted: #8f8e8d;
   --game-log-text: #8f8e8d;
   --game-red: #963221;
+  --red: var(--game-red);
   --game-highlight: #eb6b20;
 
   --card-image: url("../assets/dungeon/card.png");
@@ -297,6 +298,32 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
   align-items: flex-end;
 }
 
+.health-divider {
+  flex: 0 0 1.5%;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--red);
+  font-size: 1.1rem;
+  font-weight: 900;
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+}
+
+.health-track .health-tile {
+  flex: 1 1 0;
+}
+
+.health-track.coop-health-track .health-tile {
+  flex: 1 1 0;
+}
+
+.health-track.coop-health-track .health-divider {
+  margin: 0 0.25%;
+}
+
 .health-tile {
   flex: 1 1 0;
   min-width: 0;
@@ -476,6 +503,11 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
   text-align: center;
   line-height: 1.05;
   color: #000;
+}
+
+.duel-p1-weapon .duel-info,
+.duel-p2-weapon .duel-info {
+  color: var(--red);
 }
 
 .duel-info .duel-rank {
