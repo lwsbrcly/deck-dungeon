@@ -940,7 +940,7 @@ function animateRoomEntry(skipFirst) {
 
   if (!incomingCards.length) return Promise.resolve();
 
-  var deckEl = document.getElementById('p1Deck');
+  var deckEl = document.getElementById(getBoardLayout().deckId);
   var deckCardEl = deckEl ? deckEl.querySelector('.deck-card') : null;
   var deckDepth = Math.ceil(state.deck.length / 3);
   var deckOffset = -(deckDepth / 2);
@@ -964,7 +964,7 @@ function animateRoomEntry(skipFirst) {
 async function animateFlee(cards) {
   if (!cards || !cards.length) return;
 
-  var deckEl = document.getElementById('p1Deck');
+  var deckEl = document.getElementById(getBoardLayout().deckId);
   var deckCardEl = deckEl ? deckEl.querySelector('.deck-card') : null;
   var target = deckCardEl || deckEl;
   if (!target) return;
