@@ -129,7 +129,7 @@ function enterDungeonId() {
       showScreen('game-ui');
       startGame(seed, id);
     } catch (error) {
-      alert(error.message || 'Invalid Dungeon ID.');
+      alert(error.message || 'Invalid Deck ID.');
     }
 }
 
@@ -381,7 +381,7 @@ fillDungeon();
 var firstRoom = state.dungeon.slice();
 state.dungeon = [];
 
-log('Dungeon ID: ' + dungeonId, false);
+log('Deck ID: ' + dungeonId, false);
 log('A new ' + (mode === 'coop' ? 'co-op' : 'solo') + ' ' + currentThemeName + ' run begins.', false); 
 if (isDaggerMode) {
   log(p1Name + ' enters the dungeon wielding a Dagger (2♦).');
@@ -425,7 +425,7 @@ function fillDungeon() {
     }
 }
 
-function refreshDungeon() {
+async function refreshDungeon() {
     if (state.justFled || state.over || state.actionInProgress || state.dungeon.length < 4 || state.deck.length === 0) return;
     saveState();
     state.actionInProgress = true;
@@ -436,20 +436,26 @@ function refreshDungeon() {
     
     resetRoomLimits();
     
-    // Deal the replacement room from the untouched deck first. Normally there
-    // are at least 4 cards available, so this simply deals a full room. At the
-    // end of a Starter Dagger run there can be exactly 3 cards left: deal those
-    // 3 first, then shuffle the fled room back in and draw one random card to
-    // make the replacement room a full 4 cards.
+    // Deal the replacement room from the untouched deck first. This is
+    // deliberately done before hashing so the new room can never contain one
+    // of the cards we are about to shuffle back into the deck.
     while (state.dungeon.length < 4 && state.deck.length > 0) {
       state.dungeon.push(state.deck.pop());
     }
 
-    // Now return the fled room to the deck. If only 3 untouched cards remained,
-    // this also supplies the fourth card needed for the new room.
+    // The order of the remaining untouched deck is the complete deterministic
+    // state. SHA-256 gives us a stable 256-bit value; seedFromDeck takes its
+    // first 64 bits and uses those as the shuffle seed.
+    var fleeSeed = await seedFromDeck(state.deck);
+
+    // Now return the fled room and deterministically shuffle it into the
+    // untouched deck. Two games with the same remaining deck will therefore
+    // make exactly the same Flee shuffle.
     state.deck.push.apply(state.deck, fledCards);
-    shuffle(state.deck);
+    shuffleSeeded(state.deck, fleeSeed);
     
+    // If fewer than four untouched cards remained, the shuffled deck supplies
+    // the final card(s) needed to complete the replacement room.
     while (state.dungeon.length < 4 && state.deck.length > 0) {
       state.dungeon.push(state.deck.pop());
     }
