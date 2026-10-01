@@ -93,11 +93,40 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
   text-align: center;
 }
 
+.portrait-pickers {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: 200px;
+}
+
+.portrait-choice {
+  width: 200px;
+}
+
+.portrait-choice-label {
+  margin-bottom: 4px;
+  color: var(--rules-text);
+  font-size: 0.72rem;
+  font-weight: bold;
+  text-align: center;
+}
+
 .portrait-hint {
   margin-top: 6px;
   color: var(--rules-muted);
   font-size: 0.72rem;
   line-height: 1.2;
+}
+
+.setup-portrait.coop-mode .portrait-choice {
+  width: 95px;
+}
+
+.setup-portrait.coop-mode .portrait-picker {
+  width: 95px;
+  height: 95px;
+  flex-basis: 95px;
 }
 
 .player-name-field {
