@@ -2219,10 +2219,7 @@ if (!isSolo && c) {
     var p1Name = name('p1');
     var p2Name = name('p2');
 
-    openDecisionOverlay({
-      title: 'Choose how we fight',
-      prompt: c.rank + ' ' + SUITS[c.suit] + ' ' + c.name,
-      var p1WeaponAvailable = state.p1.hp > 0 && validWeapon(state.p1, c);
+    var p1WeaponAvailable = state.p1.hp > 0 && validWeapon(state.p1, c);
       var p2WeaponAvailable = state.p2.hp > 0 && validWeapon(state.p2, c);
       var combinedWeaponAvailable =
         state.p1.hp > 0 &&
@@ -2241,8 +2238,6 @@ if (!isSolo && c) {
         !state.combinedUsedThisRoom;
 
       openDecisionOverlay({
-      title: 'Choose how we fight',
-      prompt: c.rank + ' ' + SUITS[c.suit] + ' ' + c.name,
       options: [
         { label: p1Name + ' ' + weaponAction, value: 'p1_weapon', disabled: !p1WeaponAvailable },
         { label: p2Name + ' ' + weaponAction, value: 'p2_weapon', disabled: !p2WeaponAvailable },
