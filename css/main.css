@@ -510,20 +510,18 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
   color: var(--red);
 }
 
-.duel-mini-weapon {
-  width: 42%;
-  max-width: 42%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.duel-weapon-art {
+  display: block;
+  width: 38%;
+  height: 42%;
+  margin-top: 4px;
 }
 
-.duel-mini-weapon .card {
+.duel-weapon-art img {
+  display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1.5;
-  font-size: 0.55rem;
-  pointer-events: none;
+  height: 100%;
+  object-fit: contain;
 }
 
 .duel-info .duel-rank {
