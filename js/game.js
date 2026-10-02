@@ -1663,6 +1663,13 @@ if (isDead || isCleared || allMonstersSlain) {
   log('HP Restored: ' + state.foodConsumed + ' / ' + state.maxFoodHP + ' HP', false);
   log('Flee Count: ' + (state.roomsFled || 0), false);
 
+  var modeBadge = document.getElementById('modeBadge');
+  if (modeBadge) {
+    var difficultyLabel = state.ultraHardMode ? 'ULTRA HARD MODE' : (state.hardMode ? 'HARD MODE' : '');
+    modeBadge.textContent = difficultyLabel;
+    modeBadge.hidden = !difficultyLabel;
+  }
+
   // Populate Run Summary Stats
   document.getElementById('summarySlain').textContent = state.monstersSlain + ' / 26';
   document.getElementById('summaryRooms').textContent = state.roomsCleared + ' / 14';
