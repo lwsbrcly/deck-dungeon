@@ -1665,7 +1665,7 @@ if (isDead || isCleared || allMonstersSlain) {
 
   var modeBadge = document.getElementById('modeBadge');
   if (modeBadge) {
-    var difficultyLabel = state.ultraHardMode ? '★★★ ULTRA HARD MODE' : (state.hardMode ? '★★ HARD MODE' : '★ NORMAL MODE');
+    var difficultyLabel = state.ultraHardMode ? '★★★ ULTRA HARD MODE ★★★' : (state.hardMode ? '★★ HARD MODE ★★' : '★ NORMAL MODE ★');
     modeBadge.textContent = difficultyLabel;
     modeBadge.hidden = !difficultyLabel;
   }
