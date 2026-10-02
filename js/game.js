@@ -1435,6 +1435,23 @@ function fight(player, mode) {
           var damage = Math.max(0, c.value - power);
           applySharedDamage(damage, 'p1');
           var targetCeiling = Math.floor(c.value / 2);
+
+          // A combined weapon fight gives each player a memory of the same
+          // monster, but only half of the monster's value counts for each
+          // player's future weapon ceiling.
+          var previousP1 = JSON.parse(JSON.stringify(c));
+          var previousP2 = JSON.parse(JSON.stringify(c));
+          previousP1.value = targetCeiling;
+          previousP2.value = targetCeiling;
+          previousP1.stackX = 0;
+          previousP1.stackY = 0;
+          previousP1.stackRotation = 0;
+          previousP2.stackX = 0;
+          previousP2.stackY = 0;
+          previousP2.stackRotation = 0;
+          a.previousMonsters.push(previousP1);
+          b.previousMonsters.push(previousP2);
+
           a.ceiling = Math.min(a.ceiling, targetCeiling);
           b.ceiling = Math.min(b.ceiling, targetCeiling);
           state.combinedUsedThisRoom = true;
