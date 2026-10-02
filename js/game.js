@@ -2263,14 +2263,21 @@ if (!isSolo && c) {
       ? (getThemeAction('weapon', 'secondary') || 'Discard')
       : (getThemeAction('consumable', 'secondary') || 'Discard');
 
+    var p1ItemAction = potion && state.p1.hp === 0 ? 'Revive' : itemPrimaryAction;
+    var p2ItemAction = potion && state.p2.hp === 0 ? 'Revive' : itemPrimaryAction;
+
     openDecisionOverlay({
       title: 'What do we do?',
       prompt: c.rank + ' ' + SUITS[c.suit] + ' ' + c.name,
       options: [
-        { label: name('p1') + ' ' + itemPrimaryAction, value: 'p1',
-          disabled: state.p1.hp <= 0 || (potion && state.p1.consumedThisRoom) },
-        { label: name('p2') + ' ' + itemPrimaryAction, value: 'p2',
-          disabled: state.p2.hp <= 0 || (potion && state.p2.consumedThisRoom) },
+        { label: name('p1') + ' ' + p1ItemAction, value: 'p1',
+          disabled: potion
+            ? state.p1.consumedThisRoom
+            : state.p1.hp <= 0 },
+        { label: name('p2') + ' ' + p2ItemAction, value: 'p2',
+          disabled: potion
+            ? state.p2.consumedThisRoom
+            : state.p2.hp <= 0 },
         { label: itemSecondaryAction, value: 'discard', fullWidth: true }
       ],
       onChoose: function(value) {
