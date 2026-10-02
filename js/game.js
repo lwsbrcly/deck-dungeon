@@ -1050,7 +1050,7 @@ function clearPreviousMonsters() {
 var finishEquip = function() {
   p.weapon = c;
   p.ceiling = 99;
-  if (player === 'p1') {
+  if (player === 'p1' || player === 'p2') {
     p.previousMonsters = [];
     // A newly cleared stack gets a fresh random starting side. The first
     // monster in the new stack is still 0°, then subsequent cards alternate.
