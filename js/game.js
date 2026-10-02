@@ -2183,13 +2183,13 @@ if (!isSolo && c) {
 
     openDecisionOverlay({
       title: 'Choose how we fight',
-      prompt: c.rank + ' ' + SUITS[c.suit] + ' — ' + c.name,
+      prompt: c.rank + ' ' + SUITS[c.suit] + ' ' + c.name,
       options: [
-        { label: p1Name + ' — ' + weaponAction, value: 'p1_weapon' },
-        { label: p2Name + ' — ' + weaponAction, value: 'p2_weapon' },
+        { label: p1Name + ' ' + weaponAction, value: 'p1_weapon' },
+        { label: p2Name + ' ' + weaponAction, value: 'p2_weapon' },
         { label: 'Both — ' + weaponAction, value: 'both_weapon', fullWidth: true },
-        { label: p1Name + ' — ' + fistAction, value: 'p1_fist' },
-        { label: p2Name + ' — ' + fistAction, value: 'p2_fist' },
+        { label: p1Name + ' ' + fistAction, value: 'p1_fist' },
+        { label: p2Name + ' ' + fistAction, value: 'p2_fist' },
         { label: 'Both — ' + fistAction, value: 'both_fist', fullWidth: true }
       ],
       onChoose: function(value) {
@@ -2206,10 +2206,10 @@ if (!isSolo && c) {
 
     openDecisionOverlay({
       title: 'What do we do?',
-      prompt: c.rank + ' ' + SUITS[c.suit] + ' — ' + c.name,
+      prompt: c.rank + ' ' + SUITS[c.suit] + ' ' + c.name,
       options: [
-        { label: name('p1') + ' — ' + itemPrimaryAction, value: 'p1' },
-        { label: name('p2') + ' — ' + itemPrimaryAction, value: 'p2' },
+        { label: name('p1') + ' ' + itemPrimaryAction, value: 'p1' },
+        { label: name('p2') + ' ' + itemPrimaryAction, value: 'p2' },
         { label: itemSecondaryAction, value: 'discard', fullWidth: true }
       ],
       onChoose: function(value) {
