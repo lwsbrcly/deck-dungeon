@@ -156,7 +156,7 @@ function openDecisionOverlay(config) {
 
   if (!overlay || !optionsEl) return;
 
-  title.textContent = config.title || 'Choose';
+  title.textContent = '';
   prompt.textContent = config.prompt || '';
   optionsEl.innerHTML = '';
 
