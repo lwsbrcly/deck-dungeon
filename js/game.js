@@ -1461,10 +1461,10 @@ function fight(player, mode) {
       state.actionInProgress = true;
     
       // Weapon kills create the monster's "memory" before the animation starts.
-      // It stays out of the live dungeon until the weapon returns home, when the
-      // ghost is materialised on top of the previous-monster stack.
+      // Co-op keeps a previous-monster memory for whichever player used the weapon.
+      // Solo/P1 retains the existing ghost animation.
       var ghostInfo = null;
-      if (player === 'p1' && mode === 'weapon') {
+      if (mode === 'weapon') {
         var previousMonster = JSON.parse(JSON.stringify(c));
         previousMonster._ghostId = 'ghost_' + Date.now() + '_' + Math.random().toString(36).slice(2);
         var pileIndex = p.previousMonsters.length;
@@ -1483,10 +1483,12 @@ function fight(player, mode) {
 
         p.previousMonsters.push(previousMonster);
     
-        ghostInfo = {
-          targetEl: document.getElementById('p1PreviousMonster'),
-          monster: previousMonster
-        };
+        if (player === 'p1') {
+          ghostInfo = {
+            targetEl: document.getElementById('p1PreviousMonster'),
+            monster: previousMonster
+          };
+        }
       }
     
       animateAttack(player, targetEl, function() {
@@ -1960,7 +1962,7 @@ playerIds.forEach(function(id) {
   var hpDisplay = document.getElementById(elements.hp);
   if (hpDisplay) hpDisplay.textContent = 'HP ' + p.hp + '/' + state.maxHP;
 
-  if (id === 'p1' && elements.previous) {
+  if (elements.previous && (id === 'p1' || state.mode === 'coop')) {
     var previousMonsterEl = document.getElementById(elements.previous);
     if (previousMonsterEl) {
       if (p.previousMonsters && p.previousMonsters.length) {
