@@ -1021,10 +1021,13 @@ state.actionInProgress = true;
 var old = p.weapon;
 
 function clearPreviousMonsters() {
-  if (player !== 'p1') return;
+  var layout = getBoardLayout();
+  var playerLayout = layout.players[player];
+  var previousId = playerLayout && playerLayout.previous;
+  if (!previousId) return;
 
   var stackCards = Array.prototype.slice.call(
-    document.querySelectorAll('#p1PreviousMonster .previous-monster-card .card')
+    document.querySelectorAll('#' + previousId + ' .previous-monster-card .card')
   );
   if (!stackCards.length) return;
 
