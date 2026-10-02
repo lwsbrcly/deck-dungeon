@@ -2004,8 +2004,7 @@ playerIds.forEach(function(id) {
   if (weaponEl) {
     if (state.mode === 'coop') {
       weaponEl.innerHTML = p.weapon
-        ? '<span class="duel-rank">' + p.weapon.rank + ' ' + SUITS[p.weapon.suit] + '</span>' +
-          '<span class="duel-label">' + p.weapon.name + '</span>'
+        ? '<div class="duel-mini-weapon">' + cardHTML(p.weapon) + '</div>'
         : '<span class="duel-muted">No weapon</span>';
     } else {
       weaponEl.innerHTML = p.weapon ? cardHTML(p.weapon) : '';
