@@ -663,7 +663,7 @@ async function refreshDungeon() {
     state.selected = null;
     state.justFled = true;
     state.roomsFled++;
-    log(((THEMES[state.theme] && THEMES[state.theme].text && THEMES[state.theme].text.flee) || 'Flees.'), true, 'flee');
+    log('Flees.', true, 'flee');
     checkGame();
     // Flee animation is purely visual; deal the new room after the old cards leave.
     animateFlee(oldCardEls).then(function() {
