@@ -1500,12 +1500,13 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   padding: 5px 12px;
   border: 1px solid currentColor;
   border-radius: 999px;
-  font-size: .68rem;
+  font-size: .72rem;
   font-weight: 900;
-  letter-spacing: .12em;
+  letter-spacing: .1em;
   line-height: 1;
-  color: var(--game-highlight);
+  color: #d4af37;
   background: rgba(0,0,0,.22);
+  text-shadow: 0 1px 0 rgba(0,0,0,.7);
 }
 .mode-badge[hidden] {
   display: none;
