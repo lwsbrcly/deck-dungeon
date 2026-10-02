@@ -578,11 +578,13 @@ var firstRoom = state.dungeon.slice();
 state.dungeon = [];
 
 log('Deck ID: ' + dungeonId, false);
-log('A new ' + (mode === 'coop' ? 'co-op' : 'solo') + ' ' + currentThemeName + ' run begins.', false); 
+var runModeLabel = mode === 'coop' ? 'co-op' : 'solo';
+var runDifficultyLabel = ultraHardMode ? ' Ultra Hard Mode' : (hardMode ? ' Hard Mode' : '');
+log('A new ' + runModeLabel + ' ' + currentThemeName + runDifficultyLabel + ' run begins.', false); 
 if (isDaggerMode) {
-  log(p1Name + ' enters the dungeon wielding a Dagger (2♦).');
+  log(p1Name + ' enters ' + ((currentTheme && currentTheme.text && currentTheme.text.location) || 'the game') + ' holding a ' + starterWeaponP1.name + ' (' + starterWeaponP1.value + SUITS[starterWeaponP1.suit] + ').', false);
 } else if (mode === 'coop') {
-  log(p1Name + ' and ' + p2Name + ' enter the dungeon wielding Daggers (2♦).');
+  log(p2Name + ' enters ' + ((currentTheme && currentTheme.text && currentTheme.text.location) || 'the game') + ' holding a ' + starterWeaponP2.name + ' (' + starterWeaponP2.value + SUITS[starterWeaponP2.suit] + ').', false);
 }
 
 // First render the stable layout with no dungeon cards.
@@ -660,7 +662,7 @@ async function refreshDungeon() {
     state.selected = null;
     state.justFled = true;
     state.roomsFled++;
-    log('Fled the room.', true, 'flee');
+    log(((THEMES[state.theme] && THEMES[state.theme].text && THEMES[state.theme].text.flee) || 'Flees.'), true, 'flee');
     checkGame();
     // Flee animation is purely visual; deal the new room after the old cards leave.
     animateFlee(oldCardEls).then(function() {
@@ -1534,9 +1536,9 @@ function fight(player, mode) {
         state.monstersSlain++;
     
         if (mode === 'weapon') {
-          log(name(player) + ' uses ' + p.weapon.name + ' vs ' + c.name + '. Damage taken: ' + damage + '.', true, 'monster');
+          log(name(player) + ' ' + ((THEMES[state.theme] && THEMES[state.theme].text && THEMES[state.theme].text.fight) || 'uses') + ' ' + c.name + ' (' + c.value + SUITS[c.suit] + '). Damage taken ' + damage + ' HP.', true, 'monster');
         } else {
-          log(name(player) + ' enters Fist Fight with ' + c.name + ' and takes ' + damage + ' damage.', true, 'fist');
+          log(name(player) + ' ' + ((THEMES[state.theme] && THEMES[state.theme].text && THEMES[state.theme].text.fist) || 'fights') + ' ' + c.name + ' (' + c.value + SUITS[c.suit] + '). Damage taken ' + damage + ' HP.', true, 'fist');
         }
     
         // Fist fights clear the monster normally. Weapon kills have already
