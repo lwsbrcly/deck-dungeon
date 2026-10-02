@@ -2193,7 +2193,12 @@ if (!isSolo && c) {
         { label: 'Both ' + fistAction, value: 'both_fist', fullWidth: true }
       ],
       onChoose: function(value) {
-        console.log('Co-op monster decision:', value);
+        if (value === 'p1_weapon') fight('p1', 'weapon');
+        else if (value === 'p2_weapon') fight('p2', 'weapon');
+        else if (value === 'both_weapon') fight('both', 'combined');
+        else if (value === 'p1_fist') fight('p1', 'bare');
+        else if (value === 'p2_fist') fight('p2', 'bare');
+        else if (value === 'both_fist') fight('both', 'combined_bare');
       }
     });
   } else if (weapon || potion) {
@@ -2213,7 +2218,12 @@ if (!isSolo && c) {
         { label: itemSecondaryAction, value: 'discard', fullWidth: true }
       ],
       onChoose: function(value) {
-        console.log('Co-op item decision:', value);
+        if (value === 'p1' && weapon) equipWeapon('p1');
+        else if (value === 'p2' && weapon) equipWeapon('p2');
+        else if (value === 'p1' && potion) drinkDirectPotion('p1');
+        else if (value === 'p2' && potion) drinkDirectPotion('p2');
+        else if (value === 'discard' && weapon) discardDungeonWeapon();
+        else if (value === 'discard' && potion) discardDungeonPotion();
       }
     });
   }
