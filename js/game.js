@@ -2030,8 +2030,8 @@ playerIds.forEach(function(id) {
         ? p.previousMonsters[p.previousMonsters.length - 1]
         : null;
       previousEl.innerHTML = previous
-        ? '<span class="duel-rank">' + previous.rank + ' ' + SUITS[previous.suit] + '</span>' +
-          '<span class="duel-label">' + previous.name + '</span>' +
+        ? '<span class="duel-rank">' + previous.rank + ' ' + SUITS[previous.suit] + '</span><br>' +
+          '<span class="duel-label">' + previous.name + '</span><br>' +
           '<span class="duel-value">' + previous.value + '</span>'
         : '<span class="duel-muted">No previous monster</span>';
     }
