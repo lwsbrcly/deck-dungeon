@@ -581,10 +581,11 @@ log('Deck ID: ' + dungeonId, false);
 var runModeLabel = mode === 'coop' ? 'co-op' : 'solo';
 var runDifficultyLabel = ultraHardMode ? ' Ultra Hard Mode' : (hardMode ? ' Hard Mode' : '');
 log('A new ' + runModeLabel + ' ' + currentThemeName + runDifficultyLabel + ' run begins.', false); 
-if (isDaggerMode) {
+if (mode === 'coop') {
   log(p1Name + ' enters ' + ((currentTheme && currentTheme.text && currentTheme.text.location) || 'the game') + ' holding a ' + starterWeaponP1.name + ' (' + starterWeaponP1.value + SUITS[starterWeaponP1.suit] + ').', false);
-} else if (mode === 'coop') {
   log(p2Name + ' enters ' + ((currentTheme && currentTheme.text && currentTheme.text.location) || 'the game') + ' holding a ' + starterWeaponP2.name + ' (' + starterWeaponP2.value + SUITS[starterWeaponP2.suit] + ').', false);
+} else if (isDaggerMode) {
+  log(p1Name + ' enters ' + ((currentTheme && currentTheme.text && currentTheme.text.location) || 'the game') + ' holding a ' + starterWeaponP1.name + ' (' + starterWeaponP1.value + SUITS[starterWeaponP1.suit] + ').', false);
 }
 
 // First render the stable layout with no dungeon cards.
