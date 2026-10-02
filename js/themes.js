@@ -127,10 +127,9 @@ const THEMES = {
             potion: 'Food',
             equip: 'equips',
             discard: 'discards',
-            fight: 'uses',
+            fight: 'swings their weapon at',
             fist: 'enters fist fight with',
             heal: 'consumes',
-            flee: 'Fled the room',
             enter: 'Enters Dungeon weilding',
         },
 
@@ -303,7 +302,7 @@ const THEMES = {
             fist: 'tussles with',
             heal: 'consumes',
             flee: 'Ran for it',
-            enter: 'Heads out armed with',
+            enter: 'Heads out, armed with',
         },
 
         actions: {
@@ -473,10 +472,10 @@ const THEMES = {
             equip: 'loads up',
             discard: 'jetisons',
             fight: 'targets',
-            fist: 'engages in close combat',
+            fist: 'engages in close combat with',
             heal: 'applies',
             flee: 'Escapes',
-            enter: 'Heads out armed with',
+            enter: 'Boards ship armed with',
         },
 
         actions: {
