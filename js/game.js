@@ -1903,7 +1903,10 @@ playerIds.forEach(function(id) {
     if (healthbar) {
       var track = healthbar.querySelector('.health-track');
   
-      if (!track) {
+      // A co-op run leaves a 20-heart track with a player divider behind.
+      // Rebuild it when returning to solo so the solo bar is always 20
+      // plain heart tiles.
+      if (!track || track.classList.contains('coop-health-track')) {
         track = document.createElement('div');
         track.className = 'health-track';
   
