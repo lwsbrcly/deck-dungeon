@@ -2018,7 +2018,7 @@ playerIds.forEach(function(id) {
       previousEl.innerHTML = previous
         ? '<span class="duel-rank">' + previous.rank + ' ' + SUITS[previous.suit] + '</span>' +
           '<span class="duel-label">' + previous.name + '</span>' +
-          '<span class="duel-value">Value ' + previous.value + '</span>'
+          '<span class="duel-value">' + previous.value + '</span>'
         : '<span class="duel-muted">No previous monster</span>';
     }
   }
