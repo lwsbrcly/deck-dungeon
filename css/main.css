@@ -510,6 +510,22 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
   color: var(--red);
 }
 
+.duel-mini-weapon {
+  width: 42%;
+  max-width: 42%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.duel-mini-weapon .card {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1.5;
+  font-size: 0.55rem;
+  pointer-events: none;
+}
+
 .duel-info .duel-rank {
   font-size: 1.15rem;
   font-weight: 900;
