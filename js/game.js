@@ -332,6 +332,12 @@ function initPortraitPicker(playerId) {
   showPortrait();
 }
 
+function toggleUltraHardMode() {
+    var ultra = document.getElementById('ultraHardModeInput');
+    var hard = document.getElementById('hardModeInput');
+    if (ultra && hard && ultra.checked) hard.checked = true;
+}
+
 function toggleModeInputs() {
     var p2Group = document.getElementById('p2Group');
     var p1Label = document.querySelector('#p1Group label');
@@ -361,6 +367,7 @@ function toggleModeInputs() {
         '<li><strong>Damage:</strong> Monsters deal damage equal to their value minus your equipped weapon\'s value. Fight bare-handed to take their full amount of damage - without lowering your equipped weapon\'s "previous monster value".</li>' +
         '<li><strong>Health Points:</strong> Each player starts with 10 HP in co-op (20 HP in solitaire). Heals cannot take you above their maximum. If your HP reaches 0 it\'s game over!</li>' +
         '<li><strong>Discard:</strong> Don\'t want to replace your current weapon? Don\'t want to fight that last monster? <strong>Discard</strong> unwanted weapon/consumable cards to action them and move on.</li>' +
+        '<li><strong>Ultra Hard Mode:</strong> Weapon cards cannot be discarded.</li>' +
         '<li><strong>Fleeing:</strong> Press <em>Flee</em> to skip a room - 4 new cards are dealt. Fled cards are shuffled back into the deck for later. You cannot flee twice in a row, so use it wisely!</li>' +
       '</ul>';
 
@@ -457,6 +464,7 @@ var portraitCount = portraitTheme && portraitTheme.artwork && portraitTheme.artw
 var p1Portrait = document.getElementById('p1PortraitInput').value || String(Math.floor(Math.random() * portraitCount) + 1);
 var p2Portrait = document.getElementById('p2PortraitInput').value || String(Math.floor(Math.random() * portraitCount) + 1);
 var hardMode = document.getElementById('hardModeInput').checked;
+var ultraHardMode = document.getElementById('ultraHardModeInput').checked;
 var p1Name = p1Val || (mode === 'coop' ? 'Player 1' : 'Player');
 var p2Name = p2Val || 'Player 2';
 var maxHP = mode === 'coop' ? 10 : 20;
@@ -501,6 +509,7 @@ state = {
   deckId: dungeonId,
   mode: mode,
   hardMode: hardMode,
+  ultraHardMode: ultraHardMode,
   maxHP: maxHP,
   // Player objects are now the canonical container for player identity and state.
   // Keep the existing p1/p2 aliases for now so solo gameplay remains untouched while
@@ -1072,6 +1081,7 @@ DeckDungeonAnimations.equip(cardEl, targetEl, {
 
 function discardDungeonWeapon() {
     if (state.over || state.selected === null || state.actionInProgress) return;
+    if (state.ultraHardMode) return;
 
     // Capture the selected card before the animation starts. The user cannot
     // change selection while an action is resolving.
@@ -2278,7 +2288,8 @@ if (!isSolo && c) {
           disabled: potion
             ? state.p2.consumedThisRoom
             : state.p2.hp <= 0 },
-        { label: itemSecondaryAction, value: 'discard', fullWidth: true }
+        { label: itemSecondaryAction, value: 'discard', fullWidth: true,
+          disabled: weapon && state.ultraHardMode }
       ],
       onChoose: function(value) {
         if (value === 'p1' && weapon) equipWeapon('p1');
@@ -2317,7 +2328,7 @@ if (monster && isSolo) {
 
   setContextAction(2, getThemeAction('weapon', 'secondary') || 'Discard', function() {
     discardDungeonWeapon();
-  });
+  }, state.ultraHardMode);
 
 } else if (potion && isSolo) {
 
