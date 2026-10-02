@@ -467,7 +467,7 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
 .duel-p2-weapon {
   top: 5%;
   width: 44%;
-  height: 55%;
+  height: 60%;
 }
 
 .duel-p1-weapon {
@@ -494,12 +494,10 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
 }
 
 .duel-info {
+  position: relative;
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: block;
   text-align: center;
   line-height: 1.05;
   color: #000;
@@ -510,11 +508,21 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
   color: var(--red);
 }
 
+.duel-p1-weapon .duel-rank,
+.duel-p2-weapon .duel-rank {
+  position: absolute;
+  top: 13.333%;
+  left: 0;
+  width: 100%;
+}
+
 .duel-weapon-art {
-  display: block;
-  width: 38%;
-  height: 42%;
-  margin-top: 4px;
+  position: absolute;
+  top: 31.667%;
+  left: 15%;
+  width: 70%;
+  height: 66.667%;
+  margin: 0;
 }
 
 .duel-weapon-art img {
