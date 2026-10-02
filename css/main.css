@@ -466,16 +466,16 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
 .duel-p1-weapon,
 .duel-p2-weapon {
   top: 5%;
-  width: 40%;
+  width: 44%;
   height: 55%;
 }
 
 .duel-p1-weapon {
-  left: 5%;
+  left: 3%;
 }
 
 .duel-p2-weapon {
-  right: 5%;
+  right: 3%;
 }
 
 .duel-p1-previous,
@@ -517,7 +517,7 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
 
 .duel-info .duel-label {
   margin-top: 3px;
-  font-size: 0.68rem;
+  font-size: 0.58rem;
   font-weight: 700;
   max-width: 100%;
   overflow-wrap: anywhere;
