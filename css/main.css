@@ -1498,13 +1498,14 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   display: inline-block;
   margin: 0 auto 12px;
   padding: 5px 12px;
-  border: 1px solid currentColor;
+  border: 1px solid #d4af37;
   border-radius: 999px;
   font-size: .72rem;
   font-weight: 900;
   letter-spacing: .1em;
   line-height: 1;
-  color: #d4af37;
+  color: #d4af37 !important;
+  -webkit-text-fill-color: #d4af37;
   background: rgba(0,0,0,.22);
   text-shadow: 0 1px 0 rgba(0,0,0,.7);
 }
