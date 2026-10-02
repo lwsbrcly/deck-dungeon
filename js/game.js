@@ -1789,8 +1789,11 @@ function renderCoopHealthbar() {
   var healthbar = document.getElementById('p1Bar');
   if (!healthbar || !state.players) return;
 
-  var p1 = state.players[0];
-  var p2 = state.players[1];
+  // Keep the health track on the same live player objects used by the
+  // player-card HP displays. The canonical players array is still the
+  // fallback, but the aliases are authoritative during rendering.
+  var p1 = state.p1 || state.players[0];
+  var p2 = state.p2 || state.players[1];
   if (!p1 || !p2) return;
 
   var track = healthbar.querySelector('.health-track');
