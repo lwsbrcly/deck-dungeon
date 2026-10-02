@@ -2222,13 +2222,34 @@ if (!isSolo && c) {
     openDecisionOverlay({
       title: 'Choose how we fight',
       prompt: c.rank + ' ' + SUITS[c.suit] + ' ' + c.name,
+      var p1WeaponAvailable = state.p1.hp > 0 && validWeapon(state.p1, c);
+      var p2WeaponAvailable = state.p2.hp > 0 && validWeapon(state.p2, c);
+      var combinedWeaponAvailable =
+        state.p1.hp > 0 &&
+        state.p2.hp > 0 &&
+        !!state.p1.weapon &&
+        !!state.p2.weapon &&
+        state.p1.ceiling !== null &&
+        state.p2.ceiling !== null &&
+        c.value <= (state.p1.ceiling + state.p2.ceiling) &&
+        !state.combinedUsedThisRoom;
+      var p1FistAvailable = state.p1.hp > 0;
+      var p2FistAvailable = state.p2.hp > 0;
+      var combinedFistAvailable =
+        state.p1.hp > 0 &&
+        state.p2.hp > 0 &&
+        !state.combinedUsedThisRoom;
+
+      openDecisionOverlay({
+      title: 'Choose how we fight',
+      prompt: c.rank + ' ' + SUITS[c.suit] + ' ' + c.name,
       options: [
-        { label: p1Name + ' ' + weaponAction, value: 'p1_weapon' },
-        { label: p2Name + ' ' + weaponAction, value: 'p2_weapon' },
-        { label: 'Both ' + weaponAction, value: 'both_weapon', fullWidth: true },
-        { label: p1Name + ' ' + fistAction, value: 'p1_fist' },
-        { label: p2Name + ' ' + fistAction, value: 'p2_fist' },
-        { label: 'Both ' + fistAction, value: 'both_fist', fullWidth: true }
+        { label: p1Name + ' ' + weaponAction, value: 'p1_weapon', disabled: !p1WeaponAvailable },
+        { label: p2Name + ' ' + weaponAction, value: 'p2_weapon', disabled: !p2WeaponAvailable },
+        { label: 'Both ' + weaponAction, value: 'both_weapon', fullWidth: true, disabled: !combinedWeaponAvailable },
+        { label: p1Name + ' ' + fistAction, value: 'p1_fist', disabled: !p1FistAvailable },
+        { label: p2Name + ' ' + fistAction, value: 'p2_fist', disabled: !p2FistAvailable },
+        { label: 'Both ' + fistAction, value: 'both_fist', fullWidth: true, disabled: !combinedFistAvailable }
       ],
       onChoose: function(value) {
         if (value === 'p1_weapon') fight('p1', 'weapon');
@@ -2251,8 +2272,10 @@ if (!isSolo && c) {
       title: 'What do we do?',
       prompt: c.rank + ' ' + SUITS[c.suit] + ' ' + c.name,
       options: [
-        { label: name('p1') + ' ' + itemPrimaryAction, value: 'p1' },
-        { label: name('p2') + ' ' + itemPrimaryAction, value: 'p2' },
+        { label: name('p1') + ' ' + itemPrimaryAction, value: 'p1',
+          disabled: state.p1.hp <= 0 || (potion && state.p1.consumedThisRoom) },
+        { label: name('p2') + ' ' + itemPrimaryAction, value: 'p2',
+          disabled: state.p2.hp <= 0 || (potion && state.p2.consumedThisRoom) },
         { label: itemSecondaryAction, value: 'discard', fullWidth: true }
       ],
       onChoose: function(value) {
