@@ -2187,10 +2187,10 @@ if (!isSolo && c) {
       options: [
         { label: p1Name + ' ' + weaponAction, value: 'p1_weapon' },
         { label: p2Name + ' ' + weaponAction, value: 'p2_weapon' },
-        { label: 'Both — ' + weaponAction, value: 'both_weapon', fullWidth: true },
+        { label: 'Both ' + weaponAction, value: 'both_weapon', fullWidth: true },
         { label: p1Name + ' ' + fistAction, value: 'p1_fist' },
         { label: p2Name + ' ' + fistAction, value: 'p2_fist' },
-        { label: 'Both — ' + fistAction, value: 'both_fist', fullWidth: true }
+        { label: 'Both ' + fistAction, value: 'both_fist', fullWidth: true }
       ],
       onChoose: function(value) {
         console.log('Co-op monster decision:', value);
