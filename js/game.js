@@ -2034,8 +2034,7 @@ playerIds.forEach(function(id) {
         : null;
       previousEl.innerHTML = previous
         ? '<span class="duel-rank">' + previous.rank + ' ' + SUITS[previous.suit] + '</span><br>' +
-          '<span class="duel-label">' + previous.name + '</span><br>' +
-          '<span class="duel-value">' + previous.value + '</span>'
+          '<span class="duel-value">☠️ ' + previous.value + '</span>'
         : '<span class="duel-muted">No previous monster</span>';
     }
   }
