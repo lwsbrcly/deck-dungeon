@@ -2003,9 +2003,21 @@ playerIds.forEach(function(id) {
   var weaponEl = document.getElementById(elements.weapon);
   if (weaponEl) {
     if (state.mode === 'coop') {
-      weaponEl.innerHTML = p.weapon
-        ? '<div class="duel-mini-weapon">' + cardHTML(p.weapon) + '</div>'
-        : '<span class="duel-muted">No weapon</span>';
+      if (p.weapon) {
+        var weaponKey = p.weapon.suit + '_' + p.weapon.rank;
+        var weaponTheme = THEMES[selectedTheme || 'dungeon'];
+        var weaponArt = weaponTheme && weaponTheme.artwork && weaponTheme.artwork.weapons
+          ? weaponTheme.artwork.weapons[weaponKey]
+          : null;
+
+        weaponEl.innerHTML =
+          '<span class="duel-rank">' + p.weapon.rank + ' ' + SUITS[p.weapon.suit] + '</span>' +
+          (weaponArt
+            ? '<span class="duel-weapon-art"><img src="' + weaponArt + '" alt="' + p.weapon.name + '"></span>'
+            : '');
+      } else {
+        weaponEl.innerHTML = '<span class="duel-muted">No weapon</span>';
+      }
     } else {
       weaponEl.innerHTML = p.weapon ? cardHTML(p.weapon) : '';
     }
