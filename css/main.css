@@ -1122,8 +1122,22 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
   box-shadow: none;
   outline: none;
 }
-.card.red { color: var(--game-red); }
-.card.black { color: #000; }
+.card.red {
+  color: var(--game-red);
+  text-shadow:
+    1px 0 var(--game-red-keyline),
+    -1px 0 var(--game-red-keyline),
+    0 1px var(--game-red-keyline),
+    0 -1px var(--game-red-keyline);
+}
+.card.black {
+  color: var(--game-black);
+  text-shadow:
+    1px 0 var(--game-black-keyline),
+    -1px 0 var(--game-black-keyline),
+    0 1px var(--game-black-keyline),
+    0 -1px var(--game-black-keyline);
+}
 .card.empty {
   border: none;
   background: transparent;
