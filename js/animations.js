@@ -446,9 +446,19 @@
       boardCenter.y - source.y
     );
 
+    var duration = options.duration || 1500;
+    var growDuration = Math.round(duration * 0.48);
+    var fadeDuration = options.fadeDuration || 350;
+    var holdTimer = null;
+    var dismissed = false;
+
     clone.style.setProperty(
       '--animation-duration',
-      (options.duration || 1050) + 'ms'
+      duration + 'ms'
+    );
+    clone.style.setProperty(
+      '--fade-duration',
+      fadeDuration + 'ms'
     );
 
     hide(card);
@@ -458,10 +468,42 @@
       options.sound();
     }
 
-    removeLater(clone, options.duration || 1050, function () {
-      show(card);
-      finish();
-    });
+    function cleanupListeners() {
+      document.removeEventListener('pointerdown', dismissDiscovery, true);
+      document.removeEventListener('keydown', dismissDiscovery, true);
+    }
+
+    function dismissDiscovery(event) {
+      if (dismissed) return;
+      dismissed = true;
+
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      cleanupListeners();
+
+      clone.classList.remove('dd-discover-hold');
+      clone.classList.add('dd-discover-fade');
+
+      removeLater(clone, fadeDuration, function () {
+        show(card);
+        finish();
+      });
+    }
+
+    // Let the card reach its full-size viewing state first. Once there,
+    // pause indefinitely until the player taps/clicks or presses a key.
+    holdTimer = window.setTimeout(function () {
+      if (dismissed || !clone.parentNode) return;
+
+      clone.classList.remove('dd-discover-active');
+      clone.classList.add('dd-discover-hold');
+
+      document.addEventListener('pointerdown', dismissDiscovery, true);
+      document.addEventListener('keydown', dismissDiscovery, true);
+    }, growDuration);
   }
 
   function deal(cards, deck, slots, options) {
