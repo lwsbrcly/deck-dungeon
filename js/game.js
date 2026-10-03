@@ -31,6 +31,7 @@ function applySelectedTheme() {
     root.style.setProperty('--game-black', gameColours.black || '#000000');
     root.style.setProperty('--game-red-keyline', gameColours.redKeyline || '#ffffff');
     root.style.setProperty('--game-black-keyline', gameColours.blackKeyline || '#ffffff');
+    root.classList.toggle('use-keylines', gameColours.useKeyLines === true);
     root.style.setProperty('--game-highlight', gameColours.highlight || '');
 
     root.style.setProperty('--card-image', 'url("' + theme.artwork.card + '")');
