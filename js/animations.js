@@ -22,6 +22,7 @@
  *   DeckDungeonAnimations.monsterToPrevious(...)
  *   DeckDungeonAnimations.fistFight(...)
  *   DeckDungeonAnimations.use(...)
+ *   DeckDungeonAnimations.discover(...)
  *   DeckDungeonAnimations.deal(...)
  *   DeckDungeonAnimations.slideDungeonCards(...)
  *   DeckDungeonAnimations.weaponFightMelee(...)
@@ -405,6 +406,59 @@
     }, options.impactTime || 700);
 
     removeLater(clone, options.duration || 900, function () {
+      show(card);
+      finish();
+    });
+  }
+
+  function discover(card, options) {
+    options = options || {};
+
+    var finish = once(options.done);
+    var sourceRect = rect(card);
+    var canvas = getCanvas();
+
+    if (!sourceRect || !canvas) {
+      finish();
+      return;
+    }
+
+    var canvasRect = canvas.getBoundingClientRect();
+    var scale = canvasRect.width / WIDTH;
+    if (!scale) scale = 1;
+
+    // The discovery always resolves to the visual centre of the 667 × 1000
+    // game board, regardless of which dungeon slot the card came from.
+    var boardCenter = {
+      x: (canvasRect.width / scale) / 2,
+      y: (canvasRect.height / scale) / 2
+    };
+
+    var source = center(sourceRect);
+    var clone = appendClone(card, 'dd-discover-clone', sourceRect);
+    if (!clone) {
+      finish();
+      return;
+    }
+
+    setVector(clone, 'move',
+      boardCenter.x - source.x,
+      boardCenter.y - source.y
+    );
+
+    clone.style.setProperty(
+      '--animation-duration',
+      (options.duration || 1050) + 'ms'
+    );
+
+    hide(card);
+    clone.classList.add('dd-discover-active');
+
+    if (options.sound) {
+      options.sound();
+    }
+
+    removeLater(clone, options.duration || 1050, function () {
       show(card);
       finish();
     });
