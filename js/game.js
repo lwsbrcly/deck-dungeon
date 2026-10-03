@@ -1224,6 +1224,23 @@ if (
     return;
   }
 
+  // Discovery equipment does not attack the creature. Instead the
+  // creature/discovery card itself becomes the focus of the animation:
+  // grow to the centre of the board, hold, then fade away. The normal
+  // action callback then updates the previous-monster stack.
+  if (
+    weaponAnimation === 'discover' &&
+    DeckDungeonAnimations.discover
+  ) {
+    DeckDungeonAnimations.discover(
+      targetEl,
+      {
+        done: done
+      }
+    );
+    return;
+  }
+
   if (
     weaponAnimation === 'thrown' &&
     DeckDungeonAnimations.weaponFightThrown
