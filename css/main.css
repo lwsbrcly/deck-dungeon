@@ -1124,14 +1124,19 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
 }
 .card.red {
   color: var(--game-red);
+}
+.card.black {
+  color: var(--game-black);
+}
+
+.use-keylines .card.red {
   text-shadow:
     1px 0 var(--game-red-keyline),
     -1px 0 var(--game-red-keyline),
     0 1px var(--game-red-keyline),
     0 -1px var(--game-red-keyline);
 }
-.card.black {
-  color: var(--game-black);
+.use-keylines .card.black {
   text-shadow:
     1px 0 var(--game-black-keyline),
     -1px 0 var(--game-black-keyline),
