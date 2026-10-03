@@ -869,9 +869,9 @@ const THEMES = {
         },
 
         actions: {
-            monster: { primary: 'Equipment', secondary: 'Brace' },
-            weapon: { primary: 'Deploy', secondary: 'Stow' },
-            consumable: { primary: 'Use', secondary: 'Stow' },
+            monster: { primary: 'Explore', secondary: 'Freedive' },
+            weapon: { primary: 'Select', secondary: 'Stow' },
+            consumable: { primary: 'Install', secondary: 'Stow' },
         },
 
         cards: {
@@ -879,12 +879,12 @@ const THEMES = {
                 clubs: {
                     2: 'Shoal of fish', 3: 'Seagrass Meadow', 4: 'Kelp Forest', 5: 'Manta Ray',
                     6: 'Blue Whale', 7: 'Tiger Shark', 8: 'Sea Fan Garden', 9: 'Plane Wreck',
-                    10: 'Whale Fall', J: 'Vampire Squid', Q: 'Giant Isopod', K: 'Whale', A: 'Orca'
+                    10: 'Whale Fall', J: 'Ghost Crabs', Q: 'Hydrothermal Vent', K: 'Bioluminescent Plume', A: 'Giant Isopods'
                 },
                 spades: {
                     2: 'Giant Turtle', 3: 'Coral Reef', 4: 'Dolphin Pod', 5: 'Sunken Boat',
                     6: 'Sea Cave', 7: 'Deep Shelf', 8: 'Sunfish', 9: 'Jellyfish Bloom',
-                    10: 'Vampire Squid', J: 'Vampire Squid', Q: 'Giant Isopod', K: 'Whale', A: 'Orca'
+                    10: 'Vampire Squid', J: 'Seamount', Q: 'Deep Trench', K: 'Sponge Garden', A: 'Abyssal Plain'
                 }
             },
             weapons: {
@@ -908,8 +908,8 @@ const THEMES = {
                     5: { name: 'Oxygen Generator', animation: 'use' },
                     6: { name: 'Pressure Regulator', animation: 'use' },
                     7: { name: 'Air Purifier', animation: 'use' },
-                    8: { name: 'Oxygen Compressor', animation: 'eat' },
-                    9: { name: 'Emergency Oxygen', animation: 'drink' },
+                    8: { name: 'Oxygen Compressor', animation: 'use' },
+                    9: { name: 'Emergency Oxygen', animation: 'use' },
                     10: { name: 'Life Support Unit', animation: 'use' }
                 }
             }
