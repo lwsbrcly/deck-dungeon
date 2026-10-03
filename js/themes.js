@@ -829,7 +829,7 @@ const THEMES = {
                 text: "#d7f5ff",
                 muted: "#187ea2",
                 logText: "#d7f5ff",
-                red: "#ff4b3e",
+                red: "#4b3eff",
                 highlight: "#23c7ff",
             },
         },
@@ -877,14 +877,14 @@ const THEMES = {
         cards: {
             monsters: {
                 clubs: {
-                    2: 'Shoal of fish', 3: 'Jellyfish', 4: 'Crab', 5: 'Shark',
-                    6: 'Manta Ray', 7: 'Dolphin', 8: 'Sea Turtle', 9: 'Giant Squid',
-                    10: 'Tiger Shark', J: 'Vampire Squid', Q: 'Giant Isopod', K: 'Whale', A: 'Orca'
+                    2: 'Shoal of fish', 3: 'Seagrass Meadow', 4: 'Kelp Forest', 5: 'Manta Ray',
+                    6: 'Blue Whale', 7: 'Tiger Shark', 8: 'Sea Fan Garden', 9: 'Plane Wreck',
+                    10: 'Whale Fall', J: 'Vampire Squid', Q: 'Giant Isopod', K: 'Whale', A: 'Orca'
                 },
                 spades: {
-                    2: 'Shoal', 3: 'Jellyfish', 4: 'Crab', 5: 'Shark',
-                    6: 'Manta Ray', 7: 'Dolphin', 8: 'Sea Turtle', 9: 'Giant Squid',
-                    10: 'Tiger Shark', J: 'Vampire Squid', Q: 'Giant Isopod', K: 'Whale', A: 'Orca'
+                    2: 'Giant Turtle', 3: 'Coral Reef', 4: 'Dolphin Pod', 5: 'Sunken Boat',
+                    6: 'Sea Cave', 7: 'Deep Shelf', 8: 'Sunfish', 9: 'Jellyfish Bloom',
+                    10: 'Vampire Squid', J: 'Vampire Squid', Q: 'Giant Isopod', K: 'Whale', A: 'Orca'
                 }
             },
             weapons: {
