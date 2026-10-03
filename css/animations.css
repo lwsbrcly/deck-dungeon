@@ -232,7 +232,7 @@
 
 .dd-discover-clone {
   position: absolute !important;
-  z-index: 1004;
+  z-index: 2000;
   pointer-events: none !important;
   margin: 0 !important;
   transform-origin: center center;
