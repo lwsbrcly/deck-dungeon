@@ -252,12 +252,12 @@
     opacity: 1;
   }
 
-  48% {
+  40% {
     transform: translate3d(var(--move-x),var(--move-y),0) scale(5);
     opacity: 1;
   }
 
-  68% {
+  80% {
     transform: translate3d(var(--move-x),var(--move-y),0) scale(5);
     opacity: 1;
   }
