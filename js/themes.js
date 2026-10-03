@@ -829,7 +829,7 @@ const THEMES = {
                 text: "#d7f5ff",
                 muted: "#187ea2",
                 logText: "#d7f5ff",
-                red: "#4b3eff",
+                red: "#ffff00",
                 highlight: "#23c7ff",
             },
         },
