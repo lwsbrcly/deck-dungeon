@@ -78,6 +78,7 @@ const THEMES = {
                 highlight: "#474b14",
             },
             game: {
+                useKeyLines: true,
                 bg: "#19191a",
                 border: "#d89f3f",
                 text: "#CDA655",
@@ -250,6 +251,7 @@ const THEMES = {
                 highlight: "#C86801",
             },
             game: {
+                useKeyLines: true,
                 bg: "#19191a",
                 border: "#e48a41",
                 text: "#efcfa6",
@@ -424,6 +426,7 @@ const THEMES = {
                 highlight: "#22618F ",
             },
             game: {
+                useKeyLines: true,
                 bg: "#19191a",
                 border: "#a6711f",
                 text: "#fd2f20",
@@ -544,6 +547,7 @@ const THEMES = {
                 highlight: "#1a1a1a",
             },
             game: {
+                useKeyLines: true,
                 bg: "#19191a",
                 border: "#6a5a56",
                 text: "#ecd7de",
@@ -664,6 +668,7 @@ const THEMES = {
                 highlight: "#1a1a1a",
             },
             game: {
+                useKeyLines: true,
                 bg: "#19191a",
                 border: "#6a5a56",
                 text: "#ecd7de",
@@ -839,6 +844,7 @@ const THEMES = {
                 highlight: "#0c7aa8",
             },
             game: {
+                useKeyLines: true,
                 bg: "#19191a",
                 border: "#1f9bd1",
                 text: "#d7f5ff",
