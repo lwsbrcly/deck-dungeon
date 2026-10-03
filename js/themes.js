@@ -877,7 +877,7 @@ const THEMES = {
         cards: {
             monsters: {
                 clubs: {
-                    2: 'Shoal', 3: 'Jellyfish', 4: 'Crab', 5: 'Shark',
+                    2: 'Shoal of fish', 3: 'Jellyfish', 4: 'Crab', 5: 'Shark',
                     6: 'Manta Ray', 7: 'Dolphin', 8: 'Sea Turtle', 9: 'Giant Squid',
                     10: 'Tiger Shark', J: 'Vampire Squid', Q: 'Giant Isopod', K: 'Whale', A: 'Orca'
                 },
@@ -891,26 +891,26 @@ const THEMES = {
                 diamonds: {
                     2: { name: 'Dive Light', animation: 'use' },
                     3: { name: 'Sample Kit', animation: 'use' },
-                    4: { name: 'Water Sampler', animation: 'use' },
+                    4: { name: 'Underwater Camera', animation: 'use' },
                     5: { name: 'Sonar Scanner', animation: 'use' },
-                    6: { name: 'Long Range Camera', animation: 'use' },
-                    7: { name: 'Deep-Sea Telescope', animation: 'use' },
-                    8: { name: 'ROV', animation: 'use' },
-                    9: { name: 'Observation Submersible', animation: 'use' },
-                    10: { name: 'Deep-Sea Cutter', animation: 'use' }
+                    6: { name: 'Water Sampler', animation: 'use' },
+                    7: { name: 'Long-range Imaging', animation: 'use' },
+                    8: { name: 'Deep-sea Telescope', animation: 'use' },
+                    9: { name: 'R.O.V.', animation: 'use' },
+                    10: { name: 'Submarine', animation: 'use' }
                 }
             },
             potions: {
                 hearts: {
-                    2: { name: 'Air Canister', animation: 'use' },
-                    3: { name: 'Repair Kit', animation: 'use' },
-                    4: { name: 'Emergency Oxygen', animation: 'use' },
-                    5: { name: 'Pressure Suit', animation: 'use' },
-                    6: { name: 'Medical Pack', animation: 'use' },
-                    7: { name: 'Thermal Blanket', animation: 'use' },
-                    8: { name: 'Calorie Gel', animation: 'eat' },
-                    9: { name: 'Water Ration', animation: 'drink' },
-                    10: { name: 'Emergency Flare', animation: 'use' }
+                    2: { name: 'CO₂ Scrubber', animation: 'use' },
+                    3: { name: 'Electrolyzer', animation: 'use' },
+                    4: { name: 'Oxygen Storage', animation: 'use' },
+                    5: { name: 'Oxygen Generator', animation: 'use' },
+                    6: { name: 'Pressure Regulator', animation: 'use' },
+                    7: { name: 'Air Purifier', animation: 'use' },
+                    8: { name: 'Oxygen Compressor', animation: 'eat' },
+                    9: { name: 'Emergency Oxygen', animation: 'drink' },
+                    10: { name: 'Life Support Unit', animation: 'use' }
                 }
             }
         }
