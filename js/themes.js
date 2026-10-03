@@ -272,13 +272,13 @@ const THEMES = {
 
                     title: 'You got bitten!',
 
-                    body: 'You\\'ve been turned into a zombie. Hope you get a nice job somewhere.'
+                    body: 'You\'ve been turned into a zombie. Hope you get a nice job somewhere.'
 
                 },
 
                 draw: {
 
-                    title: 'You\\'ve got red on you!',
+                    title: 'You\'ve got red on you!',
 
                     body: 'You killed all the zombies, but became one yourself. Hope it was all worth it!'
 
@@ -331,7 +331,7 @@ const THEMES = {
             },
             potions: {
                 hearts: {
-                    2: { name: 'Peanuts', animation: 'eat' }, 3: { name: 'Fulci\\'s Fish', animation: 'eat' },
+                    2: { name: 'Peanuts', animation: 'eat' }, 3: { name: 'Fulci\'s Fish', animation: 'eat' },
                     4: { name: 'Guinness', animation: 'drink' }, 5: { name: 'Regular Coke', animation: 'drink' },
                     6: { name: 'Toastie', animation: 'eat' }, 7: { name: 'Cold Pint', animation: 'drink' }, 
                     8: { name: 'Meat Pie', animation: 'eat' }, 9: { name: 'Pork Scratchings', animation: 'eat' }, 
@@ -343,7 +343,7 @@ const THEMES = {
     space: {
         
         name: 'Space Deck',
-        description: 'You dock your mercenary ship and enter the derelict freighter. Wait. Something\\'s moving...',
+        description: 'You dock your mercenary ship and enter the derelict freighter. Wait. Something\'s moving...',
 
         artwork: {
             logo: 'assets/space/logo.png',
@@ -451,7 +451,7 @@ const THEMES = {
 
                     title: 'You put up a good fight!',
 
-                    body: 'The threats are subdued. Too bad you couldn\\'t send out that HAZARDOUS SHIP alert to warn the others...!'
+                    body: 'The threats are subdued. Too bad you couldn\'t send out that HAZARDOUS SHIP alert to warn the others...!'
 
                 }
 
@@ -631,7 +631,7 @@ const THEMES = {
     ninja: {
         
         name: 'Deck of Shadows',
-        description: 'Don\\'t get caught!',
+        description: 'Don\'t get caught!',
 
         artwork: {
             logo: 'assets/ninja/logo.png',
@@ -669,7 +669,7 @@ const THEMES = {
 
                     title: 'Quest Successful!',
 
-                    body: 'You have found your way to the Lord\\'s inner chamber and stolen back your family heirloom!'
+                    body: 'You have found your way to the Lord\'s inner chamber and stolen back your family heirloom!'
 
                 },
 
@@ -738,7 +738,7 @@ const THEMES = {
                 hearts: {
                     2: { name: 'Silent walk', animation: 'use' }, 3: { name: 'Keen hearing', animation: 'use' }, 
                     4: { name: 'Trap sense', animation: 'use' }, 5: { name: 'Lock picking', animation: 'use' },
-                    6: { name: 'Night vision', animation: 'use' }, 7: { name: 'Cat\\'s landing', animation: 'use' }, 
+                    6: { name: 'Night vision', animation: 'use' }, 7: { name: 'Cat\'s landing', animation: 'use' }, 
                     8: { name: 'Wall climbing', animation: 'use' }, 9: { name: 'Roof running', animation: 'use' }, 
                     10: { name: 'Shadow agility', animation: 'use' }
                 }
