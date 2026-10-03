@@ -979,6 +979,7 @@
     fistFight: fistFight,
     use: use,
     drink: drink,
+    discover: discover,
     deal: deal,
     slideDungeonCards: slideDungeonCards,
     weaponFightMelee: weaponFightMelee,
