@@ -241,7 +241,7 @@
 
 .dd-discover-active {
   animation: dd-discover-card
-    var(--animation-duration, 1050ms)
+    var(--animation-duration, 1500ms)
     cubic-bezier(.18,.78,.22,1)
     forwards;
 }
@@ -252,12 +252,12 @@
     opacity: 1;
   }
 
-  40% {
+  48% {
     transform: translate3d(var(--move-x),var(--move-y),0) scale(5);
     opacity: 1;
   }
 
-  80% {
+  68% {
     transform: translate3d(var(--move-x),var(--move-y),0) scale(5);
     opacity: 1;
   }
