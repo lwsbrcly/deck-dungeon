@@ -68,8 +68,6 @@ const THEMES = {
             },
         },
 
-        //audio: {},
-            
         colours: {
             rules: {
                 bg: "#19191a",
@@ -239,8 +237,6 @@ const THEMES = {
             },
         },
 
-        //audio: {},
-            
         colours: {
             rules: {
                 bg: "#19191a",
@@ -276,13 +272,13 @@ const THEMES = {
 
                     title: 'You got bitten!',
 
-                    body: 'You\'ve been turned into a zombie. Hope you get a nice job somewhere.'
+                    body: 'You\\'ve been turned into a zombie. Hope you get a nice job somewhere.'
 
                 },
 
                 draw: {
 
-                    title: 'You\'ve got red on you!',
+                    title: 'You\\'ve got red on you!',
 
                     body: 'You killed all the zombies, but became one yourself. Hope it was all worth it!'
 
@@ -335,7 +331,7 @@ const THEMES = {
             },
             potions: {
                 hearts: {
-                    2: { name: 'Peanuts', animation: 'eat' }, 3: { name: 'Fulci\'s Fish', animation: 'eat' },
+                    2: { name: 'Peanuts', animation: 'eat' }, 3: { name: 'Fulci\\'s Fish', animation: 'eat' },
                     4: { name: 'Guinness', animation: 'drink' }, 5: { name: 'Regular Coke', animation: 'drink' },
                     6: { name: 'Toastie', animation: 'eat' }, 7: { name: 'Cold Pint', animation: 'drink' }, 
                     8: { name: 'Meat Pie', animation: 'eat' }, 9: { name: 'Pork Scratchings', animation: 'eat' }, 
@@ -347,7 +343,7 @@ const THEMES = {
     space: {
         
         name: 'Space Deck',
-        description: 'You dock your mercenary ship and enter the derelict freighter. Wait. Something\'s moving...',
+        description: 'You dock your mercenary ship and enter the derelict freighter. Wait. Something\\'s moving...',
 
         artwork: {
             logo: 'assets/space/logo.png',
@@ -412,8 +408,6 @@ const THEMES = {
             },
         },
 
-        //audio: {},
-            
         colours: {
             rules: {
                 bg: "#19191a",
@@ -457,7 +451,7 @@ const THEMES = {
 
                     title: 'You put up a good fight!',
 
-                    body: 'The threats are subdued. Too bad you couldn\'t send out that HAZARDOUS SHIP alert to warn the others...!'
+                    body: 'The threats are subdued. Too bad you couldn\\'t send out that HAZARDOUS SHIP alert to warn the others...!'
 
                 }
 
@@ -531,8 +525,6 @@ const THEMES = {
             portraitCount: 16,
         },
 
-        //audio: {},
-            
         colours: {
             rules: {
                 bg: "#19191a",
@@ -639,7 +631,7 @@ const THEMES = {
     ninja: {
         
         name: 'Deck of Shadows',
-        description: 'Don\'t get caught!',
+        description: 'Don\\'t get caught!',
 
         artwork: {
             logo: 'assets/ninja/logo.png',
@@ -650,8 +642,6 @@ const THEMES = {
             portraitCount: 16,
         },
 
-        //audio: {},
-            
         colours: {
             rules: {
                 bg: "#19191a",
@@ -679,7 +669,7 @@ const THEMES = {
 
                     title: 'Quest Successful!',
 
-                    body: 'You have found your way to the Lord\'s inner chamber and stolen back your family heirloom!'
+                    body: 'You have found your way to the Lord\\'s inner chamber and stolen back your family heirloom!'
 
                 },
 
@@ -748,9 +738,179 @@ const THEMES = {
                 hearts: {
                     2: { name: 'Silent walk', animation: 'use' }, 3: { name: 'Keen hearing', animation: 'use' }, 
                     4: { name: 'Trap sense', animation: 'use' }, 5: { name: 'Lock picking', animation: 'use' },
-                    6: { name: 'Night vision', animation: 'use' }, 7: { name: 'Cat\'s landing', animation: 'use' }, 
+                    6: { name: 'Night vision', animation: 'use' }, 7: { name: 'Cat\\'s landing', animation: 'use' }, 
                     8: { name: 'Wall climbing', animation: 'use' }, 9: { name: 'Roof running', animation: 'use' }, 
                     10: { name: 'Shadow agility', animation: 'use' }
+                }
+            }
+        }
+    },
+
+    ocean: {
+        
+        name: 'Ocean Deck',
+        description: 'Dive deep. Discover what lies beneath.',
+
+        artwork: {
+            logo: 'assets/ocean/logo.png',
+            card: 'assets/ocean/card.png',
+            back: 'assets/ocean/back.png',
+            background: 'assets/ocean/background.png',
+            portraits: 'assets/ocean/portraits/',
+            portraitCount: 16,
+            
+            monsters: {
+                'clubs_2': 'assets/ocean/monsters/2.png',
+                'clubs_3': 'assets/ocean/monsters/3.png',
+                'clubs_4': 'assets/ocean/monsters/4.png',
+                'clubs_5': 'assets/ocean/monsters/5.png',
+                'clubs_6': 'assets/ocean/monsters/6.png',
+                'clubs_7': 'assets/ocean/monsters/7.png',
+                'clubs_8': 'assets/ocean/monsters/8.png',
+                'clubs_9': 'assets/ocean/monsters/9.png',
+                'clubs_10': 'assets/ocean/monsters/10.png',
+                'clubs_J': 'assets/ocean/monsters/J.png',
+                'clubs_Q': 'assets/ocean/monsters/Q.png',
+                'clubs_K': 'assets/ocean/monsters/K.png',
+                'clubs_A': 'assets/ocean/monsters/A.png',
+
+                'spades_2': 'assets/ocean/monsters/2.png',
+                'spades_3': 'assets/ocean/monsters/3.png',
+                'spades_4': 'assets/ocean/monsters/4.png',
+                'spades_5': 'assets/ocean/monsters/5.png',
+                'spades_6': 'assets/ocean/monsters/6.png',
+                'spades_7': 'assets/ocean/monsters/7.png',
+                'spades_8': 'assets/ocean/monsters/8.png',
+                'spades_9': 'assets/ocean/monsters/9.png',
+                'spades_10': 'assets/ocean/monsters/10.png',
+                'spades_J': 'assets/ocean/monsters/J.png',
+                'spades_Q': 'assets/ocean/monsters/Q.png',
+                'spades_K': 'assets/ocean/monsters/K.png',
+                'spades_A': 'assets/ocean/monsters/A.png'
+            },
+
+            weapons: {
+                'diamonds_2': 'assets/ocean/weapons/2.png',
+                'diamonds_3': 'assets/ocean/weapons/3.png',
+                'diamonds_4': 'assets/ocean/weapons/4.png',
+                'diamonds_5': 'assets/ocean/weapons/5.png',
+                'diamonds_6': 'assets/ocean/weapons/6.png',
+                'diamonds_7': 'assets/ocean/weapons/7.png',
+                'diamonds_8': 'assets/ocean/weapons/8.png',
+                'diamonds_9': 'assets/ocean/weapons/9.png',
+                'diamonds_10': 'assets/ocean/weapons/10.png',
+            },
+
+            food: {
+                'hearts_2': 'assets/ocean/food/2.png',
+                'hearts_3': 'assets/ocean/food/3.png',
+                'hearts_4': 'assets/ocean/food/4.png',
+                'hearts_5': 'assets/ocean/food/5.png',
+                'hearts_6': 'assets/ocean/food/6.png',
+                'hearts_7': 'assets/ocean/food/7.png',
+                'hearts_8': 'assets/ocean/food/8.png',
+                'hearts_9': 'assets/ocean/food/9.png',
+                'hearts_10': 'assets/ocean/food/10.png',
+            },
+        },
+
+        colours: {
+            rules: {
+                bg: "#19191a",
+                panelBg: "#0b4366",
+                border: "#1f9bd1",
+                text: "#d7f5ff",
+                muted: "#041822",
+                highlight: "#0c7aa8",
+            },
+            game: {
+                bg: "#19191a",
+                border: "#1f9bd1",
+                text: "#d7f5ff",
+                muted: "#187ea2",
+                logText: "#d7f5ff",
+                red: "#ff4b3e",
+                highlight: "#23c7ff",
+            },
+        },
+
+        endGame: {
+
+                win: {
+                    title: 'Dive Complete!',
+                    body: 'You reached the depths and returned safely.'
+                },
+
+                lose: {
+                    title: 'Lost at Sea',
+                    body: 'The depths claimed your expedition.'
+                },
+
+                draw: {
+                    title: 'A Narrow Escape',
+                    body: 'You completed the dive, but barely made it back.'
+                }
+
+            },
+
+        text: {
+            gameTitle: 'Ocean Deck',
+            location: 'The Deep',
+            monster: 'Sea Creature',
+            weapon: 'Equipment',
+            potion: 'Supplies',
+            equip: 'deploys',
+            discard: 'stows',
+            fight: 'uses',
+            fist: 'grapples with',
+            heal: 'uses',
+            flee: 'Ascends',
+            enter: 'Descends with',
+        },
+
+        actions: {
+            monster: { primary: 'Equipment', secondary: 'Brace' },
+            weapon: { primary: 'Deploy', secondary: 'Stow' },
+            consumable: { primary: 'Use', secondary: 'Stow' },
+        },
+
+        cards: {
+            monsters: {
+                clubs: {
+                    2: 'Shoal', 3: 'Jellyfish', 4: 'Crab', 5: 'Shark',
+                    6: 'Manta Ray', 7: 'Dolphin', 8: 'Sea Turtle', 9: 'Giant Squid',
+                    10: 'Tiger Shark', J: 'Vampire Squid', Q: 'Giant Isopod', K: 'Whale', A: 'Orca'
+                },
+                spades: {
+                    2: 'Shoal', 3: 'Jellyfish', 4: 'Crab', 5: 'Shark',
+                    6: 'Manta Ray', 7: 'Dolphin', 8: 'Sea Turtle', 9: 'Giant Squid',
+                    10: 'Tiger Shark', J: 'Vampire Squid', Q: 'Giant Isopod', K: 'Whale', A: 'Orca'
+                }
+            },
+            weapons: {
+                diamonds: {
+                    2: { name: 'Dive Light', animation: 'use' },
+                    3: { name: 'Sample Kit', animation: 'use' },
+                    4: { name: 'Water Sampler', animation: 'use' },
+                    5: { name: 'Sonar Scanner', animation: 'use' },
+                    6: { name: 'Long Range Camera', animation: 'use' },
+                    7: { name: 'Deep-Sea Telescope', animation: 'use' },
+                    8: { name: 'ROV', animation: 'use' },
+                    9: { name: 'Observation Submersible', animation: 'use' },
+                    10: { name: 'Deep-Sea Cutter', animation: 'use' }
+                }
+            },
+            potions: {
+                hearts: {
+                    2: { name: 'Air Canister', animation: 'use' },
+                    3: { name: 'Repair Kit', animation: 'use' },
+                    4: { name: 'Emergency Oxygen', animation: 'use' },
+                    5: { name: 'Pressure Suit', animation: 'use' },
+                    6: { name: 'Medical Pack', animation: 'use' },
+                    7: { name: 'Thermal Blanket', animation: 'use' },
+                    8: { name: 'Calorie Gel', animation: 'eat' },
+                    9: { name: 'Water Ration', animation: 'drink' },
+                    10: { name: 'Emergency Flare', animation: 'use' }
                 }
             }
         }
