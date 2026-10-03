@@ -246,6 +246,21 @@
     forwards;
 }
 
+.dd-discover-hold {
+  pointer-events: auto !important;
+  cursor: pointer;
+  transform: translate3d(var(--move-x),var(--move-y),0) scale(5);
+  opacity: 1;
+}
+
+.dd-discover-fade {
+  pointer-events: none !important;
+  animation: dd-discover-fade
+    var(--fade-duration, 350ms)
+    ease-out
+    forwards;
+}
+
 @keyframes dd-discover-card {
   0% {
     transform: translate3d(0,0,0) scale(1);
@@ -257,7 +272,14 @@
     opacity: 1;
   }
 
-  68% {
+  100% {
+    transform: translate3d(var(--move-x),var(--move-y),0) scale(5);
+    opacity: 1;
+  }
+}
+
+@keyframes dd-discover-fade {
+  0% {
     transform: translate3d(var(--move-x),var(--move-y),0) scale(5);
     opacity: 1;
   }
