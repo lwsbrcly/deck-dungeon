@@ -889,15 +889,15 @@ const THEMES = {
             },
             weapons: {
                 diamonds: {
-                    2: { name: 'Dive Light', animation: 'use' },
-                    3: { name: 'Sample Kit', animation: 'use' },
-                    4: { name: 'Underwater Camera', animation: 'use' },
-                    5: { name: 'Sonar Scanner', animation: 'use' },
-                    6: { name: 'Water Sampler', animation: 'use' },
-                    7: { name: 'Long-range Imaging', animation: 'use' },
-                    8: { name: 'Deep-sea Telescope', animation: 'use' },
-                    9: { name: 'R.O.V.', animation: 'use' },
-                    10: { name: 'Submarine', animation: 'use' }
+                    2: { name: 'Dive Light', animation: 'discover' },
+                    3: { name: 'Sample Kit', animation: 'discover' },
+                    4: { name: 'Underwater Camera', animation: 'discover' },
+                    5: { name: 'Sonar Scanner', animation: 'discover' },
+                    6: { name: 'Water Sampler', animation: 'discover' },
+                    7: { name: 'Long-range Imaging', animation: 'discover' },
+                    8: { name: 'Deep-sea Telescope', animation: 'discover' },
+                    9: { name: 'R.O.V.', animation: 'discover' },
+                    10: { name: 'Submarine', animation: 'discover' }
                 }
             },
             potions: {
