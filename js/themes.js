@@ -87,7 +87,7 @@ const THEMES = {
                 red: "#FD0201",
                 black: "#000000",
                 redKeyline: "#d89f3f",
-                blackKeyline: "#191919",
+                blackKeyline: "#787878",
                 highlight: "#DC8618",
             },
         },
