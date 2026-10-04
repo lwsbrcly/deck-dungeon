@@ -369,17 +369,25 @@
   pointer-events: none !important;
   margin: 0 !important;
   transform-origin: center center;
-  will-change: transform;
+  filter: grayscale(1);
+  will-change: transform, opacity;
 }
 
 .dd-monster-stack-active {
-  animation: dd-monster-to-stack 520ms cubic-bezier(.22,.8,.25,1) forwards;
+  animation: dd-monster-stack-fade
+    var(--animation-duration, 320ms)
+    ease-out
+    forwards;
 }
 
-@keyframes dd-monster-to-stack {
-  0% { transform: translate3d(0,0,0) rotate(0deg); }
+@keyframes dd-monster-stack-fade {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0;
+  }
   100% {
-    transform: translate3d(var(--move-x),var(--move-y),0) rotate(var(--stack-rotation, 0deg));
+    transform: rotate(var(--stack-rotation, 0deg));
+    opacity: 1;
   }
 }
 
