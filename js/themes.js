@@ -891,17 +891,17 @@ const THEMES = {
 
                 win: {
                     title: 'Dive Complete!',
-                    body: 'You reached the depths and returned safely.'
+                    body: 'You reached the depths and discovered everything!'
                 },
 
                 lose: {
-                    title: 'Lost at Sea',
-                    body: 'The depths claimed your expedition.'
+                    title: 'Time\'s up!',
+                    body: 'Oxygen reserves too low, let\'s head back to the surface, and dive again soon!'
                 },
 
                 draw: {
-                    title: 'A Narrow Escape',
-                    body: 'You completed the dive, but barely made it back.'
+                    title: 'A Close one!',
+                    body: 'You completed the dive, but barely made it back. You must prioritise your safety next time!'
                 }
 
             },
