@@ -738,10 +738,12 @@
     hide(monsterCard);
     clone.classList.add('dd-monster-stack-active');
 
-    removeLater(clone, duration, function () {
-      // The normal game render owns the real card once the animation ends.
-      finish();
-    });
+    // Keep the faded clone alive until the normal render has produced
+    // the real previous-monster card. The caller can then swap them without
+    // ever exposing a gap or a freshly-rendered "ping".
+    window.setTimeout(function () {
+      finish(clone);
+    }, duration);
   }
 
   function fistFight(monster, player, options) {
