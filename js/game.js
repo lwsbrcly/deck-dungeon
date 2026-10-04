@@ -1235,6 +1235,39 @@ if (
     return;
   }
 
+  // A kill gets its own final visual hand-off. The weapon animation finishes
+  // first; then the live monster disappears and a grayscale copy fades into
+  // the previous-monster stack. Only after that fade do we let the game state
+  // render, so the real stack card is never visible popping in over the clone.
+  function finishWeaponCombat() {
+    if (
+      ghostInfo &&
+      ghostInfo.targetEl &&
+      ghostInfo.monster &&
+      DeckDungeonAnimations &&
+      DeckDungeonAnimations.monsterToPrevious
+    ) {
+      DeckDungeonAnimations.monsterToPrevious(
+        targetEl,
+        ghostInfo.targetEl,
+        {
+          x: ghostInfo.monster.stackX || 0,
+          y: ghostInfo.monster.stackY || 0,
+          rotation: ghostInfo.monster.stackRotation || 0
+        },
+        {
+          duration: 320,
+          done: function() {
+            done();
+          }
+        }
+      );
+      return;
+    }
+
+    done();
+  }
+
   // Discovery equipment does not attack the creature. Instead the
   // creature/discovery card itself becomes the focus of the animation:
   // grow to the centre of the board, hold, then fade away. The normal
@@ -1246,7 +1279,7 @@ if (
     DeckDungeonAnimations.discover(
       targetEl,
       {
-        done: done
+        done: finishWeaponCombat
       }
     );
     return;
@@ -1260,7 +1293,7 @@ if (
       weaponEl,
       playerEl,
       targetEl,
-      { done: done }
+      { done: finishWeaponCombat }
     );
     return;
   }
@@ -1273,7 +1306,7 @@ if (
       weaponEl,
       playerEl,
       targetEl,
-      { done: done }
+      { done: finishWeaponCombat }
     );
     return;
   }
@@ -1284,7 +1317,7 @@ if (
       playerEl,
       targetEl,
       {
-        done: done,
+        done: finishWeaponCombat,
         slotIndex: slotIndex,
         sound: typeof punchSound === 'function' ? punchSound : null
       }
