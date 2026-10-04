@@ -725,6 +725,14 @@
       return;
     }
 
+    // The dungeon card may still carry its one-shot deal animation class.
+    // That class forces opacity: 1 !important, which would completely
+    // override the fade below. The stack animation is a fresh visual state,
+    // so strip the old deal choreography from the clone.
+    clone.classList.remove('enter-card');
+    clone.classList.remove('enter-prep');
+    clone.style.removeProperty('opacity');
+
     var targetX = targetRect.centerX + ((stack && stack.x) || 0);
     var targetY = targetRect.centerY + ((stack && stack.y) || 0);
 
