@@ -1537,9 +1537,15 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   letter-spacing: .1em;
   line-height: 1;
   color: #d4af37 !important;
-  -webkit-text-fill-color: #d4af37;
+  -webkit-text-fill-color: #d4af37 !important;
   background: rgba(0,0,0,.22);
   text-shadow: 0 1px 0 rgba(0,0,0,.7);
+}
+
+.mode-badge strong,
+.mode-badge span {
+  color: #d4af37 !important;
+  -webkit-text-fill-color: #d4af37 !important;
 }
 .mode-badge[hidden] {
   display: none;
