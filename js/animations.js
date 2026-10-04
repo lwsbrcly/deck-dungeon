@@ -758,8 +758,10 @@
     // the real previous-monster card. The caller can then swap them without
     // ever exposing a gap or a freshly-rendered "ping".
     window.setTimeout(function () {
-      finish(clone);
+      if (clone && clone.parentNode) clone.parentNode.removeChild(clone);
     }, duration);
+
+    finish(clone);
   }
 
   function fistFight(monster, player, options) {
