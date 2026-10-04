@@ -769,53 +769,40 @@ function renderAfterAction() {
 var animateRoom = !!state._roomWasDealt;
 var skipFirst = !!state._skipFirstRoomCard;
 
-// Capture where the existing dungeon cards are before the state-driven render.
-var before = {};
+// Capture the surviving card elements before render. The dedicated animation
+// system will clone these old cards and slide the clones into the newly
+// rendered slot positions.
+var beforeCards = {};
 var currentWraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
 for (var i = 0; i < currentWraps.length; i++) {
   var wrap = currentWraps[i];
-  if (wrap._cardKey) before[wrap._cardKey] = wrap.getBoundingClientRect();
+  var card = wrap.querySelector('.card:not(.empty)');
+  if (wrap._cardKey && card) beforeCards[wrap._cardKey] = card;
 }
 
 state._roomWasDealt = false;
 state._skipFirstRoomCard = false;
 render();
 
-// FLIP the cards that survived the action. The real card elements stay alive;
-// only their position changes, so the browser animates the slide naturally.
-var moved = [];
+var slides = [];
 var afterWraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
 for (var j = 0; j < afterWraps.length; j++) {
   var afterWrap = afterWraps[j];
-  var oldRect = before[afterWrap._cardKey];
-  if (!oldRect) continue;
+  var oldCard = beforeCards[afterWrap._cardKey];
+  var newCard = afterWrap.querySelector('.card:not(.empty)');
+  if (!oldCard || !newCard) continue;
 
-  var newRect = afterWrap.getBoundingClientRect();
-  var dx = oldRect.left - newRect.left;
-  var dy = oldRect.top - newRect.top;
-
-  if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5) {
-    afterWrap.style.transition = 'none';
-    afterWrap.style.transform = 'translate(' + dx + 'px, ' + dy + 'px)';
-    moved.push(afterWrap);
+  var oldRect = oldCard.getBoundingClientRect();
+  var newRect = newCard.getBoundingClientRect();
+  if (Math.abs(oldRect.left - newRect.left) > 0.5 ||
+      Math.abs(oldRect.top - newRect.top) > 0.5) {
+    slides.push({ source: oldCard, target: newCard });
   }
 }
 
-if (moved.length) {
-  // Force the starting transform to be painted before releasing it.
-  void document.getElementById('dungeon').offsetWidth;
-  requestAnimationFrame(function() {
-    for (var m = 0; m < moved.length; m++) {
-      moved[m].style.transition = 'transform 420ms cubic-bezier(.22,.8,.28,1)';
-      moved[m].style.transform = 'translate(0, 0)';
-    }
-    setTimeout(function() {
-      for (var n = 0; n < moved.length; n++) {
-        moved[n].style.transition = '';
-        moved[n].style.transform = '';
-      }
-    }, 450);
-  });
+if (slides.length && window.DeckDungeonAnimations &&
+    DeckDungeonAnimations.slideDungeonCards) {
+  DeckDungeonAnimations.slideDungeonCards(slides, { duration: 420 });
 }
 
 if (animateRoom) animateRoomEntry(skipFirst);
