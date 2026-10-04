@@ -589,7 +589,7 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
   z-index: 1;
   pointer-events: none;
   text-align: center;
-  color: #000;
+  color: var(--game-player-text, #000000);
 }
 
 .player-header {
@@ -611,7 +611,7 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
   right: 5%;
   bottom: 10%;
   width: 90%;
-  color: #000;
+  color: var(--game-player-hp-text, #000000);
   font-size: 0.8rem;
   font-weight: bold;
   text-align: center;
