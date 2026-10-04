@@ -1256,7 +1256,8 @@ if (
           rotation: ghostInfo.monster.stackRotation || 0
         },
         {
-          duration: 320,
+          duration: 850,
+          doneOnStart: true,
           done: function() {
             done();
           }
