@@ -572,54 +572,45 @@
     if (pending === 0) complete();
   }
 
-  function slideDungeonCards(cards, slots, removedIndex, options) {
+  function slideDungeonCards(slides, options) {
     options = options || {};
 
-    var list = Array.isArray(cards) ? cards : [];
-    var targets = Array.isArray(slots) ? slots : [];
-
-    if (removedIndex == null || removedIndex < 0 || removedIndex >= list.length) {
-      if (options.done) options.done();
-      return;
-    }
-
+    var list = Array.isArray(slides) ? slides : [];
     var finish = once(options.done);
     var duration = options.duration || 420;
     var pending = 0;
 
-    for (var i = removedIndex + 1; i < list.length; i += 1) {
-      var card = list[i];
-      var target = targets[i - 1];
+    list.forEach(function (slide) {
+      if (!slide || !slide.source || !slide.target) return;
 
-      if (!card || !target) continue;
+      var sourceRect = rect(slide.source);
+      var targetRect = rect(slide.target);
+      if (!sourceRect || !targetRect) return;
 
-      var sourceRect = rect(card);
-      var targetRect = rect(target);
-      if (!sourceRect || !targetRect) continue;
+      var clone = appendClone(slide.source, 'dd-dungeon-slide-clone', sourceRect);
+      if (!clone) return;
 
       pending += 1;
-
-      var clone = appendClone(card, 'dd-dungeon-slide-clone', sourceRect);
-      if (!clone) {
-        pending -= 1;
-        continue;
-      }
-
-      setVector(clone, 'move',
+      setVector(
+        clone,
+        'move',
         targetRect.centerX - sourceRect.centerX,
         targetRect.centerY - sourceRect.centerY
       );
       clone.style.setProperty('--animation-duration', duration + 'ms');
 
-      hide(card);
+      // render() has already created the card at its destination. Hide that
+      // real card while its old visual clone slides across, then reveal it
+      // when the clone lands.
+      hide(slide.target);
       clone.classList.add('dd-dungeon-slide-active');
 
       removeLater(clone, duration, function () {
-        show(card);
+        show(slide.target);
         pending -= 1;
         if (pending === 0) finish();
       });
-    }
+    });
 
     if (pending === 0) finish();
   }
