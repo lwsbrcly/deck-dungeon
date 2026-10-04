@@ -747,6 +747,8 @@
     // so strip the old deal choreography from the clone.
     clone.classList.remove('enter-card');
     clone.classList.remove('enter-prep');
+    clone.classList.remove('selected');
+    clone.classList.remove('selection-hidden');
     clone.style.removeProperty('opacity');
 
     var targetX = targetRect.centerX + ((stack && stack.x) || 0);
