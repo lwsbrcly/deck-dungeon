@@ -716,6 +716,9 @@
       return;
     }
 
+    // A defeated monster does not travel to the previous-monster stack.
+    // The live card disappears immediately; a grayscale clone is created
+    // directly at its final stack position and fades into existence there.
     var clone = appendClone(monsterCard, 'dd-monster-stack-clone', sourceRect);
     if (!clone) {
       finish();
@@ -724,17 +727,19 @@
 
     var targetX = targetRect.centerX + ((stack && stack.x) || 0);
     var targetY = targetRect.centerY + ((stack && stack.y) || 0);
-    var source = center(sourceRect);
 
-    setVector(clone, 'move', targetX - source.x, targetY - source.y);
+    clone.style.left = (targetX - sourceRect.width / 2) + 'px';
+    clone.style.top = (targetY - sourceRect.height / 2) + 'px';
     clone.style.setProperty('--stack-rotation', ((stack && stack.rotation) || 0) + 'deg');
-    clone.style.setProperty('--animation-duration', '520ms');
+
+    var duration = Number(options.duration) || 320;
+    clone.style.setProperty('--animation-duration', duration + 'ms');
 
     hide(monsterCard);
     clone.classList.add('dd-monster-stack-active');
 
-    removeLater(clone, 520, function () {
-      show(monsterCard);
+    removeLater(clone, duration, function () {
+      // The normal game render owns the real card once the animation ends.
       finish();
     });
   }
