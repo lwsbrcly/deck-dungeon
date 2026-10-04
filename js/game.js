@@ -1002,31 +1002,34 @@ async function animateFlee(cards) {
   });
 }
 function animateMonsterToPrevious(cardEl, targetEl, monster, done) {
-if (!cardEl || !targetEl) { done(); return; }
+  if (!cardEl || !targetEl) {
+    if (done) done();
+    return;
+  }
 
-var a = getCanvasAnimationRect(cardEl);
-var b = getCanvasAnimationRect(targetEl);
-var clone = cardEl.cloneNode(true);
-clone.classList.add('action-clone', 'monster-equip-clone');
-clone.style.left = a.left + 'px';
-clone.style.top = a.top + 'px';
-clone.style.width = a.width + 'px';
-clone.style.height = a.height + 'px';
+  // The animation choreography now lives in animations.js. Keep this
+  // compatibility wrapper so the game flow does not need to know about
+  // DOM animation details.
+  if (window.DeckDungeonAnimations &&
+      typeof window.DeckDungeonAnimations.monsterToPrevious === 'function') {
+    window.DeckDungeonAnimations.monsterToPrevious(
+      cardEl,
+      targetEl,
+      {
+        x: monster && monster.stackX || 0,
+        y: monster && monster.stackY || 0,
+        rotation: monster && monster.stackRotation || 0
+      },
+      {
+        duration: 320,
+        done: done
+      }
+    );
+    return;
+  }
 
-var targetX = b.left + b.width / 2 + (monster.stackX || 0);
-var targetY = b.top + b.height / 2 + (monster.stackY || 0);
-clone.style.setProperty('--dx', (targetX - (a.left + a.width / 2)) + 'px');
-clone.style.setProperty('--dy', (targetY - (a.top + a.height / 2)) + 'px');
-clone.style.setProperty('--stack-rotation', (monster.stackRotation || 0) + 'deg');
-
-cardEl.classList.add('action-hidden');
-document.querySelector('.game-canvas').appendChild(clone);
-
-setTimeout(function() {
-  clone.remove();
-  cardEl.classList.remove('action-hidden');
-  done();
-}, 650);
+  // Defensive fallback if the animation system is unavailable.
+  if (done) done();
 }
 
 function equipWeapon(player) {
