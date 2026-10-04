@@ -378,15 +378,14 @@
     var(--animation-duration, 320ms)
     ease-out
     forwards;
+  transform: rotate(var(--stack-rotation, 0deg));
 }
 
 @keyframes dd-monster-stack-fade {
   0% {
-    transform: rotate(0deg);
     opacity: 0;
   }
   100% {
-    transform: rotate(var(--stack-rotation, 0deg));
     opacity: 1;
   }
 }
