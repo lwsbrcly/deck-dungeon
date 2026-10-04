@@ -1364,25 +1364,27 @@ setTimeout(function() {
     // The monster disappears exactly when the weapon lands on it.
     targetEl.classList.add('combat-hidden');
 
-    if (ghostInfo && ghostInfo.targetEl && ghostInfo.monster) {
-      var canvas = document.querySelector('.game-canvas');
-      var ghostTarget = getCanvasAnimationRect(ghostInfo.targetEl);
-
-      if (canvas && ghostTarget) {
-        activeGhostMemoryId = ghostInfo.monster._ghostId;
-
-        ghost = targetEl.cloneNode(true);
-        ghost.classList.remove('combat-hidden', 'selected', 'selection-hidden');
-        ghost.classList.add('combat-ghost');
-        ghost.style.left = ghostTarget.left + 'px';
-        ghost.style.top = ghostTarget.top + 'px';
-        ghost.style.width = ghostTarget.width + 'px';
-        ghost.style.height = ghostTarget.height + 'px';
-        ghost.style.setProperty('--ghost-x', (ghostInfo.monster.stackX || 0) + 'px');
-        ghost.style.setProperty('--ghost-y', (ghostInfo.monster.stackY || 0) + 'px');
-        ghost.style.setProperty('--ghost-rotation', (ghostInfo.monster.stackRotation || 0) + 'deg');
-        canvas.appendChild(ghost);
-      }
+    if (ghostInfo && ghostInfo.targetEl && ghostInfo.monster &&
+        window.DeckDungeonAnimations &&
+        typeof DeckDungeonAnimations.monsterToPrevious === 'function') {
+      // The defeated monster is now handed directly to the new animation
+      // system: disappear from the dungeon, then fade into the previous
+      // monster stack at its final position. The completion callback is
+      // deliberately held until the fade is complete so render() cannot
+      // make the real stack card "ping" in over the animation.
+      DeckDungeonAnimations.monsterToPrevious(
+        targetEl,
+        ghostInfo.targetEl,
+        {
+          x: ghostInfo.monster.stackX || 0,
+          y: ghostInfo.monster.stackY || 0,
+          rotation: ghostInfo.monster.stackRotation || 0
+        },
+        {
+          duration: 320,
+          done: function() {}
+        }
+      );
     }
   }
 
@@ -1413,17 +1415,11 @@ setTimeout(function() {
   clone.remove();
   sourceEl.classList.remove('combat-hidden');
 
-  if (!isFistFight && ghost) {
-    // The board is allowed to update immediately. The real state card stays
-    // hidden until the 900ms visual materialisation has finished.
+  if (!isFistFight && ghostInfo && ghostInfo.targetEl && ghostInfo.monster) {
+    // monsterToPrevious owns the fade. Wait for the animation callback below
+    // before allowing the normal render to replace the temporary clone.
     targetEl.classList.remove('combat-hidden');
     done();
-
-    setTimeout(function() {
-      ghost.remove();
-      activeGhostMemoryId = null;
-      render();
-    }, 950);
     return;
   }
 
