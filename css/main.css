@@ -1143,6 +1143,19 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
     0 1px var(--game-black-keyline),
     0 -1px var(--game-black-keyline);
 }
+
+/* Theme-specific card name styling. Keyline support remains optional. */
+.card-title {
+  color: var(--game-card-name, inherit);
+}
+
+.use-keylines .card-title {
+  text-shadow:
+    1px 0 var(--game-card-name-keyline),
+    -1px 0 var(--game-card-name-keyline),
+    0 1px var(--game-card-name-keyline),
+    0 -1px var(--game-card-name-keyline);
+}
 .card.empty {
   border: none;
   background: transparent;
