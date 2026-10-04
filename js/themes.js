@@ -79,6 +79,8 @@ const THEMES = {
             },
             game: {
                 useKeyLines: true,
+                cardName: "",
+                cardNameKeyline: "",
                 bg: "#19191a",
                 border: "#d89f3f",
                 text: "#CDA655",
@@ -252,6 +254,8 @@ const THEMES = {
             },
             game: {
                 useKeyLines: true,
+                cardName: "",
+                cardNameKeyline: "",
                 bg: "#19191a",
                 border: "#e48a41",
                 text: "#efcfa6",
@@ -427,6 +431,8 @@ const THEMES = {
             },
             game: {
                 useKeyLines: true,
+                cardName: "",
+                cardNameKeyline: "",
                 bg: "#19191a",
                 border: "#a6711f",
                 text: "#fd2f20",
@@ -548,6 +554,8 @@ const THEMES = {
             },
             game: {
                 useKeyLines: true,
+                cardName: "",
+                cardNameKeyline: "",
                 bg: "#19191a",
                 border: "#6a5a56",
                 text: "#ecd7de",
@@ -669,6 +677,8 @@ const THEMES = {
             },
             game: {
                 useKeyLines: true,
+                cardName: "",
+                cardNameKeyline: "",
                 bg: "#19191a",
                 border: "#6a5a56",
                 text: "#ecd7de",
@@ -845,6 +855,8 @@ const THEMES = {
             },
             game: {
                 useKeyLines: true,
+                cardName: "#d7f5ff",
+                cardNameKeyline: "#062033",
                 bg: "#19191a",
                 border: "#1f9bd1",
                 text: "#d7f5ff",
