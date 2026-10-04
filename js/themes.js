@@ -853,7 +853,7 @@ const THEMES = {
                 red: "#ffffff",
                 black: "#000000",
                 redKeyline: "#062033",
-                blackKeyline: "#d7f5ff",
+                blackKeyline: "#005da7",
                 highlight: "#fa9500",
             },
         },
