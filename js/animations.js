@@ -578,30 +578,55 @@
     var list = Array.isArray(slides) ? slides : [];
     var finish = once(options.done);
     var duration = options.duration || 420;
+    var canvas = getCanvas();
     var pending = 0;
 
+    if (!canvas) {
+      finish();
+      return;
+    }
+
     list.forEach(function (slide) {
-      if (!slide || !slide.source || !slide.target) return;
+      if (!slide || !slide.html || !slide.sourceRect || !slide.target) return;
 
-      var sourceRect = rect(slide.source);
       var targetRect = rect(slide.target);
-      if (!sourceRect || !targetRect) return;
+      if (!targetRect) return;
 
-      var clone = appendClone(slide.source, 'dd-dungeon-slide-clone', sourceRect);
+      // The old card has already been removed by render(). Recreate its exact
+      // visual from the captured HTML and place it at its pre-render position.
+      var holder = document.createElement('div');
+      holder.innerHTML = slide.html;
+      var clone = holder.firstElementChild;
       if (!clone) return;
 
+      clone.classList.add('dd-animation-clone', 'dd-dungeon-slide-clone');
+      clone.style.left = (
+        slide.sourceRect.left -
+        canvas.getBoundingClientRect().left / (canvas.getBoundingClientRect().width / WIDTH)
+      ) + 'px';
+
+      var canvasRect = canvas.getBoundingClientRect();
+      var scale = canvasRect.width / WIDTH;
+      if (!scale) scale = 1;
+
+      clone.style.left = ((slide.sourceRect.left - canvasRect.left) / scale) + 'px';
+      clone.style.top = ((slide.sourceRect.top - canvasRect.top) / scale) + 'px';
+      clone.style.width = (slide.sourceRect.width / scale) + 'px';
+      clone.style.height = (slide.sourceRect.height / scale) + 'px';
+
+      canvas.appendChild(clone);
       pending += 1;
+
+      var sourceCenterX = (slide.sourceRect.left - canvasRect.left + slide.sourceRect.width / 2) / scale;
+      var sourceCenterY = (slide.sourceRect.top - canvasRect.top + slide.sourceRect.height / 2) / scale;
       setVector(
         clone,
         'move',
-        targetRect.centerX - sourceRect.centerX,
-        targetRect.centerY - sourceRect.centerY
+        targetRect.centerX - sourceCenterX,
+        targetRect.centerY - sourceCenterY
       );
       clone.style.setProperty('--animation-duration', duration + 'ms');
 
-      // render() has already created the card at its destination. Hide that
-      // real card while its old visual clone slides across, then reveal it
-      // when the clone lands.
       hide(slide.target);
       clone.classList.add('dd-dungeon-slide-active');
 
