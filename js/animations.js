@@ -740,11 +740,19 @@
     clone.style.top = (targetY - sourceRect.height / 2) + 'px';
     clone.style.setProperty('--stack-rotation', ((stack && stack.rotation) || 0) + 'deg');
 
-    var duration = Number(options.duration) || 320;
+    var duration = Number(options.duration) || 850;
     clone.style.setProperty('--animation-duration', duration + 'ms');
 
     hide(monsterCard);
     clone.classList.add('dd-monster-stack-active');
+
+    // The visual fade is deliberately non-blocking. Gameplay can render the
+    // next state and accept the next selection while this clone continues
+    // fading in independently.
+    if (options.doneOnStart) {
+      finish(clone);
+      return;
+    }
 
     // Keep the faded clone alive until the normal render has produced
     // the real previous-monster card. The caller can then swap them without
