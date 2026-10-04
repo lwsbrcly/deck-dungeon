@@ -1415,17 +1415,10 @@ setTimeout(function() {
   clone.remove();
   sourceEl.classList.remove('combat-hidden');
 
-  if (!isFistFight && ghostInfo && ghostInfo.targetEl && ghostInfo.monster) {
-    // monsterToPrevious owns the fade. Wait for the animation callback below
-    // before allowing the normal render to replace the temporary clone.
-    targetEl.classList.remove('combat-hidden');
-    done();
-    return;
-  }
 
   if (!isFistFight) targetEl.classList.remove('combat-hidden');
   done();
-}, isFistFight ? 1000 : 700);
+}, isFistFight ? 1000 : (ghostInfo ? 820 : 700));
 }
 
 function getDungeonCardElement(slotIndex) {
