@@ -1042,16 +1042,36 @@ function clearPreviousMonsters() {
   var layout = getBoardLayout();
   var playerLayout = layout.players[player];
   var previousId = playerLayout && playerLayout.previous;
+
+  // The live monster-to-stack animation uses a clone which sits directly
+  // on the game canvas rather than inside the rendered previous-monster
+  // wrapper. Clear that visual clone as well as the rendered stack.
+  var stackClones = previousId
+    ? document.querySelectorAll('#' + previousId + ' .dd-monster-stack-clone')
+    : [];
+  var canvasClones = document.querySelectorAll('.dd-monster-stack-clone');
+
+  var seen = [];
+  function fadeAndRemove(el) {
+    if (!el || seen.indexOf(el) !== -1) return;
+    seen.push(el);
+    el.classList.remove('dd-monster-stack-active');
+    el.classList.add('previous-monster-fade');
+    setTimeout(function() {
+      if (el && el.parentNode) el.parentNode.removeChild(el);
+    }, 700);
+  }
+
+  for (var c = 0; c < canvasClones.length; c++) {
+    fadeAndRemove(canvasClones[c]);
+  }
+
   if (!previousId) return;
 
   var stackCards = Array.prototype.slice.call(
     document.querySelectorAll('#' + previousId + ' .previous-monster-card .card')
   );
-  if (!stackCards.length) return;
 
-  // Fade the real cards in place. Keeping them inside the previous-monster
-  // stack preserves its grayscale styling; cloning them into document.body
-  // would strip that inherited filter and create full-colour ghosts.
   for (var i = 0; i < stackCards.length; i++) {
     var monsterCardEl = stackCards[i];
     monsterCardEl.classList.add('previous-monster-fade');
