@@ -33,6 +33,8 @@ function applySelectedTheme() {
     root.style.setProperty('--game-black-keyline', gameColours.blackKeyline || '#ffffff');
     root.style.setProperty('--game-card-name', gameColours.cardName || '');
     root.style.setProperty('--game-card-name-keyline', gameColours.cardNameKeyline || '');
+    root.style.setProperty('--game-player-text', gameColours.playerText || '#000000');
+    root.style.setProperty('--game-player-hp-text', gameColours.playerHpText || '#000000');
     root.classList.toggle('use-keylines', gameColours.useKeyLines === true);
     root.style.setProperty('--game-highlight', gameColours.highlight || '');
 
@@ -2029,7 +2031,10 @@ playerIds.forEach(function(id) {
   if (down) down.innerHTML = p.hp === 0 ? '<span class="badge">DOWN</span>' : '';
 
   var hpDisplay = document.getElementById(elements.hp);
-  if (hpDisplay) hpDisplay.textContent = 'HP ' + p.hp + '/' + state.maxHP;
+  if (hpDisplay) {
+    var hpLabel = (THEMES[state.theme] && THEMES[state.theme].text && THEMES[state.theme].text.hpLabel) || 'HP';
+    hpDisplay.textContent = hpLabel + ' ' + p.hp + '/' + state.maxHP;
+  }
 
   if (elements.previous && (id === 'p1' || state.mode === 'coop')) {
     var previousMonsterEl = document.getElementById(elements.previous);
