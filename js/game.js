@@ -769,15 +769,20 @@ function renderAfterAction() {
 var animateRoom = !!state._roomWasDealt;
 var skipFirst = !!state._skipFirstRoomCard;
 
-// Capture the surviving card elements before render. The dedicated animation
-// system will clone these old cards and slide the clones into the newly
-// rendered slot positions.
+// Capture the visual card and its position before render() replaces the
+// dungeon markup. The old DOM element itself will disappear during render,
+// so retain the HTML and geometry, not the element reference.
 var beforeCards = {};
 var currentWraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
 for (var i = 0; i < currentWraps.length; i++) {
   var wrap = currentWraps[i];
   var card = wrap.querySelector('.card:not(.empty)');
-  if (wrap._cardKey && card) beforeCards[wrap._cardKey] = card;
+  if (wrap._cardKey && card) {
+    beforeCards[wrap._cardKey] = {
+      html: card.outerHTML,
+      rect: card.getBoundingClientRect()
+    };
+  }
 }
 
 state._roomWasDealt = false;
@@ -792,11 +797,14 @@ for (var j = 0; j < afterWraps.length; j++) {
   var newCard = afterWrap.querySelector('.card:not(.empty)');
   if (!oldCard || !newCard) continue;
 
-  var oldRect = oldCard.getBoundingClientRect();
   var newRect = newCard.getBoundingClientRect();
-  if (Math.abs(oldRect.left - newRect.left) > 0.5 ||
-      Math.abs(oldRect.top - newRect.top) > 0.5) {
-    slides.push({ source: oldCard, target: newCard });
+  if (Math.abs(oldCard.rect.left - newRect.left) > 0.5 ||
+      Math.abs(oldCard.rect.top - newRect.top) > 0.5) {
+    slides.push({
+      html: oldCard.html,
+      sourceRect: oldCard.rect,
+      target: newCard
+    });
   }
 }
 
