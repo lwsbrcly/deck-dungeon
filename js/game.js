@@ -1299,6 +1299,7 @@ var sourceRect;
 var targetRect;
 var clone;
 var ghost = null;
+var monsterStackClone = null;
 
 if (isFistFight) {
   // Bare-handed combat: the monster itself lunges up at the player.
@@ -1382,7 +1383,9 @@ setTimeout(function() {
         },
         {
           duration: 320,
-          done: function() {}
+          done: function(cloneEl) {
+            monsterStackClone = cloneEl;
+          }
         }
       );
     }
@@ -1415,6 +1418,23 @@ setTimeout(function() {
   clone.remove();
   sourceEl.classList.remove('combat-hidden');
 
+  if (!isFistFight && ghostInfo && monsterStackClone) {
+    // Keep the rendered previous-monster slot hidden while render() builds
+    // its real card underneath the already-faded animation clone.
+    ghostInfo.targetEl.style.visibility = 'hidden';
+    done();
+
+    // renderAfterAction() is synchronous. Swap the visual elements on the
+    // next frame so the player never sees the real card being created.
+    requestAnimationFrame(function() {
+      if (monsterStackClone && monsterStackClone.parentNode) {
+        monsterStackClone.remove();
+      }
+      ghostInfo.targetEl.style.visibility = '';
+      monsterStackClone = null;
+    });
+    return;
+  }
 
   if (!isFistFight) targetEl.classList.remove('combat-hidden');
   done();
