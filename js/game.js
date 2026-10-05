@@ -1249,9 +1249,16 @@ function runAttackAnimation(player, mode, targetEl, slotIndex, done, previousMon
     return;
   }
 
+  var layout = getBoardLayout();
+  var layoutPlayer = layout.players[player === 'both' ? 'p1' : player];
+
+  if (!layoutPlayer) {
+    done();
+    return;
+  }
+
   if (mode !== 'weapon') {
-    var fistPlayerId = player === 'both' ? 'p1' : player;
-    var fistPlayerEl = document.getElementById(fistPlayerId + 'Panel');
+    var fistPlayerEl = document.getElementById(layoutPlayer.panel);
 
     if (!fistPlayerEl || !DeckDungeonAnimations.fistFight) {
       done();
@@ -1265,9 +1272,9 @@ function runAttackAnimation(player, mode, targetEl, slotIndex, done, previousMon
     return;
   }
 
-  var weaponEl = document.querySelector('#' + player + 'Weapon .card');
-  var playerEl = document.getElementById(player + 'Panel');
-  var previousStack = document.getElementById(player + 'PreviousMonster');
+  var weaponEl = document.querySelector('#' + layoutPlayer.weapon + ' .card');
+  var playerEl = document.getElementById(layoutPlayer.panel);
+  var previousStack = document.getElementById(layoutPlayer.previous);
   var weaponAnimation =
     state[player] &&
     state[player].weapon &&
