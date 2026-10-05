@@ -793,23 +793,58 @@
     hide(monsterCard);
     clone.classList.add('dd-monster-stack-active');
 
-    // The visual fade is deliberately non-blocking. Gameplay can render the
-    // next state and accept the next selection while this clone continues
-    // fading in independently.
-    //
-    // Always schedule cleanup before returning. doneOnStart means only that
-    // gameplay does not wait for the visual fade; it must not leave the clone
-    // behind on the canvas.
     window.setTimeout(function () {
       if (clone && clone.parentNode) clone.parentNode.removeChild(clone);
+      finish();
     }, duration);
+  }
 
-    if (options.doneOnStart) {
-      finish(clone);
+  function weaponFight(weapon, player, monster, previousStack, stack, options) {
+    options = options || {};
+
+    var finish = once(options.done);
+    var animation = options.animation;
+
+    function finishAttack() {
+      if (!previousStack || !stack) {
+        finish();
+        return;
+      }
+
+      monsterToPrevious(monster, previousStack, {
+        x: stack.stackX || 0,
+        y: stack.stackY || 0,
+        rotation: stack.stackRotation || 0
+      }, {
+        duration: options.stackDuration || 320,
+        done: finish
+      });
+    }
+
+    if (animation === 'discover') {
+      discover(monster, { done: finishAttack });
       return;
     }
 
-    finish(clone);
+    if (animation === 'thrown') {
+      weaponFightThrown(weapon, player, monster, {
+        done: finishAttack
+      });
+      return;
+    }
+
+    if (animation === 'ranged') {
+      weaponFightRanged(weapon, player, monster, {
+        done: finishAttack
+      });
+      return;
+    }
+
+    weaponFightMelee(weapon, player, monster, {
+      done: finishAttack,
+      slotIndex: options.slotIndex,
+      sound: options.sound
+    });
   }
 
   function fistFight(monster, player, options) {
@@ -1097,6 +1132,7 @@
     discover: discover,
     deal: deal,
     slideDungeonCards: slideDungeonCards,
+    weaponFight: weaponFight,
     weaponFightMelee: weaponFightMelee,
     weaponFightThrown: weaponFightThrown,
     weaponFightRanged: weaponFightRanged
