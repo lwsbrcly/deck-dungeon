@@ -827,7 +827,7 @@ const THEMES = {
                 border: "#1f9bd1",
                 text: "#d7f5ff",
                 muted: "#041822",
-                highlight: "#0c7aa8",
+                highlight: "#fa9500",
             },
             game: {
                 useKeyLines: true,
@@ -839,12 +839,12 @@ const THEMES = {
                 border: "#1f9bd1",
                 text: "#d7f5ff",
                 muted: "#187ea2",
-                logText: "#d7f5ff",
+                logText: "#fa9500",
                 red: "#ffffff",
                 black: "#000000",
                 redKeyline: "#062033",
                 blackKeyline: "#019ad1",
-                highlight: "#fa9500",
+                highlight: "#ffffff",
             },
         },
 
