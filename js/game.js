@@ -1904,6 +1904,7 @@ playerIds.forEach(function(id) {
           var monsterCard = p.previousMonsters[m];
           var ghostClass = (activeGhostMemoryId && monsterCard._ghostId === activeGhostMemoryId) ? ' ghost-memory-hidden' : '';
           previousMonsterHtml += '<div class="previous-monster-card' + ghostClass + (monsterCard._fadeIn ? ' previous-monster-fade-in' : '') + '" style="--stack-x:' + monsterCard.stackX + 'px; --stack-y:' + monsterCard.stackY + 'px; --stack-rotation:' + monsterCard.stackRotation + 'deg; z-index:' + (m + 1) + ';">' + cardHTML(monsterCard) + '</div>';
+          monsterCard._fadeIn = false;
         }
         previousMonsterHtml += '</div>';
         previousMonsterEl.innerHTML = previousMonsterHtml;
