@@ -89,6 +89,14 @@
     var clone = source.cloneNode(true);
     clone.classList.add('dd-animation-clone');
 
+    // Animation clones are visual-only. Never carry the gameplay selection
+    // halo into the animation, regardless of which classes the source card has.
+    clone.classList.remove('selected');
+    clone.classList.remove('selection-hidden');
+    clone.style.setProperty('box-shadow', 'none', 'important');
+    clone.style.setProperty('outline', 'none', 'important');
+    clone.style.setProperty('border-color', 'transparent', 'important');
+
     if (className) {
       className.split(/\\s+/).forEach(function (name) {
         if (name) clone.classList.add(name);
