@@ -1312,7 +1312,7 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   color: #fff;
   border-color: var(--game-muted);
 }
-.modal h2 { margin-bottom: 4px; color: #fff; font-size: 1.2rem; }
+.modal h2 { margin-top: 6px; margin-bottom: 4px; color: #fff; font-size: 1.2rem; }
 .modal p { color: var(--game-muted); margin-bottom: 12px; font-size: 0.85rem; line-height: 1.4; }
 .score-banner { font-size: 1.5rem; font-weight: bold; margin: 6px 0 12px 0; color: var(--game-highlight); }
 .score-banner.negative { color: var(--game-red); }
