@@ -816,7 +816,7 @@
         y: stack.stackY || 0,
         rotation: stack.stackRotation || 0
       }, {
-        duration: options.stackDuration || 320,
+        duration: options.stackDuration || 750,
         done: finish
       });
     }
