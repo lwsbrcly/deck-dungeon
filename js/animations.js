@@ -806,18 +806,8 @@
     var animation = options.animation;
 
     function finishAttack() {
-      // The defeated monster's stack fade is purely visual. Start it here,
-      // but do not make the attack/game-flow callback wait for it.
-      if (previousStack && stack) {
-        monsterToPrevious(monster, previousStack, {
-          x: stack.stackX || 0,
-          y: stack.stackY || 0,
-          rotation: stack.stackRotation || 0
-        }, {
-          duration: options.stackDuration || 1000
-        });
-      }
-
+      // The previous-monster card is now rendered by game state. Its 1000ms
+      // fade is purely visual and therefore must not be part of attack timing.
       finish();
     }
 
