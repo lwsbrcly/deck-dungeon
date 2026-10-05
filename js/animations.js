@@ -767,17 +767,18 @@
     // The visual fade is deliberately non-blocking. Gameplay can render the
     // next state and accept the next selection while this clone continues
     // fading in independently.
+    //
+    // Always schedule cleanup before returning. doneOnStart means only that
+    // gameplay does not wait for the visual fade; it must not leave the clone
+    // behind on the canvas.
+    window.setTimeout(function () {
+      if (clone && clone.parentNode) clone.parentNode.removeChild(clone);
+    }, duration);
+
     if (options.doneOnStart) {
       finish(clone);
       return;
     }
-
-    // Keep the faded clone alive until the normal render has produced
-    // the real previous-monster card. The caller can then swap them without
-    // ever exposing a gap or a freshly-rendered "ping".
-    window.setTimeout(function () {
-      if (clone && clone.parentNode) clone.parentNode.removeChild(clone);
-    }, duration);
 
     finish(clone);
   }
