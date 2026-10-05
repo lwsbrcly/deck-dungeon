@@ -848,7 +848,7 @@ function renderAfterAction() {
     centerX: (rect.left - canvasRect.left + rect.width / 2) / scale,
     centerY: (rect.top - canvasRect.top + rect.height / 2) / scale
   };
-}*/
+}
 
 function animateCardAction(cardEl, targetEl, className, done, icon, animationType) {
 if (!cardEl) { done(); return; }
@@ -962,7 +962,7 @@ function waitForAnimation(el) {
       }
       el.addEventListener('animationend', done);
     });
-}
+}*/
 
 function animateRoomEntry(skipFirst) {
   var cards = Array.prototype.slice.call(
@@ -994,6 +994,7 @@ function animateRoomEntry(skipFirst) {
     );
   });
 }
+
 async function animateFlee(cards) {
   if (!cards || !cards.length) return;
 
@@ -1009,7 +1010,8 @@ async function animateFlee(cards) {
     });
   });
 }
-function animateMonsterToPrevious(cardEl, targetEl, monster, done) {
+
+/*function animateMonsterToPrevious(cardEl, targetEl, monster, done) {
   if (!cardEl || !targetEl) {
     if (done) done();
     return;
@@ -1038,7 +1040,7 @@ function animateMonsterToPrevious(cardEl, targetEl, monster, done) {
 
   // Defensive fallback if the animation system is unavailable.
   if (done) done();
-}
+}*/
 
 function clearPreviousMonsterElement(el, seen) {
   if (!el || seen.indexOf(el) !== -1) return;
