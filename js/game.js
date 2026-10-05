@@ -2464,52 +2464,6 @@ if (monster && isSolo) {
   } 
 }
 
-// The action buttons can slightly change the layout on desktop when their
-// label changes (for example, Weapon -> Consume). Re-measure the fixed
-// dungeon slots after the buttons have been updated so the free-positioned
-// card wrappers always stay aligned with their dotted slots.
-/*var syncBoard = document.querySelector('.dungeon-board');
-var syncDungeon = document.getElementById('dungeon');
-var syncSlots = document.querySelectorAll('.dungeon-slot');
-if (syncBoard && syncDungeon && syncSlots.length) {
-  var syncBoardRect = syncBoard.getBoundingClientRect();
-  var syncWraps = syncDungeon.querySelectorAll('.dungeon-card-wrap');
-  for (var sw = 0; sw < syncWraps.length; sw++) {
-    var syncWrap = syncWraps[sw];
-    var syncIndex = syncWrap._slotIndex;
-    if (syncIndex === undefined || !syncSlots[syncIndex]) continue;
-    var syncRect = syncSlots[syncIndex].getBoundingClientRect();
-    syncWrap.style.left = (syncRect.left - syncBoardRect.left) + 'px';
-    syncWrap.style.top = (syncRect.top - syncBoardRect.top) + 'px';
-    syncWrap.style.width = syncRect.width + 'px';
-    syncWrap.style.height = syncRect.height + 'px';
-  }
-}*/
-
-      //weaponGrid.innerHTML = 
-      //'<button type="button" onclick="equipWeapon(\'p1\')"' + (state.p1.hp === 0 ? ' disabled' : '') + '>' + state.p1Name + ' Equip</button>' +
-      //'<button type="button" onclick="equipWeapon(\'p2\')"' + (state.p2.hp === 0 ? ' disabled' : '') + '>' + state.p2Name + ' Equip</button>' +
-      //'<button type="button" onclick="discardDungeonWeapon()" style="grid-column:1/-1">Discard Weapon</button>';
-  
-    //fightGrid.innerHTML = 
-    //  '<button type="button" onclick="fight(\'p1\',\'weapon\')" id="p1WeaponFight" style="grid-column:1">' + state.p1Name + ' Weapon</button>' +
-    //  '<button type="button" onclick="fight(\'p2\',\'weapon\')" id="p2WeaponFight" style="grid-column:2">' + state.p2Name + ' Weapon</button>' +
-    //  '<button type="button" onclick="fight(\'p1\',\'bare\')" id="p1BareFight" style="grid-column:1">' + state.p1Name + ' Fist Fight</button>' +
-    //  '<button type="button" onclick="fight(\'p2\',\'bare\')" id="p2BareFight" style="grid-column:2">' + state.p2Name + ' Fist Fight</button>' +
-    //  '<button type="button" onclick="fight(\'both\',\'combined\')" id="combinedFight" style="grid-column:1/-1">⚔️ Both Combine Weapons</button>' +
-    //  '<button type="button" onclick="fight(\'both\',\'combined_bare\')" id="combinedBareFight" style="grid-column:1/-1">👊 Both 2v1 Fist Fight</button>';
-    //document.getElementById('p1WeaponFight').disabled = !validWeapon(state.p1, c) || state.p1.hp === 0;
-    //document.getElementById('p2WeaponFight').disabled = !validWeapon(state.p2, c) || state.p2.hp === 0;
-    //document.getElementById('p1BareFight').disabled = state.p1.hp === 0;
-    //document.getElementById('p2BareFight').disabled = state.p2.hp === 0;
-    
-    //var okCombinedWeapon = state.p1.weapon && state.p2.weapon && state.p1.ceiling !== null && state.p2.ceiling !== null && state.p1.hp > 0 && state.p2.hp > 0 && (c.value) <= (state.p1.ceiling + state.p2.ceiling) && !state.combinedUsedThisRoom;
-    //document.getElementById('combinedFight').disabled = !okCombinedWeapon;
-
-    //var okCombinedBare = state.p1.hp > 0 && state.p2.hp > 0 && !state.combinedUsedThisRoom;
-    //document.getElementById('combinedBareFight').disabled = !okCombinedBare;
-
-
 function log(text, recordEvent, eventType, weaponStrengths) {
     // Keep the complete plain-text log independently of the DOM. The visible
     // log is only a display of this history and may be hidden by the game-over
@@ -2569,13 +2523,10 @@ function renderRunChart() {
     var parts = [];
     parts.push('<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Run log">');
     parts.push('<line class="grid-line" x1="' + left + '" y1="' + hpY(maxHP) + '" x2="' + (W-right) + '" y2="' + hpY(maxHP) + '"/>');
-    //parts.push('<line class="grid-line" x1="' + left + '" y1="' + hpY(maxHP/2) + '" x2="' + (W-right) + '" y2="' + hpY(maxHP/2) + '"/>');
     parts.push('<line class="grid-line" x1="' + left + '" y1="' + hpY(0) + '" x2="' + (W-right) + '" y2="' + hpY(0) + '"/>');
     parts.push('<line class="axis-line" x1="' + left + '" y1="' + top + '" x2="' + left + '" y2="' + bottom + '"/>');
     parts.push('<line class="axis-line" x1="' + left + '" y1="' + bottom + '" x2="' + (W-right) + '" y2="' + bottom + '"/>');
-    //parts.push('<text class="panel-label" x="' + left + '" y="13">Health</text>');
     parts.push('<text class="axis-label" text-anchor="end" x="' + (left-7) + '" y="' + (hpY(maxHP)+4) + '">' + maxHP + '</text>');
-    //parts.push('<text class="axis-label" text-anchor="end" x="' + (left-7) + '" y="' + (hpY(maxHP/2)+4) + '">' + Math.round(maxHP/2) + '</text>');
     parts.push('<text class="axis-label" text-anchor="end" x="' + (left-7) + '" y="' + (hpY(0)+4) + '">0</text>');
     
     var p1HpPoints = events.map(function(e,i){ return x(i)+','+hpY(e.p1hp); }).join(' ');
