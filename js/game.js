@@ -1399,6 +1399,8 @@ function fight(player, mode) {
         previousMonster.stackX = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
         previousMonster.stackY = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
 
+        previousMonster._fadeIn = true;
+
         if (pileIndex === 0) {
           previousMonster.stackRotation = 0;
         } else {
@@ -1901,7 +1903,7 @@ playerIds.forEach(function(id) {
         for (var m = 0; m < p.previousMonsters.length; m++) {
           var monsterCard = p.previousMonsters[m];
           var ghostClass = (activeGhostMemoryId && monsterCard._ghostId === activeGhostMemoryId) ? ' ghost-memory-hidden' : '';
-          previousMonsterHtml += '<div class="previous-monster-card' + ghostClass + '" style="--stack-x:' + monsterCard.stackX + 'px; --stack-y:' + monsterCard.stackY + 'px; --stack-rotation:' + monsterCard.stackRotation + 'deg; z-index:' + (m + 1) + ';">' + cardHTML(monsterCard) + '</div>';
+          previousMonsterHtml += '<div class="previous-monster-card' + ghostClass + (monsterCard._fadeIn ? ' previous-monster-fade-in' : '') + '" style="--stack-x:' + monsterCard.stackX + 'px; --stack-y:' + monsterCard.stackY + 'px; --stack-rotation:' + monsterCard.stackRotation + 'deg; z-index:' + (m + 1) + ';">' + cardHTML(monsterCard) + '</div>';
         }
         previousMonsterHtml += '</div>';
         previousMonsterEl.innerHTML = previousMonsterHtml;
