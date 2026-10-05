@@ -11,7 +11,7 @@ const THEMES = {
             back: 'assets/dungeon/back.png',
             background: 'assets/dungeon/background.png',
             portraits: 'assets/dungeon/portraits/',
-            portraitCount: 15,
+            portraitCount: 16,
         
             monsters: {
                 'clubs_2': 'assets/dungeon/monsters/rat.png',
@@ -98,31 +98,18 @@ const THEMES = {
 
 
         endGame: {
-
                 win: {
-
                     title: 'Dungeon Complete!',
-
                     body: 'You have defeated the dungeon!'
-
                 },
-
                 lose: {
-
                     title: 'You Have Fallen',
-
                     body: 'The dungeon has beaten you this time, Adventurer.'
-
                 },
-
                 draw: {
-
                     title: 'A Pyrrhic Victory!',
-
                     body: 'You struck down the final beast of the dungeon, but took a mortal blow in the process. The dungeon is cleared, though none survived to tell the tale!'
-
                 }
-
             },
 
         text: {
@@ -276,31 +263,18 @@ const THEMES = {
 
 
         endGame: {
-
                 win: {
-
                     title: 'You survived!',
-
                     body: 'The army arrived and averted the apocolypse!'
-
                 },
-
                 lose: {
-
                     title: 'You got bitten!',
-
                     body: 'You\'ve been turned into a zombie. Hope you get a nice job somewhere.'
-
                 },
-
                 draw: {
-
                     title: 'You\'ve got red on you!',
-
                     body: 'You killed all the zombies, but became one yourself. Hope it was all worth it!'
-
                 }
-
             },
 
         text: {
@@ -448,39 +422,26 @@ const THEMES = {
                 logText: "#52d65b",
                 red: "#fd2f20",
                 black: "#000000",
-                redKeyline: "#c7bdb1",
-                blackKeyline: "#c7bdb1",
+                redKeyline: "#e7bdb1",
+                blackKeyline: "#A89F95",
                 highlight: "#52d65b",
             },
         },
 
 
         endGame: {
-
                 win: {
-
                     title: 'You have survived!',
-
                     body: 'Time to loot the ship of any worthy cargo, and get the hell out of here!'
-
                 },
-
                 lose: {
-
                     title: 'You have been enslaved by the hive.',
-
                     body: 'At least you can rest assured your body will live on to feed hundreds more hideous aliens.'
-
                 },
-
                 draw: {
-
                     title: 'You put up a good fight!',
-
                     body: 'The threats are subdued. Too bad you couldn\'t send out that HAZARDOUS SHIP alert to warn the others...!'
-
                 }
-
             },
 
         text: {
