@@ -1243,287 +1243,54 @@ function trackWeaponKill(weaponName, monsterValue) {
     state.weaponUsage[weaponName].ptsSlain += monsterValue;
 }
 
-function animateAttack(player, targetEl, done, isFistFight, ghostInfo, slotIndex) {
-if (!targetEl) { done(); return; }
-
-// Bare-handed fights use the parallel fist-fight choreography.
-// Weapon combat is being migrated one physical beat at a time. For this
-// first live test, only the weapon → player hand-off is active.
-if (isFistFight) {
-  var fistPlayerId = player === 'both' ? 'p1' : player;
-  var fistPlayerEl = document.getElementById(fistPlayerId + 'Panel');
-  if (!fistPlayerEl || !window.DeckDungeonAnimations || !DeckDungeonAnimations.fistFight) {
+function runAttackAnimation(player, mode, targetEl, slotIndex, done, previousMonster) {
+  if (!targetEl || !window.DeckDungeonAnimations) {
     done();
     return;
   }
 
-  targetEl.classList.add('selection-hidden');
+  if (mode !== 'weapon') {
+    var fistPlayerId = player === 'both' ? 'p1' : player;
+    var fistPlayerEl = document.getElementById(fistPlayerId + 'Panel');
 
-  DeckDungeonAnimations.fistFight(targetEl, fistPlayerEl, {
-    sound: typeof ughSound === 'function' ? ughSound : null,
-    done: function() {
-      targetEl.classList.remove('selection-hidden');
+    if (!fistPlayerEl || !DeckDungeonAnimations.fistFight) {
       done();
+      return;
     }
-  });
-  return;
-}
 
-if (
-  (player === 'p1' || player === 'p2') &&
-  window.DeckDungeonAnimations
-) {
+    DeckDungeonAnimations.fistFight(targetEl, fistPlayerEl, {
+      sound: typeof ughSound === 'function' ? ughSound : null,
+      done: done
+    });
+    return;
+  }
+
+  var weaponEl = document.querySelector('#' + player + 'Weapon .card');
+  var playerEl = document.getElementById(player + 'Panel');
+  var previousStack = document.getElementById(player + 'PreviousMonster');
   var weaponAnimation =
     state[player] &&
     state[player].weapon &&
     state[player].weapon.animation;
 
-  var weaponEl = document.querySelector('#' + player + 'Weapon .card');
-  var playerEl = document.getElementById(player + 'Panel');
-
-  if (!weaponEl || !playerEl) {
+  if (!weaponEl || !playerEl || !DeckDungeonAnimations.weaponFight) {
     done();
     return;
   }
 
-  // A kill gets its own final visual hand-off. The weapon animation finishes
-  // first; then the live monster disappears and a grayscale copy fades into
-  // the previous-monster stack. Only after that fade do we let the game state
-  // render, so the real stack card is never visible popping in over the clone.
-  function finishWeaponCombat() {
-    if (
-      ghostInfo &&
-      ghostInfo.targetEl &&
-      ghostInfo.monster &&
-      DeckDungeonAnimations &&
-      DeckDungeonAnimations.monsterToPrevious
-    ) {
-      DeckDungeonAnimations.monsterToPrevious(
-        targetEl,
-        ghostInfo.targetEl,
-        {
-          x: ghostInfo.monster.stackX || 0,
-          y: ghostInfo.monster.stackY || 0,
-          rotation: ghostInfo.monster.stackRotation || 0
-        },
-        {
-          duration: 850,
-          doneOnStart: true,
-          done: function() {
-            done();
-          }
-        }
-      );
-      return;
+  DeckDungeonAnimations.weaponFight(
+    weaponEl,
+    playerEl,
+    targetEl,
+    previousStack,
+    previousMonster,
+    {
+      animation: weaponAnimation,
+      slotIndex: slotIndex,
+      sound: typeof punchSound === 'function' ? punchSound : null,
+      done: done
     }
-
-    done();
-  }
-
-  // Discovery equipment does not attack the creature. Instead the
-  // creature/discovery card itself becomes the focus of the animation:
-  // grow to the centre of the board, hold, then fade away. The normal
-  // action callback then updates the previous-monster stack.
-  if (
-    weaponAnimation === 'discover' &&
-    DeckDungeonAnimations.discover
-  ) {
-    DeckDungeonAnimations.discover(
-      targetEl,
-      {
-        done: finishWeaponCombat
-      }
-    );
-    return;
-  }
-
-  if (
-    weaponAnimation === 'thrown' &&
-    DeckDungeonAnimations.weaponFightThrown
-  ) {
-    DeckDungeonAnimations.weaponFightThrown(
-      weaponEl,
-      playerEl,
-      targetEl,
-      { done: finishWeaponCombat }
-    );
-    return;
-  }
-
-  if (
-    weaponAnimation === 'ranged' &&
-    DeckDungeonAnimations.weaponFightRanged
-  ) {
-    DeckDungeonAnimations.weaponFightRanged(
-      weaponEl,
-      playerEl,
-      targetEl,
-      { done: finishWeaponCombat }
-    );
-    return;
-  }
-
-  if (DeckDungeonAnimations.weaponFightMelee) {
-    DeckDungeonAnimations.weaponFightMelee(
-      weaponEl,
-      playerEl,
-      targetEl,
-      {
-        done: finishWeaponCombat,
-        slotIndex: slotIndex,
-        sound: typeof punchSound === 'function' ? punchSound : null
-      }
-    );
-    return;
-  }
-}
-
-
-var sourceEl = null;
-var sourceRect;
-var targetRect;
-var clone;
-var ghost = null;
-var monsterStackClone = null;
-
-if (isFistFight) {
-  // Bare-handed combat: the monster itself lunges up at the player.
-  sourceEl = targetEl;
-  var sourcePosition = getCanvasAnimationRect(sourceEl);
-  var targetPosition = getCanvasAnimationRect(
-    document.getElementById((player === 'both' ? 'p1' : player) + 'Panel')
   );
-  if (!sourcePosition || !targetPosition) { done(); return; }
-  sourceRect = sourcePosition;
-  targetRect = targetPosition;
-  sourceEl.classList.add('selection-hidden');
-} else if (player === 'p1' || player === 'p2') {
-  // Weapon combat: the weapon travels to the monster while rising,
-  // slams down, then returns to its starting position.
-  sourceEl = document.querySelector('#' + player + 'Weapon .card');
-  targetRect = getCanvasAnimationRect(targetEl);
-}
-
-if (!sourceEl) { done(); return; }
-
-sourceRect = getCanvasAnimationRect(sourceEl);
-var sourceX = sourceRect.left + sourceRect.width / 2;
-var sourceY = sourceRect.top + sourceRect.height / 2;
-var targetX = targetRect.left + targetRect.width / 2;
-var targetY = targetRect.top + targetRect.height / 2;
-
-clone = sourceEl.cloneNode(true);
-clone.classList.add('combat-clone');
-if (isFistFight) clone.classList.add('combat-monster');
-else clone.classList.add('combat-weapon');
-
-clone.style.left = sourceRect.left + 'px';
-clone.style.top = sourceRect.top + 'px';
-clone.style.width = sourceRect.width + 'px';
-clone.style.height = sourceRect.height + 'px';
-clone.style.setProperty('--dx', (targetX - sourceX) + 'px');
-clone.style.setProperty('--dy', (targetY - sourceY) + 'px');
-clone.style.setProperty('--hit-x', isFistFight ? '-5px' : '5px');
-
-if (!isFistFight) {
-  clone.style.setProperty('--strike-dx', (targetX - sourceX) + 'px');
-  clone.style.setProperty('--strike-dy', (targetY - sourceY) + 'px');
-}
-clone.style.setProperty('--hit-y', isFistFight ? '3px' : '-3px');
-
-sourceEl.classList.add('combat-hidden');
-document.querySelector('.game-canvas').appendChild(clone);
-
-if (isFistFight) ughSound(); else punchSound();
-
-setTimeout(function() {
-  document.getElementById('game').classList.add('combat-shake');
-
-  var impact = document.createElement('div');
-  impact.className = 'combat-impact';
-  impact.textContent = isFistFight ? '💥' : '⚔';
-  impact.style.left = targetX + 'px';
-  impact.style.top = targetY + 'px';
-  document.querySelector('.game-canvas').appendChild(impact);
-
-  if (!isFistFight) {
-    // The monster disappears exactly when the weapon lands on it.
-    targetEl.classList.add('combat-hidden');
-
-    if (ghostInfo && ghostInfo.targetEl && ghostInfo.monster &&
-        window.DeckDungeonAnimations &&
-        typeof DeckDungeonAnimations.monsterToPrevious === 'function') {
-      // The defeated monster is now handed directly to the new animation
-      // system: disappear from the dungeon, then fade into the previous
-      // monster stack at its final position. The completion callback is
-      // deliberately held until the fade is complete so render() cannot
-      // make the real stack card "ping" in over the animation.
-      DeckDungeonAnimations.monsterToPrevious(
-        targetEl,
-        ghostInfo.targetEl,
-        {
-          x: ghostInfo.monster.stackX || 0,
-          y: ghostInfo.monster.stackY || 0,
-          rotation: ghostInfo.monster.stackRotation || 0
-        },
-        {
-          duration: 320,
-          done: function(cloneEl) {
-            monsterStackClone = cloneEl;
-          }
-        }
-      );
-    }
-  }
-
-  setTimeout(function() { impact.remove(); }, 280);
-
-  if (isFistFight) {
-    // A fist fight is a two-way exchange: give the monster a second quick
-    // strike after the first hit, rather than making it look like a single hit.
-    setTimeout(function() {
-      document.getElementById('game').classList.remove('combat-shake');
-      document.getElementById('game').classList.add('combat-shake');
-
-      var secondImpact = document.createElement('div');
-      secondImpact.className = 'combat-impact';
-      secondImpact.textContent = '💥';
-      secondImpact.style.left = targetX + 'px';
-      secondImpact.style.top = targetY + 'px';
-      document.querySelector('.game-canvas').appendChild(secondImpact);
-      setTimeout(function() { secondImpact.remove(); }, 280);
-      setTimeout(function() { document.getElementById('game').classList.remove('combat-shake'); }, 160);
-    }, 220);
-  } else {
-    setTimeout(function() { document.getElementById('game').classList.remove('combat-shake'); }, 160);
-  }
-}, isFistFight ? 320 : 476);
-
-setTimeout(function() {
-  clone.remove();
-  sourceEl.classList.remove('combat-hidden');
-
-  if (!isFistFight && ghostInfo && monsterStackClone) {
-    // Keep the rendered previous-monster slot hidden while render() builds
-    // its real card underneath the already-faded animation clone.
-    ghostInfo.targetEl.style.visibility = 'hidden';
-    done();
-
-    // renderAfterAction() is synchronous. Swap the visual elements on the
-    // next frame so the player never sees the real card being created.
-    requestAnimationFrame(function() {
-      if (monsterStackClone && monsterStackClone.parentNode) {
-        monsterStackClone.remove();
-      }
-      ghostInfo.targetEl.style.visibility = '';
-      monsterStackClone = null;
-    });
-    return;
-  }
-
-  if (!isFistFight) targetEl.classList.remove('combat-hidden');
-  done();
-}, isFistFight ? 1000 : (ghostInfo ? 820 : 700));
 }
 
 function getDungeonCardElement(slotIndex) {
@@ -1541,18 +1308,19 @@ function fight(player, mode) {
     var selectedIndex = state.selected;
     var c = state.dungeon[selectedIndex];
     if (['spades','clubs'].indexOf(c.suit) === -1) return;
-    
+
     var targetEl = getDungeonCardElement(selectedIndex);
-    
+
     if (player === 'both') {
       var a = state.p1, b = state.p2;
       if (state.combinedUsedThisRoom) { log('Combined action already used this room.'); return; }
       if (a.hp <= 0 || b.hp <= 0) { log('Both players must be standing.'); return; }
-    
+
       if (mode === 'combined_bare') {
         saveState();
         state.actionInProgress = true;
-        animateAttack('both', targetEl, function() {
+
+        runAttackAnimation('both', 'fist', targetEl, selectedIndex, function() {
           var totalDamage = c.value;
           applySharedDamage(totalDamage, 'p1');
           state.combinedUsedThisRoom = true;
@@ -1563,20 +1331,18 @@ function fight(player, mode) {
           log('Both heroes team up vs ' + c.name + '. Took ' + totalDamage + ' damage split between them.', true, 'fist');
           checkGame();
           renderAfterAction();
-        }, true, null, selectedIndex);
+        }, null);
       } else {
         if (!a.weapon || !b.weapon || a.ceiling === null || b.ceiling === null || c.value > (a.ceiling + b.ceiling)) { log('Cannot combine weapons.'); return; }
         saveState();
         state.actionInProgress = true;
-        animateAttack('p1', targetEl, function() {
+
+        runAttackAnimation('p1', 'weapon', targetEl, selectedIndex, function() {
           var power = a.weapon.value + b.weapon.value;
           var damage = Math.max(0, c.value - power);
           applySharedDamage(damage, 'p1');
           var targetCeiling = Math.floor(c.value / 2);
 
-          // A combined weapon fight gives each player a memory of the same
-          // monster, but only half of the monster's value counts for each
-          // player's future weapon ceiling.
           var previousP1 = JSON.parse(JSON.stringify(c));
           var previousP2 = JSON.parse(JSON.stringify(c));
           previousP1.value = targetCeiling;
@@ -1601,27 +1367,27 @@ function fight(player, mode) {
           log('Combined weapons (' + power + ' pwr) vs ' + c.name + '. Taken ' + damage + ' damage.', true, 'monster');
           checkGame();
           renderAfterAction();
-        }, false, null, selectedIndex);
+        }, null);
       }
     } else {
       var p = state[player];
       if (p.hp <= 0) { log(name(player) + ' is Downed.'); return; }
       var damage = c.value;
-    
+
       if (mode === 'weapon') {
         if (!validWeapon(p, c)) { log('Monster value exceeds weapon ceiling.'); return; }
       }
-    
+
       saveState();
       state.actionInProgress = true;
-    
-      // Weapon kills create the monster's "memory" before the animation starts.
-      // Co-op keeps a previous-monster memory for whichever player used the weapon.
-      // Solo/P1 retains the existing ghost animation.
-      var ghostInfo = null;
+
+      // Prepare the stack position before the animation, but do not commit the
+      // defeated monster to game state until the visual hand-off is complete.
+      var previousMonster = null;
       if (mode === 'weapon') {
-        var previousMonster = JSON.parse(JSON.stringify(c));
+        previousMonster = JSON.parse(JSON.stringify(c));
         previousMonster._ghostId = 'ghost_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+
         var pileIndex = p.previousMonsters.length;
         previousMonster.stackX = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
         previousMonster.stackY = pileIndex === 0 ? 0 : (-0.5 * pileIndex) + (Math.random() * 3 - 1.5);
@@ -1629,49 +1395,36 @@ function fight(player, mode) {
         if (pileIndex === 0) {
           previousMonster.stackRotation = 0;
         } else {
-          // Pick the side once for this stack, then alternate it for every
-          // subsequent monster. The degree amount is independently random.
           var rotationDirection = p.previousMonsterRotationDirection || 1;
           previousMonster.stackRotation = rotationDirection * (2 + Math.random() * 3);
           p.previousMonsterRotationDirection = -rotationDirection;
         }
-
-        p.previousMonsters.push(previousMonster);
-    
-        if (player === 'p1') {
-          ghostInfo = {
-            targetEl: document.getElementById('p1PreviousMonster'),
-            monster: previousMonster
-          };
-        }
       }
-    
-      animateAttack(player, targetEl, function() {
+
+      runAttackAnimation(player, mode, targetEl, selectedIndex, function() {
         if (mode === 'weapon') {
           damage = Math.max(0, c.value - p.weapon.value);
           p.ceiling = Math.min(p.ceiling, c.value);
           trackWeaponKill(p.weapon.name, c.value);
+          p.previousMonsters.push(previousMonster);
         } else {
           trackWeaponKill('Bare Fists', c.value);
         }
-    
+
         p.hp = Math.max(0, p.hp - damage);
         state.monstersSlain++;
-    
+
         if (mode === 'weapon') {
           log(name(player) + ' ' + ((THEMES[state.theme] && THEMES[state.theme].text && THEMES[state.theme].text.fight) || 'uses') + ' ' + c.name + ' (' + c.value + SUITS[c.suit] + '). Damage taken ' + damage + ' HP.', true, 'monster');
         } else {
           log(name(player) + ' ' + ((THEMES[state.theme] && THEMES[state.theme].text && THEMES[state.theme].text.fist) || 'fights') + ' ' + c.name + ' (' + c.value + SUITS[c.suit] + '). Damage taken ' + damage + ' HP.', true, 'fist');
         }
-    
-        // Fist fights clear the monster normally. Weapon kills have already
-        // prepared the previous-monster memory and now just reveal it through
-        // the ghost materialisation inside animateAttack().
+
         removeSelected(selectedIndex);
         state.actionInProgress = false;
         checkGame();
         renderAfterAction();
-      }, mode !== 'weapon', ghostInfo, selectedIndex);
+      }, previousMonster);
     }
 }
 
