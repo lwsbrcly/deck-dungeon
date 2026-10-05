@@ -1529,7 +1529,7 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .mode-badge-wrap {
   display: flex;
   justify-content: center;
-  margin: 8px 0 12px;
+  margin: 0 0 12px;
 }
 
 .mode-badge {
