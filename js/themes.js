@@ -99,12 +99,12 @@ const THEMES = {
 
         endGame: {
                 win: {
-                    title: 'Dungeon Complete!',
-                    body: 'You have defeated the dungeon!'
+                    title: 'A Heroic Victory!',
+                    body: 'You have defeated the monster of the dungeon!'
                 },
                 lose: {
                     title: 'You Have Fallen',
-                    body: 'The dungeon has beaten you this time, Adventurer.'
+                    body: 'The dungeon has beaten you, Adventurer. Your quest, and your life, are over.'
                 },
                 draw: {
                     title: 'A Pyrrhic Victory!',
@@ -269,7 +269,7 @@ const THEMES = {
                 },
                 lose: {
                     title: 'You got bitten!',
-                    body: 'You\'ve been turned into a zombie. Hope you get a nice job somewhere.'
+                    body: 'You\'ve been turned into a zombie. Hope you get a nice job somewhere, at least.'
                 },
                 draw: {
                     title: 'You\'ve got red on you!',
@@ -571,8 +571,8 @@ const THEMES = {
             },
 
         text: {
-            gameTitle: 'Shaun of the Deck',
-            location: 'The Pub',
+            gameTitle: 'All Hands On Deck',
+            location: 'Your Ship',
             monster: 'Zombie',
             weapon: 'Weapon',
             potion: 'Food',
@@ -698,15 +698,15 @@ const THEMES = {
 
         text: {
             gameTitle: 'Deck of Shadows',
-            location: 'The Pub',
-            monster: 'Zombie',
-            weapon: 'Weapon',
-            potion: 'Food',
-            hpLabel: 'HP',
-            equip: 'grabs',
-            discard: 'chucks',
-            fight: 'whacks',
-            fist: 'tussles with',
+            location: 'The Shogun\'s Palace',
+            monster: 'Guards',
+            weapon: 'Skills',
+            potion: 'Equipment',
+            hpLabel: 'Stealth',
+            equip: 'learns',
+            discard: 'ignores',
+            fight: 'sneaks',
+            fist: 'subdues',
             heal: 'consumes',
             flee: 'Ran for it',
             enter: 'Heads out armed with',
@@ -755,7 +755,7 @@ const THEMES = {
     ocean: {
         
         name: 'Ocean Deck',
-        description: 'Dive deep. Discover what lies beneath.',
+        description: 'A lovely day for some deep sea exploration!',
 
         artwork: {
             logo: 'assets/ocean/logo.png',
@@ -869,10 +869,10 @@ const THEMES = {
 
         text: {
             gameTitle: 'Ocean Deck',
-            location: 'The Deep',
+            location: 'The Ocean',
             monster: 'Sea Creature',
-            weapon: 'Equipment',
-            potion: 'Supplies',
+            weapon: 'Gadgets',
+            potion: 'Parts',
             hpLabel: 'O²',
             equip: 'deploys',
             discard: 'stows',
