@@ -279,6 +279,10 @@ function resetDungeonDom() {
 }
 
 function undoLastAction() {
+    // Undo is unavailable while any gameplay animation is running. This is
+    // a gameplay lock, not just a button-state/UI lock, so rapid taps cannot
+    // exploit the animation window.
+    if (state && state.actionInProgress) return;
     if (historyStack.length === 0) return;
     resetDungeonDom();
     state = historyStack.pop();
@@ -286,6 +290,19 @@ function undoLastAction() {
     log('Undid last action.', false);
     render();
 }
+
+// Block the physical Undo control during animations as well as guarding
+// the action itself. This catches touch/click events even before the next
+// render has had a chance to update the button's disabled state.
+document.addEventListener('click', function(event) {
+  var undoTarget = event.target && event.target.closest
+    ? event.target.closest('#undoBtn')
+    : null;
+  if (undoTarget && state && state.actionInProgress) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+}, true);
 
 function undoFromGameOver() {
     if (historyStack.length === 0) return;
