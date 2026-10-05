@@ -369,7 +369,7 @@
   pointer-events: none !important;
   margin: 0 !important;
   transform-origin: center center;
-  filter: grayscale(1);
+  filter: grayscale(1) brightness(0.85) contrast(0.55);
   will-change: transform, opacity;
 }
 
