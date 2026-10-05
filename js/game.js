@@ -1040,18 +1040,17 @@ function animateMonsterToPrevious(cardEl, targetEl, monster, done) {
   if (done) done();
 }
 
-function equipWeapon(player) {
-    if (state.over || state.selected === null || state.actionInProgress) return;
-    var selectedIndex = state.selected;
-    var c = state.dungeon[selectedIndex], p = state[player];
-    if (p.hp <= 0) { log(name(player) + ' is Downed and cannot take weapons.'); return; }
-    var cardEl = getDungeonCardElement(selectedIndex);
-    var targetEl = document.getElementById(player + 'Weapon');
-    saveState();
-    state.actionInProgress = true;
-    var old = p.weapon;
+function clearPreviousMonsterElement(el, seen) {
+  if (!el || seen.indexOf(el) !== -1) return;
+  seen.push(el);
+  el.classList.remove('dd-monster-stack-active');
+  el.classList.add('previous-monster-fade');
+  setTimeout(function() {
+    if (el && el.parentNode) el.parentNode.removeChild(el);
+  }, 700);
+}
 
-function clearPreviousMonsters() {
+function clearPreviousMonsters(player) {
   var layout = getBoardLayout();
   var playerLayout = layout.players[player];
   var previousId = playerLayout && playerLayout.previous;
@@ -1059,24 +1058,11 @@ function clearPreviousMonsters() {
   // The live monster-to-stack animation uses a clone which sits directly
   // on the game canvas rather than inside the rendered previous-monster
   // wrapper. Clear that visual clone as well as the rendered stack.
-  var stackClones = previousId
-    ? document.querySelectorAll('#' + previousId + ' .dd-monster-stack-clone')
-    : [];
   var canvasClones = document.querySelectorAll('.dd-monster-stack-clone');
-
   var seen = [];
-  function fadeAndRemove(el) {
-    if (!el || seen.indexOf(el) !== -1) return;
-    seen.push(el);
-    el.classList.remove('dd-monster-stack-active');
-    el.classList.add('previous-monster-fade');
-    setTimeout(function() {
-      if (el && el.parentNode) el.parentNode.removeChild(el);
-    }, 700);
-  }
 
   for (var c = 0; c < canvasClones.length; c++) {
-    fadeAndRemove(canvasClones[c]);
+    clearPreviousMonsterElement(canvasClones[c], seen);
   }
 
   if (!previousId) return;
@@ -1089,36 +1075,73 @@ function clearPreviousMonsters() {
     var monsterCardEl = stackCards[i];
     monsterCardEl.classList.add('previous-monster-fade');
 
-    (function(original) {
-      setTimeout(function() {
-        var wrapper = original.closest('.previous-monster-card');
-        if (wrapper) wrapper.remove();
-      }, 700);
-    })(monsterCardEl);
+    setTimeout(function(original) {
+      var wrapper = original.closest('.previous-monster-card');
+      if (wrapper) wrapper.remove();
+    }.bind(null, monsterCardEl), 700);
   }
 }
 
-var finishEquip = function() {
-  p.weapon = c;
+function completeWeaponEquip(player, selectedIndex, card, oldWeapon) {
+  var p = state[player];
+
+  p.weapon = card;
   p.ceiling = 99;
+
   if (player === 'p1' || player === 'p2') {
     p.previousMonsters = [];
     // A newly cleared stack gets a fresh random starting side. The first
     // monster in the new stack is still 0°, then subsequent cards alternate.
     p.previousMonsterRotationDirection = Math.random() < 0.5 ? -1 : 1;
   }
+
   removeSelected(selectedIndex);
   state.actionInProgress = false;
-  log(name(player) + ' equips ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').' + (old ? ' (' + old.name + ' discarded)' : ''), true, 'weapon', player === 'p1' ? {p1:c.value,p2:null} : {p1:null,p2:c.value});
-  checkGame(); renderAfterAction();
-};
 
-// Start the previous-monster fade at the same time as the weapon equip.
-// It is purely visual and never holds up the board/state update.
-clearPreviousMonsters();
-DeckDungeonAnimations.equip(cardEl, targetEl, {
-  done: finishEquip
-});
+  log(
+    name(player) + ' equips ' +
+    card.name + ' (' + card.rank + SUITS[card.suit] + ').' +
+    (oldWeapon ? ' (' + oldWeapon.name + ' discarded)' : ''),
+    true,
+    'weapon',
+    player === 'p1'
+      ? {p1:card.value,p2:null}
+      : {p1:null,p2:card.value}
+  );
+
+  checkGame();
+  renderAfterAction();
+}
+
+function equipWeapon(player) {
+  if (state.over || state.selected === null || state.actionInProgress) return;
+
+  var selectedIndex = state.selected;
+  var c = state.dungeon[selectedIndex];
+  var p = state[player];
+
+  if (p.hp <= 0) {
+    log(name(player) + ' is Downed and cannot take weapons.');
+    return;
+  }
+
+  var cardEl = getDungeonCardElement(selectedIndex);
+  var targetEl = document.getElementById(player + 'Weapon');
+
+  saveState();
+  state.actionInProgress = true;
+
+  var old = p.weapon;
+
+  // Start the previous-monster fade at the same time as the weapon equip.
+  // It is purely visual and never holds up the board/state update.
+  clearPreviousMonsters(player);
+
+  DeckDungeonAnimations.equip(cardEl, targetEl, {
+    done: function() {
+      completeWeaponEquip(player, selectedIndex, c, old);
+    }
+  });
 }
 
 function discardDungeonWeapon() {
