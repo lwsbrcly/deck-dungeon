@@ -1,36 +1,29 @@
 /*
- * Deck Dungeon — Animation System (parallel rewrite)
+ * Deck Dungeon — Animation System
  *
- * This file is intentionally NOT loaded by index.html yet.
- * It is a clean-room replacement for the animation code currently living
- * in game.js. Existing gameplay is therefore completely unaffected.
+ * Centralised visual animation layer for gameplay.
  *
- * Design principles:
- *   1. Every animation has its own focused function.
- *   2. No isFistFight / isWeaponFight branching inside choreography.
- *   3. All geometry is converted into the 667 × 1000 game-canvas coordinate
- *      system in exactly one place.
- *   4. Animation functions know about DOM elements, not game rules/state.
- *   5. Shared helpers provide mechanics only; they do not decide choreography.
- *   6. Callbacks fire once, after the visual animation has completed.
+ * Architecture:
+ *   - game.js owns game rules, state changes and gameplay sequencing.
+ *   - animations.js owns DOM animation choreography and visual transitions.
+ *   - animations never decide game rules or mutate gameplay state.
+ *   - game.js calls animation APIs and receives completion callbacks when
+ *     the gameplay-critical choreography has finished.
+ *   - Purely decorative transitions may run independently of gameplay flow.
+ *     For example, the defeated monster's previous-stack fade is applied
+ *     by render() to the newly-created card and never blocks the game.
+ *   - Rendering remains the source of truth for persistent board state;
+ *     animation clones are used only where a transition genuinely requires
+ *     movement between rendered positions.
+ *   - Shared geometry is converted through the 667 × 1000 game-canvas
+ *     coordinate system in one place.
  *
- * Planned public API:
- *   DeckDungeonAnimations.equip(...)
- *   DeckDungeonAnimations.eat(...)
- *   DeckDungeonAnimations.discard(...)
- *   DeckDungeonAnimations.flee(...)
- *   DeckDungeonAnimations.monsterToPrevious(...)
- *   DeckDungeonAnimations.fistFight(...)
- *   DeckDungeonAnimations.use(...)
- *   DeckDungeonAnimations.discover(...)
- *   DeckDungeonAnimations.deal(...)
- *   DeckDungeonAnimations.slideDungeonCards(...)
- *   DeckDungeonAnimations.weaponFightMelee(...)
- *   DeckDungeonAnimations.weaponFightThrown(...)
- *   DeckDungeonAnimations.weaponFightRanged(...)
+ * Public API includes focused animations for:
+ *   equip, eat, discard, flee, fist fights, weapon fights, discovery,
+ *   dealing, card sliding and other gameplay transitions.
  *
- * The implementation below is deliberately self-contained so each animation
- * can be migrated and tested independently.
+ * The animation refactor is complete: this file is the single home for
+ * animation choreography, while game.js remains responsible for orchestration.
  */
 
 (function (global) {
