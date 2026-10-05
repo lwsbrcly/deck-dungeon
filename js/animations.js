@@ -479,18 +479,38 @@
     function cleanupListeners() {
       document.removeEventListener('pointerdown', dismissDiscovery, true);
       document.removeEventListener('keydown', dismissDiscovery, true);
+      document.removeEventListener('click', dismissDiscovery, true);
     }
 
     function dismissDiscovery(event) {
-      if (dismissed) return;
+      if (dismissed) {
+        // On touch devices the pointerdown that dismisses the enlarged card
+        // can be followed by a synthetic click. The card may already have
+        // been removed by then, so make sure that click cannot land on the
+        // board underneath (for example, the Undo button).
+        if (event && event.type === 'click') {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }
+        return;
+      }
+
       dismissed = true;
 
       if (event) {
         event.preventDefault();
-        event.stopPropagation();
+        // stopImmediatePropagation is important here: another listener on
+        // document may otherwise still process the same pointer/click event.
+        event.stopImmediatePropagation();
       }
 
-      cleanupListeners();
+      // Keep the click listener alive until after the pointerdown has had
+      // a chance to generate its synthetic click.
+      document.removeEventListener('pointerdown', dismissDiscovery, true);
+      document.removeEventListener('keydown', dismissDiscovery, true);
+      window.setTimeout(function () {
+        document.removeEventListener('click', dismissDiscovery, true);
+      }, 0);
 
       clone.classList.remove('dd-discover-hold');
       clone.classList.add('dd-discover-fade');
@@ -511,6 +531,7 @@
 
       document.addEventListener('pointerdown', dismissDiscovery, true);
       document.addEventListener('keydown', dismissDiscovery, true);
+      document.addEventListener('click', dismissDiscovery, true);
     }, growDuration);
   }
 
