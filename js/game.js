@@ -141,11 +141,7 @@ function enterDungeonId() {
     }
 }
 
-
-
-// Custom SVG Dragon for Ace cards
 var activeGhostMemoryId = null;
-
 
 var decisionOverlayState = {
   open: false,
@@ -619,7 +615,7 @@ if (mode === 'coop') {
 render();
 
 var dealStartDelay = new Promise(function(resolve) {
-  setTimeout(resolve, 700);
+  setTimeout(resolve, 1200);
 });
 
 Promise.all([themeAssetsReady, dealStartDelay]).then(function() {
@@ -783,57 +779,57 @@ function removeSelected(selectedIndex) {
 }
 
 function renderAfterAction() {
-var animateRoom = !!state._roomWasDealt;
-var skipFirst = !!state._skipFirstRoomCard;
+    var animateRoom = !!state._roomWasDealt;
+    var skipFirst = !!state._skipFirstRoomCard;
+    
+    // Capture the visual card and its position before render() replaces the
+    // dungeon markup. The old DOM element itself will disappear during render,
+    // so retain the HTML and geometry, not the element reference.
+    var beforeCards = {};
+    var currentWraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
+    for (var i = 0; i < currentWraps.length; i++) {
+      var wrap = currentWraps[i];
+      var card = wrap.querySelector('.card:not(.empty)');
+      if (wrap._cardKey && card) {
+        beforeCards[wrap._cardKey] = {
+          html: card.outerHTML,
+          rect: card.getBoundingClientRect()
+        };
+      }
+    }
 
-// Capture the visual card and its position before render() replaces the
-// dungeon markup. The old DOM element itself will disappear during render,
-// so retain the HTML and geometry, not the element reference.
-var beforeCards = {};
-var currentWraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
-for (var i = 0; i < currentWraps.length; i++) {
-  var wrap = currentWraps[i];
-  var card = wrap.querySelector('.card:not(.empty)');
-  if (wrap._cardKey && card) {
-    beforeCards[wrap._cardKey] = {
-      html: card.outerHTML,
-      rect: card.getBoundingClientRect()
-    };
-  }
+    state._roomWasDealt = false;
+    state._skipFirstRoomCard = false;
+    render();
+    
+    var slides = [];
+    var afterWraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
+    for (var j = 0; j < afterWraps.length; j++) {
+      var afterWrap = afterWraps[j];
+      var oldCard = beforeCards[afterWrap._cardKey];
+      var newCard = afterWrap.querySelector('.card:not(.empty)');
+      if (!oldCard || !newCard) continue;
+    
+      var newRect = newCard.getBoundingClientRect();
+      if (Math.abs(oldCard.rect.left - newRect.left) > 0.5 ||
+          Math.abs(oldCard.rect.top - newRect.top) > 0.5) {
+        slides.push({
+          html: oldCard.html,
+          sourceRect: oldCard.rect,
+          target: newCard
+        });
+      }
+    }
+
+    if (slides.length && window.DeckDungeonAnimations &&
+        DeckDungeonAnimations.slideDungeonCards) {
+      DeckDungeonAnimations.slideDungeonCards(slides, { duration: 420 });
+    }
+    
+    if (animateRoom) animateRoomEntry(skipFirst);
 }
 
-state._roomWasDealt = false;
-state._skipFirstRoomCard = false;
-render();
-
-var slides = [];
-var afterWraps = document.querySelectorAll('#dungeon .dungeon-card-wrap');
-for (var j = 0; j < afterWraps.length; j++) {
-  var afterWrap = afterWraps[j];
-  var oldCard = beforeCards[afterWrap._cardKey];
-  var newCard = afterWrap.querySelector('.card:not(.empty)');
-  if (!oldCard || !newCard) continue;
-
-  var newRect = newCard.getBoundingClientRect();
-  if (Math.abs(oldCard.rect.left - newRect.left) > 0.5 ||
-      Math.abs(oldCard.rect.top - newRect.top) > 0.5) {
-    slides.push({
-      html: oldCard.html,
-      sourceRect: oldCard.rect,
-      target: newCard
-    });
-  }
-}
-
-if (slides.length && window.DeckDungeonAnimations &&
-    DeckDungeonAnimations.slideDungeonCards) {
-  DeckDungeonAnimations.slideDungeonCards(slides, { duration: 420 });
-}
-
-if (animateRoom) animateRoomEntry(skipFirst);
-}
-
-function getCanvasAnimationRect(el) {
+/*function getCanvasAnimationRect(el) {
   var canvas = document.querySelector('.game-canvas');
   if (!canvas || !el) return null;
 
@@ -852,7 +848,7 @@ function getCanvasAnimationRect(el) {
     centerX: (rect.left - canvasRect.left + rect.width / 2) / scale,
     centerY: (rect.top - canvasRect.top + rect.height / 2) / scale
   };
-}
+}*/
 
 function animateCardAction(cardEl, targetEl, className, done, icon, animationType) {
 if (!cardEl) { done(); return; }
@@ -1045,15 +1041,15 @@ function animateMonsterToPrevious(cardEl, targetEl, monster, done) {
 }
 
 function equipWeapon(player) {
-if (state.over || state.selected === null || state.actionInProgress) return;
-var selectedIndex = state.selected;
-var c = state.dungeon[selectedIndex], p = state[player];
-if (p.hp <= 0) { log(name(player) + ' is Downed and cannot take weapons.'); return; }
-var cardEl = getDungeonCardElement(selectedIndex);
-var targetEl = document.getElementById(player + 'Weapon');
-saveState();
-state.actionInProgress = true;
-var old = p.weapon;
+    if (state.over || state.selected === null || state.actionInProgress) return;
+    var selectedIndex = state.selected;
+    var c = state.dungeon[selectedIndex], p = state[player];
+    if (p.hp <= 0) { log(name(player) + ' is Downed and cannot take weapons.'); return; }
+    var cardEl = getDungeonCardElement(selectedIndex);
+    var targetEl = document.getElementById(player + 'Weapon');
+    saveState();
+    state.actionInProgress = true;
+    var old = p.weapon;
 
 function clearPreviousMonsters() {
   var layout = getBoardLayout();
