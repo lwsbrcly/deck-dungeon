@@ -234,6 +234,9 @@
                             <h2 id="gameMenuTitle">Game Menu</h2>
                             <button type="button" class="game-menu-option" onclick="restartCurrentDeck()">↻ Restart This Deck</button>
                             <button type="button" class="game-menu-option" onclick="startNewRandomDeck()">⚄ New Random Deck</button>
+                            <button type="button" class="game-menu-option" id="gameMenuSoundToggle" onclick="toggleAudio()" aria-pressed="true">
+                                <span aria-hidden="true">♪</span> <span id="menuSoundToggleLabel">Sound On</span>
+                            </button>
                             <button type="button" class="game-menu-option game-menu-secondary" onclick="leaveGameToMenu()">☰ Back to Menu</button>
                             <button type="button" class="game-menu-cancel" onclick="closeGameMenu()">Cancel</button>
                         </div>
