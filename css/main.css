@@ -1367,6 +1367,25 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
   display: block;
 }
 
+/* Dungeon weapon/food PNGs are monochrome source art. Use their alpha
+   channel as a mask so the artwork inherits the live Dungeon red colour
+   from --game-red without affecting full-colour theme artwork. */
+.dungeon-red-art {
+  background-color: var(--game-red);
+  -webkit-mask-image: var(--dungeon-art-image);
+  mask-image: var(--dungeon-art-image);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.dungeon-red-art img {
+  visibility: hidden;
+}
+
 .card-art.monster-art {
   top: 48%;
   width: 70%;
