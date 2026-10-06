@@ -2458,6 +2458,59 @@ function setupPeekHandlers() {
     peekBtn.addEventListener('touchend', function(e) { e.preventDefault(); setPeek(false); });
 }
 
+function setupKeyboardHandlers() {
+    // 1-4 select the four dungeon cards.
+    // Q/W/E/R trigger the four action buttons:
+    // Q = Action 1, W = Action 2, E = Undo, R = Flee.
+    window.addEventListener('keydown', function(e) {
+        if (e.repeat) return;
+
+        // Never hijack keyboard input while the player is typing.
+        var target = e.target;
+        var tag = target && target.tagName ? target.tagName.toLowerCase() : '';
+        if (tag === 'input' || tag === 'textarea' || tag === 'select' ||
+            (target && target.isContentEditable)) {
+            return;
+        }
+
+        // Co-op decisions use their own overlay controls.
+        if (decisionOverlayState.open) return;
+
+        // Keyboard controls only apply while the game board is active.
+        var gameScreen = document.getElementById('game-ui');
+        if (!gameScreen || !gameScreen.classList.contains('active')) return;
+
+        var key = e.key.toLowerCase();
+
+        if (key >= '1' && key <= '4') {
+            var cardIndex = Number(key) - 1;
+            if (state && Array.isArray(state.dungeon) && state.dungeon[cardIndex]) {
+                e.preventDefault();
+                selectCard(cardIndex);
+            }
+            return;
+        }
+
+        var buttonId = {
+            q: 'action1',
+            w: 'action2',
+            e: 'undoBtn',
+            r: 'refreshBtn'
+        }[key];
+
+        if (!buttonId) return;
+
+        var button = document.getElementById(buttonId);
+        if (!button || button.disabled || button.classList.contains('action-button-hidden')) {
+            return;
+        }
+
+        e.preventDefault();
+        button.click();
+    });
+}
+
+
 // Initial load execution
 window.addEventListener('resize', resizeGameCanvas);
 
@@ -2465,5 +2518,6 @@ window.onload = function() {
     resizeGameCanvas();
     toggleModeInputs();
     setupPeekHandlers();
+    setupKeyboardHandlers();
     
 };
