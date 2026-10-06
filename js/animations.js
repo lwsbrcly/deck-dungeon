@@ -448,7 +448,7 @@
     );
 
     var duration = options.duration || 1500;
-    var scale = Number(options.scale) || 5;
+    var discoverScale = Number(options.scale) || 5;
     var growDuration = Math.round(duration * 0.48);
     var fadeDuration = options.fadeDuration || 350;
     var holdTimer = null;
@@ -462,7 +462,7 @@
       '--fade-duration',
       fadeDuration + 'ms'
     );
-    clone.style.setProperty('--discover-scale', scale);
+    clone.style.setProperty('--discover-scale', discoverScale);
 
     hide(card);
     clone.classList.add('dd-discover-active');
