@@ -397,7 +397,6 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
   font-weight: 900;
   letter-spacing: .1em;
   line-height: 1;
-  text-transform: uppercase;
   white-space: nowrap;
   text-shadow: 0 1px 0 rgba(0,0,0,.7);
 }
