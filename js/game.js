@@ -428,6 +428,12 @@ function leaveGameToMenu() {
     backToMenu();
 }
 
+function updateDeckIdPill() {
+    var pill = document.getElementById('deckIdPill');
+    if (!pill) return;
+    pill.textContent = state && state.deckId ? 'Deck ID: ' + state.deckId : '';
+}
+
 function replayGame() {
     document.getElementById('overlay').classList.remove('show');
     showScreen('game-ui');
