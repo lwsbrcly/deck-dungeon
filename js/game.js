@@ -403,6 +403,31 @@ function showSetupScreen() {
     toggleModeInputs();
 }
 
+function openGameMenu() {
+    var menu = document.getElementById('gameMenu');
+    if (menu) menu.hidden = false;
+}
+
+function closeGameMenu() {
+    var menu = document.getElementById('gameMenu');
+    if (menu) menu.hidden = true;
+}
+
+function restartCurrentDeck() {
+    closeGameMenu();
+    replayGame();
+}
+
+function startNewRandomDeck() {
+    closeGameMenu();
+    newRandomGame();
+}
+
+function leaveGameToMenu() {
+    closeGameMenu();
+    backToMenu();
+}
+
 function replayGame() {
     document.getElementById('overlay').classList.remove('show');
     showScreen('game-ui');
@@ -778,7 +803,14 @@ function removeSelected(selectedIndex) {
     return c;
 }
 
+function updateDeckIdPill() {
+    var pill = document.getElementById('deckIdPill');
+    if (!pill) return;
+    pill.textContent = state && state.deckId ? 'DECK ' + state.deckId : '';
+}
+
 function renderAfterAction() {
+    updateDeckIdPill();
     var animateRoom = !!state._roomWasDealt;
     var skipFirst = !!state._skipFirstRoomCard;
     
@@ -2273,14 +2305,19 @@ if (monster && isSolo) {
 
 function log(text, recordEvent, eventType, weaponStrengths) {
     // Keep the complete plain-text log independently of the DOM. The visible
-    // log is only a display of this history and may be hidden by the game-over
-    // modal.
+    // log is intentionally only the four most recent actions; the full history
+    // remains available for the end-of-game copy/export flow.
     if (state && Array.isArray(state.logHistory)) {
       state.logHistory.push(String(text));
     }
 
     var box = document.getElementById('log');
-    if (box) box.innerHTML = '<div class="logline">• ' + text + '</div>' + box.innerHTML;
+    if (box && state && Array.isArray(state.logHistory)) {
+      var visible = state.logHistory.slice(-4).reverse();
+      box.innerHTML = visible.map(function(entry) {
+        return '<div class="logline">• ' + entry + '</div>';
+      }).join('');
+    }
     
     // Keep a compact structured history alongside the visible text log.
     // The graph uses event order as the run's X-axis because the game has no
