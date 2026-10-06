@@ -448,6 +448,7 @@
     );
 
     var duration = options.duration || 1500;
+    var scale = Number(options.scale) || 5;
     var growDuration = Math.round(duration * 0.48);
     var fadeDuration = options.fadeDuration || 350;
     var holdTimer = null;
@@ -461,6 +462,7 @@
       '--fade-duration',
       fadeDuration + 'ms'
     );
+    clone.style.setProperty('--discover-scale', scale);
 
     hide(card);
     clone.classList.add('dd-discover-active');
@@ -834,6 +836,16 @@
     options = options || {};
 
     var finish = once(options.done);
+
+    // Theme equipment can define the visual treatment for bare-handed
+    // exploration. Ocean Deck uses discovery rather than combat.
+    if (options.animation === 'discover-small') {
+      discover(monster, {
+        done: finish,
+        scale: 2
+      });
+      return;
+    }
     var monsterRect = rect(monster);
     var playerRect = rect(player);
 
