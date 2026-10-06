@@ -280,6 +280,128 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
   background-repeat: no-repeat;
 }
 
+/* Persistent in-game controls */
+.game-menu-button {
+  position: absolute;
+  top: 2.4%;
+  left: 3.2%;
+  z-index: 3000;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  color: var(--game-text);
+  border: 1px solid var(--game-border);
+  border-radius: 6px;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.game-menu-button:hover,
+.game-menu-button:focus-visible {
+  background: rgba(0,0,0,.82);
+  outline: none;
+  box-shadow: 0 0 0 1px var(--game-text);
+}
+
+.game-menu-overlay[hidden] { display: none; }
+
+.game-menu-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.68);
+}
+
+.game-menu-panel {
+  width: 62%;
+  max-width: 420px;
+  padding: 24px 22px 18px;
+  background: #000;
+  border: 2px solid var(--game-border);
+  border-radius: 8px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.55);
+  text-align: center;
+}
+
+.game-menu-panel h2 {
+  margin-bottom: 18px;
+  color: var(--game-text);
+  font-size: 1.05rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.game-menu-option,
+.game-menu-cancel {
+  display: block;
+  width: 100%;
+  min-height: 40px;
+  margin: 0 0 8px;
+  padding: 8px 12px;
+  background: #000;
+  color: var(--game-text);
+  border: 1px solid var(--game-border);
+  border-radius: 5px;
+  font-size: .82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.game-menu-option:hover,
+.game-menu-option:focus-visible {
+  background: var(--game-border);
+  color: #000;
+  outline: none;
+}
+
+.game-menu-secondary { margin-top: 14px; }
+
+.game-menu-cancel {
+  margin-top: 12px;
+  margin-bottom: 0;
+  border-color: #555;
+  color: var(--game-muted);
+}
+
+.game-menu-cancel:hover,
+.game-menu-cancel:focus-visible {
+  background: #222;
+  color: var(--game-text);
+  outline: none;
+}
+
+.deck-id-pill {
+  position: absolute;
+  left: 50%;
+  bottom: 1.8%;
+  transform: translateX(-50%);
+  z-index: 2500;
+  display: inline-block;
+  padding: 5px 12px;
+  background: #000;
+  color: var(--game-text);
+  border: 1px solid var(--game-border);
+  border-radius: 999px;
+  font-size: .68rem;
+  font-weight: 900;
+  letter-spacing: .1em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: 0 1px 0 rgba(0,0,0,.7);
+}
+
 /* The six regions below use the 667 × 1000 artwork as their coordinate system. */
 .canvas-health-track {
   position: absolute;
