@@ -597,6 +597,8 @@ state = {
 state.p1 = state.players[0];
 state.p2 = state.players[1];
 
+updateDeckIdPill();
+
 document.getElementById('setupScreen').style.display = 'none';
 document.getElementById('game').style.display = 'flex';
 resizeGameCanvas();
