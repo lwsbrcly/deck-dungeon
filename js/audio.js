@@ -39,8 +39,12 @@ let themeLoopToken = 0;
 
     var toggle = document.getElementById("soundToggle");
     var label = document.getElementById("soundToggleLabel");
+    var menuToggle = document.getElementById("gameMenuSoundToggle");
+    var menuLabel = document.getElementById("menuSoundToggleLabel");
     if (toggle) toggle.setAttribute("aria-pressed", audioEnabled ? "true" : "false");
     if (label) label.textContent = audioEnabled ? "Sound On" : "Sound Off";
+    if (menuToggle) menuToggle.setAttribute("aria-pressed", audioEnabled ? "true" : "false");
+    if (menuLabel) menuLabel.textContent = audioEnabled ? "Sound On" : "Sound Off";
   }
 
   function toggleAudio() {
@@ -50,8 +54,12 @@ let themeLoopToken = 0;
   function updateSoundToggle() {
     var toggle = document.getElementById("soundToggle");
     var label = document.getElementById("soundToggleLabel");
+    var menuToggle = document.getElementById("gameMenuSoundToggle");
+    var menuLabel = document.getElementById("menuSoundToggleLabel");
     if (toggle) toggle.setAttribute("aria-pressed", audioEnabled ? "true" : "false");
     if (label) label.textContent = audioEnabled ? "Sound On" : "Sound Off";
+    if (menuToggle) menuToggle.setAttribute("aria-pressed", audioEnabled ? "true" : "false");
+    if (menuLabel) menuLabel.textContent = audioEnabled ? "Sound On" : "Sound Off";
   }
 
   function makeNoiseBuffer(context, duration) {
