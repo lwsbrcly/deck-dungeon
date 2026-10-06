@@ -930,4 +930,360 @@ const THEMES = {
             }
         }
     },
+    Match: {
+        
+        name: 'Match of the Deck',
+        description: 'A lovely day for some deep sea exploration!',
+
+        artwork: {
+            logo: 'assets/match/logo.png',
+            card: 'assets/match/card.png',
+            back: 'assets/match/back.png',
+            background: 'assets/match/background.png',
+            portraits: 'assets/match/portraits/',
+            portraitCount: 16,
+            
+            monsters: {
+                'clubs_2': 'assets/match/monsters/C2.png',
+                'clubs_3': 'assets/match/monsters/C3.png',
+                'clubs_4': 'assets/match/monsters/C4.png',
+                'clubs_5': 'assets/match/monsters/C5.png',
+                'clubs_6': 'assets/match/monsters/C6.png',
+                'clubs_7': 'assets/match/monsters/C7.png',
+                'clubs_8': 'assets/match/monsters/C8.png',
+                'clubs_9': 'assets/match/monsters/C9.png',
+                'clubs_10': 'assets/match/monsters/C10.png',
+                'clubs_J': 'assets/match/monsters/CJ.png',
+                'clubs_Q': 'assets/match/monsters/CQ.png',
+                'clubs_K': 'assets/match/monsters/CK.png',
+                'clubs_A': 'assets/match/monsters/CA.png',
+
+                'spades_2': 'assets/match/monsters/S2.png',
+                'spades_3': 'assets/match/monsters/S3.png',
+                'spades_4': 'assets/match/monsters/S4.png',
+                'spades_5': 'assets/match/monsters/S5.png',
+                'spades_6': 'assets/match/monsters/S6.png',
+                'spades_7': 'assets/match/monsters/S7.png',
+                'spades_8': 'assets/match/monsters/S8.png',
+                'spades_9': 'assets/match/monsters/S9.png',
+                'spades_10': 'assets/match/monsters/S10.png',
+                'spades_J': 'assets/match/monsters/SJ.png',
+                'spades_Q': 'assets/match/monsters/SQ.png',
+                'spades_K': 'assets/match/monsters/SK.png',
+                'spades_A': 'assets/match/monsters/SA.png'
+            },
+
+            weapons: {
+                'diamonds_2': 'assets/match/weapons/2.png',
+                'diamonds_3': 'assets/match/weapons/3.png',
+                'diamonds_4': 'assets/match/weapons/4.png',
+                'diamonds_5': 'assets/match/weapons/5.png',
+                'diamonds_6': 'assets/match/weapons/6.png',
+                'diamonds_7': 'assets/match/weapons/7.png',
+                'diamonds_8': 'assets/match/weapons/8.png',
+                'diamonds_9': 'assets/match/weapons/9.png',
+                'diamonds_10': 'assets/match/weapons/10.png',
+            },
+
+            food: {
+                'hearts_2': 'assets/match/food/2.png',
+                'hearts_3': 'assets/match/food/3.png',
+                'hearts_4': 'assets/match/food/4.png',
+                'hearts_5': 'assets/match/food/5.png',
+                'hearts_6': 'assets/match/food/6.png',
+                'hearts_7': 'assets/match/food/7.png',
+                'hearts_8': 'assets/match/food/8.png',
+                'hearts_9': 'assets/match/food/9.png',
+                'hearts_10': 'assets/match/food/10.png',
+            },
+        },
+
+        colours: {
+            rules: {
+                bg: "#19191a",
+                panelBg: "#0b4366",
+                border: "#1f9bd1",
+                text: "#d7f5ff",
+                muted: "#041822",
+                highlight: "#fa9500",
+            },
+            game: {
+                useKeyLines: true,
+                cardName: "#d7f5ff",
+                cardNameKeyline: "#062033",
+                playerText: "#013772",
+                playerHpText: "#d7f5ff",
+                bg: "#19191a",
+                border: "#1f9bd1",
+                text: "#d7f5ff",
+                muted: "#187ea2",
+                logText: "#fa9500",
+                red: "#ffffff",
+                black: "#000000",
+                redKeyline: "#062033",
+                blackKeyline: "#019ad1",
+                highlight: "#ffffff",
+            },
+        },
+
+        endGame: {
+
+                win: {
+                    title: 'Dive Complete!',
+                    body: 'You reached the depths and discovered everything!'
+                },
+
+                lose: {
+                    title: 'Time\'s up!',
+                    body: 'Oxygen reserves too low, let\'s head back to the surface, and dive again soon!'
+                },
+
+                draw: {
+                    title: 'A Close one!',
+                    body: 'You completed the dive, but barely made it back. You must prioritise your safety next time!'
+                }
+
+            },
+
+        text: {
+            gameTitle: 'Ocean Deck',
+            location: 'The Ocean',
+            monster: 'Sea Creature',
+            weapon: 'Gadgets',
+            potion: 'Parts',
+            hpLabel: 'O²',
+            equip: 'deploys',
+            discard: 'stows',
+            fight: 'explores',
+            fist: 'freedives down to the',
+            heal: 'installs',
+            flee: 'Ascends',
+            enter: 'Descends with',
+        },
+
+        actions: {
+            monster: { primary: 'Explore', secondary: 'Freedive' },
+            weapon: { primary: 'Select', secondary: 'Stow' },
+            consumable: { primary: 'Install', secondary: 'Stow' },
+        },
+
+        cards: {
+            monsters: {
+                clubs: {
+                    2: 'Shoal of fish', 3: 'Seagrass Meadow', 4: 'Kelp Forest', 5: 'Manta Ray',
+                    6: 'Blue Whale', 7: 'Tiger Shark', 8: 'Sea Fan Garden', 9: 'Plane Wreck',
+                    10: 'Whale Fall', J: 'Ghost Crabs', Q: 'Hydrothermal Vent', K: 'Bioluminescent Plume', A: 'Giant Isopods'
+                },
+                spades: {
+                    2: 'Giant Turtle', 3: 'Coral Reef', 4: 'Dolphin Pod', 5: 'Sunken Boat',
+                    6: 'Sea Cave', 7: 'Deep Shelf', 8: 'Sunfish', 9: 'Jellyfish Bloom',
+                    10: 'Vampire Squid', J: 'Seamount', Q: 'Deep Trench', K: 'Sponge Garden', A: 'Abyssal Plain'
+                }
+            },
+            weapons: {
+                diamonds: {
+                    2: { name: 'Dive Light', animation: 'discover' },
+                    3: { name: 'Sample Kit', animation: 'discover' },
+                    4: { name: 'Underwater Camera', animation: 'discover' },
+                    5: { name: 'Sonar Scanner', animation: 'discover' },
+                    6: { name: 'Water Sampler', animation: 'discover' },
+                    7: { name: 'Long-range Imaging', animation: 'discover' },
+                    8: { name: 'Deep-sea Telescope', animation: 'discover' },
+                    9: { name: 'R.O.V.', animation: 'discover' },
+                    10: { name: 'Submarine', animation: 'discover' }
+                }
+            },
+            potions: {
+                hearts: {
+                    2: { name: 'CO₂ Scrubber', animation: 'use' },
+                    3: { name: 'Electrolyzer', animation: 'use' },
+                    4: { name: 'Oxygen Storage', animation: 'use' },
+                    5: { name: 'Oxygen Generator', animation: 'use' },
+                    6: { name: 'Pressure Regulator', animation: 'use' },
+                    7: { name: 'Air Purifier', animation: 'use' },
+                    8: { name: 'Oxygen Compressor', animation: 'use' },
+                    9: { name: 'Emergency Oxygen', animation: 'use' },
+                    10: { name: 'Life Support Unit', animation: 'use' }
+                }
+            }
+        }
+    },
+    battle: {
+        
+        name: 'Deck Battle',
+        description: 'A lovely day for some deep sea exploration!',
+
+        artwork: {
+            logo: 'assets/battle/logo.png',
+            card: 'assets/battle/card.png',
+            back: 'assets/battle/back.png',
+            background: 'assets/battle/background.png',
+            portraits: 'assets/battle/portraits/',
+            portraitCount: 16,
+            
+            monsters: {
+                'clubs_2': 'assets/battle/monsters/C2.png',
+                'clubs_3': 'assets/battle/monsters/C3.png',
+                'clubs_4': 'assets/battle/monsters/C4.png',
+                'clubs_5': 'assets/battle/monsters/C5.png',
+                'clubs_6': 'assets/battle/monsters/C6.png',
+                'clubs_7': 'assets/battle/monsters/C7.png',
+                'clubs_8': 'assets/battle/monsters/C8.png',
+                'clubs_9': 'assets/battle/monsters/C9.png',
+                'clubs_10': 'assets/battle/monsters/C10.png',
+                'clubs_J': 'assets/battle/monsters/CJ.png',
+                'clubs_Q': 'assets/battle/monsters/CQ.png',
+                'clubs_K': 'assets/battle/monsters/CK.png',
+                'clubs_A': 'assets/battle/monsters/CA.png',
+
+                'spades_2': 'assets/battle/monsters/S2.png',
+                'spades_3': 'assets/battle/monsters/S3.png',
+                'spades_4': 'assets/battle/monsters/S4.png',
+                'spades_5': 'assets/battle/monsters/S5.png',
+                'spades_6': 'assets/battle/monsters/S6.png',
+                'spades_7': 'assets/battle/monsters/S7.png',
+                'spades_8': 'assets/battle/monsters/S8.png',
+                'spades_9': 'assets/battle/monsters/S9.png',
+                'spades_10': 'assets/battle/monsters/S10.png',
+                'spades_J': 'assets/battle/monsters/SJ.png',
+                'spades_Q': 'assets/battle/monsters/SQ.png',
+                'spades_K': 'assets/battle/monsters/SK.png',
+                'spades_A': 'assets/battle/monsters/SA.png'
+            },
+
+            weapons: {
+                'diamonds_2': 'assets/battle/weapons/2.png',
+                'diamonds_3': 'assets/battle/weapons/3.png',
+                'diamonds_4': 'assets/battle/weapons/4.png',
+                'diamonds_5': 'assets/battle/weapons/5.png',
+                'diamonds_6': 'assets/battle/weapons/6.png',
+                'diamonds_7': 'assets/battle/weapons/7.png',
+                'diamonds_8': 'assets/battle/weapons/8.png',
+                'diamonds_9': 'assets/battle/weapons/9.png',
+                'diamonds_10': 'assets/battle/weapons/10.png',
+            },
+
+            food: {
+                'hearts_2': 'assets/battle/food/2.png',
+                'hearts_3': 'assets/battle/food/3.png',
+                'hearts_4': 'assets/battle/food/4.png',
+                'hearts_5': 'assets/battle/food/5.png',
+                'hearts_6': 'assets/battle/food/6.png',
+                'hearts_7': 'assets/battle/food/7.png',
+                'hearts_8': 'assets/battle/food/8.png',
+                'hearts_9': 'assets/battle/food/9.png',
+                'hearts_10': 'assets/battle/food/10.png',
+            },
+        },
+
+        colours: {
+            rules: {
+                bg: "#19191a",
+                panelBg: "#0b4366",
+                border: "#1f9bd1",
+                text: "#d7f5ff",
+                muted: "#041822",
+                highlight: "#fa9500",
+            },
+            game: {
+                useKeyLines: true,
+                cardName: "#d7f5ff",
+                cardNameKeyline: "#062033",
+                playerText: "#013772",
+                playerHpText: "#d7f5ff",
+                bg: "#19191a",
+                border: "#1f9bd1",
+                text: "#d7f5ff",
+                muted: "#187ea2",
+                logText: "#fa9500",
+                red: "#ffffff",
+                black: "#000000",
+                redKeyline: "#062033",
+                blackKeyline: "#019ad1",
+                highlight: "#ffffff",
+            },
+        },
+
+        endGame: {
+
+                win: {
+                    title: 'Victory!',
+                    body: 'Victory!'
+                },
+
+                lose: {
+                    title: 'Death!',
+                    body: 'Death!'
+                },
+
+                draw: {
+                    title: 'A sword day!',
+                    body: 'A red day!'
+                }
+
+            },
+
+        text: {
+            gameTitle: 'Deck Battle',
+            location: 'The Battle',
+            monster: 'Sea Creature',
+            weapon: 'Gadgets',
+            potion: 'Parts',
+            hpLabel: 'Troops',
+            equip: 'deploys',
+            discard: 'stows',
+            fight: 'explores',
+            fist: 'freedives down to the',
+            heal: 'installs',
+            flee: 'Ascends',
+            enter: 'Descends with',
+        },
+
+        actions: {
+            monster: { primary: 'Charge!', secondary: 'Defend!' },
+            weapon: { primary: 'Lead', secondary: 'Hold' },
+            consumable: { primary: 'Join', secondary: 'Hold' },
+        },
+
+        cards: {
+            monsters: {
+                clubs: {
+                    2: 'Goblin 1', 3: 'Goblin 2', 4: 'Goblin 3', 5: 'Orc 1',
+                    6: 'Orc 2', 7: 'Orc 3', 8: 'Big Orc 1', 9: 'Big Orc 2',
+                    10: 'Big Orc 3', J: 'Trolls', Q: 'Ogres', K: 'Giants', A: 'Horde'
+                },
+                spades: {
+                    2: 'Chaos Men 1', 3: 'Chaos Men 2', 4: 'Chaos Men 3', 5: 'Beastmen 1',
+                    6: 'Beastmen 2', 7: 'Beastmen 3', 8: 'Chaos Knight 1', 9: 'Chaos Knight 2',
+                    10: 'Chaos Knight 3', J: 'Demon', Q: 'Big Demon', K: 'Biggest Demon', A: 'Horde'
+                }
+            },
+            weapons: {
+                diamonds: {
+                    2: { name: 'Herald', animation: 'melee' },
+                    3: { name: 'Standard Bearer', animation: 'melee' },
+                    4: { name: 'Captain', animation: 'melee' },
+                    5: { name: 'Hero', animation: 'melee' },
+                    6: { name: 'Wizard', animation: 'melee' },
+                    7: { name: 'General', animation: 'melee' },
+                    8: { name: 'Battlemage', animation: 'melee' },
+                    9: { name: 'Lord of Horses', animation: 'melee' },
+                    10: { name: 'Dragon Rider', animation: 'melee' },
+                }
+            },
+            potions: {
+                hearts: {
+                    2: { name: 'Halfling Militia', animation: 'use' },
+                    3: { name: 'Spearmen', animation: 'use' },
+                    4: { name: 'Elven Archers', animation: 'use' },
+                    5: { name: 'Men-at-Arms', animation: 'use' },
+                    6: { name: 'Cavalry', animation: 'use' },
+                    7: { name: 'Dwarf Veterans', animation: 'use' },
+                    8: { name: 'Royal Guard', animation: 'use' },
+                    9: { name: 'Elite Knights', animation: 'use' },
+                    10: { name: 'Heroes of the Realm', animation: 'use' }
+                }
+            }
+        }
+    },
 };
