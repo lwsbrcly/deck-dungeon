@@ -1196,11 +1196,11 @@ const THEMES = {
                 text: "#d7f5ff",
                 muted: "#187ea2",
                 logText: "#fa9500",
-                red: "#ff0000",
+                red: "#06509F",
                 black: "#000000",
                 redKeyline: "#062033",
                 blackKeyline: "#019ad1",
-                highlight: "#2424fa",
+                highlight: "#06509F",
             },
         },
 
