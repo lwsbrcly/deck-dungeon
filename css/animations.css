@@ -249,7 +249,7 @@
 .dd-discover-hold {
   pointer-events: auto !important;
   cursor: pointer;
-  transform: translate3d(var(--move-x),var(--move-y),0) scale(5);
+  transform: translate3d(var(--move-x),var(--move-y),0) scale(var(--discover-scale, 5));
   opacity: 1;
 }
 
