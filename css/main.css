@@ -865,7 +865,7 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
   background: rgba(0,0,0,.18);
   border: 0;
   border-radius: 0;
-  overflow-y: auto;
+  overflow-y: hidden;
   padding: 8px 10px;
   font-family: monospace;
   font-size: 0.75rem;
