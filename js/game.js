@@ -811,11 +811,11 @@ function removeSelected(selectedIndex) {
     return c;
 }
 
-function updateDeckIdPill() {
+/*function updateDeckIdPill() {
     var pill = document.getElementById('deckIdPill');
     if (!pill) return;
     pill.textContent = state && state.deckId ? 'DECK ' + state.deckId : '';
-}
+}*/
 
 function renderAfterAction() {
     updateDeckIdPill();
