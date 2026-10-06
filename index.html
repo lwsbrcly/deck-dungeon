@@ -227,6 +227,20 @@
   
             <div id="game" style="display: none;" class="game-layout">
                 <div class="game-canvas">
+                    <button type="button" class="game-menu-button" id="gameMenuButton" onclick="openGameMenu()" aria-label="Game menu" aria-haspopup="dialog">☰</button>
+
+                    <div id="gameMenu" class="game-menu-overlay" hidden>
+                        <div class="game-menu-panel" role="dialog" aria-modal="true" aria-labelledby="gameMenuTitle">
+                            <h2 id="gameMenuTitle">Game Menu</h2>
+                            <button type="button" class="game-menu-option" onclick="restartCurrentDeck()">↻ Restart This Deck</button>
+                            <button type="button" class="game-menu-option" onclick="startNewRandomDeck()">⚄ New Random Deck</button>
+                            <button type="button" class="game-menu-option game-menu-secondary" onclick="leaveGameToMenu()">☰ Back to Menu</button>
+                            <button type="button" class="game-menu-cancel" onclick="closeGameMenu()">Cancel</button>
+                        </div>
+                    </div>
+
+                    <div id="deckIdPill" class="deck-id-pill" aria-label="Deck ID"></div>
+
                     <!-- Decision overlay: shared decision point for solo and co-op. -->
                     <div id="decisionOverlay" class="decision-overlay" hidden>
                         <div class="decision-panel" role="dialog" aria-modal="true" aria-labelledby="decisionTitle">
