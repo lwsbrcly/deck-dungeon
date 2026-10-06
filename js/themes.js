@@ -88,7 +88,7 @@ const THEMES = {
                 text: "#CDA655",
                 muted: "#79731B",
                 logText: "#CDA655",
-                red: "#FD0201",
+                red: "#7A090A",
                 black: "#000000",
                 redKeyline: "#EBC196",
                 blackKeyline: "#A09172",
