@@ -767,13 +767,13 @@ function cardHTML(c, customCornerText) {
       centerArt = '<div class="card-art monster-art"><img src="' + monsterArt + '" alt=""></div>';
     } else if (pngArt) {
       if ((selectedTheme || 'dungeon') === 'dungeon') {
-        centerArt = '<div class="card-art png-art dungeon-red-art" style="--dungeon-art-image: url("' + pngArt + '");"><img src="' + pngArt + '" alt=""></div>';
+        centerArt = '<div class="card-art png-art dungeon-red-art" style="--dungeon-art-image: url(\'' + pngArt + '\');"><img src="' + pngArt + '" alt=""></div>';
       } else {
         centerArt = '<div class="card-art png-art"><img src="' + pngArt + '" alt=""></div>';
       }
     } else if (foodArt) {
       if ((selectedTheme || 'dungeon') === 'dungeon') {
-        centerArt = '<div class="card-art png-art dungeon-red-art" style="--dungeon-art-image: url("' + foodArt + '");"><img src="' + foodArt + '" alt=""></div>';
+        centerArt = '<div class="card-art png-art dungeon-red-art" style="--dungeon-art-image: url(\'' + foodArt + '\');"><img src="' + foodArt + '" alt=""></div>';
       } else {
         centerArt = '<div class="card-art png-art"><img src="' + foodArt + '" alt=""></div>';
       }
@@ -1996,7 +1996,7 @@ playerIds.forEach(function(id) {
         weaponEl.innerHTML =
           '<span class="duel-rank">' + p.weapon.rank + ' ' + SUITS[p.weapon.suit] + '</span>' +
           (weaponArt
-            ? '<span class="duel-weapon-art' + ((selectedTheme || 'dungeon') === 'dungeon' ? ' dungeon-red-art' : '') + '" style="' + ((selectedTheme || 'dungeon') === 'dungeon' ? '--dungeon-art-image: url("' + weaponArt + '");' : '') + '"><img src="' + weaponArt + '" alt="' + p.weapon.name + '"></span>'
+            ? '<span class="duel-weapon-art' + ((selectedTheme || 'dungeon') === 'dungeon' ? ' dungeon-red-art' : '') + '" style="' + ((selectedTheme || 'dungeon') === 'dungeon' ? '--dungeon-art-image: url(\'' + weaponArt + '\');' : '') + '"><img src="' + weaponArt + '" alt="' + p.weapon.name + '"></span>'
             : '');
       } else {
         weaponEl.innerHTML = '<span class="duel-muted">No weapon</span>';
