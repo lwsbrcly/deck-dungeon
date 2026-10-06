@@ -1259,6 +1259,22 @@ function runAttackAnimation(player, mode, targetEl, slotIndex, done, previousMon
     return;
   }
 
+  // Some themes use their equipped card's animation type to determine
+  // how a bare-handed action should look. Ocean Deck uses "discover".
+  var equippedAnimation = null;
+  if (player === 'both') {
+    var p1Animation = state.p1 && state.p1.weapon && state.p1.weapon.animation;
+    var p2Animation = state.p2 && state.p2.weapon && state.p2.weapon.animation;
+    equippedAnimation = (p1Animation === 'discover' || p2Animation === 'discover')
+      ? 'discover'
+      : (p1Animation || p2Animation);
+  } else {
+    equippedAnimation =
+      state[player] &&
+      state[player].weapon &&
+      state[player].weapon.animation;
+  }
+
   if (mode !== 'weapon') {
     var fistPlayerEl = document.getElementById(layoutPlayer.panel);
 
@@ -1268,7 +1284,10 @@ function runAttackAnimation(player, mode, targetEl, slotIndex, done, previousMon
     }
 
     DeckDungeonAnimations.fistFight(targetEl, fistPlayerEl, {
-      sound: typeof ughSound === 'function' ? ughSound : null,
+      animation: equippedAnimation === 'discover' ? 'discover-small' : null,
+      sound: equippedAnimation === 'discover'
+        ? null
+        : (typeof ughSound === 'function' ? ughSound : null),
       done: done
     });
     return;
