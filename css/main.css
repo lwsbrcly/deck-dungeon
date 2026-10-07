@@ -1250,19 +1250,48 @@ select, input { width: 100%; padding: 8px; background: var(--rules-bg); border: 
   color: var(--game-black);
 }
 
-.use-keylines .card.red {
-  text-shadow:
-    1px 0 var(--game-red-keyline),
-    -1px 0 var(--game-red-keyline),
-    0 1px var(--game-red-keyline),
-    0 -1px var(--game-red-keyline);
+/* Cards use suit-specific colours. Themes can override any suit independently;
+   the JS fallbacks preserve the traditional black/black/red/red palette. */
+.card.suit-spades {
+  color: var(--game-spades);
 }
-.use-keylines .card.black {
+.card.suit-clubs {
+  color: var(--game-clubs);
+}
+.card.suit-diamonds {
+  color: var(--game-diamonds);
+}
+.card.suit-hearts {
+  color: var(--game-hearts);
+}
+
+.use-keylines .card.suit-spades {
   text-shadow:
-    1px 0 var(--game-black-keyline),
-    -1px 0 var(--game-black-keyline),
-    0 1px var(--game-black-keyline),
-    0 -1px var(--game-black-keyline);
+    1px 0 var(--game-spades-keyline),
+    -1px 0 var(--game-spades-keyline),
+    0 1px var(--game-spades-keyline),
+    0 -1px var(--game-spades-keyline);
+}
+.use-keylines .card.suit-clubs {
+  text-shadow:
+    1px 0 var(--game-clubs-keyline),
+    -1px 0 var(--game-clubs-keyline),
+    0 1px var(--game-clubs-keyline),
+    0 -1px var(--game-clubs-keyline);
+}
+.use-keylines .card.suit-diamonds {
+  text-shadow:
+    1px 0 var(--game-diamonds-keyline),
+    -1px 0 var(--game-diamonds-keyline),
+    0 1px var(--game-diamonds-keyline),
+    0 -1px var(--game-diamonds-keyline);
+}
+.use-keylines .card.suit-hearts {
+  text-shadow:
+    1px 0 var(--game-hearts-keyline),
+    -1px 0 var(--game-hearts-keyline),
+    0 1px var(--game-hearts-keyline),
+    0 -1px var(--game-hearts-keyline);
 }
 
 /* Theme-specific card name styling. Keyline support remains optional. */
