@@ -1317,9 +1317,9 @@ const THEMES = {
                     10: 'Thrurg Boss', J: 'Thrurg Rocklobba', Q: '\'Uge Vargz', K: 'Thrurg Zerkerz', A: 'Giant'
                 },
                 spades: {
-                    2: 'Chaos Men 1', 3: 'Chaos Men 2', 4: 'Chaos Men 3', 5: 'Beastmen 1',
-                    6: 'Beastmen 2', 7: 'Beastmen 3', 8: 'Chaos Knight 1', 9: 'Chaos Knight 2',
-                    10: 'Chaos Knight 3', J: 'Demon', Q: 'Big Demon', K: 'Biggest Demon', A: 'Horde'
+                    2: 'Drow Scout', 3: 'Black Guard', 4: 'Repeater Crossbows', 5: 'Drow Assassins',
+                    6: 'Beastman Warriors', 7: 'Chaos Hounds', 8: 'Beastman Chariot', 9: 'Minotaurs',
+                    10: 'Chaos Warriors', J: 'Chaos Knights', Q: 'Dragon Ogres', K: 'Chaos Lord', A: 'Demon'
                 }
             },
             weapons: {
