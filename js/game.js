@@ -27,10 +27,18 @@ function applySelectedTheme() {
     root.style.setProperty('--game-text', gameColours.text || '');
     root.style.setProperty('--game-muted', gameColours.muted || '');
     root.style.setProperty('--game-log-text', gameColours.logText || '');
-    root.style.setProperty('--game-red', gameColours.red || '');
+    root.style.setProperty('--game-red', gameColours.red || '#CE0A0A');
     root.style.setProperty('--game-black', gameColours.black || '#000000');
+    root.style.setProperty('--game-spades', gameColours.spades || gameColours.black || '#000000');
+    root.style.setProperty('--game-clubs', gameColours.clubs || gameColours.black || '#000000');
+    root.style.setProperty('--game-diamonds', gameColours.diamonds || gameColours.red || '#CE0A0A');
+    root.style.setProperty('--game-hearts', gameColours.hearts || gameColours.red || '#CE0A0A');
     root.style.setProperty('--game-red-keyline', gameColours.redKeyline || '#ffffff');
     root.style.setProperty('--game-black-keyline', gameColours.blackKeyline || '#ffffff');
+    root.style.setProperty('--game-spades-keyline', gameColours.spadesKeyline || gameColours.blackKeyline || '#ffffff');
+    root.style.setProperty('--game-clubs-keyline', gameColours.clubsKeyline || gameColours.blackKeyline || '#ffffff');
+    root.style.setProperty('--game-diamonds-keyline', gameColours.diamondsKeyline || gameColours.redKeyline || '#ffffff');
+    root.style.setProperty('--game-hearts-keyline', gameColours.heartsKeyline || gameColours.redKeyline || '#ffffff');
     root.style.setProperty('--game-card-name', gameColours.cardName || '');
     root.style.setProperty('--game-card-name-keyline', gameColours.cardNameKeyline || '');
     root.style.setProperty('--game-player-text', gameColours.playerText || '#000000');
@@ -741,6 +749,7 @@ function selectCard(i) {
 function cardHTML(c, customCornerText) {
     if (!c) return '';
     var red = c.suit === 'hearts' || c.suit === 'diamonds';
+    var suitClass = 'suit-' + c.suit;
     var cornerText = customCornerText !== undefined ? customCornerText : null;
     var rankText = customCornerText !== undefined ? customCornerText : c.rank;
     var suitText = customCornerText !== undefined ? '' : SUITS[c.suit];
@@ -786,7 +795,7 @@ function cardHTML(c, customCornerText) {
       ? THEMES[selectedTheme || 'dungeon'].artwork.card
       : 'assets/dungeon/card.png';
     
-    return '<div class="card ' + (red ? 'red' : 'black') + '" style="background-image: url(' + cardArtwork + ');">' +
+    return '<div class="card ' + (red ? 'red' : 'black') + ' ' + suitClass + '" style="background-image: url(' + cardArtwork + ');">' +
       '<div class="card-rank"><span class="card-rank-value">' + rankText + '</span><span class="card-rank-suit">' + suitText + '</span></div>' +
       valueCorner +
       centerArt +
