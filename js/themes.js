@@ -1256,11 +1256,11 @@ const THEMES = {
                 black: "#000000",
                 diamonds: '#0d82ff',
                 hearts: '#8934c2',
-                spades: '#420022',
+                spades: '#aa0000',
                 clubs: '#42ad00',
                 redKeyline: "#062033",
                 blackKeyline: "#019ad1",
-                spadesKeyline: "#aa0000",
+                spadesKeyline: "#420022",
                 clubsKeyline: "#000000",
                 diamondsKeyline: "#ffffff",
                 heartsKeyline: "#ffffff",
@@ -1305,8 +1305,8 @@ const THEMES = {
 
         actions: {
             monster: { primary: 'Charge!', secondary: 'Defend!' },
-            weapon: { primary: 'Lead', secondary: 'Hold' },
-            consumable: { primary: 'Join', secondary: 'Hold' },
+            weapon: { primary: 'Lead', secondary: 'Resign' },
+            consumable: { primary: 'Join', secondary: 'Dismiss' },
         },
 
         cards: {
@@ -1331,7 +1331,7 @@ const THEMES = {
                     6: { name: 'Wizard', animation: 'melee' },
                     7: { name: 'General', animation: 'melee' },
                     8: { name: 'Battlemage', animation: 'melee' },
-                    9: { name: 'Lord of Horses', animation: 'melee' },
+                    9: { name: 'Lord', animation: 'melee' },
                     10: { name: 'Dragon Rider', animation: 'melee' },
                 }
             },
