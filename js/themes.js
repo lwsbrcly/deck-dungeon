@@ -1314,7 +1314,7 @@ const THEMES = {
                 clubs: {
                     2: 'Goblin Mob', 3: 'Goblin Shootas', 4: 'Spider Frenz', 5: 'Gob-hoppers',
                     6: 'Orc Warband', 7: 'Orc Chukkas', 8: 'Boar Boys', 9: 'Shamanic Tribe',
-                    10: 'Thrurg Boss', J: 'Thrurg Rocklobba', Q: '\'Uge Vargz', K: 'Thrurg Zerkerz', A: 'Massed Horde'
+                    10: 'Thrurg Boss', J: 'Thrurg Rocklobba', Q: '\'Uge Vargz', K: 'Thrurg Zerkerz', A: 'Giant'
                 },
                 spades: {
                     2: 'Chaos Men 1', 3: 'Chaos Men 2', 4: 'Chaos Men 3', 5: 'Beastmen 1',
