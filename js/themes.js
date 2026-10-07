@@ -1260,7 +1260,7 @@ const THEMES = {
                 clubs: '#42ad00',
                 redKeyline: "#062033",
                 blackKeyline: "#019ad1",
-                spadesKeyline: "#000000",
+                spadesKeyline: "#aa0000",
                 clubsKeyline: "#000000",
                 diamondsKeyline: "#ffffff",
                 heartsKeyline: "#ffffff",
@@ -1312,9 +1312,9 @@ const THEMES = {
         cards: {
             monsters: {
                 clubs: {
-                    2: 'Goblin 1', 3: 'Goblin 2', 4: 'Goblin 3', 5: 'Orc 1',
-                    6: 'Orc 2', 7: 'Orc 3', 8: 'Big Orc 1', 9: 'Big Orc 2',
-                    10: 'Big Orc 3', J: 'Trolls', Q: 'Ogres', K: 'Giants', A: 'Horde'
+                    2: 'Goblin Mob', 3: 'Goblin Shootas', 4: 'Spider Frenz', 5: 'Gob-hoppers',
+                    6: 'Orc Warband', 7: 'Orc Chukkas', 8: 'Boar Boys', 9: 'Shamanic Tribe',
+                    10: 'Thrurg Boss', J: 'Thrurg Rocklobba', Q: '\'Uge Vargz', K: 'Thrurg Zerkerz', A: 'Massed Horde'
                 },
                 spades: {
                     2: 'Chaos Men 1', 3: 'Chaos Men 2', 4: 'Chaos Men 3', 5: 'Beastmen 1',
