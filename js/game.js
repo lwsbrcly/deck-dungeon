@@ -292,6 +292,7 @@ function undoLastAction() {
     resetDungeonDom();
     state = historyStack.pop();
     state.actionInProgress = false;
+    renderLog();
     render();
 }
 
