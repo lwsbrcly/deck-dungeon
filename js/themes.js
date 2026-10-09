@@ -76,6 +76,7 @@ const THEMES = {
                 text: "#CDA655",
                 muted: "#000000",
                 highlight: "#474b14",
+                portraitBg: "#D4C095",
             },
             game: {
                 useKeyLines: false,
@@ -249,6 +250,7 @@ const THEMES = {
                 text: "#EFD3AE",
                 muted: "#000000",
                 highlight: "#C86801",
+                portraitBg: "#D8C2A2",
             },
             game: {
                 useKeyLines: true,
@@ -424,6 +426,7 @@ const THEMES = {
                 text: "#F4C61F",
                 muted: "#00000",
                 highlight: "#22618F ",
+                portraitBg: "#20272E",
             },
             game: {
                 useKeyLines: true,
@@ -545,6 +548,7 @@ const THEMES = {
                 text: "#ecd7de",
                 muted: "#493231",
                 highlight: "#1a1a1a",
+                portraitBg: "#B8D8D8",
             },
             game: {
                 useKeyLines: true,
@@ -679,6 +683,7 @@ const THEMES = {
                 text: "#ecd7de",
                 muted: "#493231",
                 highlight: "#1a1a1a",
+                portraitBg: "#D8C29A",
             },
             game: {
                 useKeyLines: true,
@@ -868,6 +873,7 @@ const THEMES = {
                 text: "#d7f5ff",
                 muted: "#041822",
                 highlight: "#fa9500",
+                portraitBg: "#29252F",
             },
             game: {
                 useKeyLines: true,
@@ -1054,6 +1060,7 @@ const THEMES = {
                 text: "#d7f5ff",
                 muted: "#041822",
                 highlight: "#fa9500",
+                portraitBg: "#E8E8E8",
             },
             game: {
                 useKeyLines: true,
@@ -1240,6 +1247,7 @@ const THEMES = {
                 text: "#d7f5ff",
                 muted: "#041822",
                 highlight: "#fa9500",
+                portraitBg: "#C5D5E8",
             },
             game: {
                 useKeyLines: true,
