@@ -20,6 +20,7 @@ function applySelectedTheme() {
     root.style.setProperty('--rules-text', rulesColours.text || '');
     root.style.setProperty('--rules-muted', rulesColours.muted || '');
     root.style.setProperty('--rules-highlight', rulesColours.highlight || '');
+    root.style.setProperty('--rules-portrait-bg', rulesColours.portraitBg || '#D4C095');
 
     // Gameplay colours
     root.style.setProperty('--game-bg', gameColours.bg || '');
