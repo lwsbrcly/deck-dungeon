@@ -1247,7 +1247,7 @@ const THEMES = {
                 text: "#d7f5ff",
                 muted: "#041822",
                 highlight: "#fa9500",
-                portraitBg: "#C5D5E8",
+                portraitBg: "#49A0DB",
             },
             game: {
                 useKeyLines: true,
