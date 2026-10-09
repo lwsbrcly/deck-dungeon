@@ -315,6 +315,7 @@ function undoFromGameOver() {
     state.actionInProgress = false;
     state.over = false;
     document.getElementById('overlay').classList.remove('show');
+    renderLog();
     render();
 }
 
@@ -2323,6 +2324,16 @@ function logHpPair(before, after) {
     return ' [' + before + ',' + after + ']';
 }
 
+function renderLog() {
+    var box = document.getElementById('log');
+    if (!box || !state || !Array.isArray(state.logHistory)) return;
+
+    var visible = state.logHistory.slice(-4).reverse();
+    box.innerHTML = visible.map(function(entry) {
+      return '<div class="logline">• ' + entry + '</div>';
+    }).join('');
+}
+
 function log(text, recordEvent, eventType, weaponStrengths) {
     // Keep the complete plain-text log independently of the DOM. The visible
     // log is intentionally only the four most recent actions; the full history
@@ -2331,13 +2342,8 @@ function log(text, recordEvent, eventType, weaponStrengths) {
       state.logHistory.push(String(text));
     }
 
-    var box = document.getElementById('log');
-    if (box && state && Array.isArray(state.logHistory)) {
-      var visible = state.logHistory.slice(-4).reverse();
-      box.innerHTML = visible.map(function(entry) {
-        return '<div class="logline">• ' + entry + '</div>';
-      }).join('');
-    }
+    renderLog();
+
     
     // Keep a compact structured history alongside the visible text log.
     // The graph uses event order as the run's X-axis because the game has no
