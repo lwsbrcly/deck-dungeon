@@ -292,7 +292,6 @@ function undoLastAction() {
     resetDungeonDom();
     state = historyStack.pop();
     state.actionInProgress = false;
-    log('Undid last action.', false);
     render();
 }
 
@@ -316,7 +315,6 @@ function undoFromGameOver() {
     state.actionInProgress = false;
     state.over = false;
     document.getElementById('overlay').classList.remove('show');
-    log('Undid fatal last action.', false);
     render();
 }
 
@@ -643,13 +641,10 @@ state.dungeon = [];
 log('Deck ID: ' + dungeonId, false);
 var runModeLabel = mode === 'coop' ? 'co-op' : 'solo';
 var runDifficultyLabel = ultraHardMode ? ' Ultra Hard Mode' : (hardMode ? ' Hard Mode' : '');
-log('A new ' + runModeLabel + ' ' + currentThemeName + runDifficultyLabel + ' run begins.', false); 
-if (mode === 'coop') {
-  log(p1Name + ' enters ' + ((currentTheme && currentTheme.text && currentTheme.text.location) || 'the game') + ' holding a ' + starterWeaponP1.name + ' (' + starterWeaponP1.value + SUITS[starterWeaponP1.suit] + ').', false);
-  log(p2Name + ' enters ' + ((currentTheme && currentTheme.text && currentTheme.text.location) || 'the game') + ' holding a ' + starterWeaponP2.name + ' (' + starterWeaponP2.value + SUITS[starterWeaponP2.suit] + ').', false);
-} else if (isDaggerMode) {
-  log(p1Name + ' enters ' + ((currentTheme && currentTheme.text && currentTheme.text.location) || 'the game') + ' holding a ' + starterWeaponP1.name + ' (' + starterWeaponP1.value + SUITS[starterWeaponP1.suit] + ').', false);
-}
+// Run setup is represented by the replay header, not an action entry.
+
+// Starting equipment is part of the initial state, not an action entry.
+
 
 // First render the stable layout with no dungeon cards.
 // Give the player a moment to see the empty board, while the selected
@@ -726,7 +721,7 @@ async function refreshDungeon() {
     state.selected = null;
     state.justFled = true;
     state.roomsFled++;
-    log('Flees.', true, 'flee');
+    log('FLEE', true, 'flee');
     checkGame();
     // Flee animation is purely visual; deal the new room after the old cards leave.
     animateFlee(oldCardEls).then(function() {
@@ -1158,16 +1153,7 @@ function completeWeaponEquip(player, selectedIndex, card, oldWeapon) {
   removeSelected(selectedIndex);
   state.actionInProgress = false;
 
-  log(
-    name(player) + ' equips ' +
-    card.name + ' (' + card.rank + SUITS[card.suit] + ').' +
-    (oldWeapon ? ' (' + oldWeapon.name + ' discarded)' : ''),
-    true,
-    'weapon',
-    player === 'p1'
-      ? {p1:card.value,p2:null}
-      : {p1:null,p2:card.value}
-  );
+  log((player === 'p2' ? 'P2 ' : 'P1 ') + logCard(card) + ' E', true, 'weapon');
 
   checkGame();
   renderAfterAction();
@@ -1219,7 +1205,7 @@ function discardDungeonWeapon() {
       done: function() {
         var c = removeSelected(selectedIndex);
         state.actionInProgress = false;
-        log('Discarded the ' + c.name + ' (' + c.rank + SUITS[c.suit] + ').');
+        log('P1 ' + logCard(c) + ' D');
         checkGame();
         renderAfterAction();
       }
@@ -1239,7 +1225,7 @@ function discardDungeonPotion() {
       done: function() {
         var c = removeSelected(selectedIndex);
         state.actionInProgress = false;
-        log('Discarded the ' + c.name + ' (' + c.value + ' HP).');
+        log('P1 ' + logCard(c) + ' D');
         checkGame();
         renderAfterAction();
       }
@@ -1257,14 +1243,14 @@ function drinkDirectPotion(target) {
     var c = state.dungeon[selectedIndex];
 
     var finishConsume = function() {
+      var hpBefore = t.hp;
       var isDowned = t.hp === 0; var amount = 0;
       if (!t.consumedThisRoom) {
         amount = isDowned ? Math.floor(c.value / 2) + 1 : c.value;
         var actualHeal = Math.min(state.maxHP - t.hp, amount); t.hp = Math.min(state.maxHP, t.hp + amount); t.consumedThisRoom = true;
         if (actualHeal > 0) state.foodConsumed += actualHeal;
-        if (isDowned) log(name(target) + ' was revived by ' + c.name + ' with ' + amount + ' HP!', true, 'potion');
-        else log(name(target) + ' consumes ' + c.name + ', restoring ' + amount + ' HP.', true, 'potion');
-      } else log(name(target) + ' consumed ' + c.name + ', but to no effect.', false, 'potion');
+        if (actualHeal > 0 || isDowned) log((target === 'p2' ? 'P2 ' : 'P1 ') + logCard(c) + logHpPair(hpBefore, t.hp), true, 'potion');
+      } else log((target === 'p2' ? 'P2 ' : 'P1 ') + logCard(c) + logHpPair(hpBefore, t.hp), false, 'potion');
       removeSelected(selectedIndex);
       state.actionInProgress = false;
       checkGame(); renderAfterAction();
@@ -1406,6 +1392,7 @@ function fight(player, mode) {
         saveState();
         state.actionInProgress = true;
 
+        var p1HpBefore = a.hp, p2HpBefore = b.hp;
         runAttackAnimation('both', 'fist', targetEl, selectedIndex, function() {
           var totalDamage = c.value;
           applySharedDamage(totalDamage, 'p1');
@@ -1414,7 +1401,7 @@ function fight(player, mode) {
           trackWeaponKill('Bare Fists', c.value);
           removeSelected(selectedIndex);
           state.actionInProgress = false;
-          log('Both heroes team up vs ' + c.name + '. Took ' + totalDamage + ' damage split between them.', true, 'fist');
+          log('COOP ' + logCard(c) + ' -- --' + logHpPair(p1HpBefore, a.hp) + logHpPair(p2HpBefore, b.hp), true, 'fist');
           checkGame();
           renderAfterAction();
         }, null);
@@ -1423,6 +1410,7 @@ function fight(player, mode) {
         saveState();
         state.actionInProgress = true;
 
+        var p1HpBefore = a.hp, p2HpBefore = b.hp;
         runAttackAnimation('p1', 'weapon', targetEl, selectedIndex, function() {
           var power = a.weapon.value + b.weapon.value;
           var damage = Math.max(0, c.value - power);
@@ -1450,7 +1438,7 @@ function fight(player, mode) {
           trackWeaponKill(b.weapon.name, Math.ceil(c.value / 2));
           removeSelected(selectedIndex);
           state.actionInProgress = false;
-          log('Combined weapons (' + power + ' pwr) vs ' + c.name + '. Taken ' + damage + ' damage.', true, 'monster');
+          log('COOP ' + logCard(c) + ' ' + logCard(a.weapon) + ' ' + logCard(b.weapon) + logHpPair(p1HpBefore, a.hp) + logHpPair(p2HpBefore, b.hp), true, 'monster');
           checkGame();
           renderAfterAction();
         }, null);
@@ -1459,6 +1447,7 @@ function fight(player, mode) {
       var p = state[player];
       if (p.hp <= 0) { log(name(player) + ' is Downed.'); return; }
       var damage = c.value;
+      var hpBeforeAttack = p.hp;
 
       if (mode === 'weapon') {
         if (!validWeapon(p, c)) { log('Monster value exceeds weapon ceiling.'); return; }
@@ -1502,11 +1491,7 @@ function fight(player, mode) {
         p.hp = Math.max(0, p.hp - damage);
         state.monstersSlain++;
 
-        if (mode === 'weapon') {
-          log(name(player) + ' ' + ((THEMES[state.theme] && THEMES[state.theme].text && THEMES[state.theme].text.fight) || 'uses') + ' ' + c.name + ' (' + c.value + SUITS[c.suit] + '). Damage taken ' + damage + ' HP.', true, 'monster');
-        } else {
-          log(name(player) + ' ' + ((THEMES[state.theme] && THEMES[state.theme].text && THEMES[state.theme].text.fist) || 'fights') + ' ' + c.name + ' (' + c.value + SUITS[c.suit] + '). Damage taken ' + damage + ' HP.', true, 'fist');
-        }
+        log((player === 'p2' ? 'P2 ' : 'P1 ') + logCard(c) + ' ' + (mode === 'weapon' ? logCard(p.weapon) : '--') + logHpPair(hpBeforeAttack, p.hp), true, mode === 'weapon' ? 'monster' : 'fist');
 
         removeSelected(selectedIndex);
         state.actionInProgress = false;
@@ -2327,6 +2312,15 @@ if (monster && isSolo) {
       false
     );
   } 
+}
+
+function logCard(card) {
+    if (!card) return '--';
+    return String(card.rank || card.value) + (SUITS[card.suit] || '');
+}
+
+function logHpPair(before, after) {
+    return ' [' + before + ',' + after + ']';
 }
 
 function log(text, recordEvent, eventType, weaponStrengths) {
