@@ -1205,7 +1205,7 @@ function discardDungeonWeapon() {
       done: function() {
         var c = removeSelected(selectedIndex);
         state.actionInProgress = false;
-        log('P1 ' + logCard(c) + ' D');
+        log((state.mode === 'coop' ? 'COOP ' : 'P1 ') + logCard(c) + ' D');
         checkGame();
         renderAfterAction();
       }
@@ -1249,8 +1249,8 @@ function drinkDirectPotion(target) {
         amount = isDowned ? Math.floor(c.value / 2) + 1 : c.value;
         var actualHeal = Math.min(state.maxHP - t.hp, amount); t.hp = Math.min(state.maxHP, t.hp + amount); t.consumedThisRoom = true;
         if (actualHeal > 0) state.foodConsumed += actualHeal;
-        if (actualHeal > 0 || isDowned) log((target === 'p2' ? 'P2 ' : 'P1 ') + logCard(c) + logHpPair(hpBefore, t.hp), true, 'potion');
-      } else log((target === 'p2' ? 'P2 ' : 'P1 ') + logCard(c) + logHpPair(hpBefore, t.hp), false, 'potion');
+        if (actualHeal >= 0) log((target === 'p2' ? 'P2 ' : 'P1 ') + logCard(c) + logHpPair(hpBefore, t.hp), true, 'potion');
+      } else log((target === 'p2' ? 'P2 ' : 'P1 ') + logCard(c) + logHpPair(hpBefore, t.hp), true, 'potion');
       removeSelected(selectedIndex);
       state.actionInProgress = false;
       checkGame(); renderAfterAction();
