@@ -1724,3 +1724,42 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 .mode-badge[hidden] {
   display: none;
 }
+
+
+/* Optional rules reference on the setup screen */
+.rules-expander {
+  margin-top: 16px;
+  border-top: 1px solid var(--rules-border);
+  text-align: left;
+}
+
+.rules-expander summary {
+  padding: 12px 4px 4px;
+  color: var(--rules-text);
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-align: center;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.rules-expander summary::-webkit-details-marker {
+  display: none;
+}
+
+.rules-expander summary::after {
+  content: "＋";
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 0.9em;
+  transition: transform 150ms ease;
+}
+
+.rules-expander[open] summary::after {
+  content: "−";
+}
+
+.rules-expander .setup-rules {
+  margin-top: 12px;
+}
