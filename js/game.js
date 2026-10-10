@@ -813,7 +813,7 @@ function cardHTML(c, customCornerText) {
       '<div class="card-rank"><span class="card-rank-value">' + rankText + '</span><span class="card-rank-suit">' + suitText + '</span></div>' +
       valueCorner +
       centerArt +
-      '<div class="card-title">' + c.name + '</div>' +
+      ((selectedTheme || 'dungeon') === 'plain' ? '' : '<div class="card-title">' + c.name + '</div>') +
     '</div>';
     }
     
