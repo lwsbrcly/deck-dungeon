@@ -1371,10 +1371,59 @@ THEMES.plain.artwork.portraitCount = 0;
 THEMES.plain.artwork.card = 'assets/plain/card.png';
 THEMES.plain.artwork.back = 'assets/plain/back.png';
 THEMES.plain.artwork.background = 'assets/plain/background.png';
-THEMES.plain.artwork.monsters = {};
-THEMES.plain.artwork.weapons = {};
-THEMES.plain.artwork.food = {};
-THEMES.plain.artwork.svgCards = {};
+THEMES.plain.artwork.monsters: {
+                'clubs_2': 'assets/plain/monsters/C2.png',
+                'clubs_3': 'assets/plain/monsters/C3.png',
+                'clubs_4': 'assets/plain/monsters/C4.png',
+                'clubs_5': 'assets/plain/monsters/C5.png',
+                'clubs_6': 'assets/plain/monsters/C6.png',
+                'clubs_7': 'assets/plain/monsters/C7.png',
+                'clubs_8': 'assets/plain/monsters/C8.png',
+                'clubs_9': 'assets/plain/monsters/C9.png',
+                'clubs_10': 'assets/plain/monsters/C10.png',
+                'clubs_J': 'assets/plain/monsters/CJ.png',
+                'clubs_Q': 'assets/plain/monsters/CQ.png',
+                'clubs_K': 'assets/plain/monsters/CK.png',
+                'clubs_A': 'assets/plain/monsters/CA.png',
+
+                'spades_2': 'assets/plain/monsters/S2.png',
+                'spades_3': 'assets/plain/monsters/S3.png',
+                'spades_4': 'assets/plain/monsters/S4.png',
+                'spades_5': 'assets/plain/monsters/S5.png',
+                'spades_6': 'assets/plain/monsters/S6.png',
+                'spades_7': 'assets/plain/monsters/S7.png',
+                'spades_8': 'assets/plain/monsters/S8.png',
+                'spades_9': 'assets/plain/monsters/S9.png',
+                'spades_10': 'assets/plain/monsters/S10.png',
+                'spades_J': 'assets/plain/monsters/SJ.png',
+                'spades_Q': 'assets/plain/monsters/SQ.png',
+                'spades_K': 'assets/plain/monsters/SK.png',
+                'spades_A': 'assets/plain/monsters/SA.png'
+            },
+
+            THEMES.plain.artwork.weapons: {
+                'diamonds_2': 'assets/plain/weapons/2.png',
+                'diamonds_3': 'assets/plain/weapons/3.png',
+                'diamonds_4': 'assets/plain/weapons/4.png',
+                'diamonds_5': 'assets/plain/weapons/5.png',
+                'diamonds_6': 'assets/plain/weapons/6.png',
+                'diamonds_7': 'assets/plain/weapons/7.png',
+                'diamonds_8': 'assets/plain/weapons/8.png',
+                'diamonds_9': 'assets/plain/weapons/9.png',
+                'diamonds_10': 'assets/plain/weapons/10.png',
+            },
+
+            THEMES.plain.artwork.food: {
+                'hearts_2': 'assets/plain/food/2.png',
+                'hearts_3': 'assets/plain/food/3.png',
+                'hearts_4': 'assets/plain/food/4.png',
+                'hearts_5': 'assets/plain/food/5.png',
+                'hearts_6': 'assets/plain/food/6.png',
+                'hearts_7': 'assets/plain/food/7.png',
+                'hearts_8': 'assets/plain/food/8.png',
+                'hearts_9': 'assets/plain/food/9.png',
+                'hearts_10': 'assets/plain/food/10.png',
+            },
 THEMES.plain.colours.rules = {
     bg: '#064d2b',
     panelBg: '#073d24',
