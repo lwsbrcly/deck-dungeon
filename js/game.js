@@ -589,7 +589,6 @@ state = {
   monstersSlain: 0,
   roomsCleared: 0,
   roomsFled: 0,
-  actionOrdinal: 1,
   targetRooms: 14,
   foodConsumed: 0,
   maxFoodHP: 54,
@@ -677,7 +676,6 @@ function fillDungeon() {
     if (state.dungeon.length === 0 || state.dungeon.length === 1) {
       if (state.dungeon.length === 1) {
         state.roomsCleared++;
-        state.actionOrdinal = 1;
       }
       resetRoomLimits();
       while (state.dungeon.length < 4 && state.deck.length) {
@@ -725,7 +723,7 @@ async function refreshDungeon() {
     state.selected = null;
     state.justFled = true;
     state.roomsFled++;
-    logAction('FLEE', true, true, 'flee');
+    log('FLEE', true, 'flee');
     checkGame();
     // Flee animation is purely visual; deal the new room after the old cards leave.
     animateFlee(oldCardEls).then(function() {
@@ -808,12 +806,6 @@ function removeSelected(selectedIndex) {
     if (selectedIndex === null || selectedIndex < 0 || selectedIndex >= state.dungeon.length) {
       return null;
     }
-
-    // Capture the action's location before fillDungeon can advance the room.
-    state._pendingActionPosition = {
-      room: (state.roomsCleared || 0) + 1,
-      ordinal: state.actionOrdinal || 1
-    };
 
     var c = state.dungeon.splice(selectedIndex, 1)[0];
     state.selected = null;
@@ -1163,7 +1155,7 @@ function completeWeaponEquip(player, selectedIndex, card, oldWeapon) {
   removeSelected(selectedIndex);
   state.actionInProgress = false;
 
-  logAction((player === 'p2' ? 'P2 ' : 'P1 ') + logCard(card) + ' E', false, true, 'weapon');
+  log((player === 'p2' ? 'P2 ' : 'P1 ') + logCard(card) + ' E', true, 'weapon');
 
   checkGame();
   renderAfterAction();
@@ -1215,7 +1207,7 @@ function discardDungeonWeapon() {
       done: function() {
         var c = removeSelected(selectedIndex);
         state.actionInProgress = false;
-        logAction((state.mode === 'coop' ? 'COOP ' : 'P1 ') + logCard(c) + ' D');
+        log((state.mode === 'coop' ? 'COOP ' : 'P1 ') + logCard(c) + ' D');
         checkGame();
         renderAfterAction();
       }
@@ -1235,7 +1227,7 @@ function discardDungeonPotion() {
       done: function() {
         var c = removeSelected(selectedIndex);
         state.actionInProgress = false;
-        logAction('P1 ' + logCard(c) + ' D');
+        log('P1 ' + logCard(c) + ' D');
         checkGame();
         renderAfterAction();
       }
@@ -1259,8 +1251,8 @@ function drinkDirectPotion(target) {
         amount = isDowned ? Math.floor(c.value / 2) + 1 : c.value;
         var actualHeal = Math.min(state.maxHP - t.hp, amount); t.hp = Math.min(state.maxHP, t.hp + amount); t.consumedThisRoom = true;
         if (actualHeal > 0) state.foodConsumed += actualHeal;
-        if (actualHeal >= 0) logAction((target === 'p2' ? 'P2 ' : 'P1 ') + logCard(c) + logHpPair(hpBefore, t.hp), false, true, 'potion');
-      } else logAction((target === 'p2' ? 'P2 ' : 'P1 ') + logCard(c) + logHpPair(hpBefore, t.hp), false, true, 'potion');
+        if (actualHeal >= 0) log((target === 'p2' ? 'P2 ' : 'P1 ') + logCard(c) + logHpPair(hpBefore, t.hp), true, 'potion');
+      } else log((target === 'p2' ? 'P2 ' : 'P1 ') + logCard(c) + logHpPair(hpBefore, t.hp), true, 'potion');
       removeSelected(selectedIndex);
       state.actionInProgress = false;
       checkGame(); renderAfterAction();
@@ -1411,7 +1403,7 @@ function fight(player, mode) {
           trackWeaponKill('Bare Fists', c.value);
           removeSelected(selectedIndex);
           state.actionInProgress = false;
-          logAction('COOP ' + logCard(c) + ' -- --' + logHpPair(p1HpBefore, a.hp) + logHpPair(p2HpBefore, b.hp), false, true, 'fist');
+          log('COOP ' + logCard(c) + ' -- --' + logHpPair(p1HpBefore, a.hp) + logHpPair(p2HpBefore, b.hp), true, 'fist');
           checkGame();
           renderAfterAction();
         }, null);
@@ -1448,7 +1440,7 @@ function fight(player, mode) {
           trackWeaponKill(b.weapon.name, Math.ceil(c.value / 2));
           removeSelected(selectedIndex);
           state.actionInProgress = false;
-          logAction('COOP ' + logCard(c) + ' ' + logCard(a.weapon) + ' ' + logCard(b.weapon) + logHpPair(p1HpBefore, a.hp) + logHpPair(p2HpBefore, b.hp), false, true, 'monster');
+          log('COOP ' + logCard(c) + ' ' + logCard(a.weapon) + ' ' + logCard(b.weapon) + logHpPair(p1HpBefore, a.hp) + logHpPair(p2HpBefore, b.hp), true, 'monster');
           checkGame();
           renderAfterAction();
         }, null);
@@ -1501,7 +1493,7 @@ function fight(player, mode) {
         p.hp = Math.max(0, p.hp - damage);
         state.monstersSlain++;
 
-        logAction((player === 'p2' ? 'P2 ' : 'P1 ') + logCard(c) + ' ' + (mode === 'weapon' ? logCard(p.weapon) : '--') + logHpPair(hpBeforeAttack, p.hp), false, true, mode === 'weapon' ? 'monster' : 'fist');
+        log((player === 'p2' ? 'P2 ' : 'P1 ') + logCard(c) + ' ' + (mode === 'weapon' ? logCard(p.weapon) : '--') + logHpPair(hpBeforeAttack, p.hp), true, mode === 'weapon' ? 'monster' : 'fist');
 
         removeSelected(selectedIndex);
         state.actionInProgress = false;
@@ -2322,22 +2314,6 @@ if (monster && isSolo) {
       false
     );
   } 
-}
-
-function logAction(message, isFlee, recordEvent, eventType, weaponStrengths) {
-    var position = state._pendingActionPosition;
-    var roomNumber = position ? position.room : (state.roomsCleared || 0) + 1;
-    var ordinal = position ? position.ordinal : (state.actionOrdinal || 1);
-    var prefix = roomNumber + (isFlee ? '.F ' : '.' + ordinal + ' ');
-    log(prefix + message, recordEvent, eventType, weaponStrengths);
-    state._pendingActionPosition = null;
-    if (isFlee) {
-      state.actionOrdinal = 1;
-    } else if (!position || (state.roomsCleared || 0) + 1 === position.room) {
-      state.actionOrdinal = ordinal + 1;
-    }
-    // If the room advanced during removeSelected(), fillDungeon has already
-    // reset actionOrdinal to 1 for the next room. Leave that reset intact.
 }
 
 function logCard(card) {
