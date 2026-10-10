@@ -809,6 +809,12 @@ function removeSelected(selectedIndex) {
       return null;
     }
 
+    // Capture the action's location before fillDungeon can advance the room.
+    state._pendingActionPosition = {
+      room: (state.roomsCleared || 0) + 1,
+      ordinal: state.actionOrdinal || 1
+    };
+
     var c = state.dungeon.splice(selectedIndex, 1)[0];
     state.selected = null;
     state.justFled = false;
@@ -2319,12 +2325,15 @@ if (monster && isSolo) {
 }
 
 function logAction(message, isFlee, recordEvent, eventType, weaponStrengths) {
-    var roomNumber = (state.roomsCleared || 0) + 1;
-    var prefix = roomNumber + (isFlee ? '.F ' : '.' + (state.actionOrdinal || 1) + ' ');
+    var position = state._pendingActionPosition;
+    var roomNumber = position ? position.room : (state.roomsCleared || 0) + 1;
+    var ordinal = position ? position.ordinal : (state.actionOrdinal || 1);
+    var prefix = roomNumber + (isFlee ? '.F ' : '.' + ordinal + ' ');
     log(prefix + message, recordEvent, eventType, weaponStrengths);
+    state._pendingActionPosition = null;
     if (isFlee) {
       state.actionOrdinal = 1;
-    } else {
+    } else if (!position) {
       state.actionOrdinal = (state.actionOrdinal || 1) + 1;
     }
 }
