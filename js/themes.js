@@ -1371,7 +1371,7 @@ THEMES.plain.artwork.portraitCount = 0;
 THEMES.plain.artwork.card = 'assets/plain/card.png';
 THEMES.plain.artwork.back = 'assets/plain/back.png';
 THEMES.plain.artwork.background = 'assets/plain/background.png';
-THEMES.plain.artwork.monsters: {
+THEMES.plain.artwork.monsters = {
                 'clubs_2': 'assets/plain/monsters/C2.png',
                 'clubs_3': 'assets/plain/monsters/C3.png',
                 'clubs_4': 'assets/plain/monsters/C4.png',
@@ -1401,7 +1401,7 @@ THEMES.plain.artwork.monsters: {
                 'spades_A': 'assets/plain/monsters/SA.png'
             },
 
-            THEMES.plain.artwork.weapons: {
+            THEMES.plain.artwork.weapons = {
                 'diamonds_2': 'assets/plain/weapons/2.png',
                 'diamonds_3': 'assets/plain/weapons/3.png',
                 'diamonds_4': 'assets/plain/weapons/4.png',
@@ -1413,7 +1413,7 @@ THEMES.plain.artwork.monsters: {
                 'diamonds_10': 'assets/plain/weapons/10.png',
             },
 
-            THEMES.plain.artwork.food: {
+            THEMES.plain.artwork.food = {
                 'hearts_2': 'assets/plain/food/2.png',
                 'hearts_3': 'assets/plain/food/3.png',
                 'hearts_4': 'assets/plain/food/4.png',
