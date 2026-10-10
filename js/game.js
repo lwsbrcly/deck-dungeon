@@ -339,16 +339,22 @@ function initPortraitPicker(playerId) {
   picker.appendChild(button);
 
   var theme = THEMES[selectedTheme || 'dungeon'];
+  var portraitBase = theme && theme.artwork ? theme.artwork.portraits : null;
   var portraitCount = theme && theme.artwork && theme.artwork.portraitCount
     ? theme.artwork.portraitCount
     : 15;
+
+  // Themes without portrait art should not silently borrow Dungeon portraits.
+  if (!portraitBase || portraitCount < 1) {
+    picker.style.display = 'none';
+    input.value = '';
+    return;
+  }
+
+  picker.style.display = '';
   var current = Math.floor(Math.random() * portraitCount) + 1;
 
   function showPortrait() {
-    var theme = THEMES[selectedTheme || 'dungeon'];
-    var portraitBase = theme && theme.artwork && theme.artwork.portraits
-      ? theme.artwork.portraits
-      : 'assets/dungeon/portraits/';
     input.value = String(current);
     img.src = portraitBase + current + '.png';
     img.alt = 'Player portrait ' + current;
@@ -625,15 +631,25 @@ if (boardLayout.players.p2) {
 }
 
 var portraitThemeForBoard = THEMES[state.theme || 'dungeon'];
-var portraitBaseForBoard = portraitThemeForBoard && portraitThemeForBoard.artwork && portraitThemeForBoard.artwork.portraits
+var portraitBaseForBoard = portraitThemeForBoard && portraitThemeForBoard.artwork
   ? portraitThemeForBoard.artwork.portraits
-  : 'assets/dungeon/portraits/';
+  : null;
 
 ['p1', 'p2'].forEach(function(id) {
   var playerLayout = boardLayout.players[id];
   if (!playerLayout) return;
   var portraitImage = document.getElementById(playerLayout.portrait);
-  if (portraitImage) portraitImage.src = portraitBaseForBoard + state[id].portrait + '.png';
+  if (!portraitImage) return;
+
+  // No configured portrait artwork means no portrait image, not Dungeon art.
+  if (!portraitBaseForBoard) {
+    portraitImage.removeAttribute('src');
+    portraitImage.style.visibility = 'hidden';
+    return;
+  }
+
+  portraitImage.style.visibility = '';
+  portraitImage.src = portraitBaseForBoard + state[id].portrait + '.png';
 });
 
 fillDungeon();
