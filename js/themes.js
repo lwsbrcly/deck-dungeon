@@ -1359,3 +1359,47 @@ const THEMES = {
         }
     },
 };
+
+// Plain is intentionally omitted from the public theme selector.
+// It inherits the standard card/game mappings but uses its own tabletop assets.
+THEMES.plain = JSON.parse(JSON.stringify(THEMES.dungeon));
+THEMES.plain.name = 'Plain';
+THEMES.plain.description = 'A classic playing-card table.';
+THEMES.plain.artwork.logo = '';
+THEMES.plain.artwork.card = 'assets/plain/card.png';
+THEMES.plain.artwork.back = 'assets/plain/back.png';
+THEMES.plain.artwork.background = 'assets/plain/background.png';
+THEMES.plain.colours.rules = {
+    bg: '#064d2b',
+    panelBg: '#073d24',
+    border: '#286b45',
+    text: '#f0f0e8',
+    muted: '#022d19',
+    highlight: '#0a6337',
+    portraitBg: '#0b5b32',
+};
+THEMES.plain.colours.game = {
+    useKeyLines: false,
+    cardName: '',
+    cardNameKeyline: '',
+    playerText: '#111111',
+    playerHpText: '#ffffff',
+    bg: '#064d2b',
+    border: '#286b45',
+    text: '#f0f0e8',
+    muted: '#0a6337',
+    logText: '#f0f0e8',
+    red: '#d40000',
+    black: '#000000',
+    spades: '#000000',
+    clubs: '#000000',
+    diamonds: '#d40000',
+    hearts: '#d40000',
+    redKeyline: '#ffffff',
+    blackKeyline: '#ffffff',
+    spadesKeyline: '#ffffff',
+    clubsKeyline: '#ffffff',
+    diamondsKeyline: '#ffffff',
+    heartsKeyline: '#ffffff',
+    highlight: '#ffffff',
+};
