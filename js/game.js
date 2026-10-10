@@ -2333,9 +2333,11 @@ function logAction(message, isFlee, recordEvent, eventType, weaponStrengths) {
     state._pendingActionPosition = null;
     if (isFlee) {
       state.actionOrdinal = 1;
-    } else if (!position) {
-      state.actionOrdinal = (state.actionOrdinal || 1) + 1;
+    } else if (!position || (state.roomsCleared || 0) + 1 === position.room) {
+      state.actionOrdinal = ordinal + 1;
     }
+    // If the room advanced during removeSelected(), fillDungeon has already
+    // reset actionOrdinal to 1 for the next room. Leave that reset intact.
 }
 
 function logCard(card) {
