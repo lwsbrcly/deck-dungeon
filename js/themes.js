@@ -1361,7 +1361,7 @@ const THEMES = {
 };
 
 // Plain is intentionally omitted from the public theme selector.
-// It inherits the standard card/game mappings but uses its own tabletop assets.
+// Reuse the base gameplay/text configuration, but no Deck Dungeon card artwork.
 THEMES.plain = JSON.parse(JSON.stringify(THEMES.dungeon));
 THEMES.plain.name = 'Plain';
 THEMES.plain.description = 'A classic playing-card table.';
@@ -1369,6 +1369,10 @@ THEMES.plain.artwork.logo = '';
 THEMES.plain.artwork.card = 'assets/plain/card.png';
 THEMES.plain.artwork.back = 'assets/plain/back.png';
 THEMES.plain.artwork.background = 'assets/plain/background.png';
+THEMES.plain.artwork.monsters = {};
+THEMES.plain.artwork.weapons = {};
+THEMES.plain.artwork.food = {};
+THEMES.plain.artwork.svgCards = {};
 THEMES.plain.colours.rules = {
     bg: '#064d2b',
     panelBg: '#073d24',
