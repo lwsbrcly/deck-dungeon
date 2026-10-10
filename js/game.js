@@ -1253,7 +1253,7 @@ function drinkDirectPotion(target) {
         amount = isDowned ? Math.floor(c.value / 2) + 1 : c.value;
         var actualHeal = Math.min(state.maxHP - t.hp, amount); t.hp = Math.min(state.maxHP, t.hp + amount); t.consumedThisRoom = true;
         if (actualHeal > 0) state.foodConsumed += actualHeal;
-        if (actualHeal >= 0) logAction((target === 'p2' ? 'P2 ' : 'P1 ') + logCard(c) + logHpPair(hpBefore, t.hp), true, 'potion');
+        if (actualHeal >= 0) logAction((target === 'p2' ? 'P2 ' : 'P1 ') + logCard(c) + logHpPair(hpBefore, t.hp), false, true, 'potion');
       } else log((target === 'p2' ? 'P2 ' : 'P1 ') + logCard(c) + logHpPair(hpBefore, t.hp), true, 'potion');
       removeSelected(selectedIndex);
       state.actionInProgress = false;
