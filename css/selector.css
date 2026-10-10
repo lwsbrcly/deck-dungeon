@@ -178,22 +178,39 @@
 }
 
 
-/* Deliberately unobtrusive shortcut to the hidden Plain theme. */
+/* Subtle, discoverable shortcut to the hidden Plain theme. */
 #plainThemeShortcut {
     position: absolute;
-    left: 4px;
-    bottom: 4px;
-    width: 12px;
-    height: 12px;
+    left: 6px;
+    bottom: 6px;
+    width: 18px;
+    height: 18px;
     padding: 0;
-    border: 0;
+    border: 1px solid #454548;
     border-radius: 50%;
     background: var(--selector-bg);
-    color: var(--selector-bg);
     cursor: pointer;
-    opacity: 0.01;
+    opacity: 0.75;
+    display: grid;
+    place-items: center;
+}
+#plainThemeShortcut::after {
+    content: "";
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #454548;
+}
+#plainThemeShortcut:hover {
+    opacity: 1;
+    border-color: #77777b;
+}
+#plainThemeShortcut:hover::after {
+    background: #a0a0a5;
 }
 #plainThemeShortcut:focus-visible {
-    opacity: 0.8;
-    outline: 1px solid var(--selector-text);
+    opacity: 1;
+    outline: 2px solid var(--selector-text);
+    outline-offset: 2px;
 }
