@@ -176,3 +176,24 @@
     color: #fff;
     border-color: transparent;
 }
+
+
+/* Deliberately unobtrusive shortcut to the hidden Plain theme. */
+#plainThemeShortcut {
+    position: absolute;
+    left: 4px;
+    bottom: 4px;
+    width: 12px;
+    height: 12px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--selector-bg);
+    color: var(--selector-bg);
+    cursor: pointer;
+    opacity: 0.01;
+}
+#plainThemeShortcut:focus-visible {
+    opacity: 0.8;
+    outline: 1px solid var(--selector-text);
+}
