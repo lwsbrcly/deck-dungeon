@@ -582,25 +582,25 @@ const THEMES = {
 
                 win: {
 
-                    title: 'Plundering, complete!',
+                    title: 'I love gold!',
 
-                    body: 'You have defeated every ship in the sea, time to hoard some gold and bury it!'
+                    body: 'You\'ve manabed to turn a profit. The drinks are on you tonight!'
 
                 },
 
                 lose: {
 
-                    title: 'Avast, ye have be slain',
+                    title: 'Avast, ye be penniless',
 
-                    body: 'One too many boardings, Captain. Your legacy will be told throughout the ages.'
+                    body: 'You lost it all, you old swindler! Your legacy will be told throughout the ages.'
 
                 },
 
                 draw: {
 
-                    title: 'Your ship is captainless!',
+                    title: 'Well fair\'s fair!',
 
-                    body: 'You died doing what you loved - pillaging. At least your crew will spend all the gold in your honour!'
+                    body: 'You win some, you lose some! and money isn\'t everything... luckily for you.'
 
                 }
 
@@ -609,54 +609,54 @@ const THEMES = {
         text: {
             gameTitle: 'All Hands On Deck',
             location: 'Your Ship',
-            monster: 'Zombie',
-            weapon: 'Weapon',
-            potion: 'Food',
-            hpLabel: 'HP',
-            equip: 'grabs',
-            discard: 'chucks',
-            fight: 'whacks',
-            fist: 'tussles with',
-            heal: 'consumes',
+            monster: 'moneygrabber',
+            weapon: 'asset',
+            potion: 'funds',
+            hpLabel: 'Gold Coins',
+            equip: 'use',
+            discard: 'castaway',
+            fight: 'bargains',
+            fist: 'pays off',
+            heal: 'receives',
             flee: 'Ran for it',
             enter: 'Heads out armed with',
         },
 
         actions: {
-            monster: { primary: 'Duel', secondary: 'Fisticuffs' },
-            weapon: { primary: 'Arm', secondary: 'Cast Away' },
-            consumable: { primary: 'Drink', secondary: 'Cast Away' },
+            monster: { primary: 'Bargain', secondary: 'Pay off' },
+            weapon: { primary: 'Tactic', secondary: 'Reconsider' },
+            consumable: { primary: 'Recieve', secondary: 'Cast Away' },
         },
 
         cards: {
             monsters: {
                 clubs: {
-                    2: 'Merman', 3: 'Merman', 4: 'Merman', 5: 'Merman',
-                    6: 'Merman', 7: 'Merman', 8: 'Merman', 9: 'Merman',
-                    10: 'Merman', J: 'Merman', Q: 'Merman', K: 'Merman', A: 'Merman'
+                    2: 'Tavern Keeper', 3: 'Dockhand', 4: 'Street Hustler', 5: 'Shipwright',
+                    6: 'Customs Officer', 7: 'Merchant', 8: 'Smuggler', 9: 'Rival Captain',
+                    10: 'Corrupt Official', J: 'Bounty Hunter', Q: 'Navy Officer', K: 'Pirate Boss', A: 'Governor'
                 },
                 spades: {
-                    2: 'Merman', 3: 'Merman', 4: 'Merman', 5: 'Merman',
-                    6: 'Merman', 7: 'Merman', 8: 'Merman', 9: 'Merman',
-                    10: 'Merman', J: 'Merman', Q: 'Merman', K: 'Merman', A: 'Merman'
+                    2: 'Tavern Keeper', 3: 'Dockhand', 4: 'Street Hustler', 5: 'Shipwright',
+                    6: 'Customs Officer', 7: 'Merchant', 8: 'Smuggler', 9: 'Rival Captain',
+                    10: 'Corrupt Official', J: 'Bounty Hunter', Q: 'Navy Officer', K: 'Pirate Boss', A: 'Governor'
                 }
             },
             weapons: {
                 diamonds: {
-                    2: { name: 'Cutlass', animation: 'melee' }, 3: { name: 'Cutlass', animation: 'melee' },
-                    4: { name: 'Cutlass', animation: 'melee' }, 5: { name: 'Cutlass', animation: 'thrown' },
-                    6: { name: 'Cutlass', animation: 'thrown' }, 7: { name: 'Cutlass', animation: 'thrown' },
-                    8: { name: 'Cutlass', animation: 'ranged' }, 9: { name: 'Cutlass', animation: 'ranged' },
-                    10: { name: 'Cutlass', animation: 'ranged' }
+                    2: { name: 'Old Map', animation: 'melee' }, 3: { name: 'Pocketwatch', animation: 'melee' },
+                    4: { name: 'Fine Rum', animation: 'melee' }, 5: { name: 'Forged Letter', animation: 'melee' },
+                    6: { name: 'Bribe', animation: 'melee' }, 7: { name: 'Wit & Charm', animation: 'ranged' },
+                    8: { name: 'Threats', animation: 'ranged' }, 9: { name: 'Secret Cove', animation: 'ranged' },
+                    10: { name: 'Captain\'s Seal', animation: 'ranged' }
                 }
             },
             potions: {
                 hearts: {
-                    2: { name: 'Rum', animation: 'drink' }, 3: { name: 'Rum', animation: 'drink' }, 
-                    4: { name: 'Rum', animation: 'drink' }, 5: { name: 'Rum', animation: 'drink' },
-                    6: { name: 'Rum', animation: 'drink' }, 7: { name: 'Rum', animation: 'drink' }, 
-                    8: { name: 'Rum', animation: 'drink' }, 9: { name: 'Rum', animation: 'drink' }, 
-                    10: { name: 'Rum', animation: 'drink' }
+                    2: { name: 'Loose Change', animation: 'use' }, 3: { name: 'Forgotten Purse', animation: 'use' }, 
+                    4: { name: 'Winning Bet', animation: 'use' }, 5: { name: 'Repaid Favour', animation: 'use' },
+                    6: { name: 'Salvaged Cargo', animation: 'use' }, 7: { name: 'Hustled Mark', animation: 'use' }, 
+                    8: { name: 'Ships Bounty', animation: 'use' }, 9: { name: 'Handsome Payout', animation: 'use' }, 
+                    10: { name: 'Buried Treasure', animation: 'use' }
                 }
             }
         }
