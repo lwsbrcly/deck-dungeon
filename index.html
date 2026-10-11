@@ -102,23 +102,42 @@
         
                 </button>
 
-                <!-- PIRATE - COMING SOON -->
-                <button class="theme-card deck-pirate coming-soon"
+                <!-- PIRATE -->
+                <button class="theme-card deck-pirate"
                         type="button"
-                        disabled
-                        aria-disabled="true">
+                        onclick="selectTheme('pirate')>
         
                     <img src="assets/pirate/logo.png"
                      class="theme-logo"
                      alt="Deck Pirate">
         
                     <div class="theme-description">
-                        'Arrgh me hearties! Sail the 7 seas.<br>
-                        Protect yer booty from the sea-folk!
+                        'Arrgh me hearties! Set sail on the 7 seas.<br>
+                        Everyone is after yer gold, matey!
                     </div>
         
                     <div class="theme-description theme-action">
-                        <strong>Coming Soon</strong>
+                        <strong>Protect your booty</strong>
+                    </div>
+        
+                </button>
+
+                <!-- DECK BATTLE - LIVE -->
+                <button class="theme-card deck-battle"
+                        type="button"
+                        onclick="selectTheme('battle')">
+        
+                    <img src="assets/battle/logo.png"
+                         class="theme-logo"
+                         alt="Deck Battle">
+        
+                    <div class="theme-description">
+                        The city is under attack!<br>
+                        Rally the troops and protect your people!
+                    </div>
+        
+                    <div class="theme-description theme-action">
+                        <strong>To Battle!!</strong>
                     </div>
         
                 </button>
@@ -165,25 +184,6 @@
         
                 </button>
 
-                <!-- DECK BATTLE - LIVE -->
-                <button class="theme-card deck-battle"
-                        type="button"
-                        onclick="selectTheme('battle')">
-        
-                    <img src="assets/battle/logo.png"
-                         class="theme-logo"
-                         alt="Deck Battle">
-        
-                    <div class="theme-description">
-                        The city is under attack!<br>
-                        Rally the troops and protect your people!
-                    </div>
-        
-                    <div class="theme-description theme-action">
-                        <strong>To Battle!!</strong>
-                    </div>
-        
-                </button>
             </div>
 
             <!-- Hidden Plain theme shortcut: same colour as the selector background. -->
@@ -202,8 +202,8 @@
                 <div class="form-group">
                   <label for="modeSelect">Game Mode</label>
                   <select id="modeSelect" onchange="toggleModeInputs()">
-                    <option value="solo_dagger">Solitaire (1 Player)</option>
-                    <option value="coop">Co-op (2 Players)</option>
+                    <option value="solo_dagger">Single Player</option>
+                    <option value="coop">2P Co-op</option>
                   </select>
                 </div>
 
