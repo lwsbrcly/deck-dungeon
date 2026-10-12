@@ -538,6 +538,12 @@ const THEMES = {
             background: 'assets/pirate/background.png',
             portraits: 'assets/pirate/portraits/',
             portraitCount: 16,
+
+            monsters: {
+                'clubs_2': 'assets/pirate/monsters/2.png',
+        
+                'spades_2': 'assets/pirate/monsters/2.png',
+            },
         },
 
         colours: {
