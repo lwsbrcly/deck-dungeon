@@ -571,7 +571,7 @@ const THEMES = {
                 black: "#000000",
                 spades: "#000000",
                 clubs: "#000000",
-                diamonds: "#ab0431",
+                diamonds: "#ffba33",
                 hearts: "#f9be38",
                 redKeyline: "#A09172",
                 blackKeyline: "#A09172",
