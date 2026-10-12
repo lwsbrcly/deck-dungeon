@@ -618,7 +618,7 @@ const THEMES = {
             monster: 'moneygrabber',
             weapon: 'asset',
             potion: 'funds',
-            hpLabel: 'Gold Coins',
+            hpLabel: 'Gold\:',
             equip: 'use',
             discard: 'castaway',
             fight: 'bargains',
