@@ -540,9 +540,9 @@ const THEMES = {
             portraitCount: 16,
 
             monsters: {
-                'clubs_2': 'assets/pirate/monsters/2.png',
+                'clubs_2': 'assets/pirate/monsters/C2.png',
         
-                'spades_2': 'assets/pirate/monsters/2.png',
+                'spades_2': 'assets/pirate/monsters/S2.png',
             },
         },
 
