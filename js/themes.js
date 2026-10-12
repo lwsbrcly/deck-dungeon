@@ -553,11 +553,11 @@ const THEMES = {
                 border: "#6a5a56",
                 text: "#ecd7de",
                 muted: "#493231",
-                highlight: "#1a1a1a",
+                highlight: "#117DBD",
                 portraitBg: "#B8D8D8",
             },
             game: {
-                useKeyLines: true,
+                useKeyLines: false,
                 cardName: "",
                 cardNameKeyline: "",
                 playerText: "#000000",
@@ -579,7 +579,7 @@ const THEMES = {
                 clubsKeyline: "#ffffff",
                 diamondsKeyline: "#ffffff",
                 heartsKeyline: "#ffffff",
-                highlight: "#1a1a1a",
+                highlight: "#117DBD",
             },
         },
 
