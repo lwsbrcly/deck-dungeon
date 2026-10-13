@@ -560,8 +560,8 @@ const THEMES = {
                 useKeyLines: true,
                 cardName: "",
                 cardNameKeyline: "",
-                playerText: "#117DBD",
-                playerHpText: "#117DBD",
+                playerText: "#382319",
+                playerHpText: "#382319",
                 bg: "#19191a",
                 border: "#6a5a56",
                 text: "#ecd7de",
@@ -570,7 +570,7 @@ const THEMES = {
                 
                 spades: "#000000",
                 clubs: "#000000",
-                diamonds: "#880915",
+                diamonds: "#D5292C",
                 hearts: "#f9be38",
 
                 spadesKeyline: "#D59851",
