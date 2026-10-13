@@ -567,18 +567,17 @@ const THEMES = {
                 text: "#ecd7de",
                 muted: "#493231",
                 logText: "#493231",
-                red: "#ab0431",
-                black: "#000000",
+                
                 spades: "#000000",
                 clubs: "#000000",
-                diamonds: "#ffba33",
+                diamonds: "#880915",
                 hearts: "#f9be38",
-                redKeyline: "#A09172",
-                blackKeyline: "#A09172",
+
                 spadesKeyline: "#ffffff",
                 clubsKeyline: "#ffffff",
                 diamondsKeyline: "#a0723f",
                 heartsKeyline: "#702d08",
+                
                 highlight: "#117DBD",
             },
         },
