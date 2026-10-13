@@ -599,7 +599,7 @@ const THEMES = {
 
                 spadesKeyline: "#D59851",
                 clubsKeyline: "#D59851",
-                diamondsKeyline: "#D59851",
+                diamondsKeyline: "#E9BE7D",
                 heartsKeyline: "#702d08",
                 
                 highlight: "#117DBD",
