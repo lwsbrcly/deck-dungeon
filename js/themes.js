@@ -555,6 +555,18 @@ const THEMES = {
                 'clubs_A': 'assets/pirate/monsters/C2.png',
         
                 'spades_2': 'assets/pirate/monsters/S2.png',
+                'spades_3': 'assets/pirate/monsters/S2.png',
+                'spades_4': 'assets/pirate/monsters/S2.png',
+                'spades_5': 'assets/pirate/monsters/S2.png',
+                'spades_6': 'assets/pirate/monsters/S2.png',
+                'spades_7': 'assets/pirate/monsters/S2.png',
+                'spades_8': 'assets/pirate/monsters/S2.png',
+                'spades_9': 'assets/pirate/monsters/S2.png',
+                'spades_10': 'assets/pirate/monsters/S2.png',
+                'spades_J': 'assets/pirate/monsters/S2.png',
+                'spades_Q': 'assets/pirate/monsters/S2.png',
+                'spades_K': 'assets/pirate/monsters/S2.png',
+                'spades_A': 'assets/pirate/monsters/S2.png', 
             },
         },
 
