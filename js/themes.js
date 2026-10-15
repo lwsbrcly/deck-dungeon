@@ -568,6 +568,17 @@ const THEMES = {
                 'spades_K': 'assets/pirate/monsters/SK.png',
                 'spades_A': 'assets/pirate/monsters/SA.png', 
             },
+            weapons: {
+                'diamonds_2': 'assets/pirate/weapons/2.png',
+                'diamonds_3': 'assets/pirate/weapons/3.png',
+                'diamonds_4': 'assets/pirate/weapons/4.png',
+                'diamonds_5': 'assets/pirate/weapons/5.png',
+                'diamonds_6': 'assets/pirate/weapons/6.png',
+                'diamonds_7': 'assets/pirate/weapons/7.png',
+                'diamonds_8': 'assets/pirate/weapons/8.png',
+                'diamonds_9': 'assets/pirate/weapons/9.png',
+                'diamonds_10': 'assets/pirate/weapons/10.png',
+            },
         },
 
         colours: {
