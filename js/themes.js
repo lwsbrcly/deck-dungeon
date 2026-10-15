@@ -579,6 +579,17 @@ const THEMES = {
                 'diamonds_9': 'assets/pirate/weapons/9.png',
                 'diamonds_10': 'assets/pirate/weapons/10.png',
             },
+            food: {
+                'hearts_2': 'assets/pirate/food/2.png',
+                'hearts_3': 'assets/pirate/food/3.png',
+                'hearts_4': 'assets/pirate/food/4.png',
+                'hearts_5': 'assets/pirate/food/5.png',
+                'hearts_6': 'assets/pirate/food/6.png',
+                'hearts_7': 'assets/pirate/food/7.png',
+                'hearts_8': 'assets/pirate/food/8.png',
+                'hearts_9': 'assets/pirate/food/9.png',
+                'hearts_10': 'assets/pirate/food/10.png',
+            },
         },
 
         colours: {
