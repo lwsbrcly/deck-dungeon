@@ -191,7 +191,8 @@ window.addEventListener('load', function() {
       if (window.state && Array.isArray(window.state.eventHistory)) {
         for (var i = 0; i < window.state.eventHistory.length; i++) {
           var previous = window.state.eventHistory[i];
-          if (previous && /^\d+\.\d+ /.test(String(previous.text || ''))) {
+          // Only .1-.4 are card actions. .0 is the room-level FLEE marker.
+          if (previous && /^\d+\.[1-4] /.test(String(previous.text || ''))) {
             actionCount++;
           }
         }
