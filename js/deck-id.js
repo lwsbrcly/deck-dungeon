@@ -163,3 +163,59 @@ function shuffleSeeded(array, seed) {
 
   return array;
 }
+
+/*
+ * Log ordinals
+ *
+ * Card actions are numbered independently of room-level actions such as FLEE.
+ * The ordinal is derived from the surviving event history, so the existing
+ * snapshot-based undo system automatically rolls the numbering back with the
+ * rest of the game state.
+ *
+ * This is installed after game.js because the scripts are loaded in document
+ * order. It deliberately leaves the underlying log/event model untouched.
+ */
+window.addEventListener('load', function() {
+  if (typeof window.log !== 'function') return;
+
+  var originalLog = window.log;
+  var cardActionTypes = {
+    weapon: true,
+    monster: true,
+    fist: true,
+    potion: true
+  };
+
+  function isCardAction(text, eventType, recordEvent) {
+    if (recordEvent === false) return false;
+    if (cardActionTypes[eventType]) return true;
+
+    // Weapon/consumable discards currently do not supply an eventType.
+    // They are nevertheless card actions, so recognise their deliberately
+    // compact log form without counting ordinary diagnostic messages.
+    return /^(?:P1|P2|COOP) .* D$/.test(String(text));
+  }
+
+  window.log = function(text, recordEvent, eventType, weaponStrengths) {
+    var type = eventType || 'other';
+
+    if (isCardAction(text, type, recordEvent)) {
+      var actionCount = 0;
+      if (window.state && Array.isArray(window.state.eventHistory)) {
+        for (var i = 0; i < window.state.eventHistory.length; i++) {
+          var previous = window.state.eventHistory[i];
+          if (previous && /^\d+\.\d+ /.test(String(previous.text || ''))) {
+            actionCount++;
+          }
+        }
+      }
+
+      actionCount += 1;
+      var room = Math.floor((actionCount - 1) / 3) + 1;
+      var actionInRoom = ((actionCount - 1) % 3) + 1;
+      text = room + '.' + actionInRoom + ' ' + String(text);
+    }
+
+    return originalLog.call(this, text, recordEvent, eventType, weaponStrengths);
+  };
+});
