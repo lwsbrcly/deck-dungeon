@@ -172,6 +172,10 @@ function shuffleSeeded(array, seed) {
  * snapshot-based undo system automatically rolls the numbering back with the
  * rest of the game state.
  *
+ * Normally every room contributes exactly three card actions. The final room
+ * is the one exception: if its fourth card is the final monster, that action
+ * is still part of the final room and must be numbered 14.4 rather than 15.1.
+ *
  * This is installed after game.js because the scripts are loaded in document
  * order. It deliberately leaves the underlying log/event model untouched.
  */
@@ -211,8 +215,24 @@ window.addEventListener('load', function() {
       }
 
       actionCount += 1;
-      var room = Math.floor((actionCount - 1) / 3) + 1;
-      var actionInRoom = ((actionCount - 1) % 3) + 1;
+
+      var targetRooms = window.state && Number(window.state.targetRooms);
+      var finalRoom = targetRooms > 0 && window.state &&
+        Number(window.state.roomsCleared) >= targetRooms - 1;
+      var finalRoomStart = targetRooms > 0 ? (targetRooms - 1) * 3 + 1 : Infinity;
+
+      var room;
+      var actionInRoom;
+
+      if (finalRoom && actionCount >= finalRoomStart) {
+        // The final room may legitimately contain a fourth card action.
+        room = targetRooms;
+        actionInRoom = actionCount - finalRoomStart + 1;
+      } else {
+        room = Math.floor((actionCount - 1) / 3) + 1;
+        actionInRoom = ((actionCount - 1) % 3) + 1;
+      }
+
       text = room + '.' + actionInRoom + ' ' + String(text);
     }
 
