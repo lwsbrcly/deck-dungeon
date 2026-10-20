@@ -241,29 +241,32 @@ window.addEventListener('load', function() {
   };
 
   function boxifyCopiedLog(line, index, lines) {
-    var match = String(line).match(/^(\d+)-(FLEE|[1-4]) (.*)$/);
-    if (!match) return String(line);
+    var fleeMatch = String(line).match(/^(\d+)-FLEE$/);
+    var actionMatch = String(line).match(/^(\d+)-([1-4]) (.*)$/);
 
-    var room = match[1];
-    var position = match[2];
+    if (!fleeMatch && !actionMatch) return String(line);
+
+    var room = fleeMatch ? fleeMatch[1] : actionMatch[1];
 
     // Find the complete contiguous group of events belonging to this room.
     var start = index;
     while (start > 0) {
-      var previous = String(lines[start - 1]).match(/^(\d+)-(FLEE|[1-4]) /);
+      var previous = String(lines[start - 1]).match(/^(\d+)-(FLEE|[1-4])(?: |$)/);
       if (!previous || previous[1] !== room) break;
       start--;
     }
 
     var end = index;
     while (end + 1 < lines.length) {
-      var next = String(lines[end + 1]).match(/^(\d+)-(FLEE|[1-4]) /);
+      var next = String(lines[end + 1]).match(/^(\d+)-(FLEE|[1-4])(?: |$)/);
       if (!next || next[1] !== room) break;
       end++;
     }
 
     var connector = index === start ? '┬' : (index === end ? '└' : '├');
-    return room + connector + position + ' ' + match[3];
+
+    if (fleeMatch) return room + connector + 'FLEE';
+    return room + connector + actionMatch[2] + ' ' + actionMatch[3];
   }
 
   window.copyLogText = function() {
