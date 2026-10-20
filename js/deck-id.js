@@ -186,6 +186,15 @@ window.addEventListener('load', function() {
 
   var originalLog = window.log;
 
+  // Keep the card UI's suit symbols, but use unambiguous ASCII suit codes in
+  // the compact game log. This makes the log readable at small font sizes and
+  // when colour is unavailable.
+  window.logCard = function(card) {
+    if (!card) return '--';
+    var suitCodes = { spades: 'S', clubs: 'C', diamonds: 'D', hearts: 'H' };
+    return String(card.rank || card.value) + (suitCodes[card.suit] || '');
+  };
+
   function isCardAction(text, eventType, recordEvent) {
     if (recordEvent === false) return false;
     if (eventType === 'weapon' || eventType === 'monster' ||
