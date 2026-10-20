@@ -185,7 +185,6 @@ window.addEventListener('load', function() {
   if (typeof window.log !== 'function') return;
 
   var originalLog = window.log;
-  var originalCopyLogText = window.copyLogText;
 
   function isCardAction(text, eventType, recordEvent) {
     if (recordEvent === false) return false;
@@ -198,6 +197,12 @@ window.addEventListener('load', function() {
 
   function getCurrentRoom() {
     var cleared = Number(state && state.roomsCleared) || 0;
+    var target = Number(state && state.targetRooms) || 0;
+
+    // The final room is allowed a fourth card action. Removing its last card
+    // can increment roomsCleared to 14 before log() runs, but that action still
+    // belongs to room 14 rather than creating a nonexistent room 15.
+    if (target > 0 && cleared >= target) return target;
 
     // removeSelected() can clear a room and increment roomsCleared before the
     // action is logged. _roomWasDealt marks that exact transition, so the
