@@ -163,3 +163,133 @@ function shuffleSeeded(array, seed) {
 
   return array;
 }
+
+/*
+ * Log presentation layer.
+ *
+ * The live log stays deliberately plain and compact: room-action ordinals are
+ * rendered as 1-1, 1-2, 1-3, 2-0 FLEE, etc. This is important because the
+ * visible log is reverse chronological and only shows its four most recent
+ * entries.
+ *
+ * The complete copied log is chronological, so copyLogText() makes a second,
+ * presentation-only pass and replaces the hyphen with box-drawing connectors:
+ *   first event  -> ┬
+ *   middle event -> ├
+ *   final event  -> └
+ *
+ * Nothing in the stored game state contains the box characters. Undo therefore
+ * restores the ordinary log history exactly as it always has.
+ */
+window.addEventListener('load', function() {
+  if (typeof window.log !== 'function') return;
+
+  var originalLog = window.log;
+  var originalCopyLogText = window.copyLogText;
+
+  function isCardAction(text, eventType, recordEvent) {
+    if (recordEvent === false) return false;
+    if (eventType === 'weapon' || eventType === 'monster' ||
+        eventType === 'fist' || eventType === 'potion') return true;
+
+    // Discards currently do not pass an eventType.
+    return /^(?:P1|P2|COOP) .* D$/.test(String(text));
+  }
+
+  function getCurrentRoom() {
+    var cleared = Number(state && state.roomsCleared) || 0;
+
+    // removeSelected() can clear a room and increment roomsCleared before the
+    // action is logged. _roomWasDealt marks that exact transition, so the
+    // action belongs to the room just completed, not the newly dealt room.
+    if (state && state._roomWasDealt) return cleared;
+
+    return cleared + 1;
+  }
+
+  function countRoomActions(room) {
+    var count = 0;
+    var history = state && Array.isArray(state.logHistory) ? state.logHistory : [];
+    var prefix = new RegExp('^' + room + '-[1-4] ');
+
+    for (var i = 0; i < history.length; i++) {
+      if (prefix.test(String(history[i]))) count++;
+    }
+
+    return count;
+  }
+
+  function liveOrdinal(text, eventType, recordEvent) {
+    var room = getCurrentRoom();
+
+    if (eventType === 'flee' || String(text) === 'FLEE') {
+      return room + '-0 FLEE';
+    }
+
+    if (!isCardAction(text, eventType, recordEvent)) return String(text);
+
+    return room + '-' + (countRoomActions(room) + 1) + ' ' + String(text);
+  }
+
+  window.log = function(text, recordEvent, eventType, weaponStrengths) {
+    return originalLog.call(this, liveOrdinal(text, eventType, recordEvent), recordEvent, eventType, weaponStrengths);
+  };
+
+  function boxifyCopiedLog(line, index, lines) {
+    var match = String(line).match(/^(\d+)-(0|[1-4]) (.*)$/);
+    if (!match) return String(line);
+
+    var room = match[1];
+    var position = Number(match[2]);
+
+    // Find the complete contiguous group of events belonging to this room.
+    var start = index;
+    while (start > 0) {
+      var previous = String(lines[start - 1]).match(/^(\d+)-(0|[1-4]) /);
+      if (!previous || previous[1] !== room) break;
+      start--;
+    }
+
+    var end = index;
+    while (end + 1 < lines.length) {
+      var next = String(lines[end + 1]).match(/^(\d+)-(0|[1-4]) /);
+      if (!next || next[1] !== room) break;
+      end++;
+    }
+
+    var connector = index === start ? '┬' : (index === end ? '└' : '├');
+    return room + connector + position + ' ' + match[3];
+  }
+
+  window.copyLogText = function() {
+    var logHistory = state && Array.isArray(state.logHistory)
+      ? state.logHistory
+      : [];
+
+    if (!logHistory.length) return;
+
+    var logLines = logHistory.map(function(line, index, lines) {
+      return boxifyCopiedLog(line, index, lines);
+    });
+
+    var logText = logLines.map(function(line) {
+      return '• ' + line;
+    }).join('\n');
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(logText).then(function() {
+        var button = document.getElementById('copyLogBtn');
+        if (!button) return;
+        var original = button.textContent;
+        button.textContent = 'Copied!';
+        setTimeout(function() {
+          button.textContent = original;
+        }, 1200);
+      }).catch(function() {
+        alert('Could not copy the game log. Please select and copy it manually.');
+      });
+    } else {
+      alert('Could not copy the game log. Please select and copy it manually.');
+    }
+  };
+});
