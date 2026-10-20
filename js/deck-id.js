@@ -168,7 +168,7 @@ function shuffleSeeded(array, seed) {
  * Log presentation layer.
  *
  * The live log stays deliberately plain and compact: room-action ordinals are
- * rendered as 1-1, 1-2, 1-3, 2-0 FLEE, etc. This is important because the
+ * rendered as 1-1, 1-2, 1-3, 2-FLEE, etc. This is important because the
  * visible log is reverse chronological and only shows its four most recent
  * entries.
  *
@@ -228,7 +228,7 @@ window.addEventListener('load', function() {
     var room = getCurrentRoom();
 
     if (eventType === 'flee' || String(text) === 'FLEE') {
-      return room + '-0 FLEE';
+      return room + '-FLEE';
     }
 
     if (!isCardAction(text, eventType, recordEvent)) return String(text);
@@ -241,23 +241,23 @@ window.addEventListener('load', function() {
   };
 
   function boxifyCopiedLog(line, index, lines) {
-    var match = String(line).match(/^(\d+)-(0|[1-4]) (.*)$/);
+    var match = String(line).match(/^(\d+)-(FLEE|[1-4]) (.*)$/);
     if (!match) return String(line);
 
     var room = match[1];
-    var position = Number(match[2]);
+    var position = match[2];
 
     // Find the complete contiguous group of events belonging to this room.
     var start = index;
     while (start > 0) {
-      var previous = String(lines[start - 1]).match(/^(\d+)-(0|[1-4]) /);
+      var previous = String(lines[start - 1]).match(/^(\d+)-(FLEE|[1-4]) /);
       if (!previous || previous[1] !== room) break;
       start--;
     }
 
     var end = index;
     while (end + 1 < lines.length) {
-      var next = String(lines[end + 1]).match(/^(\d+)-(0|[1-4]) /);
+      var next = String(lines[end + 1]).match(/^(\d+)-(FLEE|[1-4]) /);
       if (!next || next[1] !== room) break;
       end++;
     }
