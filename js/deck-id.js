@@ -9,6 +9,9 @@
  *   Deck ID -> seed -> PRNG -> shuffle -> starting deck
  *
  * The ID is deliberately independent of themes and card artwork.
+ *
+ * This file does not yet change game startup. It provides the seed, encoder,
+ * decoder and deterministic shuffle that game.js can use when wired in.
  */
 
 var DECK_ID_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
@@ -32,6 +35,8 @@ function encodeDeckIdSeed(seed) {
     throw new Error('Deck ID seed must be a 64-bit unsigned integer.');
   }
 
+  // 64 bits require 11 base64url characters (the final character has only
+  // two meaningful bits).
   var output = '';
   for (var i = 0; i < 11; i++) {
     var shift = BigInt((10 - i) * 6);
@@ -58,6 +63,8 @@ function decodeDeckId(deckId) {
     seed = (seed << 6n) | BigInt(value);
   }
 
+  // The first 2 bits of the 66-bit base64 representation are padding and
+  // must be zero. This also rejects IDs that cannot represent a 64-bit seed.
   if (seed > 0xffffffffffffffffn) {
     throw new Error('Invalid Deck ID.');
   }
@@ -74,6 +81,7 @@ function decodeDeckId(deckId) {
 function createSeededRandom(seed) {
   var state = BigInt(seed) & 0xffffffffffffffffn;
 
+  // xorshift64* cannot operate from zero.
   if (state === 0n) state = 0x9e3779b97f4a7c15n;
 
   return function() {
@@ -84,6 +92,8 @@ function createSeededRandom(seed) {
 
     var result = (state * 0x2545f4914f6cdd1dn) & 0xffffffffffffffffn;
 
+    // Return a Number in [0, 1), using the upper 53 bits so Fisher-Yates can
+    // use it exactly as it currently uses Math.random().
     return Number(result >> 11n) / 9007199254740992;
   };
 }
@@ -93,6 +103,8 @@ async function seedFromDeck(deck) {
     throw new Error('Deck seed requires a deck array.');
   }
 
+  // The actual card IDs and their current order are the complete state we
+  // need. Theme names/artwork are deliberately excluded.
   var canonical = deck.map(function(card) {
     return typeof card === 'string' ? card : card.id;
   }).join('|');
@@ -101,6 +113,7 @@ async function seedFromDeck(deck) {
   var digest = await crypto.subtle.digest('SHA-256', bytes);
   var hash = new Uint8Array(digest);
 
+  // Use the first 64 bits of SHA-256 as the deterministic shuffle seed.
   var seed = 0n;
   for (var i = 0; i < 8; i++) {
     seed = (seed << 8n) | BigInt(hash[i]);
@@ -109,10 +122,18 @@ async function seedFromDeck(deck) {
   return seed;
 }
 
+/*
+ * Insert a small set of cards into an existing deck without changing the
+ * relative order of any cards already in that deck.
+ *
+ * The supplied seed determines both the order of the inserted cards and
+ * their insertion positions. The existing deck itself is never shuffled.
+ */
 function insertSeeded(array, cards, seed) {
   var random = createSeededRandom(seed);
   var inserted = cards.slice();
 
+  // Randomise only the four fled cards themselves.
   for (var i = inserted.length - 1; i > 0; i--) {
     var j = Math.floor(random() * (i + 1));
     var temp = inserted[i];
@@ -120,6 +141,8 @@ function insertSeeded(array, cards, seed) {
     inserted[j] = temp;
   }
 
+  // Insert each fled card at a deterministic position. Because we only splice
+  // into the existing array, all original cards retain their relative order.
   for (var k = 0; k < inserted.length; k++) {
     var position = Math.floor(random() * (array.length + 1));
     array.splice(position, 0, inserted[k]);
@@ -140,110 +163,3 @@ function shuffleSeeded(array, seed) {
 
   return array;
 }
-
-/*
- * Log ordinals
- *
- * Card actions are numbered independently of room-level actions such as FLEE.
- * The ordinal is derived from the surviving event history, so the existing
- * snapshot-based undo system automatically rolls the numbering back with the
- * rest of the game state.
- *
- * Normally every room contributes exactly three card actions. The final room
- * is the one exception: if its fourth card is the final monster, that action
- * is still part of the final room and must be numbered 14.4 rather than 15.1.
- *
- * FLEE is a room transition rather than a card action, so it is numbered N.0
- * for the new room. It can only occur as the first event of that room.
- *
- * The box-drawing connector shows the event's position within the room:
- *   ┬ = first event, ├ = continuing event, └ = final event.
- * This keeps the room grouping visible without relying on whitespace, so the
- * copied log remains legible in proportional fonts as well as monospace.
- */
-window.addEventListener('load', function() {
-  if (typeof window.log !== 'function') return;
-
-  var originalLog = window.log;
-  var cardActionTypes = {
-    weapon: true,
-    monster: true,
-    fist: true,
-    potion: true
-  };
-
-  function isCardAction(text, eventType, recordEvent) {
-    if (recordEvent === false) return false;
-    if (cardActionTypes[eventType]) return true;
-
-    return /^(?:P1|P2|COOP) .* D$/.test(String(text));
-  }
-
-  window.log = function(text, recordEvent, eventType, weaponStrengths) {
-    var type = eventType || 'other';
-    var originalText = String(text);
-
-    if (recordEvent !== false && (type === 'flee' || originalText === 'FLEE')) {
-      var fleeRoom = window.state && Number(window.state.roomsCleared) + 1;
-      if (fleeRoom > 0) {
-        text = fleeRoom + '┬0 FLEE';
-      }
-    } else if (isCardAction(text, type, recordEvent)) {
-      var actionCount = 0;
-      var previousRoomHadFlee = false;
-
-      if (window.state && Array.isArray(window.state.eventHistory)) {
-        for (var i = 0; i < window.state.eventHistory.length; i++) {
-          var previous = window.state.eventHistory[i];
-          var previousText = previous ? String(previous.text || '') : '';
-
-          // Only .1-.4 are card actions. .0 is the room-level FLEE marker.
-          if (/^\d+\.[1-4] /.test(previousText)) {
-            actionCount++;
-          }
-        }
-
-        // FLEE is always the first event of its room, so the immediately
-        // preceding event tells us whether this room starts with a FLEE.
-        if (window.state.eventHistory.length) {
-          var lastEvent = window.state.eventHistory[window.state.eventHistory.length - 1];
-          var lastText = lastEvent ? String(lastEvent.text || '') : '';
-          previousRoomHadFlee = /^\d+┬0 FLEE$/.test(lastText);
-        }
-      }
-
-      actionCount += 1;
-
-      var targetRooms = window.state && Number(window.state.targetRooms);
-      var finalRoom = targetRooms > 0 && window.state &&
-        Number(window.state.roomsCleared) >= targetRooms - 1;
-      var finalRoomStart = targetRooms > 0 ? (targetRooms - 1) * 3 + 1 : Infinity;
-
-      var room;
-      var actionInRoom;
-
-      if (finalRoom && actionCount >= finalRoomStart) {
-        room = targetRooms;
-        actionInRoom = actionCount - finalRoomStart + 1;
-      } else {
-        room = Math.floor((actionCount - 1) / 3) + 1;
-        actionInRoom = ((actionCount - 1) % 3) + 1;
-      }
-
-      var connector;
-      if (actionInRoom === 1) {
-        connector = previousRoomHadFlee ? '├' : '┬';
-      } else if (finalRoom && actionInRoom === 4) {
-        connector = '└';
-      } else if (actionInRoom === 3) {
-        connector = '└';
-      } else {
-        connector = '├';
-      }
-
-      text = room + connector + actionInRoom + ' ' + originalText;
-    }
-
-    return originalLog.call(this, text, recordEvent, eventType, weaponStrengths);
-  };
-});
