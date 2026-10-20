@@ -155,6 +155,11 @@ function shuffleSeeded(array, seed) {
  *
  * FLEE is a room transition rather than a card action, so it is numbered N.0
  * for the new room. It can only occur as the first event of that room.
+ *
+ * The box-drawing connector shows the event's position within the room:
+ *   ┬ = first event, ├ = continuing event, └ = final event.
+ * This keeps the room grouping visible without relying on whitespace, so the
+ * copied log remains legible in proportional fonts as well as monospace.
  */
 window.addEventListener('load', function() {
   if (typeof window.log !== 'function') return;
@@ -178,23 +183,32 @@ window.addEventListener('load', function() {
     var type = eventType || 'other';
     var originalText = String(text);
 
-    // FLEE is a room-level transition. At the point log() is called,
-    // roomsCleared represents the rooms already completed, so the room being
-    // entered is roomsCleared + 1.
     if (recordEvent !== false && (type === 'flee' || originalText === 'FLEE')) {
       var fleeRoom = window.state && Number(window.state.roomsCleared) + 1;
       if (fleeRoom > 0) {
-        text = fleeRoom + '.0 FLEE';
+        text = fleeRoom + '┬0 FLEE';
       }
     } else if (isCardAction(text, type, recordEvent)) {
       var actionCount = 0;
+      var previousRoomHadFlee = false;
+
       if (window.state && Array.isArray(window.state.eventHistory)) {
         for (var i = 0; i < window.state.eventHistory.length; i++) {
           var previous = window.state.eventHistory[i];
+          var previousText = previous ? String(previous.text || '') : '';
+
           // Only .1-.4 are card actions. .0 is the room-level FLEE marker.
-          if (previous && /^\d+\.[1-4] /.test(String(previous.text || ''))) {
+          if (/^\d+\.[1-4] /.test(previousText)) {
             actionCount++;
           }
+        }
+
+        // FLEE is always the first event of its room, so the immediately
+        // preceding event tells us whether this room starts with a FLEE.
+        if (window.state.eventHistory.length) {
+          var lastEvent = window.state.eventHistory[window.state.eventHistory.length - 1];
+          var lastText = lastEvent ? String(lastEvent.text || '') : '';
+          previousRoomHadFlee = /^\d+┬0 FLEE$/.test(lastText);
         }
       }
 
@@ -216,7 +230,18 @@ window.addEventListener('load', function() {
         actionInRoom = ((actionCount - 1) % 3) + 1;
       }
 
-      text = room + '.' + actionInRoom + ' ' + originalText;
+      var connector;
+      if (actionInRoom === 1) {
+        connector = previousRoomHadFlee ? '├' : '┬';
+      } else if (finalRoom && actionInRoom === 4) {
+        connector = '└';
+      } else if (actionInRoom === 3) {
+        connector = '└';
+      } else {
+        connector = '├';
+      }
+
+      text = room + connector + actionInRoom + ' ' + originalText;
     }
 
     return originalLog.call(this, text, recordEvent, eventType, weaponStrengths);
