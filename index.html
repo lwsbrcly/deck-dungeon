@@ -89,7 +89,7 @@
         
                     <img src="assets/ocean/logo.png"
                      class="theme-logo"
-                     alt="Ocean Deck">
+                     alt="Space Deck">
         
                     <div class="theme-description">
                         Explore the deep.<br>
@@ -257,10 +257,10 @@
             </div>
 
             <div class="dungeon-id-entry">
-              <label for="deckIdInput">Have a Run Log?</label>
+              <label for="replayLogInput">Have a Run Log?</label>
               <div class="dungeon-id-row">
-                <input type="text" id="deckIdInput" placeholder="Paste run log here">
-                <button type="button" class="primary-btn">Watch Replay</button>
+                <textarea id="replayLogInput" rows="4" spellcheck="false" placeholder="Paste run log here"></textarea>
+                <button type="button" class="primary-btn" onclick="watchReplay()">Watch Replay</button>
               </div>
             </div>
 
@@ -463,5 +463,6 @@
     <script src="js/deck-id.js"></script>
     <script src="js/animations.js"></script>
     <script src="js/game.js"></script>
+    <script src="js/replay.js"></script>
 </body>
 </html>
