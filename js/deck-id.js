@@ -314,31 +314,31 @@ window.addEventListener('load', function() {
    * Fixed challenge deck.
    *
    * PERFECT is a reserved Deck ID which bypasses the normal seeded shuffle.
-   * The order below is the 43-card game deck supplied by the player. The
-   * starting 2D dagger is intentionally omitted because it is created by
+   * The order below is the 43-card game deck supplied by the player, written
+   * in the order the player wants the cards to be DRAWN. The game's deck is
+   * dealt from the end of the array, so the stored array is reversed here.
+   *
+   * The starting 2D dagger is intentionally omitted because it is created by
    * startGame() separately; 2D must not appear in state.deck as well.
    *
    * Card IDs use the same internal representation as cards.js:
    *   clubsK, diamonds10, hearts6, spadesA, etc.
    */
   var PERFECT_DECK_ORDER = [
-    'diamonds10', 'clubsA', 'spadesA',
-    'hearts8', 'clubsK', 'spadesK',
-    'hearts6', 'clubsQ', 'spadesQ',
-    'hearts4', 'clubsJ', 'spadesJ',
-    'hearts2', 'clubs10', 'spades10',
-
-    'diamonds9', 'clubs9', 'spades9',
-    'diamonds8', 'clubs8', 'spades8',
-    'diamonds7', 'clubs7', 'spades7',
-    'diamonds6', 'clubs6', 'spades6',
-    'diamonds5', 'clubs5', 'spades5',
-    'diamonds4', 'clubs4', 'spades4',
-    'diamonds3', 'clubs3', 'spades3',
-    'clubs2', 'spades2',
-
-    'hearts10', 'hearts9', 'hearts7',
-    'hearts6', 'hearts5', 'hearts3'
+    'hearts3', 'hearts5', 'hearts6', 'hearts7', 'hearts9', 'hearts10',
+    'spades2', 'clubs2',
+    'spades3', 'clubs3', 'diamonds3',
+    'spades4', 'clubs4', 'diamonds4',
+    'spades5', 'clubs5', 'diamonds5',
+    'spades6', 'clubs6', 'diamonds6',
+    'spades7', 'clubs7', 'diamonds7',
+    'spades8', 'clubs8', 'diamonds8',
+    'spades9', 'clubs9', 'diamonds9',
+    'spades10', 'clubs10', 'hearts2',
+    'spadesJ', 'clubsJ', 'hearts4',
+    'spadesQ', 'clubsQ', 'hearts6',
+    'spadesK', 'clubsK', 'hearts8',
+    'spadesA', 'clubsA', 'diamonds10'
   ];
 
   var originalMakeDeck = null;
@@ -397,8 +397,7 @@ window.addEventListener('load', function() {
         window.startGame(undefined, 'PERFECT');
       } catch (error) {
         window.__deckDungeonPerfectDeck = false;
-        alert(error.message || 'Could not load the PERFECT deck.');
-        return;
+        throw error;
       }
       window.__deckDungeonPerfectDeck = false;
     };
