@@ -48,5 +48,17 @@ window.Replay = (() => {
 
     window.processReplayLog = processRunLog;
 
-    return { parseRunLog, processRunLog };
+    function watchReplay() {
+        const input = document.getElementById('replayLogInput');
+        try {
+            return processRunLog(input ? input.value : '');
+        } catch (error) {
+            alert(error.message);
+            return null;
+        }
+    }
+
+    window.watchReplay = watchReplay;
+
+    return { parseRunLog, processRunLog, watchReplay };
 })();
