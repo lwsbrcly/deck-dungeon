@@ -8,6 +8,7 @@ window.Replay = (() => {
     let playing = false;
     let replayClickHandler = null;
     let replayKeyHandler = null;
+    let replayLabelObserver = null;
 
     function cardIdFromLog(card) {
         const match = String(card || '').trim().toUpperCase().match(/^(10|[2-9]|[AJQK])([CDHS])$/);
@@ -91,16 +92,51 @@ window.Replay = (() => {
     }
 
     function setReplayLabels() {
-        const labels = ['← Back 1 Step', playing ? '❚❚ Pause' : '▶ Play', 'Forward 1 Step →', 'Take Over'];
-        ['action1', 'action2', 'undoBtn', 'refreshBtn'].forEach((id, index) => {
+        // Buttons 1 and 2 are owned by replay. The game normally rewrites these
+        // labels whenever selection/state changes; replay must immediately put
+        // its own controls back. Buttons 3 and 4 are deliberately left alone.
+        const labels = [
+            '← Back 1 Step',
+            playing ? '❚❚ Pause' : '▶ Play'
+        ];
+
+        ['action1', 'action2'].forEach((id, index) => {
             const button = document.getElementById(id);
-            if (button && button.textContent !== labels[index]) button.textContent = labels[index];
+            if (button && button.textContent !== labels[index]) {
+                button.textContent = labels[index];
+            }
         });
 
         const back = document.getElementById('action1');
         const forward = document.getElementById('undoBtn');
         if (back) back.disabled = nextActionIndex <= 0;
         if (forward) forward.disabled = nextActionIndex >= (run ? run.actions.length : 0);
+    }
+
+    function installReplayLabelGuard() {
+        if (replayLabelObserver) replayLabelObserver.disconnect();
+
+        const actionRow = document.querySelector('.action-buttons');
+        if (!actionRow) return;
+
+        replayLabelObserver = new MutationObserver(() => {
+            if (window.replayMode) setReplayLabels();
+        });
+
+        // Watch the whole action-button area because the game may change either
+        // the button text, classes, or the button nodes themselves during render.
+        replayLabelObserver.observe(actionRow, {
+            childList: true,
+            characterData: true,
+            subtree: true
+        });
+    }
+
+    function removeReplayLabelGuard() {
+        if (replayLabelObserver) {
+            replayLabelObserver.disconnect();
+            replayLabelObserver = null;
+        }
     }
 
     function waitForGameIdle(timeout = 10000) {
@@ -194,12 +230,8 @@ window.Replay = (() => {
             throw new Error('Game card-selection function is unavailable.');
         }
 
-        // Replay selects the card internally. The user cannot select cards while replayMode is active.
         window.selectCard(cardIndex);
         await new Promise(resolve => setTimeout(resolve, 80));
-
-        // action1/action2 have been repurposed as replay controls, so call the
-        // underlying game function directly rather than simulating a button click.
         invokeGameAction(action);
         await waitForActionComplete();
     }
@@ -268,6 +300,7 @@ window.Replay = (() => {
         playing = false;
         window.replayMode = false;
         window.replayRun = null;
+        removeReplayLabelGuard();
 
         if (replayClickHandler) {
             document.removeEventListener('click', replayClickHandler, true);
@@ -303,7 +336,6 @@ window.Replay = (() => {
                 return;
             }
 
-            // No manual card selections during replay.
             const card = target && target.closest
                 ? target.closest('#dungeon .dungeon-card-wrap, #dungeon .card')
                 : null;
@@ -339,6 +371,10 @@ window.Replay = (() => {
         const seed = window.decodeDeckId(replayRun.deckId);
         window.startGame(seed, replayRun.deckId);
         await waitForGameIdle();
+
+        // Install after the game has rendered the initial action controls, then
+        // immediately take ownership of buttons 1 and 2.
+        installReplayLabelGuard();
         setReplayLabels();
     }
 
