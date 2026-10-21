@@ -43,9 +43,7 @@ window.Replay = (() => {
     function parseActionLine(line) {
         const cleaned = line.replace(/^•\s*/, '').trim();
 
-        if (/FLEE\s*$/i.test(cleaned)) {
-            return { type: 'flee', raw: line };
-        }
+        if (/FLEE\s*$/i.test(cleaned)) return { type: 'flee', raw: line };
 
         const match = cleaned.match(
             /^(\d+)(?:[-┬├└])(\d+)\s+(p\d+)\s+(10|[2-9]|[AJQK])([CDHS])\s+([^\s]+)(?:\s+(\[[^\]]*\]))?/i
@@ -92,9 +90,9 @@ window.Replay = (() => {
     }
 
     function setReplayLabels() {
-        // Buttons 1 and 2 are owned by replay. The game normally rewrites these
-        // labels whenever selection/state changes; replay must immediately put
-        // its own controls back. Buttons 3 and 4 are deliberately left alone.
+        // Replay owns buttons 1 and 2. The normal game renderer changes these
+        // labels and also adds action-button-hidden when there is no selection.
+        // In replay mode they must remain visible and retain the replay controls.
         const labels = [
             '← Back 1 Step',
             playing ? '❚❚ Pause' : '▶ Play'
@@ -102,9 +100,10 @@ window.Replay = (() => {
 
         ['action1', 'action2'].forEach((id, index) => {
             const button = document.getElementById(id);
-            if (button && button.textContent !== labels[index]) {
-                button.textContent = labels[index];
-            }
+            if (!button) return;
+
+            button.classList.remove('action-button-hidden');
+            if (button.textContent !== labels[index]) button.textContent = labels[index];
         });
 
         const back = document.getElementById('action1');
@@ -123,11 +122,10 @@ window.Replay = (() => {
             if (window.replayMode) setReplayLabels();
         });
 
-        // Watch the whole action-button area because the game may change either
-        // the button text, classes, or the button nodes themselves during render.
         replayLabelObserver.observe(actionRow, {
             childList: true,
             characterData: true,
+            attributes: true,
             subtree: true
         });
     }
@@ -161,14 +159,8 @@ window.Replay = (() => {
         return new Promise((resolve, reject) => {
             const started = Date.now();
             function check() {
-                if (window.state && !window.state.actionInProgress) {
-                    resolve();
-                    return;
-                }
-                if (Date.now() - started > timeout) {
-                    reject(new Error('Replay timed out waiting for the action to complete.'));
-                    return;
-                }
+                if (window.state && !window.state.actionInProgress) return resolve();
+                if (Date.now() - started > timeout) return reject(new Error('Replay timed out waiting for the action to complete.'));
                 setTimeout(check, 50);
             }
             check();
@@ -222,13 +214,8 @@ window.Replay = (() => {
 
     async function executeAction(action) {
         const cardIndex = findCardIndex(action.cardId);
-        if (cardIndex < 0) {
-            throw new Error(`Replay expected ${action.card} (${action.cardId}), but it is not in the current room.`);
-        }
-
-        if (typeof window.selectCard !== 'function') {
-            throw new Error('Game card-selection function is unavailable.');
-        }
+        if (cardIndex < 0) throw new Error(`Replay expected ${action.card} (${action.cardId}), but it is not in the current room.`);
+        if (typeof window.selectCard !== 'function') throw new Error('Game card-selection function is unavailable.');
 
         window.selectCard(cardIndex);
         await new Promise(resolve => setTimeout(resolve, 80));
@@ -237,9 +224,7 @@ window.Replay = (() => {
     }
 
     async function executeFlee() {
-        if (typeof window.refreshDungeon !== 'function') {
-            throw new Error('Game flee function is unavailable.');
-        }
+        if (typeof window.refreshDungeon !== 'function') throw new Error('Game flee function is unavailable.');
         window.refreshDungeon();
         await waitForActionComplete();
     }
@@ -291,9 +276,7 @@ window.Replay = (() => {
         if (playing) {
             playing = false;
             setReplayLabels();
-        } else {
-            playLoop();
-        }
+        } else playLoop();
     }
 
     function takeOver() {
@@ -385,7 +368,6 @@ window.Replay = (() => {
     }
 
     window.processReplayLog = processRunLog;
-
     async function watchReplay() {
         const input = document.getElementById('replayLogInput');
         try {
@@ -398,7 +380,6 @@ window.Replay = (() => {
             return null;
         }
     }
-
     window.watchReplay = watchReplay;
 
     function bindWatchReplayButton() {
