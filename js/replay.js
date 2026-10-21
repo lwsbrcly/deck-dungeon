@@ -1,6 +1,6 @@
 // Replay support — deliberately kept separate from the main game logic.
 // Parses a run log, starts the real game engine on that deck, then drives the
-// existing UI controls as an artificial player.
+// existing UI controls as an artificial player....
 
 window.Replay = (() => {
     let run = null;
