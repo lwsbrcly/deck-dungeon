@@ -1,5 +1,5 @@
 // Replay support — deliberately kept separate from the main game logic.
-// This first step only parses and validates a pasted copied run log.
+// This step parses a pasted copied run log into a clean sequence of replay actions.
 
 window.Replay = (() => {
     function parseRunLog(rawLog) {
@@ -28,20 +28,102 @@ window.Replay = (() => {
         if (!deckId) throw new Error('Run log has an empty Deck ID.');
         if (!actionLines.length) throw new Error('Run log contains no actions.');
 
+        const actions = actionLines.map(parseActionLine);
+
         return {
             deckId,
             mode,
             outcome,
-            actions: actionLines
+            actions
+        };
+    }
+
+    function parseActionLine(line) {
+        const cleaned = line.replace(/^•\s*/, '').trim();
+
+        // Flee entries are deliberately treated as their own action type.
+        if (/FLEE\s*$/i.test(cleaned)) {
+            return {
+                type: 'flee',
+                raw: line
+            };
+        }
+
+        // Expected action format is broadly:
+        //   1-1 p1 7C 2D [20,15]
+        //   1-2 p1 5H D [15,15]
+        //   1-3 p1 8D E
+        //   1-4 p1 9S --
+        // The exact room/action prefix is retained, but the replay executor only
+        // needs player, card and the suit-specific result.
+        const match = cleaned.match(
+            /^(\d+)(?:[-┬├└])(\d+)\s+(p\d+)\s+([0-9AJQK]+[CDHS])\s+([^\s]+)(?:\s+(\[[^\]]*\]))?/i
+        );
+
+        if (!match) {
+            throw new Error(`Could not parse action line: ${line}`);
+        }
+
+        const room = Number(match[1]);
+        const actionNumber = Number(match[2]);
+        const player = Number(match[3].slice(1));
+        const card = match[4].toUpperCase();
+        const result = match[5].toUpperCase();
+        const hp = match[6] || null;
+        const suit = card.slice(-1);
+
+        let action;
+
+        if (suit === 'H') {
+            // Hearts: button 1 = consume, button 2 = discard.
+            action = result === 'D' ? 'discard' : 'consume';
+        } else if (suit === 'D') {
+            // Diamonds: button 1 = equip, button 2 = discard.
+            action = result === 'D' ? 'discard' : 'equip';
+        } else if (suit === 'C' || suit === 'S') {
+            // Clubs / Spades: button 1 = fight with weapon, button 2 = fight bare.
+            action = result === '--' ? 'bare' : 'weapon';
+        } else {
+            throw new Error(`Unknown card suit in action line: ${line}`);
+        }
+
+        return {
+            type: 'action',
+            room,
+            actionNumber,
+            player,
+            card,
+            suit,
+            action,
+            weapon: (suit === 'C' || suit === 'S') && result !== '--' ? result : null,
+            hp,
+            raw: line
         };
     }
 
     function processRunLog(rawLog) {
         const run = parseRunLog(rawLog);
-        const result = `${run.actions.length} actions. ${run.outcome.toLowerCase()}.`;
 
         console.log('Replay run log received:', run);
-        alert(`Run log received. Deck ID=${run.deckId}. ${run.mode} mode. ${result}`);
+
+        const actionSummary = run.actions.map((action, index) => {
+            if (action.type === 'flee') {
+                return `${index + 1}. FLEE`;
+            }
+
+            let detail = `${action.player}: ${action.card} → ${action.action}`;
+            if (action.weapon) detail += ` (${action.weapon})`;
+            if (action.hp) detail += ` ${action.hp}`;
+            return `${index + 1}. ${detail}`;
+        }).join('\n');
+
+        alert(
+            `Run log received.\n\n` +
+            `Deck ID: ${run.deckId}\n` +
+            `Mode: ${run.mode}\n` +
+            `Actions: ${run.actions.length}\n\n` +
+            actionSummary
+        );
 
         return run;
     }
@@ -60,5 +142,5 @@ window.Replay = (() => {
 
     window.watchReplay = watchReplay;
 
-    return { parseRunLog, processRunLog, watchReplay };
+    return { parseRunLog, parseActionLine, processRunLog, watchReplay };
 })();
