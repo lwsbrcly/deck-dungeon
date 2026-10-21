@@ -8,7 +8,7 @@ window.Replay = (() => {
     let playing = false;
     let replayClickHandler = null;
     let replayKeyHandler = null;
-    let replayLabelObserver = null;
+    let replayLabelTimer = null;
 
     function cardIdFromLog(card) {
         const match = String(card || '').trim().toUpperCase().match(/^(10|[2-9]|[AJQK])([CDHS])$/);
@@ -76,47 +76,40 @@ window.Replay = (() => {
     }
 
     // Replay controls are deliberately independent of the game's contextual
-    // action labels. Buttons 1-4 must always read as replay controls here.
+    // action labels. Buttons 1-4 always display replay controls while active.
     function setReplayLabels() {
+        if (!window.replayMode) return;
         const labels = [
             '← Back 1 Step',
             playing ? '❚❚ Pause' : '▶ Play',
             'Forward 1 Step →',
             'Take Over'
         ];
-
         ['action1', 'action2', 'undoBtn', 'refreshBtn'].forEach((id, index) => {
             const button = document.getElementById(id);
             if (!button) return;
             button.classList.remove('action-button-hidden');
             if (button.textContent !== labels[index]) button.textContent = labels[index];
         });
-
         const back = document.getElementById('action1');
         const forward = document.getElementById('undoBtn');
         if (back) back.disabled = nextActionIndex <= 0;
         if (forward) forward.disabled = nextActionIndex >= (run ? run.actions.length : 0);
     }
 
-    function installReplayLabelGuard() {
-        if (replayLabelObserver) replayLabelObserver.disconnect();
-        const actionRow = document.querySelector('.action-buttons');
-        if (!actionRow) return;
-        replayLabelObserver = new MutationObserver(() => {
-            if (window.replayMode) setReplayLabels();
-        });
-        replayLabelObserver.observe(actionRow, {
-            childList: true,
-            characterData: true,
-            attributes: true,
-            subtree: true
-        });
+    // Do not observe the action row: game.js mutates it during render and an
+    // attribute/text MutationObserver can feed back into render indefinitely.
+    // A lightweight poll is sufficient to re-assert replay labels after render.
+    function startReplayLabelGuard() {
+        stopReplayLabelGuard();
+        setReplayLabels();
+        replayLabelTimer = setInterval(setReplayLabels, 100);
     }
 
-    function removeReplayLabelGuard() {
-        if (replayLabelObserver) {
-            replayLabelObserver.disconnect();
-            replayLabelObserver = null;
+    function stopReplayLabelGuard() {
+        if (replayLabelTimer) {
+            clearInterval(replayLabelTimer);
+            replayLabelTimer = null;
         }
     }
 
@@ -237,7 +230,7 @@ window.Replay = (() => {
         playing = false;
         window.replayMode = false;
         window.replayRun = null;
-        removeReplayLabelGuard();
+        stopReplayLabelGuard();
         if (replayClickHandler) { document.removeEventListener('click', replayClickHandler, true); replayClickHandler = null; }
         if (replayKeyHandler) { document.removeEventListener('keydown', replayKeyHandler, true); replayKeyHandler = null; }
         if (typeof window.render === 'function') window.render();
@@ -278,8 +271,7 @@ window.Replay = (() => {
         const seed = window.decodeDeckId(replayRun.deckId);
         window.startGame(seed, replayRun.deckId);
         await waitForGameIdle();
-        installReplayLabelGuard();
-        setReplayLabels();
+        startReplayLabelGuard();
     }
 
     function processRunLog(rawLog) {
@@ -296,7 +288,9 @@ window.Replay = (() => {
             await startReplay(parsed);
             return parsed;
         } catch (error) {
-            takeOver(); alert(error.message); return null;
+            takeOver();
+            alert(error.message);
+            return null;
         }
     }
     window.watchReplay = watchReplay;
