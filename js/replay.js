@@ -13,34 +13,27 @@ window.Replay = (() => {
 
     function parseRunLog(rawLog) {
         if (typeof rawLog !== 'string' || !rawLog.trim()) throw new Error('Please paste a run log first.');
-
         const lines = rawLog.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
         const deckLine = lines.find(line => /^•?\s*Deck ID:\s*/i.test(line));
         const modeLine = lines.find(line => /^•?\s*Mode:\s*(NORMAL|HARD|ULTRA)\s*$/i.test(line));
         const outcomeLine = lines.find(line => /^•?\s*GAME OVER\s+—\s+/i.test(line));
-
         if (!deckLine) throw new Error('Run log is missing a Deck ID.');
         if (!modeLine) throw new Error('Run log is missing a Mode (NORMAL, HARD or ULTRA).');
         if (!outcomeLine) throw new Error('Run log is missing its GAME OVER line.');
-
         const deckId = deckLine.replace(/^•?\s*Deck ID:\s*/i, '').trim();
         const mode = modeLine.match(/^•?\s*Mode:\s*(NORMAL|HARD|ULTRA)\s*$/i)[1].toUpperCase();
         const outcome = outcomeLine.replace(/^•?\s*GAME OVER\s+—\s*/i, '').trim();
         const actionLines = lines.filter(line => /^•?\s*\d+(?:[-┬├└])(?:\d+|FLEE)\b/i.test(line));
-
         if (!deckId) throw new Error('Run log has an empty Deck ID.');
         if (!actionLines.length) throw new Error('Run log contains no actions.');
-
         return { deckId, mode, outcome, actions: actionLines.map(parseActionLine) };
     }
 
     function parseActionLine(line) {
         const cleaned = line.replace(/^•\s*/, '').trim();
         if (/FLEE\s*$/i.test(cleaned)) return { type: 'flee', raw: line };
-
         const match = cleaned.match(/^(\d+)(?:[-┬├└])(\d+)\s+(p\d+)\s+([0-9AJQK]+[CDHS])\s+([^\s]+)(?:\s+(\[[^\]]*\]))?/i);
         if (!match) throw new Error(`Could not parse action line: ${line}`);
-
         const room = Number(match[1]);
         const actionNumber = Number(match[2]);
         const player = Number(match[3].slice(1));
@@ -48,18 +41,12 @@ window.Replay = (() => {
         const result = match[5].toUpperCase();
         const hp = match[6] || null;
         const suit = card.slice(-1);
-
         let action;
         if (suit === 'H') action = result === 'D' ? 'discard' : 'consume';
         else if (suit === 'D') action = result === 'D' ? 'discard' : 'equip';
         else if (suit === 'C' || suit === 'S') action = result === '--' ? 'bare' : 'weapon';
         else throw new Error(`Unknown card suit in action line: ${line}`);
-
-        return {
-            type: 'action', room, actionNumber, player, card, suit, action,
-            weapon: (suit === 'C' || suit === 'S') && result !== '--' ? result : null,
-            hp, raw: line
-        };
+        return { type: 'action', room, actionNumber, player, card, suit, action, weapon: (suit === 'C' || suit === 'S') && result !== '--' ? result : null, hp, raw: line };
     }
 
     function configureReplayGame(replayRun) {
@@ -67,11 +54,9 @@ window.Replay = (() => {
         const hardInput = document.getElementById('hardModeInput');
         const ultraInput = document.getElementById('ultraHardModeInput');
         const hasP2 = replayRun.actions.some(action => action.type === 'action' && action.player === 2);
-
         if (modeSelect) modeSelect.value = hasP2 ? 'coop' : 'solo_dagger';
         if (hardInput) hardInput.checked = replayRun.mode === 'HARD' || replayRun.mode === 'ULTRA';
         if (ultraInput) ultraInput.checked = replayRun.mode === 'ULTRA';
-
         window.replayMode = true;
         window.replayRun = replayRun;
         nextActionIndex = 0;
@@ -83,7 +68,7 @@ window.Replay = (() => {
         const labels = ['← Back 1 Step', playing ? '❚❚ Pause' : '▶ Play', 'Forward 1 Step →', 'Take Over'];
         ['action1', 'action2', 'undoBtn', 'refreshBtn'].forEach((id, index) => {
             const button = document.getElementById(id);
-            if (button) button.textContent = labels[index];
+            if (button && button.textContent !== labels[index]) button.textContent = labels[index];
         });
         const back = document.getElementById('action1');
         const forward = document.getElementById('undoBtn');
@@ -125,14 +110,11 @@ window.Replay = (() => {
         const cardIndex = findCardIndex(action.card);
         if (cardIndex < 0) throw new Error(`Replay expected ${action.card}, but it is not in the current room.`);
         if (typeof window.selectCard !== 'function') throw new Error('Game card-selection function is unavailable.');
-
         window.selectCard(cardIndex);
         await new Promise(resolve => setTimeout(resolve, 80));
-
         const buttonId = (action.action === 'discard' || action.action === 'bare') ? 'action2' : 'action1';
         const button = document.getElementById(buttonId);
         if (!button || button.disabled) throw new Error(`Replay could not invoke ${buttonId} for ${action.card}.`);
-
         internalClick = true;
         try { button.click(); } finally { internalClick = false; }
         await waitForActionComplete();
@@ -176,16 +158,12 @@ window.Replay = (() => {
             setReplayLabels(true);
             alert(error.message);
         }
-        if (nextActionIndex >= (run ? run.actions.length : 0)) {
-            playing = false;
-            setReplayLabels(true);
-        }
+        if (nextActionIndex >= (run ? run.actions.length : 0)) { playing = false; setReplayLabels(true); }
     }
 
     function togglePlay() {
         if (!run) return;
-        if (playing) { playing = false; setReplayLabels(true); }
-        else playLoop();
+        if (playing) { playing = false; setReplayLabels(true); } else playLoop();
     }
 
     function takeOver() {
@@ -205,8 +183,7 @@ window.Replay = (() => {
             const target = event.target;
             const button = target && target.closest ? target.closest('#action1, #action2, #undoBtn, #refreshBtn') : null;
             if (button) {
-                event.preventDefault();
-                event.stopImmediatePropagation();
+                event.preventDefault(); event.stopImmediatePropagation();
                 if (button.id === 'action1') backOneStep();
                 else if (button.id === 'action2') togglePlay();
                 else if (button.id === 'undoBtn') forwardOneStep();
@@ -217,21 +194,19 @@ window.Replay = (() => {
             if (card) { event.preventDefault(); event.stopImmediatePropagation(); }
         };
         document.addEventListener('click', replayClickHandler, true);
-
         replayKeyHandler = function(event) {
             if (!window.replayMode || internalClick) return;
             const key = String(event.key || '').toLowerCase();
-            if (key === 'q' || key === 'w' || key === 'v' || key === 'r') {
-                event.preventDefault();
-                event.stopImmediatePropagation();
-            }
+            if (key === 'q' || key === 'w' || key === 'v' || key === 'r') { event.preventDefault(); event.stopImmediatePropagation(); }
         };
         document.addEventListener('keydown', replayKeyHandler, true);
     }
 
     function installReplayLabelObserver() {
         if (controlObserver) controlObserver.disconnect();
-        controlObserver = new MutationObserver(() => { if (window.replayMode) setReplayLabels(true); });
+        controlObserver = new MutationObserver(() => {
+            if (window.replayMode) setReplayLabels(true);
+        });
         ['action1', 'action2', 'undoBtn', 'refreshBtn'].forEach(id => {
             const button = document.getElementById(id);
             if (button) controlObserver.observe(button, { childList: true, characterData: true, subtree: true });
@@ -242,13 +217,11 @@ window.Replay = (() => {
         run = replayRun;
         configureReplayGame(replayRun);
         installReplayGuards();
+        // The observer only watches for game code changing labels. setReplayLabels()
+        // itself is idempotent, preventing a mutation-observer feedback loop.
         installReplayLabelObserver();
-
         if (typeof window.showScreen === 'function') window.showScreen('game-ui');
-        if (typeof window.decodeDeckId !== 'function' || typeof window.startGame !== 'function') {
-            throw new Error('Game start functions are unavailable.');
-        }
-
+        if (typeof window.decodeDeckId !== 'function' || typeof window.startGame !== 'function') throw new Error('Game start functions are unavailable.');
         const seed = window.decodeDeckId(replayRun.deckId);
         window.startGame(seed, replayRun.deckId);
         await waitForGameIdle();
@@ -262,7 +235,6 @@ window.Replay = (() => {
     }
 
     window.processReplayLog = processRunLog;
-
     async function watchReplay() {
         const input = document.getElementById('replayLogInput');
         try {
@@ -275,21 +247,14 @@ window.Replay = (() => {
             return null;
         }
     }
-
     window.watchReplay = watchReplay;
 
-    // Also bind the button directly. This avoids relying solely on the inline
-    // onclick attribute and gives replay a single, explicit entry point.
     function bindWatchReplayButton() {
         const button = document.querySelector('#replayLogInput + button');
         if (!button || button.dataset.replayBound === 'true') return;
         button.dataset.replayBound = 'true';
-        button.addEventListener('click', event => {
-            event.preventDefault();
-            window.watchReplay();
-        });
+        button.addEventListener('click', event => { event.preventDefault(); window.watchReplay(); });
     }
-
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindWatchReplayButton);
     else bindWatchReplayButton();
 
