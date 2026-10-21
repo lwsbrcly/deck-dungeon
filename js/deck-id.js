@@ -289,9 +289,19 @@ window.addEventListener('load', function() {
       return boxifyCopiedLog(line, index, lines);
     });
 
-    var logText = logLines.map(function(line) {
+    var modeLabel = 'NORMAL';
+    if (state && state.ultraHardMode) {
+      modeLabel = 'ULTRA';
+    } else if (state && state.hardMode) {
+      modeLabel = 'HARD';
+    }
+
+    var logText = [
+      '• Deck ID: ' + (state && state.deckId ? state.deckId : ''),
+      '• Mode: ' + modeLabel
+    ].concat(logLines.map(function(line) {
       return '• ' + line;
-    }).join('\n');
+    })).join('\n');
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(logText).then(function() {
@@ -399,7 +409,6 @@ window.addEventListener('load', function() {
         window.__deckDungeonPerfectDeck = false;
         throw error;
       }
-      window.__deckDungeonPerfectDeck = false;
     };
   }
 });
