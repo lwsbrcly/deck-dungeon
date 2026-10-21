@@ -309,4 +309,99 @@ window.addEventListener('load', function() {
       alert('Could not copy the game log. Please select and copy it manually.');
     }
   };
+
+  /*
+   * Fixed challenge deck.
+   *
+   * PERFECT is a reserved Deck ID which bypasses the normal seeded shuffle.
+   * The order below is the 43-card game deck supplied by the player. The
+   * starting 2D dagger is intentionally omitted because it is created by
+   * startGame() separately; 2D must not appear in state.deck as well.
+   *
+   * Card IDs use the same internal representation as cards.js:
+   *   clubsK, diamonds10, hearts6, spadesA, etc.
+   */
+  var PERFECT_DECK_ORDER = [
+    'diamonds10', 'clubsA', 'spadesA',
+    'hearts8', 'clubsK', 'spadesK',
+    'hearts6', 'clubsQ', 'spadesQ',
+    'hearts4', 'clubsJ', 'spadesJ',
+    'hearts2', 'clubs10', 'spades10',
+
+    'diamonds9', 'clubs9', 'spades9',
+    'diamonds8', 'clubs8', 'spades8',
+    'diamonds7', 'clubs7', 'spades7',
+    'diamonds6', 'clubs6', 'spades6',
+    'diamonds5', 'clubs5', 'spades5',
+    'diamonds4', 'clubs4', 'spades4',
+    'diamonds3', 'clubs3', 'spades3',
+    'clubs2', 'spades2',
+
+    'hearts10', 'hearts9', 'hearts7',
+    'hearts6', 'hearts5', 'hearts3'
+  ];
+
+  function buildPerfectDeck() {
+    if (typeof window.makeDeck !== 'function') {
+      throw new Error('The card deck is not ready.');
+    }
+
+    // makeDeck() gives us the game's normal card objects (including theme
+    // names and animations). We only replace their order.
+    var normalDeck = window.makeDeck(0n);
+    var byId = {};
+
+    normalDeck.forEach(function(card) {
+      byId[card.id] = card;
+    });
+
+    var missing = PERFECT_DECK_ORDER.filter(function(id) { return !byId[id]; });
+    if (missing.length) {
+      throw new Error('PERFECT deck contains unavailable card(s): ' + missing.join(', '));
+    }
+
+    return PERFECT_DECK_ORDER.map(function(id) { return byId[id]; });
+  }
+
+  // game.js is loaded after this file, so install the fixed-deck hook once all
+  // game functions exist. Normal Deck IDs continue through the original paths.
+  var originalMakeDeck = null;
+  var originalEnterDungeonId = null;
+
+  window.addEventListener('load', function() {
+    if (typeof window.makeDeck !== 'function' || typeof window.enterDungeonId !== 'function') return;
+
+    originalMakeDeck = window.makeDeck;
+    originalEnterDungeonId = window.enterDungeonId;
+
+    window.makeDeck = function(seed) {
+      if (window.__deckDungeonPerfectDeck === true) {
+        return buildPerfectDeck();
+      }
+      return originalMakeDeck(seed);
+    };
+
+    window.enterDungeonId = function() {
+      var input = document.getElementById('deckIdInput');
+      var id = input ? input.value.trim() : '';
+
+      if (id.toUpperCase() !== 'PERFECT') {
+        return originalEnterDungeonId.call(this);
+      }
+
+      if (typeof window.stopDeckDungeonTheme === 'function') {
+        window.stopDeckDungeonTheme();
+      }
+
+      showScreen('game-ui');
+      window.__deckDungeonPerfectDeck = true;
+      try {
+        window.startGame(undefined, 'PERFECT');
+      } catch (error) {
+        window.__deckDungeonPerfectDeck = false;
+        throw error;
+      }
+      window.__deckDungeonPerfectDeck = false;
+    };
+  });
 });
