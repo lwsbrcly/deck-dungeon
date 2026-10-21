@@ -1,6 +1,6 @@
 // Replay support — deliberately kept separate from the main game logic.
 // Parses a run log, starts the real game engine on that deck, then drives the
-// existing UI controls as an artificial player....
+// existing UI controls as an artificial player.
 
 window.Replay = (() => {
     let run = null;
@@ -10,6 +10,15 @@ window.Replay = (() => {
     let controlObserver = null;
     let replayClickHandler = null;
     let replayKeyHandler = null;
+
+    function cardIdFromLog(card) {
+        const match = String(card || '').trim().toUpperCase().match(/^([0-9]+|10|[AJQK])([CDHS])$/);
+        if (!match) throw new Error(`Invalid card code: ${card}`);
+
+        const rank = match[1];
+        const suitNames = { C: 'clubs', D: 'diamonds', H: 'hearts', S: 'spades' };
+        return `${suitNames[match[2]]}${rank}`;
+    }
 
     function parseRunLog(rawLog) {
         if (typeof rawLog !== 'string' || !rawLog.trim()) throw new Error('Please paste a run log first.');
@@ -46,7 +55,13 @@ window.Replay = (() => {
         else if (suit === 'D') action = result === 'D' ? 'discard' : 'equip';
         else if (suit === 'C' || suit === 'S') action = result === '--' ? 'bare' : 'weapon';
         else throw new Error(`Unknown card suit in action line: ${line}`);
-        return { type: 'action', room, actionNumber, player, card, suit, action, weapon: (suit === 'C' || suit === 'S') && result !== '--' ? result : null, hp, raw: line };
+        return {
+            type: 'action', room, actionNumber, player, card, cardId: cardIdFromLog(card),
+            suit, action,
+            weapon: (suit === 'C' || suit === 'S') && result !== '--' ? result : null,
+            weaponId: (suit === 'C' || suit === 'S') && result !== '--' ? cardIdFromLog(result) : null,
+            hp, raw: line
+        };
     }
 
     function configureReplayGame(replayRun) {
@@ -100,15 +115,19 @@ window.Replay = (() => {
         });
     }
 
-    function findCardIndex(cardCode) {
+    function findCardIndex(cardId) {
         const state = window.state;
-        if (!state || !Array.isArray(state.dungeon) || typeof window.logCard !== 'function') return -1;
-        return state.dungeon.findIndex(card => window.logCard(card).toUpperCase() === cardCode);
+        if (!state || !Array.isArray(state.dungeon)) return -1;
+        return state.dungeon.findIndex(card => {
+            if (!card) return false;
+            if (card.id === cardId) return true;
+            return `${card.suit}${card.rank || card.value}`.toLowerCase() === cardId.toLowerCase();
+        });
     }
 
     async function executeAction(action) {
-        const cardIndex = findCardIndex(action.card);
-        if (cardIndex < 0) throw new Error(`Replay expected ${action.card}, but it is not in the current room.`);
+        const cardIndex = findCardIndex(action.cardId);
+        if (cardIndex < 0) throw new Error(`Replay expected ${action.card} (${action.cardId}), but it is not in the current room.`);
         if (typeof window.selectCard !== 'function') throw new Error('Game card-selection function is unavailable.');
         window.selectCard(cardIndex);
         await new Promise(resolve => setTimeout(resolve, 80));
@@ -217,8 +236,6 @@ window.Replay = (() => {
         run = replayRun;
         configureReplayGame(replayRun);
         installReplayGuards();
-        // The observer only watches for game code changing labels. setReplayLabels()
-        // itself is idempotent, preventing a mutation-observer feedback loop.
         installReplayLabelObserver();
         if (typeof window.showScreen === 'function') window.showScreen('game-ui');
         if (typeof window.decodeDeckId !== 'function' || typeof window.startGame !== 'function') throw new Error('Game start functions are unavailable.');
