@@ -341,14 +341,17 @@ window.addEventListener('load', function() {
     'hearts6', 'hearts5', 'hearts3'
   ];
 
+  var originalMakeDeck = null;
+  var originalEnterDungeonId = null;
+
   function buildPerfectDeck() {
-    if (typeof window.makeDeck !== 'function') {
+    if (typeof originalMakeDeck !== 'function') {
       throw new Error('The card deck is not ready.');
     }
 
-    // makeDeck() gives us the game's normal card objects (including theme
-    // names and animations). We only replace their order.
-    var normalDeck = window.makeDeck(0n);
+    // Use the game's normal card factory to obtain the correctly themed card
+    // objects, then replace only their order.
+    var normalDeck = originalMakeDeck(0n);
     var byId = {};
 
     normalDeck.forEach(function(card) {
@@ -363,14 +366,9 @@ window.addEventListener('load', function() {
     return PERFECT_DECK_ORDER.map(function(id) { return byId[id]; });
   }
 
-  // game.js is loaded after this file, so install the fixed-deck hook once all
-  // game functions exist. Normal Deck IDs continue through the original paths.
-  var originalMakeDeck = null;
-  var originalEnterDungeonId = null;
-
-  window.addEventListener('load', function() {
-    if (typeof window.makeDeck !== 'function' || typeof window.enterDungeonId !== 'function') return;
-
+  // game.js is loaded after this file. By the time this load handler runs all
+  // game functions exist, so install the fixed-deck hook directly here.
+  if (typeof window.makeDeck === 'function' && typeof window.enterDungeonId === 'function') {
     originalMakeDeck = window.makeDeck;
     originalEnterDungeonId = window.enterDungeonId;
 
@@ -399,9 +397,10 @@ window.addEventListener('load', function() {
         window.startGame(undefined, 'PERFECT');
       } catch (error) {
         window.__deckDungeonPerfectDeck = false;
-        throw error;
+        alert(error.message || 'Could not load the PERFECT deck.');
+        return;
       }
       window.__deckDungeonPerfectDeck = false;
     };
-  });
+  }
 });
