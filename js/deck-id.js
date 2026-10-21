@@ -325,7 +325,7 @@ window.addEventListener('load', function() {
    *   clubsK, diamonds10, hearts6, spadesA, etc.
    */
   var PERFECT_DECK_ORDER = [
-    'hearts3', 'hearts5', 'hearts6', 'hearts7', 'hearts9', 'hearts10',
+    'hearts3', 'hearts5', 'hearts7', 'hearts9', 'hearts10',
     'spades2', 'clubs2',
     'spades3', 'clubs3', 'diamonds3',
     'spades4', 'clubs4', 'diamonds4',
