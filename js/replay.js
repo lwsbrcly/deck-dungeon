@@ -1,7 +1,16 @@
 // Replay support — deliberately kept separate from the main game logic.
-// This step parses a pasted copied run log into a clean sequence of replay actions.
+// Parses a run log, starts the real game engine on that deck, then drives the
+// existing UI controls as an artificial player.
 
 window.Replay = (() => {
+    let run = null;
+    let nextActionIndex = 0;
+    let playing = false;
+    let internalClick = false;
+    let controlObserver = null;
+    let replayClickHandler = null;
+    let replayKeyHandler = null;
+
     function parseRunLog(rawLog) {
         if (typeof rawLog !== 'string' || !rawLog.trim()) {
             throw new Error('Please paste a run log first.');
@@ -20,7 +29,6 @@ window.Replay = (() => {
         const mode = modeLine.match(/^•?\s*Mode:\s*(NORMAL|HARD|ULTRA)\s*$/i)[1].toUpperCase();
         const outcome = outcomeLine.replace(/^•?\s*GAME OVER\s+—\s*/i, '').trim();
 
-        // Action lines begin with the compact room/action number, e.g. 1-1 or 2┬FLEE.
         const actionLines = lines.filter(line =>
             /^•?\s*\d+(?:[-┬├└])(?:\d+|FLEE)\b/i.test(line)
         );
@@ -29,40 +37,21 @@ window.Replay = (() => {
         if (!actionLines.length) throw new Error('Run log contains no actions.');
 
         const actions = actionLines.map(parseActionLine);
-
-        return {
-            deckId,
-            mode,
-            outcome,
-            actions
-        };
+        return { deckId, mode, outcome, actions };
     }
 
     function parseActionLine(line) {
         const cleaned = line.replace(/^•\s*/, '').trim();
 
-        // Flee entries are deliberately treated as their own action type.
         if (/FLEE\s*$/i.test(cleaned)) {
-            return {
-                type: 'flee',
-                raw: line
-            };
+            return { type: 'flee', raw: line };
         }
 
-        // Expected action format is broadly:
-        //   1-1 p1 7C 2D [20,15]
-        //   1-2 p1 5H D [15,15]
-        //   1-3 p1 8D E
-        //   1-4 p1 9S --
-        // The exact room/action prefix is retained, but the replay executor only
-        // needs player, card and the suit-specific result.
         const match = cleaned.match(
             /^(\d+)(?:[-┬├└])(\d+)\s+(p\d+)\s+([0-9AJQK]+[CDHS])\s+([^\s]+)(?:\s+(\[[^\]]*\]))?/i
         );
 
-        if (!match) {
-            throw new Error(`Could not parse action line: ${line}`);
-        }
+        if (!match) throw new Error(`Could not parse action line: ${line}`);
 
         const room = Number(match[1]);
         const actionNumber = Number(match[2]);
@@ -73,68 +62,300 @@ window.Replay = (() => {
         const suit = card.slice(-1);
 
         let action;
-
         if (suit === 'H') {
-            // Hearts: button 1 = consume, button 2 = discard.
             action = result === 'D' ? 'discard' : 'consume';
         } else if (suit === 'D') {
-            // Diamonds: button 1 = equip, button 2 = discard.
             action = result === 'D' ? 'discard' : 'equip';
         } else if (suit === 'C' || suit === 'S') {
-            // Clubs / Spades: button 1 = fight with weapon, button 2 = fight bare.
             action = result === '--' ? 'bare' : 'weapon';
         } else {
             throw new Error(`Unknown card suit in action line: ${line}`);
         }
 
         return {
-            type: 'action',
-            room,
-            actionNumber,
-            player,
-            card,
-            suit,
-            action,
+            type: 'action', room, actionNumber, player, card, suit, action,
             weapon: (suit === 'C' || suit === 'S') && result !== '--' ? result : null,
-            hp,
-            raw: line
+            hp, raw: line
         };
     }
 
-    function processRunLog(rawLog) {
-        const run = parseRunLog(rawLog);
+    function configureReplayGame(replayRun) {
+        const modeSelect = document.getElementById('modeSelect');
+        const hardInput = document.getElementById('hardModeInput');
+        const ultraInput = document.getElementById('ultraHardModeInput');
+        const hasP2 = replayRun.actions.some(action => action.type === 'action' && action.player === 2);
 
-        console.log('Replay run log received:', run);
+        // The log's Mode is difficulty; co-op is inferred from the presence of p2 actions.
+        if (modeSelect) modeSelect.value = hasP2 ? 'coop' : 'solo_dagger';
+        if (hardInput) hardInput.checked = replayRun.mode === 'HARD' || replayRun.mode === 'ULTRA';
+        if (ultraInput) ultraInput.checked = replayRun.mode === 'ULTRA';
 
-        const actionSummary = run.actions.map((action, index) => {
-            if (action.type === 'flee') {
-                return `${index + 1}. FLEE`;
+        window.replayMode = true;
+        window.replayRun = replayRun;
+        nextActionIndex = 0;
+        playing = false;
+    }
+
+    function setReplayLabels(active) {
+        if (!active) return;
+
+        const labels = ['← Back 1 Step', playing ? '❚❚ Pause' : '▶ Play', 'Forward 1 Step →', 'Take Over'];
+        ['action1', 'action2', 'undoBtn', 'refreshBtn'].forEach((id, index) => {
+            const button = document.getElementById(id);
+            if (button) button.textContent = labels[index];
+        });
+
+        const back = document.getElementById('action1');
+        const forward = document.getElementById('undoBtn');
+        if (back) back.disabled = nextActionIndex <= 0;
+        if (forward) forward.disabled = nextActionIndex >= (run ? run.actions.length : 0);
+    }
+
+    function waitForGameIdle(timeout = 10000) {
+        return new Promise((resolve, reject) => {
+            const started = Date.now();
+            function check() {
+                const state = window.state;
+                if (state && Array.isArray(state.dungeon) && state.dungeon.length > 0 && !state.actionInProgress) {
+                    resolve();
+                    return;
+                }
+                if (Date.now() - started > timeout) {
+                    reject(new Error('Replay timed out waiting for the game board to initialise.'));
+                    return;
+                }
+                setTimeout(check, 50);
+            }
+            check();
+        });
+    }
+
+    function waitForActionComplete(timeout = 15000) {
+        return new Promise((resolve, reject) => {
+            const started = Date.now();
+            function check() {
+                const state = window.state;
+                if (state && !state.actionInProgress) {
+                    resolve();
+                    return;
+                }
+                if (Date.now() - started > timeout) {
+                    reject(new Error('Replay timed out waiting for the action to complete.'));
+                    return;
+                }
+                setTimeout(check, 50);
+            }
+            check();
+        });
+    }
+
+    function findCardIndex(cardCode) {
+        const state = window.state;
+        if (!state || !Array.isArray(state.dungeon) || typeof window.logCard !== 'function') return -1;
+        return state.dungeon.findIndex(card => window.logCard(card).toUpperCase() === cardCode);
+    }
+
+    async function executeAction(action) {
+        if (!action || action.type !== 'action') return;
+
+        const cardIndex = findCardIndex(action.card);
+        if (cardIndex < 0) {
+            throw new Error(`Replay expected ${action.card}, but it is not in the current room.`);
+        }
+
+        if (typeof window.selectCard !== 'function') {
+            throw new Error('Game card-selection function is unavailable.');
+        }
+
+        // Replay is the only thing allowed to select a card while replayMode is active.
+        window.selectCard(cardIndex);
+        await new Promise(resolve => setTimeout(resolve, 80));
+
+        const buttonId = (action.action === 'discard' || action.action === 'bare') ? 'action2' : 'action1';
+        const button = document.getElementById(buttonId);
+        if (!button || button.classList.contains('action-button-hidden') || button.disabled) {
+            throw new Error(`Replay could not invoke ${buttonId} for ${action.card}.`);
+        }
+
+        internalClick = true;
+        try {
+            button.click();
+        } finally {
+            internalClick = false;
+        }
+
+        await waitForActionComplete();
+    }
+
+    async function executeFlee() {
+        const button = document.getElementById('refreshBtn');
+        if (!button) throw new Error('Flee button is unavailable.');
+
+        internalClick = true;
+        try {
+            button.click();
+        } finally {
+            internalClick = false;
+        }
+
+        await waitForActionComplete();
+    }
+
+    async function forwardOneStep() {
+        if (!run || nextActionIndex >= run.actions.length) return;
+        if (window.state && window.state.actionInProgress) return;
+
+        const action = run.actions[nextActionIndex];
+        await (action.type === 'flee' ? executeFlee() : executeAction(action));
+        nextActionIndex += 1;
+        setReplayLabels(true);
+    }
+
+    function backOneStep() {
+        if (!run || nextActionIndex <= 0) return;
+        if (window.state && window.state.actionInProgress) return;
+        if (typeof window.undoLastAction !== 'function') return;
+
+        window.undoLastAction();
+        nextActionIndex -= 1;
+        setReplayLabels(true);
+    }
+
+    async function playLoop() {
+        if (playing) return;
+        playing = true;
+        setReplayLabels(true);
+
+        try {
+            while (playing && run && nextActionIndex < run.actions.length) {
+                await forwardOneStep();
+                if (playing) await new Promise(resolve => setTimeout(resolve, 250));
+            }
+        } catch (error) {
+            playing = false;
+            setReplayLabels(true);
+            alert(error.message);
+        }
+
+        if (nextActionIndex >= (run ? run.actions.length : 0)) {
+            playing = false;
+            setReplayLabels(true);
+        }
+    }
+
+    function togglePlay() {
+        if (!run) return;
+        if (playing) {
+            playing = false;
+            setReplayLabels(true);
+        } else {
+            playLoop();
+        }
+    }
+
+    function takeOver() {
+        playing = false;
+        window.replayMode = false;
+        window.replayRun = null;
+
+        if (controlObserver) {
+            controlObserver.disconnect();
+            controlObserver = null;
+        }
+        if (replayClickHandler) {
+            document.removeEventListener('click', replayClickHandler, true);
+            replayClickHandler = null;
+        }
+        if (replayKeyHandler) {
+            document.removeEventListener('keydown', replayKeyHandler, true);
+            replayKeyHandler = null;
+        }
+
+        if (typeof window.render === 'function') window.render();
+    }
+
+    function installReplayGuards() {
+        if (replayClickHandler) return;
+
+        replayClickHandler = function(event) {
+            if (!window.replayMode || internalClick) return;
+
+            const target = event.target;
+            const button = target && target.closest ? target.closest('#action1, #action2, #undoBtn, #refreshBtn') : null;
+            if (button) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+
+                if (button.id === 'action1') backOneStep();
+                else if (button.id === 'action2') togglePlay();
+                else if (button.id === 'undoBtn') forwardOneStep();
+                else if (button.id === 'refreshBtn') takeOver();
+                return;
             }
 
-            let detail = `${action.player}: ${action.card} → ${action.action}`;
-            if (action.weapon) detail += ` (${action.weapon})`;
-            if (action.hp) detail += ` ${action.hp}`;
-            return `${index + 1}. ${detail}`;
-        }).join('\n');
+            const card = target && target.closest ? target.closest('#dungeon .dungeon-card-wrap, #dungeon .card') : null;
+            if (card) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+            }
+        };
+        document.addEventListener('click', replayClickHandler, true);
 
-        alert(
-            `Run log received.\n\n` +
-            `Deck ID: ${run.deckId}\n` +
-            `Mode: ${run.mode}\n` +
-            `Actions: ${run.actions.length}\n\n` +
-            actionSummary
-        );
+        replayKeyHandler = function(event) {
+            if (!window.replayMode || internalClick) return;
+            const key = String(event.key || '').toLowerCase();
+            if (key === 'q' || key === 'w' || key === 'v' || key === 'r') {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+            }
+        };
+        document.addEventListener('keydown', replayKeyHandler, true);
+    }
 
-        return run;
+    function installReplayLabelObserver() {
+        if (controlObserver) controlObserver.disconnect();
+        controlObserver = new MutationObserver(() => {
+            if (window.replayMode) setReplayLabels(true);
+        });
+        ['action1', 'action2', 'undoBtn', 'refreshBtn'].forEach(id => {
+            const button = document.getElementById(id);
+            if (button) controlObserver.observe(button, { childList: true, characterData: true, subtree: true });
+        });
+    }
+
+    async function startReplay(replayRun) {
+        run = replayRun;
+        configureReplayGame(replayRun);
+        installReplayGuards();
+        installReplayLabelObserver();
+
+        if (typeof window.showScreen === 'function') window.showScreen('game-ui');
+        if (typeof window.decodeDeckId !== 'function' || typeof window.startGame !== 'function') {
+            throw new Error('Game start functions are unavailable.');
+        }
+
+        const seed = window.decodeDeckId(replayRun.deckId);
+        window.startGame(seed, replayRun.deckId);
+        await waitForGameIdle();
+        setReplayLabels(true);
+    }
+
+    function processRunLog(rawLog) {
+        const parsed = parseRunLog(rawLog);
+        console.log('Replay run log received:', parsed);
+        return parsed;
     }
 
     window.processReplayLog = processRunLog;
 
-    function watchReplay() {
+    async function watchReplay() {
         const input = document.getElementById('replayLogInput');
         try {
-            return processRunLog(input ? input.value : '');
+            const parsed = parseRunLog(input ? input.value : '');
+            await startReplay(parsed);
+            return parsed;
         } catch (error) {
+            takeOver();
             alert(error.message);
             return null;
         }
@@ -142,5 +363,8 @@ window.Replay = (() => {
 
     window.watchReplay = watchReplay;
 
-    return { parseRunLog, parseActionLine, processRunLog, watchReplay };
+    return {
+        parseRunLog, parseActionLine, processRunLog, startReplay, watchReplay,
+        forwardOneStep, backOneStep, togglePlay, takeOver
+    };
 })();
