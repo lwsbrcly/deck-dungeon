@@ -79,17 +79,24 @@ window.Replay = (() => {
     // action labels. Buttons 1-4 always display replay controls while active.
     function setReplayLabels() {
         if (!window.replayMode) return;
-        const labels = [
-            '← Back 1 Step',
-            playing ? '❚❚ Pause' : '▶ Play',
-            'Forward 1 Step →',
-            'Take Over'
+        const controls = [
+            { id: 'action1', label: '|◀', accessibleLabel: 'Back one step', title: 'Back one step' },
+            {
+                id: 'action2',
+                label: playing ? 'Ⅱ' : '▶',
+                accessibleLabel: playing ? 'Pause replay' : 'Play replay',
+                title: playing ? 'Pause replay' : 'Play replay'
+            },
+            { id: 'undoBtn', label: '▶|', accessibleLabel: 'Forward one step', title: 'Forward one step' },
+            { id: 'refreshBtn', label: 'Take Over', accessibleLabel: 'Take over gameplay', title: 'Take over gameplay' }
         ];
-        ['action1', 'action2', 'undoBtn', 'refreshBtn'].forEach((id, index) => {
-            const button = document.getElementById(id);
+        controls.forEach(control => {
+            const button = document.getElementById(control.id);
             if (!button) return;
             button.classList.remove('action-button-hidden');
-            if (button.textContent !== labels[index]) button.textContent = labels[index];
+            if (button.textContent !== control.label) button.textContent = control.label;
+            button.setAttribute('aria-label', control.accessibleLabel);
+            button.title = control.title;
         });
         const back = document.getElementById('action1');
         const forward = document.getElementById('undoBtn');
@@ -236,8 +243,15 @@ window.Replay = (() => {
         // when a card is selected. Undo and Flee have stable default labels.
         if (action1) { action1.textContent = ''; action1.disabled = false; }
         if (action2) { action2.textContent = ''; action2.disabled = false; }
-        if (undo) undo.textContent = '↩ Undo';
+        if (undo) { undo.textContent = '↩ Undo'; undo.disabled = !(window.historyStack && window.historyStack.length); }
         if (flee) flee.textContent = 'Flee';
+
+        // Remove replay-only accessibility metadata as well as the compact icons.
+        [action1, action2, undo, flee].forEach(button => {
+            if (!button) return;
+            button.removeAttribute('aria-label');
+            button.removeAttribute('title');
+        });
     }
 
     function endReplay(options = {}) {
