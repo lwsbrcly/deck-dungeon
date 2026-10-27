@@ -102,9 +102,19 @@ function preloadThemeAssets(themeKey) {
     return themeAssetsReady;
 }
 
+function clearReplaySession() {
+    if (window.Replay && typeof window.Replay.endReplay === 'function') {
+        window.Replay.endReplay({ render: false });
+    } else {
+        window.replayMode = false;
+        window.replayRun = null;
+    }
+}
+
 function selectTheme(theme) {
     if (!THEMES[theme]) return;
 
+    clearReplaySession();
     selectedTheme = theme;
     window.selectedTheme = theme;
     applySelectedTheme();
@@ -512,13 +522,17 @@ function copyLogText() {
 }
 
 function backToMenu() {
+    clearReplaySession();
     document.getElementById('overlay').classList.remove('show');
     document.getElementById('game').style.display = 'none';
     document.getElementById('setupScreen').style.display = 'block';
     showScreen('game-selector');
 }
 
-function startGame(deckSeed, suppliedDeckId) {
+function startGame(deckSeed, suppliedDeckId, launchOptions) {
+if (!(launchOptions && launchOptions.replay === true)) {
+  clearReplaySession();
+}
 stopDeckDungeonTheme();
 var modeInput = document.getElementById('modeSelect');
 var mode = modeInput ? modeInput.value : 'solo_dagger';
