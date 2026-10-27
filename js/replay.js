@@ -98,6 +98,13 @@ window.Replay = (() => {
             button.setAttribute('aria-label', control.accessibleLabel);
             button.title = control.title;
         });
+
+        // Take Over is a replay control, not the normal Flee action.
+        // Flee becomes unavailable after the room's first action, but Take Over
+        // must stay enabled so the player can resume control at any replay step.
+        const takeOverButton = document.getElementById('refreshBtn');
+        if (takeOverButton) takeOverButton.disabled = false;
+
         const back = document.getElementById('action1');
         const forward = document.getElementById('undoBtn');
         if (back) back.disabled = nextActionIndex <= 0;
