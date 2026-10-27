@@ -306,3 +306,51 @@ window.Replay = (() => {
 
     return { parseRunLog, parseActionLine, processRunLog, startReplay, watchReplay, forwardOneStep, backOneStep, togglePlay, takeOver };
 })();
+
+// Board/undo fix: game.js keeps four keyed card wrappers for FLIP animation,
+// but reusing those wrappers can leave them in the old DOM order. Keep the
+// wrappers physically ordered by their logical slot after every render.
+(function installUndoBoardFix() {
+    const originalRender = window.render;
+    if (typeof originalRender !== 'function') return;
+
+    window.render = function () {
+        originalRender.apply(this, arguments);
+
+        const dungeon = document.getElementById('dungeon');
+        if (!dungeon) return;
+
+        const wraps = Array.from(dungeon.children)
+            .filter(el => el && el.classList && el.classList.contains('dungeon-card-wrap'))
+            .sort((a, b) => (a._slotIndex ?? 999) - (b._slotIndex ?? 999));
+
+        wraps.forEach(wrap => dungeon.appendChild(wrap));
+    };
+
+    function restoreWithAnimation(isGameOverUndo) {
+        if (window.state && window.state.actionInProgress) return;
+        if (!Array.isArray(window.historyStack) || window.historyStack.length === 0) return;
+
+        if (typeof window.resetDungeonDom === 'function') window.resetDungeonDom();
+        window.state = window.historyStack.pop();
+        window.state.actionInProgress = false;
+
+        if (isGameOverUndo) {
+            window.state.over = false;
+            const overlay = document.getElementById('overlay');
+            if (overlay) overlay.classList.remove('show');
+        }
+
+        if (typeof window.renderLog === 'function') window.renderLog();
+        if (typeof window.renderAfterAction === 'function') window.renderAfterAction();
+        else window.render();
+    }
+
+    window.undoLastAction = function () {
+        restoreWithAnimation(false);
+    };
+
+    window.undoFromGameOver = function () {
+        restoreWithAnimation(true);
+    };
+})();
