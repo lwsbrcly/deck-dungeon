@@ -79,17 +79,24 @@ window.Replay = (() => {
     // action labels. Buttons 1-4 always display replay controls while active.
     function setReplayLabels() {
         if (!window.replayMode) return;
-        const labels = [
-            '← Back 1 Step',
-            playing ? '❚❚ Pause' : '▶ Play',
-            'Forward 1 Step →',
-            'Take Over'
+        const controls = [
+            { id: 'action1', label: '|◀', accessibleLabel: 'Back one step', title: 'Back one step' },
+            {
+                id: 'action2',
+                label: playing ? 'Ⅱ' : '▶',
+                accessibleLabel: playing ? 'Pause replay' : 'Play replay',
+                title: playing ? 'Pause replay' : 'Play replay'
+            },
+            { id: 'undoBtn', label: '▶|', accessibleLabel: 'Forward one step', title: 'Forward one step' },
+            { id: 'refreshBtn', label: 'Take Over', accessibleLabel: 'Take over gameplay', title: 'Take over gameplay' }
         ];
-        ['action1', 'action2', 'undoBtn', 'refreshBtn'].forEach((id, index) => {
-            const button = document.getElementById(id);
+        controls.forEach(control => {
+            const button = document.getElementById(control.id);
             if (!button) return;
             button.classList.remove('action-button-hidden');
-            if (button.textContent !== labels[index]) button.textContent = labels[index];
+            if (button.textContent !== control.label) button.textContent = control.label;
+            button.setAttribute('aria-label', control.accessibleLabel);
+            button.title = control.title;
         });
         const back = document.getElementById('action1');
         const forward = document.getElementById('undoBtn');
@@ -226,14 +233,57 @@ window.Replay = (() => {
         if (playing) { playing = false; setReplayLabels(); } else playLoop();
     }
 
-    function takeOver() {
+    function restoreStandardActionLabels() {
+        const action1 = document.getElementById('action1');
+        const action2 = document.getElementById('action2');
+        const undo = document.getElementById('undoBtn');
+        const flee = document.getElementById('refreshBtn');
+
+        // The first two labels are contextual and will be repopulated by render()
+        // when a card is selected. Undo and Flee have stable default labels.
+        if (action1) { action1.textContent = ''; action1.disabled = false; }
+        if (action2) { action2.textContent = ''; action2.disabled = false; }
+        if (undo) { undo.textContent = '↩ Undo'; undo.disabled = !(window.historyStack && window.historyStack.length); }
+        if (flee) flee.textContent = 'Flee';
+
+        // Remove replay-only accessibility metadata as well as the compact icons.
+        [action1, action2, undo, flee].forEach(button => {
+            if (!button) return;
+            button.removeAttribute('aria-label');
+            button.removeAttribute('title');
+        });
+    }
+
+    function endReplay(options = {}) {
         playing = false;
+        run = null;
+        nextActionIndex = 0;
+
         window.replayMode = false;
         window.replayRun = null;
         stopReplayLabelGuard();
-        if (replayClickHandler) { document.removeEventListener('click', replayClickHandler, true); replayClickHandler = null; }
-        if (replayKeyHandler) { document.removeEventListener('keydown', replayKeyHandler, true); replayKeyHandler = null; }
-        if (typeof window.render === 'function') window.render();
+
+        if (replayClickHandler) {
+            document.removeEventListener('click', replayClickHandler, true);
+            replayClickHandler = null;
+        }
+        if (replayKeyHandler) {
+            document.removeEventListener('keydown', replayKeyHandler, true);
+            replayKeyHandler = null;
+        }
+
+        restoreStandardActionLabels();
+
+        // New-game/navigation callers pass render:false because they immediately
+        // replace or hide the current board. Take Over renders the current board
+        // so the normal contextual actions are restored straight away.
+        if (options.render !== false && typeof window.render === 'function') {
+            window.render();
+        }
+    }
+
+    function takeOver() {
+        endReplay();
     }
 
     function installReplayGuards() {
@@ -263,13 +313,16 @@ window.Replay = (() => {
     }
 
     async function startReplay(replayRun) {
+        // Starting a replay after another replay first tears down its timer,
+        // event guards and labels so only one replay session can own the controls.
+        endReplay({ render: false });
         run = replayRun;
         configureReplayGame(replayRun);
         installReplayGuards();
         if (typeof window.showScreen === 'function') window.showScreen('game-ui');
         if (typeof window.decodeDeckId !== 'function' || typeof window.startGame !== 'function') throw new Error('Game start functions are unavailable.');
         const seed = window.decodeDeckId(replayRun.deckId);
-        window.startGame(seed, replayRun.deckId);
+        window.startGame(seed, replayRun.deckId, { replay: true });
         await waitForGameIdle();
         startReplayLabelGuard();
     }
@@ -304,7 +357,7 @@ window.Replay = (() => {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindWatchReplayButton);
     else bindWatchReplayButton();
 
-    return { parseRunLog, parseActionLine, processRunLog, startReplay, watchReplay, forwardOneStep, backOneStep, togglePlay, takeOver };
+    return { parseRunLog, parseActionLine, processRunLog, startReplay, watchReplay, forwardOneStep, backOneStep, togglePlay, takeOver, endReplay };
 })();
 
 // Board/undo fix: game.js keeps four keyed card wrappers for FLIP animation,
