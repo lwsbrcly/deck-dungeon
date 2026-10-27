@@ -6,9 +6,11 @@ window.Replay = (() => {
     let run = null;
     let nextActionIndex = 0;
     let playing = false;
+    let playGeneration = 0;
     let replayClickHandler = null;
     let replayKeyHandler = null;
     let replayLabelTimer = null;
+    const PLAY_INTERVAL_MS = 1500;
 
     function cardIdFromLog(card) {
         const match = String(card || '').trim().toUpperCase().match(/^(10|[2-9]|[AJQK])([CDHS])$/);
@@ -218,26 +220,48 @@ window.Replay = (() => {
         setReplayLabels();
     }
 
+    function waitForReplayDelay(startedAt, generation) {
+        const remaining = Math.max(0, PLAY_INTERVAL_MS - (Date.now() - startedAt));
+        return new Promise(resolve => {
+            setTimeout(() => resolve(generation === playGeneration && playing), remaining);
+        });
+    }
+
     async function playLoop() {
         if (playing) return;
         playing = true;
+        const generation = ++playGeneration;
         setReplayLabels();
         try {
-            while (playing && run && nextActionIndex < run.actions.length) {
+            while (playing && generation === playGeneration && run && nextActionIndex < run.actions.length) {
+                const actionStartedAt = Date.now();
                 await forwardOneStep();
-                if (playing) await new Promise(resolve => setTimeout(resolve, 250));
+                if (playing && generation === playGeneration) {
+                    const shouldContinue = await waitForReplayDelay(actionStartedAt, generation);
+                    if (!shouldContinue) break;
+                }
             }
         } catch (error) {
             playing = false;
+            playGeneration += 1;
             setReplayLabels();
             alert(error.message);
         }
-        if (nextActionIndex >= (run ? run.actions.length : 0)) { playing = false; setReplayLabels(); }
+        if (generation === playGeneration && nextActionIndex >= (run ? run.actions.length : 0)) {
+            playing = false;
+            setReplayLabels();
+        }
     }
 
     function togglePlay() {
         if (!run) return;
-        if (playing) { playing = false; setReplayLabels(); } else playLoop();
+        if (playing) {
+            playing = false;
+            playGeneration += 1;
+            setReplayLabels();
+        } else {
+            playLoop();
+        }
     }
 
     function restoreStandardActionLabels() {
@@ -263,6 +287,7 @@ window.Replay = (() => {
 
     function endReplay(options = {}) {
         playing = false;
+        playGeneration += 1;
         run = null;
         nextActionIndex = 0;
 
