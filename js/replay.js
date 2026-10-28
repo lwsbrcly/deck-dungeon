@@ -145,7 +145,11 @@ window.Replay = (() => {
         return new Promise((resolve, reject) => {
             const started = Date.now();
             function check() {
-                if (window.state && !window.state.actionInProgress) return resolve();
+                // Completing the logged action can immediately start a room-deal
+                // animation. That transition is not a separate run-log action,
+                // but the next card must not be played until the incoming cards land.
+                const roomDealInProgress = !!document.querySelector('.game-canvas .dd-deal-clone');
+                if (window.state && !window.state.actionInProgress && !roomDealInProgress) return resolve();
                 if (Date.now() - started > timeout) return reject(new Error('Replay timed out waiting for the action to complete.'));
                 setTimeout(check, 50);
             }
