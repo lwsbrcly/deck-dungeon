@@ -613,6 +613,10 @@ state = {
   foodConsumed: 0,
   maxFoodHP: 54,
   weaponUsage: {},
+  // Excess damage from the most recent combat action, beyond HP available.
+  // Used only if that action ends the run, so downed-but-revived players do not
+  // permanently affect the eventual score.
+  lastActionOverkillDamage: 0,
   eventHistory: [],
   logHistory: [],
   // Legacy aliases retained for the existing rules/rendering code.
@@ -1520,6 +1524,7 @@ function fight(player, mode) {
           trackWeaponKill('Bare Fists', c.value);
         }
 
+        state.lastActionOverkillDamage = Math.max(0, damage - hpBeforeAttack);
         p.hp = Math.max(0, p.hp - damage);
         state.monstersSlain++;
 
@@ -1536,6 +1541,8 @@ function fight(player, mode) {
 function applySharedDamage(damage, acting) {
     var a = Math.floor(damage / 2), b = Math.floor(damage / 2);
     if (damage % 2) { if (acting === 'p2') b++; else a++; }
+    state.lastActionOverkillDamage =
+      Math.max(0, a - state.p1.hp) + Math.max(0, b - state.p2.hp);
     state.p1.hp = Math.max(0, state.p1.hp - a);
     state.p2.hp = Math.max(0, state.p2.hp - b);
 }
@@ -1578,6 +1585,12 @@ if (isDead || isCleared || allMonstersSlain) {
     }
   }
 
+  // Count damage beyond the HP available on the action that ended the run.
+  // The gameplay HP display remains capped at zero; overkill affects scoring only.
+  var overkillDamage = isDead
+    ? Math.max(0, Number(state.lastActionOverkillDamage) || 0)
+    : 0;
+
   // Check special case: dying on the very last card after clearing all monsters
   var isPyrrhicVictory = isDead && monstersRemainingCount === 0;
 
@@ -1587,10 +1600,10 @@ if (isDead || isCleared || allMonstersSlain) {
 
   if (isPyrrhicVictory) {
     title = endGame.draw.title;
-    score = 0;
+    score = -overkillDamage;
     text = endGame.draw.body;
-    scoreBanner.className = 'score-banner';
-    scoreBanner.textContent = 'SCORE: 0 (DRAW)';
+    scoreBanner.className = score < 0 ? 'score-banner negative' : 'score-banner';
+    scoreBanner.textContent = 'SCORE: ' + score + ' (DRAW)';
   } else if (isCleared || allMonstersSlain) {
     title = endGame.win.title;
     score = (isSolo ? state.p1.hp : (state.p1.hp + state.p2.hp))
@@ -1600,7 +1613,7 @@ if (isDead || isCleared || allMonstersSlain) {
     scoreBanner.textContent = 'SCORE: +' + score;
   } else {
     title = endGame.lose.title;
-    score = -monsterSum;
+    score = -(monsterSum + overkillDamage);
     text = endGame.lose.body;
     scoreBanner.className = 'score-banner negative';
     scoreBanner.textContent = 'SCORE: ' + score;
