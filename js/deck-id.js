@@ -285,9 +285,15 @@ window.addEventListener('load', function() {
 
     if (!logHistory.length) return;
 
-    var logLines = logHistory.map(function(line, index, lines) {
-      return boxifyCopiedLog(line, index, lines);
-    });
+    // Deck ID is added as a dedicated header below. Omit the copy used by
+    // the live log so the exported log contains exactly one Deck ID line.
+    var logLines = logHistory
+      .filter(function(line) {
+        return !/^\s*Deck ID:\s*/i.test(String(line));
+      })
+      .map(function(line, index, lines) {
+        return boxifyCopiedLog(line, index, lines);
+      });
 
     var modeLabel = 'NORMAL';
     if (state && state.ultraHardMode) {
